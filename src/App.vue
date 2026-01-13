@@ -6,34 +6,35 @@
         <v-row align="center" class="justify-space-between">
           <v-col cols="auto">
             <div class="d-flex align-center">
-              <span class="g2a-text-22 g2a-text-bold-800 text-warning"
-                >Go2</span
-              >
+              <span class="g2a-text-22 g2a-text-bold-800 text-error">Go2</span>
               <span class="g2a-text-22 g2a-text-bold-800">Andaman</span>
             </div>
           </v-col>
           <v-col cols="auto">
-            <span class="g2a-text-14 text-greyDark">Secure Booking</span>
-            <v-icon size="16" class="ml-2 text-success">mdi-lock</v-icon>
+            <span class="g2a-text-14 text-grey">Secure Booking</span>
+            <v-icon size="20" class="ml-2 text-green">mdi-lock</v-icon>
           </v-col>
         </v-row>
       </v-container>
     </v-app-bar>
 
     <v-main>
-      <v-container>
+      <v-container class="my-1">
         <v-row>
           <!-- Step Component -->
           <v-col cols="12" md="8">
             <div class="pb-4">
-              <v-chip class="g2a-text-bold-600" size="small" color="warning">{{
-                productInfo.label
-              }}</v-chip>
-              <div class="g2a-text-24 g2a-text-bold-600">
+              <v-chip
+                class="g2a-text-bold-600 text-uppercase"
+                size="small"
+                color="warning"
+                >{{ productInfo.label }}</v-chip
+              >
+              <div class="g2a-text-28 my-1 g2a-text-bold-600">
                 {{ productInfo.description }} -
                 {{ booking?.selectedLocation?.name || "Select Location" }}
               </div>
-              <div class="text-greyDark">
+              <div class="text-grey">
                 <v-icon size="16">mdi-map-marker</v-icon>
                 {{ booking?.selectedLocation?.name || "-" }}
               </div>

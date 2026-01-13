@@ -1,14 +1,15 @@
 <template>
   <div class="sticky">
-    <v-card elevation="0" sticky class="g2a-rounded-border border">
-      <v-alert
+    <v-card elevation="0" sticky class="g2a-rounded-border border bg-white">
+      <v-alert color="background"
         ><div class="g2a-text-20 g2a-text-bold-600">
           Booking Summary
         </div></v-alert
       >
+      <v-divider />
       <v-container>
         <!-- Bike Image and Title -->
-        <div class="mb-6">
+        <div>
           <v-row align="center" no-gutters>
             <v-col cols="auto" class="me-3">
               <v-card class="rounded-lg" elevation="0" width="100" height="60">
@@ -25,105 +26,99 @@
                 {{ productInfo.label }} -
                 {{ bookingData.selectedLocation?.name }}
               </p>
-              <p class="g2a-text-caption text-greyDark mb-0">
+              <p class="g2a-text-13 text-grey mb-0">
                 {{ bookingData.quantity }} Vehicle(s)
               </p>
             </v-col>
           </v-row>
         </div>
 
+        <v-divider class="my-4" color="grey" />
+
         <!-- Summary Details -->
-        <div class="mb-6">
+        <div class="my-4">
           <!-- Duration -->
-          <v-row class="mb-4" dense no-gutters>
+          <v-row class="my-1" dense no-gutters>
             <v-col cols="5">
-              <p class="g2a-text-caption text-greyDark">Duration</p>
+              <p class="g2a-text-13 text-grey">Duration</p>
             </v-col>
             <v-col cols="7" align="end">
-              <p class="g2a-text-bold-600 g2a-text-14">
+              <p class="g2a-text-bold-500 g2a-text-14">
                 {{ calculateDuration }} Days
               </p>
             </v-col>
           </v-row>
 
           <!-- Dates -->
-          <v-row class="mb-4" dense no-gutters>
+          <v-row class="my-1" dense no-gutters>
             <v-col cols="5">
-              <p class="g2a-text-caption text-greyDark">Dates</p>
+              <p class="g2a-text-13 text-grey">Dates</p>
             </v-col>
             <v-col cols="7" align="end">
-              <p class="g2a-text-bold-600 g2a-text-14">{{ formatDateRange }}</p>
+              <p class="g2a-text-bold-500 g2a-text-14">{{ formatDateRange }}</p>
             </v-col>
           </v-row>
 
           <!-- Pickup -->
-          <v-row class="mb-4" dense no-gutters>
+          <v-row class="my-1" dense no-gutters>
             <v-col cols="5">
-              <p class="g2a-text-caption text-greyDark">Pickup</p>
+              <p class="g2a-text-13 text-grey">Pickup</p>
             </v-col>
             <v-col cols="7" align="end">
-              <p class="g2a-text-bold-600 g2a-text-14">{{ pickupDisplay }}</p>
+              <p class="g2a-text-bold-500 g2a-text-14">{{ pickupDisplay }}</p>
             </v-col>
           </v-row>
 
           <!-- Dropoff -->
-          <v-row class="mb-4" dense no-gutters>
+          <v-row class="my-1" dense no-gutters>
             <v-col cols="5">
-              <p class="g2a-text-caption text-greyDark">Dropoff</p>
+              <p class="g2a-text-13 text-grey">Dropoff</p>
             </v-col>
             <v-col cols="7" align="end">
-              <p class="g2a-text-bold-600 g2a-text-14">{{ dropoffDisplay }}</p>
+              <p class="g2a-text-bold-500 g2a-text-14">{{ dropoffDisplay }}</p>
             </v-col>
           </v-row>
         </div>
 
-        <v-divider class="my-6" />
+        <v-divider color="grey" />
 
         <!-- Pricing -->
-        <div class="mb-5">
-          <v-row class="mb-2" dense no-gutters>
+        <div class="my-4">
+          <v-row dense no-gutters>
             <v-col cols="7">
-              <p class="g2a-text-caption text-greyDark">
+              <p class="g2a-text-15">
                 Rental ({{ calculateDuration }}d x ₹{{
-                  bookingData.selectedLocation?.dailyRate || 600
+                  bookingData.selectedLocation?.pricing.amount || 0
                 }})
               </p>
             </v-col>
             <v-col cols="5" align="end">
-              <p class="g2a-text-bold-600 g2a-text-14">₹{{ rentalTotal }}</p>
+              <p class="g2a-text-bold-500 g2a-text-15">₹{{ rentalTotal }}</p>
             </v-col>
           </v-row>
         </div>
 
-        <v-divider class="my-6" />
+        <v-divider color="grey" />
 
         <!-- Total -->
-        <v-row class="mb-4" dense no-gutters>
+        <v-row class="mt-3" dense no-gutters>
           <v-col cols="5">
-            <p class="g2a-text-bold-600 g2a-text-16">Total</p>
+            <p class="g2a-text-bold-600 g2a-text-20">Total</p>
           </v-col>
           <v-col cols="7" align="end">
-            <p
-              class="g2a-text-bold-700"
-              style="font-size: 18px; color: #ff8c00"
-            >
+            <p class="g2a-text-bold-700 g2a-text-24 text-warning">
               ₹{{ totalPrice }}
             </p>
           </v-col>
         </v-row>
       </v-container>
       <!-- No Hidden Charges -->
-      <v-alert
-        :icon="false"
-        color="background"
-        text-color="grey"
-        density="compact"
-      >
+      <v-alert :icon="false" color="surface" density="compact">
         <div class="d-flex align-center justify-center w-100">
-          <v-icon color="grey" size="16" class="me-2">
-            mdi-shield-check-outline
+          <v-icon color="grey" size="14" class="me-2">
+            mdi-shield-check
           </v-icon>
-          <span class="g2a-text-caption">No hidden charges</span>
+          <span class="g2a-text-13 text-grey">No hidden charges</span>
         </div>
       </v-alert>
     </v-card>

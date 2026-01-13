@@ -1,18 +1,48 @@
 <template>
-  <v-card elevation="0" class="mb-6 g2a-rounded-border border">
+  <v-card elevation="0" class="mb-6 g2a-rounded-border border bg-white">
     <v-progress-linear color="warning" model-value="66" height="6" />
 
     <div class="d-flex justify-space-between px-4 mt-4">
-      <span class="g2a-text-12 text-greyDark">Step 2 of 3</span>
-      <span class="g2a-text-12 text-greyDark">Details</span>
+      <span class="g2a-text-13 text-grey">Step 2 of 3</span>
+      <span class="g2a-text-13 text-grey">Details</span>
     </div>
 
     <v-container>
-      <h3 class="g2a-title-3 mb-6">Pickup & Delivery</h3>
+      <div class="g2a-text-22 g2a-text-bold-600 my-2">Pickup & Delivery</div>
+
+      <!-- <div>
+        {{ productInfo }}
+      </div> -->
+
+      <v-card class="border bg-white my-6" elevation="0">
+        <v-container>
+          <div class="g2a-text-bold-600 text-greyDark">
+            <v-avatar color="green" variant="tonal" size="34" class="mr-2">
+              <v-icon size="22" icon="mdi-motorbike"></v-icon>
+            </v-avatar>
+            Inclusions
+          </div>
+          <v-divider color="black" class="my-4" />
+          <v-row>
+            <v-col
+              v-for="(item, index) in productInfo.inclusions"
+              :key="index"
+              cols="12"
+              sm="6"
+              class="d-flex align-center"
+            >
+              <v-icon color="green" size="20" class="mr-2">
+                mdi-check-circle
+              </v-icon>
+              <span class="g2a-text-15">{{ item }}</span>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card>
 
       <!-- QUANTITY -->
       <div class="mb-8">
-        <p class="g2a-text-caption text-greyDark mb-4">QUANTITY</p>
+        <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4">QUANTITY</div>
         <div class="d-flex align-center">
           <v-btn icon variant="outlined" size="small" @click="decreaseQuantity">
             <v-icon>mdi-minus</v-icon>
@@ -184,6 +214,7 @@ import { ref, computed, watch } from "vue";
 
 const props = defineProps({
   bookingData: Object,
+  productInfo: Object,
 });
 
 const emit = defineEmits(["update", "next-step", "prev-step"]);
