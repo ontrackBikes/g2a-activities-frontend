@@ -15,17 +15,15 @@
                 <v-img
                   cover
                   height="80"
-                  :src="
-                    bookingData.vehicleImage ||
-                    '/placeholder.svg?height=80&width=100'
-                  "
+                  :src="productInfo.productThumbnailUrl"
                 />
               </v-card>
             </v-col>
 
             <v-col>
               <p class="g2a-text-bold-600 g2a-text-14 mb-0">
-                Scooty Rental - {{ bookingData.selectedLocation?.name }}
+                {{ productInfo.label }} -
+                {{ bookingData.selectedLocation?.name }}
               </p>
               <p class="g2a-text-caption text-greyDark mb-0">
                 {{ bookingData.quantity }} Vehicle(s)
@@ -137,6 +135,10 @@ import { computed } from "vue";
 import moment from "moment";
 
 const props = defineProps({
+  productInfo: {
+    type: Object,
+    required: true,
+  },
   bookingData: {
     type: Object,
     required: true,
@@ -186,7 +188,7 @@ const dropoffDisplay = computed(() => {
 const rentalTotal = computed(() => {
   return (
     calculateDuration.value *
-    (props.bookingData.selectedLocation?.dailyRate || 600) *
+    (props.bookingData.selectedLocation?.pricing.amount || 600) *
     props.bookingData.quantity
   );
 });

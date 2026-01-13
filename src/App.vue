@@ -20,167 +20,125 @@
       </v-container>
     </v-app-bar>
 
-    <!-- Main Content -->
-    <v-container class="py-8">
-      <v-progress-linear
-        v-if="loadingLocations"
-        indeterminate
-        color="#FF8C00"
-        class="mb-4"
-      />
+    <v-main>
+      <v-container>
+        <v-row>
+          <!-- Step Component -->
+          <v-col cols="12" md="8">
+            <div class="pb-4">
+              <v-chip class="g2a-text-bold-600" size="small" color="warning">{{
+                productInfo.label
+              }}</v-chip>
+              <div class="g2a-text-24 g2a-text-bold-600">
+                {{ productInfo.description }} -
+                {{ booking?.selectedLocation?.name || "Select Location" }}
+              </div>
+              <div class="text-greyDark">
+                <v-icon size="16">mdi-map-marker</v-icon>
+                {{ booking?.selectedLocation?.name || "-" }}
+              </div>
+            </div>
 
-      <v-row class="my-10">
-        <!-- Left -->
-        <v-col cols="12" md="8">
-          <component
-            :is="currentStepComponent"
-            :booking-data="bookingData"
-            :location-data="locationData"
-            @update-booking="updateBooking"
-            @next-step="nextStep"
-            @prev-step="prevStep"
-          />
-        </v-col>
+            <component
+              :is="currentStepComponent"
+              :product-info="productInfo"
+              :booking-data="booking"
+              :location-data="locationData"
+              @update="updateBooking"
+              @next-step="nextStep"
+              @prev-step="prevStep"
+            />
+          </v-col>
 
-        <!-- Right -->
-        <v-col cols="12" md="4">
-          <BookingSummary
-            :booking-data="bookingData"
-            :location-data="locationData"
-            :rental-cost="rentalCost"
-          />
-        </v-col>
-      </v-row>
-    </v-container>
+          <!-- Summary -->
+          <v-col cols="12" md="4">
+            <BookingSummary
+              :product-info="productInfo"
+              :booking-data="booking"
+              :rental-cost="rentalCost"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import moment from "moment";
 import axios from "axios";
-// import api from "@/services/api";
+import moment from "moment";
 
 import Step1LocationDates from "./components/Step1LocationDates.vue";
-import Step2PickupDelivery from "./components/Step2PickupDelivery.vue";
-import Step3ReviewPay from "./components/Step3ReviewPay.vue";
+import Step2PickupDelivery from "./components/Step2PickupDelivery.vue"; // placeholder for step 2
+import Step3ReviewPay from "./components/Step3ReviewPay.vue"; // placeholder for step 3
 import BookingSummary from "./components/BookingSummary.vue";
 
 /* -------------------- STATE -------------------- */
-
-const currentStep = ref(1);
-const loadingLocations = ref(false);
-
-const locationData = ref({
-  locations: [],
-  pickupOptions: [],
-  dropoffOptions: [],
-  outlets: [],
-});
-
-const bookingData = ref({
+const booking = ref({
   selectedLocation: null,
-  selectedBike: null,
   pickupDate: moment().add(2, "days").format("YYYY-MM-DD"),
   returnDate: moment().add(3, "days").format("YYYY-MM-DD"),
   quantity: 1,
-  pickupOption: null,
-  dropoffOption: null,
-  pickupOutlet: null,
-  pickupHotelName: "",
-  dropoffHotelName: "",
-  guestDetails: {
-    title: "Mr",
+  pickupType: "self-pickup",
+  dropType: "self-drop",
+  pickup: null,
+  drop: null,
+  pickupHotelName: null,
+  dropoffHotelName: null,
+  customer: {
+    title: "",
     firstName: "",
     lastName: "",
-    countryCode: "+91",
-    mobileNumber: "",
     email: "",
-    alternativeMobile: "",
+    phone: "",
   },
-  vehicleImage:
-    "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070&auto=format&fit=crop",
+  paymentType: "full",
 });
 
-/* -------------------- API -------------------- */
+const productInfo = ref({});
+const locationData = ref({ locations: [] });
 
+const currentStep = ref(3);
+const stepComponents = {
+  1: Step1LocationDates,
+  2: Step2PickupDelivery,
+  3: Step3ReviewPay,
+};
+const currentStepComponent = computed(() => stepComponents[currentStep.value]);
+
+/* -------------------- API -------------------- */
 const fetchLocations = async () => {
   try {
-    loadingLocations.value = true;
-
     const res = await axios.get(
-      "http://localhost:3000/api/bike-rentals/locations"
+      "http://localhost:3000/api/bike-rentals/product-info"
     );
-
-    // 1. Match the API structure: the array is directly inside res.data.data
-    const locationsArray = res.data.data;
-
-    // 2. Map the API data to your local state
-    locationData.value = {
-      locations: locationsArray || [],
-      // Based on your JSON, pickup/drop options seem to be derived from the location
-      pickupOptions: [
-        { id: "airport", name: "Airport" },
-        { id: "hotel", name: "Hotel Delivery" },
-      ],
-      dropoffOptions: [
-        { id: "airport", name: "Airport" },
-        { id: "hotel", name: "Hotel Delivery" },
-      ],
-      outlets: locationsArray.map((loc) => loc.name) || [],
-    };
-
-    // 3. SAFE DEFAULTS (Check if data exists first)
-    if (locationData.value.locations.length > 0) {
-      bookingData.value.selectedLocation = locationData.value.locations[0];
-
-      // Ensure dailyRate exists to prevent NaN in your computed property
-      if (!bookingData.value.selectedLocation.dailyRate) {
-        bookingData.value.selectedLocation.dailyRate = 500; // Default fallback price
-      }
+    productInfo.value = res.data?.product || {};
+    locationData.value.locations = res.data?.locations || [];
+    if (locationData.value.locations.length) {
+      booking.value.selectedLocation = locationData.value.locations[0];
     }
-
-    bookingData.value.pickupOption =
-      locationData.value.pickupOptions[0]?.id || null;
-    bookingData.value.dropoffOption =
-      locationData.value.dropoffOptions[0]?.id || null;
-    bookingData.value.pickupOutlet = locationData.value.outlets[0] || null;
   } catch (err) {
     console.error("Failed to fetch locations", err);
-  } finally {
-    loadingLocations.value = false;
   }
 };
 
 /* -------------------- COMPUTED -------------------- */
-
 const rentalCost = computed(() => {
-  if (
-    !bookingData.value.selectedLocation ||
-    !bookingData.value.pickupDate ||
-    !bookingData.value.returnDate
-  ) {
-    return 0;
-  }
-
-  const pickup = moment(bookingData.value.pickupDate);
-  const dropoff = moment(bookingData.value.returnDate);
-  const days = dropoff.diff(pickup, "days") || 1;
-
+  if (!booking.value.selectedLocation) return 0;
+  const days =
+    moment(booking.value.returnDate).diff(
+      moment(booking.value.pickupDate),
+      "days"
+    ) || 1;
   return (
-    days *
-    bookingData.value.selectedLocation.dailyRate *
-    bookingData.value.quantity
+    days * booking.value.selectedLocation.dailyRate * booking.value.quantity
   );
 });
 
-const steps = [Step1LocationDates, Step2PickupDelivery, Step3ReviewPay];
-const currentStepComponent = computed(() => steps[currentStep.value - 1]);
-
-/* -------------------- METHODS -------------------- */
-
-const updateBooking = (updates) => {
-  bookingData.value = { ...bookingData.value, ...updates };
+/* -------------------- HANDLERS -------------------- */
+const updateBooking = (payload) => {
+  booking.value = { ...booking.value, ...payload };
 };
 
 const nextStep = () => {
@@ -190,8 +148,6 @@ const nextStep = () => {
 const prevStep = () => {
   if (currentStep.value > 1) currentStep.value--;
 };
-
-/* -------------------- LIFECYCLE -------------------- */
 
 onMounted(fetchLocations);
 </script>

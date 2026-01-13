@@ -458,7 +458,7 @@ input {
   box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.11) !important;
 }
 
-.v-overlay__content.mySelect-menu > .v-list {
+.v-overlay__content.mySelect-menu>.v-list {
   box-shadow: none !important;
   padding: 0;
 }

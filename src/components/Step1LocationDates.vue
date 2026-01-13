@@ -1,26 +1,7 @@
 <template>
   <div>
-    <!-- Updated header to show selected location dynamically -->
-    <v-card class="mb-6" elevation="0">
-      <v-container>
-        <v-chip
-          size="small"
-          color="warning"
-          class="g2a-text-12 g2a-text-bold-700"
-          >VEHICLE RENTAL</v-chip
-        >
-        <h2 class="g2a-title-1 mt-2">
-          Scooty Rental - {{ bookingData.selectedLocation?.name }}
-        </h2>
-        <p class="text-greyDark g2a-text-14 mt-1">
-          <v-icon size="16" class="mr-1">mdi-map-marker</v-icon>
-          {{ bookingData.selectedLocation?.name }}
-        </p>
-      </v-container>
-    </v-card>
-
-    <!-- Main Content Card -->
-    <v-card elevation="0" class="mb-6 g2a-rounded-border border">
+    <!-- Card -->
+    <v-card elevation="0" class="border g2a-rounded-border">
       <v-progress-linear
         color="warning"
         model-value="33"
@@ -30,234 +11,185 @@
         <span class="g2a-text-12 text-greyDark">Step 1 of 3</span>
         <span class="g2a-text-12 text-greyDark">Location & Dates</span>
       </div>
+
       <v-container>
-        <h3 class="g2a-title-3 mb-6">Select Location & Dates</h3>
+        <h3 class="my-4">Select Location & Dates</h3>
 
-        <!-- Island Selection -->
-        <div class="mb-8">
-          <p class="g2a-text-caption text-greyDark g2a-text-bold-600 mb-4">
-            ISLAND
-          </p>
-          <v-row>
-            <v-col
-              cols="12"
-              sm="6"
-              md="4"
-              v-for="location in locationData.locations"
-              :key="location.id"
+        <!-- Locations -->
+        <v-row class="my-2">
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+            v-for="location in locationData.locations"
+            :key="location.id"
+          >
+            <v-card
+              elevation="0"
+              class="cursor-pointer pa-4 h-100 d-flex flex-column justify-center"
+              :style="cardStyle(location)"
+              @click="selectLocation(location)"
             >
-              <v-card
-                :outlined="bookingData.selectedLocation?.id !== location.id"
-                class="cursor-pointer g2a-rounded-border"
-                min-height="80"
-                max-height="80"
-                :style="{
-                  borderColor:
-                    bookingData.selectedLocation?.id === location.id
-                      ? '#FF8C00'
-                      : '#dde2e4',
-                  borderWidth:
-                    bookingData.selectedLocation?.id === location.id
-                      ? '2px'
-                      : '1px',
-                  backgroundColor:
-                    bookingData.selectedLocation?.id === location.id
-                      ? '#FFF3E0'
-                      : '#FFFFFF',
-                }"
-                @click="selectLocation(location)"
-                elevation="0"
+              <p class="font-weight-bold text-center">
+                {{ location.name }}
+              </p>
+              <p
+                v-if="selectedLocation?.name === location.name"
+                class="text-warning text-center mt-2"
               >
-                <v-container class="text-center">
-                  <p
-                    class="g2a-text-bold-600"
-                    :class="
-                      bookingData.selectedLocation?.id === location.id
-                        ? 'text-red'
-                        : 'text-greyDark'
-                    "
-                  >
-                    {{ location.name }}
-                  </p>
-                  <!-- <p class="g2a-text-12 text-greyDark mt-2">
-                    ₹{{ location.dailyRate }}/day
-                  </p> -->
-                  <span
-                    v-if="bookingData.selectedLocation?.id === location.id"
-                    class="g2a-text-12 align-center g2a-text-bold-600 mt-2 text-warning"
-                  >
-                    <v-icon size="14" class="mr-1">mdi-check-circle</v-icon
-                    >Selected
-                  </span>
-                </v-container>
-              </v-card>
-            </v-col>
-          </v-row>
-        </div>
-
-        <!-- Planning Ahead Alert -->
+                <v-icon size="14">mdi-check-circle</v-icon>
+                Selected
+              </p>
+            </v-card>
+          </v-col>
+        </v-row>
         <v-alert
-          type="info"
-          :icon="false"
           class="my-2"
-          color="primary"
-          text-color="#29339B"
-          border="start"
+          type="info"
           variant="tonal"
+          border="start"
+          v-for="(data, index) in productInfo?.pickupDropMessages"
+          :key="index"
         >
-          <div class="d-flex align-center">
-            <v-icon color="primary" size="20" class="mr-3"
-              >mdi-clock-outline</v-icon
-            >
-            <span class="g2a-text-14"
-              ><strong>Planning ahead?</strong> Bookings must be made at least
-              48 hours in advance.</span
-            >
-          </div>
+          {{ data }}
         </v-alert>
-
-        <!-- Date Selection -->
-        <v-row class="my-4">
+        <!-- Dates -->
+        <v-row class="my-2">
           <v-col cols="12" md="6">
-            <p class="g2a-text-caption text-greyDark g2a-text-bold-600 mb-2">
-              PICKUP DATE
-            </p>
+            <p class="text-caption">PICKUP DATE</p>
             <v-text-field
-              v-model="bookingData.pickupDate"
+              v-model="pickupDate"
               type="date"
               variant="outlined"
-              density="comfortable"
-              hide-details="auto"
               :min="minDate"
-              class="custom-border"
               @update:model-value="validateDates"
             />
           </v-col>
+
           <v-col cols="12" md="6">
-            <p class="g2a-text-caption text-greyDark g2a-text-bold-600 mb-2">
-              RETURN DATE
-            </p>
+            <p class="text-caption">RETURN DATE</p>
             <v-text-field
-              v-model="bookingData.returnDate"
+              v-model="returnDate"
               type="date"
               variant="outlined"
-              density="comfortable"
-              hide-details="auto"
-              :min="bookingData.pickupDate || minDate"
-              class="custom-border"
+              :min="pickupDate || minDate"
               @update:model-value="validateDates"
             />
           </v-col>
         </v-row>
 
-        <!-- Operational Hours -->
-        <v-card
-          elevation="0"
-          class="pa-4 mb-4 g2a-rounded-border bg-background"
-        >
-          <p class="g2a-text-caption text-greyDark mb-2">
-            Operational Hours (Peak Season)
-          </p>
-          <p class="g2a-text-14 g2a-text-bold-600">
-            Pickup/Dropoff: 08:00 AM - 05:00 PM
-          </p>
-        </v-card>
+        <v-alert>
+          <div class="g2a-text-bold-600">Operational Hours (Peak Season)</div>
+          <div>
+            Pickup/Dropoff: {{ bookingData.selectedLocation?.timings.season }}
+          </div>
+        </v-alert>
       </v-container>
-      <v-divider> </v-divider>
-      <v-alert
-        :icon="false"
-        color="background"
-        text-color="grey"
-        density="compact"
-      >
-        <div class="d-flex align-center justify-space-between w-100">
-          <v-btn
-            variant="text"
-            color="#999999"
-            size="large"
-            @click="goBack"
-            class="px-2"
-          >
-            <v-icon start>mdi-arrow-left</v-icon>
-            BACK
-          </v-btn>
 
-          <v-btn
-            color="warning"
-            rounded="lg"
-            size="large"
-            :disabled="!isStep1Valid"
-            @click="continueToStep2"
-          >
-            Continue
-            <v-icon end>mdi-arrow-right</v-icon>
-          </v-btn>
-        </div>
-      </v-alert>
+      <v-divider />
+
+      <!-- Footer -->
+      <div class="d-flex align-center justify-space-between w-100 px-6 py-4">
+        <v-btn variant="text" disabled>
+          <v-icon start>mdi-arrow-left</v-icon>
+          Back
+        </v-btn>
+
+        <v-btn
+          color="warning"
+          rounded="lg"
+          size="large"
+          :disabled="!isValid"
+          @click="continueNext"
+        >
+          Continue
+          <v-icon end>mdi-arrow-right</v-icon>
+        </v-btn>
+      </div>
     </v-card>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, computed, watch } from "vue";
 import moment from "moment";
 
+/* -------------------- PROPS -------------------- */
+
 const props = defineProps({
-  bookingData: {
-    type: Object,
-    required: true,
-  },
-  locationData: {
-    type: Object,
-    required: true,
-  },
+  productInfo: Object,
+  bookingData: Object,
+  locationData: Object,
 });
 
-const emit = defineEmits(["update-booking", "next-step"]);
+const emit = defineEmits(["update", "next-step"]);
 
-const minDate = computed(() => {
-  return moment().add(2, "days").format("YYYY-MM-DD");
+/* -------------------- LOCAL STATE -------------------- */
+
+const selectedLocation = ref(props.bookingData.selectedLocation);
+const pickupDate = ref(props.bookingData.pickupDate);
+const returnDate = ref(props.bookingData.returnDate);
+
+/* -------------------- COMPUTED -------------------- */
+
+const minDate = computed(() => moment().add(2, "days").format("YYYY-MM-DD"));
+
+const isValid = computed(() => {
+  return selectedLocation.value && pickupDate.value && returnDate.value;
 });
 
-const isStep1Valid = computed(() => {
-  return (
-    props.bookingData.selectedLocation &&
-    props.bookingData.pickupDate &&
-    props.bookingData.returnDate
-  );
+/* -------------------- METHODS -------------------- */
+
+const cardStyle = (location) => ({
+  border:
+    selectedLocation.value?.name === location.name
+      ? "2px solid #FF8C00"
+      : "1px solid #dde2e4",
+  background:
+    selectedLocation.value?.name === location.name ? "#FFF3E0" : "#FFFFFF",
 });
+
+const emitUpdate = () => {
+  emit("update", {
+    selectedLocation: selectedLocation.value,
+    pickupDate: pickupDate.value,
+    returnDate: returnDate.value,
+  });
+};
 
 const selectLocation = (location) => {
-  emit("update-booking", { selectedLocation: location });
+  selectedLocation.value = location;
+  emitUpdate();
 };
 
 const validateDates = () => {
-  if (props.bookingData.pickupDate && props.bookingData.returnDate) {
-    const pickup = moment(props.bookingData.pickupDate);
-    const dropoff = moment(props.bookingData.returnDate);
-    if (dropoff.isBefore(pickup)) {
-      emit("update-booking", { returnDate: "" });
+  if (pickupDate.value && returnDate.value) {
+    if (moment(returnDate.value).isBefore(moment(pickupDate.value))) {
+      returnDate.value = "";
     }
   }
+  emitUpdate();
 };
 
-const continueToStep2 = () => {
-  if (isStep1Valid.value) {
-    emit("next-step");
-  }
+const continueNext = () => {
+  if (isValid.value) emit("next-step");
 };
 
-const goBack = () => {
-  // Can add history navigation here
-};
+/* -------------------- SYNC FROM PARENT -------------------- */
+
+watch(
+  () => props.bookingData,
+  (val) => {
+    selectedLocation.value = val.selectedLocation;
+    pickupDate.value = val.pickupDate;
+    returnDate.value = val.returnDate;
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>
 .cursor-pointer {
   cursor: pointer;
-}
-
-.w-100 {
-  width: 100%;
 }
 </style>

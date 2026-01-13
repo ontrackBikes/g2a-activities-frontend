@@ -1,39 +1,18 @@
 <template>
   <div>
-    <!-- Dynamic header with selected location and cost -->
-    <v-card class="mb-6" elevation="0">
-      <v-container>
-        <v-chip
-          size="small"
-          color="warning"
-          class="g2a-text-12 g2a-text-bold-700"
-          >VEHICLE RENTAL</v-chip
-        >
-        <h2 class="g2a-title-1 mt-2">
-          Scooty Rental - {{ bookingData.selectedLocation?.name }}
-        </h2>
-        <p class="text-greyDark g2a-text-14 mt-1">
-          <v-icon size="16" class="mr-1">mdi-map-marker</v-icon>
-          {{ bookingData.selectedLocation?.name }}
-        </p>
-      </v-container>
-    </v-card>
-
     <!-- Main Content Card -->
     <v-card elevation="0" class="mb-6 g2a-rounded-border border">
-      <v-progress-linear
-        color="warning"
-        model-value="100"
-        :height="6"
-      ></v-progress-linear>
+      <v-progress-linear color="warning" model-value="100" :height="6" />
+
       <div class="d-flex align-center justify-space-between px-4 mt-4">
         <span class="g2a-text-12 text-greyDark">Step 3 of 3</span>
         <span class="g2a-text-12 text-greyDark">Payment</span>
       </div>
+
       <v-container>
         <h3 class="g2a-title-3 mb-8">Review & Pay</h3>
 
-        <!-- Guest Details Section -->
+        <!-- Guest Details -->
         <div class="mb-8">
           <p class="g2a-text-bold-600 g2a-text-16 mb-6 text-greyDark">
             GUEST DETAILS
@@ -42,35 +21,34 @@
           <v-row class="mb-4">
             <v-col cols="12" sm="3">
               <v-select
-                v-model="guestDetails.title"
+                v-model="customer.title"
                 :items="['Mr', 'Mrs', 'Ms', 'Dr']"
                 label="Title"
                 variant="outlined"
                 density="comfortable"
-                class="custom-border"
-                @update:model-value="updateGuestDetails"
+                @update:model-value="emitCustomer"
               />
             </v-col>
+
             <v-col cols="12" sm="4">
               <v-text-field
-                v-model="guestDetails.firstName"
+                v-model="customer.firstName"
                 label="First Name"
                 variant="outlined"
                 density="comfortable"
-                class="custom-border"
-                :rules="[(v) => !!v || 'First name is required']"
-                @update:model-value="updateGuestDetails"
+                :rules="[(v) => !!v || 'Required']"
+                @update:model-value="emitCustomer"
               />
             </v-col>
+
             <v-col cols="12" sm="5">
               <v-text-field
-                v-model="guestDetails.lastName"
+                v-model="customer.lastName"
                 label="Last Name"
                 variant="outlined"
                 density="comfortable"
-                class="custom-border"
-                :rules="[(v) => !!v || 'Last name is required']"
-                @update:model-value="updateGuestDetails"
+                :rules="[(v) => !!v || 'Required']"
+                @update:model-value="emitCustomer"
               />
             </v-col>
           </v-row>
@@ -78,27 +56,26 @@
           <v-row class="mb-4">
             <v-col cols="12" sm="4">
               <v-select
-                v-model="guestDetails.countryCode"
+                v-model="customer.countryCode"
                 :items="countryCodes"
                 label="Country Code"
                 variant="outlined"
                 density="comfortable"
-                class="custom-border"
-                @update:model-value="updateGuestDetails"
+                @update:model-value="emitCustomer"
               />
             </v-col>
+
             <v-col cols="12" sm="8">
               <v-text-field
-                v-model="guestDetails.mobileNumber"
+                v-model="customer.mobileNumber"
                 label="Mobile Number"
                 variant="outlined"
                 density="comfortable"
-                class="custom-border"
                 :rules="[
-                  (v) => !!v || 'Mobile number is required',
-                  (v) => /^[0-9]{10}$/.test(v) || 'Enter valid 10-digit number',
+                  (v) => !!v || 'Required',
+                  (v) => /^[0-9]{10}$/.test(v) || 'Invalid number',
                 ]"
-                @update:model-value="updateGuestDetails"
+                @update:model-value="emitCustomer"
               />
             </v-col>
           </v-row>
@@ -106,17 +83,16 @@
           <v-row class="mb-4">
             <v-col cols="12">
               <v-text-field
-                v-model="guestDetails.email"
-                label="Email Address"
+                v-model="customer.email"
+                label="Email"
                 type="email"
                 variant="outlined"
                 density="comfortable"
-                class="custom-border"
                 :rules="[
-                  (v) => !!v || 'Email is required',
-                  (v) => /.+@.+\..+/.test(v) || 'Enter valid email',
+                  (v) => !!v || 'Required',
+                  (v) => /.+@.+\..+/.test(v) || 'Invalid email',
                 ]"
-                @update:model-value="updateGuestDetails"
+                @update:model-value="emitCustomer"
               />
             </v-col>
           </v-row>
@@ -124,98 +100,90 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                v-model="guestDetails.alternativeMobile"
+                v-model="customer.alternativeMobile"
                 label="Alternate Mobile (Optional)"
                 variant="outlined"
                 density="comfortable"
-                class="custom-border"
-                @update:model-value="updateGuestDetails"
+                @update:model-value="emitCustomer"
               />
             </v-col>
           </v-row>
         </div>
 
-        <!-- Payment Breakdown Section -->
+        <!-- Payment Modes -->
         <v-card
           elevation="0"
           class="pa-6 mb-8 g2a-rounded-border"
-          :style="{
-            backgroundColor: '#FFF9E6',
-            borderLeft: '4px solid #FFB84D',
-          }"
+          style="background: #fff9e6; border-left: 4px solid #ffb84d"
         >
-          <p class="g2a-text-caption text-greyDark mb-6">PAYMENT BREAKDOWN</p>
+          <p class="g2a-text-caption text-greyDark mb-6">PAYMENT MODES</p>
 
-          <v-row align="center" class="mb-4">
-            <v-col>
-              <p class="g2a-text-bold-600">Pay Now</p>
-              <p class="g2a-text-14 text-greyDark">Secure online payment</p>
-            </v-col>
-            <v-col align="end">
-              <v-chip
-                color="#FF8C00"
-                text-color="white"
-                size="small"
-                class="mr-3"
-                >TO RESERVE</v-chip
-              >
-              <span
-                class="g2a-text-bold-700"
-                style="font-size: 18px; color: #ff8c00"
-                >₹{{ payNowAmount }}</span
-              >
-            </v-col>
-          </v-row>
+          <v-radio-group v-model="paymentType">
+            <v-row
+              no-gutters
+              v-for="(mode, i) in paymentModes"
+              :key="i"
+              class="mb-4 cursor-pointer"
+              align="center"
+              @click="paymentType = mode.paymentType"
+            >
+              <v-col cols="9">
+                <div class="d-flex">
+                  <div>
+                    <v-radio :value="mode.paymentType" />
+                  </div>
+                  <div>
+                    <p class="g2a-text-bold-600 mt-1">{{ mode.label }}</p>
+                    <p class="g2a-text-14 text-greyDark">
+                      Secure online payment
+                    </p>
+                  </div>
+                </div>
+              </v-col>
+
+              <v-col align="end">
+                <!-- <v-chip
+                  color="#FF8C00"
+                  size="small"
+                  class="mr-3"
+                  text-color="white"
+                >
+                  TO RESERVE
+                </v-chip> -->
+                <span
+                  class="g2a-text-bold-700"
+                  style="font-size: 18px; color: #ff8c00"
+                >
+                  ₹{{ mode.amount * quantity * duration }}
+                </span>
+              </v-col>
+            </v-row>
+          </v-radio-group>
 
           <v-divider class="my-4" />
 
-          <v-row align="center">
-            <v-col>
-              <p class="g2a-text-bold-600">Pay after confirmation</p>
-            </v-col>
-            <v-col align="end">
-              <span class="g2a-text-16 text-greyDark"
-                >₹{{ payLaterAmount }}</span
-              >
-            </v-col>
-          </v-row>
-
-          <p class="g2a-text-14 text-greyDark mt-6 mb-0">
+          <p class="g2a-text-14 text-greyDark">
             By clicking Pay, you agree to the
-            <a href="#" style="color: #ff8c00; text-decoration: none"
-              >Terms of Service</a
-            >. Cancellation allowed up to 48hrs before pickup.
+            <a href="#" style="color: #ff8c00">Terms of Service</a>.
           </p>
         </v-card>
       </v-container>
 
-      <v-divider> </v-divider>
-      <v-alert
-        :icon="false"
-        color="background"
-        text-color="grey"
-        density="compact"
-      >
-        <div class="d-flex align-center justify-space-between w-100">
-          <v-btn
-            variant="text"
-            color="#999999"
-            size="large"
-            @click="goBack"
-            class="px-2"
-          >
-            <v-icon start>mdi-arrow-left</v-icon>
-            BACK
+      <v-divider />
+
+      <v-alert color="background" density="compact" :icon="false">
+        <div class="d-flex justify-space-between align-center w-100">
+          <v-btn variant="text" color="#999" @click="goBack">
+            <v-icon start>mdi-arrow-left</v-icon> BACK
           </v-btn>
 
           <v-btn
             color="warning"
             rounded="lg"
             size="large"
-            :disabled="!isStep3Valid"
+            :disabled="!isStep3Valid || !paymentType"
             @click="processPayment"
           >
-            <v-icon left>mdi-check</v-icon>
             Pay ₹{{ payNowAmount }}
           </v-btn>
         </div>
@@ -225,64 +193,71 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import moment from "moment";
+import { ref, computed, watch } from "vue";
 
 const props = defineProps({
-  bookingData: {
-    type: Object,
-    required: true,
-  },
-  rentalCost: {
-    type: Number,
-    required: true,
-  },
+  bookingData: Object,
+  rentalCost: Number,
 });
 
-const emit = defineEmits(["update-booking", "prev-step"]);
+const emit = defineEmits(["update", "prev-step"]);
 
-const countryCodes = [
-  "+91 (India)",
-  "+1 (USA)",
-  "+44 (UK)",
-  "+61 (Australia)",
-  "+81 (Japan)",
-];
+const countryCodes = ["+91 (India)", "+1 (USA)", "+44 (UK)"];
 
-const guestDetails = ref(props.bookingData.guestDetails);
+const customer = ref({ ...props.bookingData.customer });
 
-const payNowAmount = computed(() => {
-  return Math.floor(props.rentalCost / 3);
+watch(customer, () => emit("update", { customer: { ...customer.value } }), {
+  deep: true,
 });
 
-const payLaterAmount = computed(() => {
-  return props.rentalCost - payNowAmount.value;
-});
+const paymentType = ref(props.bookingData.paymentType || null);
+watch(paymentType, (v) => emit("update", { paymentType: v }));
 
-const isStep3Valid = computed(() => {
+const duration = computed(() => {
+  if (!props.bookingData.pickupDate || !props.bookingData.returnDate) return 1;
   return (
-    guestDetails.value.firstName &&
-    guestDetails.value.lastName &&
-    guestDetails.value.mobileNumber &&
-    guestDetails.value.email &&
-    /^[0-9]{10}$/.test(guestDetails.value.mobileNumber) &&
-    /.+@.+\..+/.test(guestDetails.value.email)
+    moment(props.bookingData.returnDate).diff(
+      moment(props.bookingData.pickupDate),
+      "days"
+    ) || 1
   );
 });
 
-const updateGuestDetails = () => {
-  emit("update-booking", { guestDetails: { ...guestDetails.value } });
-};
+const quantity = computed(() => props.bookingData.quantity || 1);
+
+const payNowAmount = computed(() => {
+  if (!paymentType.value) return 0;
+
+  const mode = paymentModes.value.find(
+    (m) => m.paymentType === paymentType.value
+  );
+
+  if (!mode) return 0;
+
+  return mode.amount * quantity.value * duration.value;
+});
+
+const isStep3Valid = computed(
+  () =>
+    customer.value.firstName &&
+    customer.value.lastName &&
+    /^[0-9]{10}$/.test(customer.value.mobileNumber) &&
+    /.+@.+\..+/.test(customer.value.email)
+);
+
+const paymentModes = computed(
+  () => props.bookingData.selectedLocation?.paymentModes || []
+);
+
+const emitCustomer = () => {};
 
 const processPayment = () => {
-  if (isStep3Valid.value) {
-    alert("Payment processed! Booking confirmed.");
-    console.log("Complete Booking Data:", props.bookingData);
-  }
+  console.log("FINAL BOOKING:", props.bookingData);
+  alert("Payment initiated");
 };
 
-const goBack = () => {
-  emit("prev-step");
-};
+const goBack = () => emit("prev-step");
 </script>
 
 <style scoped>
