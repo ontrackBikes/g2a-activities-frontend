@@ -86,7 +86,7 @@ const booking = ref({
   pickup: null,
   drop: null,
   pickupHotelName: null,
-  dropoffHotelName: null,
+  dropHotelName: null,
   customer: {
     title: "",
     firstName: "",

@@ -273,8 +273,8 @@ const processPayment = async () => {
       dropType: props.bookingData.dropType,
       pickup: props.bookingData.pickup,
       drop: props.bookingData.drop,
-      dropoffHotelName: props.bookingData.dropoffHotelName,
-      pickupHotelName: props.bookingData.pickupHotelName,
+      dropHotelName: props.bookingData.dropHotelName || "",
+      pickupHotelName: props.bookingData.pickupHotelName || "",
       customer: {
         ...customer.value,
       },

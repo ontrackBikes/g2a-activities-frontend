@@ -223,7 +223,7 @@
 
             <v-text-field
               v-if="dropType === 'hotel'"
-              v-model="dropoffHotelName"
+              v-model="dropHotelName"
               label="Hotel Name"
               class="px-4 my-4"
               variant="outlined"
@@ -277,7 +277,7 @@ const selectedPickupPoint = ref(props.bookingData.pickup || null);
 const pickupHotelName = ref(props.bookingData.pickupHotelName || "");
 
 const selectedDropPoint = ref(props.bookingData.drop || null);
-const dropoffHotelName = ref(props.bookingData.dropoffHotelName || "");
+const dropHotelName = ref(props.bookingData.dropHotelName || "");
 
 const pickupAndDropPoints = ref([]);
 
@@ -303,7 +303,7 @@ watch(selectedPickupPoint, (v) => emit("update", { pickup: v }));
 watch(pickupHotelName, (v) => emit("update", { pickupHotelName: v }));
 
 watch(selectedDropPoint, (v) => emit("update", { drop: v }));
-watch(dropoffHotelName, (v) => emit("update", { dropoffHotelName: v }));
+watch(dropHotelName, (v) => emit("update", { dropHotelName: v }));
 
 // QUANTITY
 const increaseQuantity = () => {
@@ -327,7 +327,7 @@ const isStep2Valid = computed(() => {
 
   if (dropType.value === "self-drop" && !selectedDropPoint.value) return false;
 
-  if (dropType.value === "hotel" && !dropoffHotelName.value) return false;
+  if (dropType.value === "hotel" && !dropHotelName.value) return false;
 
   return true;
 });
