@@ -174,7 +174,7 @@ const pickupDisplay = computed(() => {
 });
 
 const dropoffDisplay = computed(() => {
-  if (props.bookingData.dropoffOption === "self-dropoff") {
+  if (props.bookingData.dropoffOption === "self-drop") {
     return "Self Dropoff";
   }
   return "Hotel Collection";

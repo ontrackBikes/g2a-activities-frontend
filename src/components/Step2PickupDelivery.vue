@@ -60,25 +60,34 @@
 
       <!-- PICKUP -->
       <section class="mb-10">
-        <p class="g2a-text-bold-600 mb-3">GETTING THE VEHICLE</p>
+        <div class="g2a-text-bold-600 mb-3 d-flex align-center">
+          <v-icon color="warning" class="mr-2">mdi-arrow-right-circle</v-icon>
+          <span class="text-blackLight1">GETTING THE VEHICLE</span>
+        </div>
 
         <v-radio-group v-model="pickupType">
           <!-- SELF PICKUP -->
           <v-card
-            class="pa-4 mb-3 g2a-rounded-border"
+            class="mb-3 g2a-rounded-border"
             variant="outlined"
             @click="pickupType = 'self-pickup'"
             :class="{ active: pickupType === 'self-pickup' }"
+            :style="cardStyle('self-pickup')"
           >
-            <div class="d-flex align-center">
-              <v-radio value="self-pickup" />
+            <div class="d-flex align-center px-4 my-4">
+              <v-radio value="self-pickup" color="warning" />
               <div class="ml-3">
-                <p class="g2a-text-bold-600">Self Pickup</p>
-                <p class="g2a-text-14 text-greyDark">
+                <div class="g2a-text-bold-600">Self Pickup</div>
+                <div class="g2a-text-12 text-greyDark">
                   Collect from our outlet (Free)
-                </p>
+                </div>
               </div>
             </div>
+
+            <v-divider
+              v-if="pickupType === 'self-pickup'"
+              color="error"
+            ></v-divider>
 
             <v-select
               v-if="pickupType === 'self-pickup'"
@@ -87,38 +96,50 @@
               item-title="name"
               item-value="name"
               label="Select Outlet"
-              class="mt-3"
+              class="px-4 my-4"
+              variant="outlined"
+              density="compact"
+              hide-details="auto"
             />
           </v-card>
 
           <!-- HOTEL DELIVERY -->
           <v-card
-            class="pa-4 g2a-rounded-border"
+            class="g2a-rounded-border"
             variant="outlined"
-            @click="pickupType = 'hotel-delivery'"
-            :class="{ active: pickupType === 'hotel-delivery' }"
+            @click="pickupType = 'hotel'"
+            :class="{ active: pickupType === 'hotel' }"
+            :style="cardStyle('hotel')"
           >
-            <div class="d-flex align-center">
-              <v-radio value="hotel-delivery" />
+            <div class="d-flex align-center px-4 my-4">
+              <v-radio value="hotel" color="warning" />
               <div class="ml-3">
-                <p class="g2a-text-bold-600">Hotel Delivery</p>
-                <p class="g2a-text-14 text-greyDark">Drop at your hotel</p>
+                <div class="g2a-text-bold-600">Hotel Delivery</div>
+                <div class="g2a-text-12 text-greyDark">Drop at your hotel</div>
               </div>
             </div>
 
-            <v-alert
-              v-if="pickupType === 'hotel-delivery'"
-              type="info"
-              variant="tonal"
-              class="my-3"
-            >
-              Free within city limits. Outside → ₹100 approx.
-            </v-alert>
+            <v-divider v-if="pickupType === 'hotel'" color="error"></v-divider>
+
+            <div class="px-4 my-4">
+              <v-alert
+                v-if="pickupType === 'hotel'"
+                type="info"
+                variant="tonal"
+                class="py-2"
+              >
+                Free within city limits. Outside → ₹100 approx.
+              </v-alert>
+            </div>
 
             <v-text-field
-              v-if="pickupType === 'hotel-delivery'"
+              v-if="pickupType === 'hotel'"
               v-model="pickupHotelName"
               label="Hotel Name"
+              class="px-4 my-4"
+              variant="outlined"
+              density="compact"
+              hide-details="auto"
             />
           </v-card>
         </v-radio-group>
@@ -126,23 +147,34 @@
 
       <!-- DROP -->
       <section>
-        <p class="g2a-text-bold-600 mb-3">RETURNING THE VEHICLE</p>
+        <div class="g2a-text-bold-600 mb-3 d-flex align-center">
+          <v-icon color="warning" class="mr-2">mdi-arrow-left-circle</v-icon>
+          <span class="text-blackLight1">RETURNING THE VEHICLE</span>
+        </div>
 
         <v-radio-group v-model="dropType">
           <!-- SELF DROP -->
           <v-card
-            class="pa-4 mb-3 g2a-rounded-border"
+            class="mb-3 g2a-rounded-border"
             variant="outlined"
             @click="dropType = 'self-drop'"
             :class="{ active: dropType === 'self-drop' }"
+            :style="dropCardStyle('self-drop')"
           >
-            <div class="d-flex align-center">
-              <v-radio value="self-drop" />
+            <div class="d-flex align-center px-4 my-4">
+              <v-radio value="self-drop" color="warning" />
               <div class="ml-3">
-                <p class="g2a-text-bold-600">Self Drop</p>
-                <p class="g2a-text-14 text-greyDark">Return to outlet (Free)</p>
+                <div class="g2a-text-bold-600">Self Drop</div>
+                <div class="g2a-text-12 text-greyDark">
+                  Return to outlet (Free)
+                </div>
               </div>
             </div>
+
+            <v-divider
+              v-if="dropType === 'self-drop'"
+              color="error"
+            ></v-divider>
 
             <v-select
               v-if="dropType === 'self-drop'"
@@ -151,40 +183,52 @@
               item-title="name"
               item-value="name"
               label="Select Outlet"
-              class="mt-3"
+              class="px-4 my-4"
+              variant="outlined"
+              density="compact"
+              hide-details="auto"
             />
           </v-card>
 
           <!-- HOTEL PICKUP -->
           <v-card
-            class="pa-4 g2a-rounded-border"
+            class="g2a-rounded-border"
             variant="outlined"
-            @click="dropType = 'hotel-pickup'"
-            :class="{ active: dropType === 'hotel-pickup' }"
+            @click="dropType = 'hotel'"
+            :class="{ active: dropType === 'hotel' }"
+            :style="dropCardStyle('hotel')"
           >
-            <div class="d-flex align-center">
-              <v-radio value="hotel-pickup" />
+            <div class="d-flex align-center px-4 my-4">
+              <v-radio value="hotel" color="warning" />
               <div class="ml-3">
-                <p class="g2a-text-bold-600">Hotel Pickup</p>
-                <p class="g2a-text-14 text-greyDark">
+                <div class="g2a-text-bold-600">Hotel Pickup</div>
+                <div class="g2a-text-12 text-greyDark">
                   We collect from your hotel
-                </p>
+                </div>
               </div>
             </div>
 
-            <v-alert
-              v-if="dropType === 'hotel-pickup'"
-              type="info"
-              variant="tonal"
-              class="my-3"
-            >
-              Free within city limits. Outside → ₹100 approx.
-            </v-alert>
+            <v-divider v-if="dropType === 'hotel'" color="error"></v-divider>
+
+            <div class="px-4 my-4">
+              <v-alert
+                v-if="dropType === 'hotel'"
+                type="info"
+                variant="tonal"
+                class="py-2"
+              >
+                Free within city limits. Outside → ₹100 approx.
+              </v-alert>
+            </div>
 
             <v-text-field
-              v-if="dropType === 'hotel-pickup'"
+              v-if="dropType === 'hotel'"
               v-model="dropoffHotelName"
               label="Hotel Name"
+              class="px-4 my-4"
+              variant="outlined"
+              density="compact"
+              hide-details="auto"
             />
           </v-card>
         </v-radio-group>
@@ -194,17 +238,23 @@
     <!-- FOOTER -->
     <v-divider />
 
-    <v-card-actions class="justify-space-between">
-      <v-btn variant="text" @click="$emit('prev-step')">Back</v-btn>
+    <div class="d-flex align-center justify-space-between w-100 px-6 py-4">
+      <v-btn variant="text" @click="$emit('prev-step')">
+        <v-icon start>mdi-arrow-left</v-icon>
+        BACK
+      </v-btn>
 
       <v-btn
-        color="warning"
+        color="error"
+        rounded="lg"
+        size="large"
         :disabled="!isStep2Valid"
         @click="$emit('next-step')"
       >
-        Continue
+        <span class="g2a-text-bold-600">Continue</span>
+        <v-icon end>mdi-arrow-right</v-icon>
       </v-btn>
-    </v-card-actions>
+    </div>
   </v-card>
 </template>
 
@@ -256,8 +306,11 @@ watch(selectedDropPoint, (v) => emit("update", { drop: v }));
 watch(dropoffHotelName, (v) => emit("update", { dropoffHotelName: v }));
 
 // QUANTITY
-const increaseQuantity = () =>
-  emit("update", { quantity: props.bookingData.quantity + 1 });
+const increaseQuantity = () => {
+  if (props.bookingData.quantity < props.productInfo.maxQuantity) {
+    emit("update", { quantity: props.bookingData.quantity + 1 });
+  }
+};
 
 const decreaseQuantity = () => {
   if (props.bookingData.quantity > 1) {
@@ -270,14 +323,22 @@ const isStep2Valid = computed(() => {
   if (pickupType.value === "self-pickup" && !selectedPickupPoint.value)
     return false;
 
-  if (pickupType.value === "hotel-delivery" && !pickupHotelName.value)
-    return false;
+  if (pickupType.value === "hotel" && !pickupHotelName.value) return false;
 
   if (dropType.value === "self-drop" && !selectedDropPoint.value) return false;
 
-  if (dropType.value === "hotel-pickup" && !dropoffHotelName.value)
-    return false;
+  if (dropType.value === "hotel" && !dropoffHotelName.value) return false;
 
   return true;
+});
+
+const cardStyle = (type) => ({
+  border: pickupType.value === type ? "1px solid #FF6B36" : "1px solid #dde2e4",
+  background: pickupType.value === type ? "#FFF5F2" : "#FFFFFF",
+});
+
+const dropCardStyle = (type) => ({
+  border: dropType.value === type ? "1px solid #FF6B36" : "1px solid #dde2e4",
+  background: dropType.value === type ? "#FFF5F2" : "#FFFFFF",
 });
 </script>

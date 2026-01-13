@@ -37,6 +37,7 @@ export default createVuetify({
           darkGreen: "#006400",
           black: "#000",
           blackLight1: "#212121",
+          blackLight2: "#616161",
           grey: "#808080",
           greyLight: "#e1e1e1",
           greyDark: "#666666",

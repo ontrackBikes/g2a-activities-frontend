@@ -4,22 +4,20 @@
     <v-card elevation="0" class="mb-6 g2a-rounded-border border">
       <v-progress-linear color="warning" model-value="100" :height="6" />
 
-      <div class="d-flex align-center justify-space-between px-4 mt-4">
-        <span class="g2a-text-12 text-greyDark">Step 3 of 3</span>
-        <span class="g2a-text-12 text-greyDark">Payment</span>
+      <div class="d-flex justify-space-between px-4 mt-4">
+        <span class="g2a-text-13 text-grey">Step 3 of 3</span>
+        <span class="g2a-text-13 text-grey">Payment</span>
       </div>
 
       <v-container>
-        <h3 class="g2a-title-3 mb-8">Review & Pay</h3>
+        <div class="g2a-text-22 g2a-text-bold-600 my-2">Review & Pay</div>
 
         <!-- Guest Details -->
-        <div class="mb-8">
-          <p class="g2a-text-bold-600 g2a-text-16 mb-6 text-greyDark">
-            GUEST DETAILS
-          </p>
+        <div>
+          <span class="text-blackLight2 g2a-text-bold-600">GUEST DETAILS</span>
 
-          <v-row class="mb-4">
-            <v-col cols="12" sm="3">
+          <v-row class="my-2">
+            <v-col cols="12" sm="2">
               <v-select
                 v-model="customer.title"
                 :items="['Mr', 'Mrs', 'Ms', 'Dr']"
@@ -30,7 +28,7 @@
               />
             </v-col>
 
-            <v-col cols="12" sm="4">
+            <v-col cols="12" sm="5">
               <v-text-field
                 v-model="customer.firstName"
                 label="First Name"
@@ -104,6 +102,10 @@
                 label="Alternate Mobile (Optional)"
                 variant="outlined"
                 density="comfortable"
+                :rules="[
+                  (v) => !!v || 'Required',
+                  (v) => /^[0-9]{10}$/.test(v) || 'Invalid number',
+                ]"
                 @update:model-value="emitCustomer"
               />
             </v-col>
@@ -114,7 +116,7 @@
         <v-card
           elevation="0"
           class="pa-6 mb-8 g2a-rounded-border"
-          style="background: #fff9e6; border-left: 4px solid #ffb84d"
+          style="background: #e5dac8; border: 1px dashed #ffb84d"
         >
           <p class="g2a-text-caption text-greyDark mb-6">PAYMENT MODES</p>
 
@@ -142,10 +144,7 @@
               </v-col>
 
               <v-col align="end">
-                <span
-                  class="g2a-text-bold-700"
-                  style="font-size: 18px; color: #ff8c00"
-                >
+                <span class="g2a-text-bold-700 g2a-text-18 text-error">
                   ₹{{ mode.amount * quantity * duration }}
                 </span>
               </v-col>
@@ -156,7 +155,7 @@
 
           <p class="g2a-text-14 text-greyDark">
             By clicking Pay, you agree to the
-            <a href="#" style="color: #ff8c00">Terms of Service</a>.
+            <a href="#" class="text-error">Terms of Service</a>.
           </p>
         </v-card>
       </v-container>
@@ -170,17 +169,29 @@
           </v-btn>
 
           <v-btn
-            color="warning"
+            color="error"
             rounded="lg"
             size="large"
-            :disabled="!isStep3Valid || !paymentType"
+            :disabled="!isStep3Valid || !paymentType || loading"
             @click="processPayment"
+            :loading="loading"
           >
             Pay ₹{{ payNowAmount }}
           </v-btn>
         </div>
       </v-alert>
     </v-card>
+
+    <!-- error message  -->
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      top
+      right
+      timeout="4000"
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -192,6 +203,13 @@ import axios from "axios";
 const props = defineProps({
   bookingData: Object,
   rentalCost: Number,
+});
+
+const loading = ref(false);
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "error",
 });
 
 const emit = defineEmits(["update", "prev-step"]);
@@ -243,6 +261,7 @@ const isStep3Valid = computed(
 const emitCustomer = () => {};
 
 const processPayment = async () => {
+  loading.value = true;
   try {
     const payload = {
       locationName: props.bookingData.selectedLocation.name,
@@ -294,7 +313,15 @@ const processPayment = async () => {
     rzp.open();
   } catch (error) {
     console.error("Payment error:", error);
-    alert("Something went wrong during payment.");
+    snackbar.value = {
+      show: true,
+      message:
+        error.response.data.errors?.[0]?.message ||
+        "Something went wrong during payment.",
+      color: "error",
+    };
+  } finally {
+    loading.value = false;
   }
 };
 
