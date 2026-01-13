@@ -92,7 +92,7 @@ const booking = ref({
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    mobile: "",
   },
   paymentType: "full",
 });

@@ -67,7 +67,7 @@
 
             <v-col cols="12" sm="8">
               <v-text-field
-                v-model="customer.mobileNumber"
+                v-model="customer.mobile"
                 label="Mobile Number"
                 variant="outlined"
                 density="comfortable"
@@ -100,7 +100,7 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                v-model="customer.alternativeMobile"
+                v-model="customer.alternatePhone"
                 label="Alternate Mobile (Optional)"
                 variant="outlined"
                 density="comfortable"
@@ -142,14 +142,6 @@
               </v-col>
 
               <v-col align="end">
-                <!-- <v-chip
-                  color="#FF8C00"
-                  size="small"
-                  class="mr-3"
-                  text-color="white"
-                >
-                  TO RESERVE
-                </v-chip> -->
                 <span
                   class="g2a-text-bold-700"
                   style="font-size: 18px; color: #ff8c00"
@@ -195,6 +187,7 @@
 <script setup>
 import moment from "moment";
 import { ref, computed, watch } from "vue";
+import axios from "axios";
 
 const props = defineProps({
   bookingData: Object,
@@ -226,15 +219,16 @@ const duration = computed(() => {
 
 const quantity = computed(() => props.bookingData.quantity || 1);
 
+const paymentModes = computed(
+  () => props.bookingData.selectedLocation?.paymentModes || []
+);
+
 const payNowAmount = computed(() => {
   if (!paymentType.value) return 0;
-
   const mode = paymentModes.value.find(
     (m) => m.paymentType === paymentType.value
   );
-
   if (!mode) return 0;
-
   return mode.amount * quantity.value * duration.value;
 });
 
@@ -242,19 +236,66 @@ const isStep3Valid = computed(
   () =>
     customer.value.firstName &&
     customer.value.lastName &&
-    /^[0-9]{10}$/.test(customer.value.mobileNumber) &&
+    /^[0-9]{10}$/.test(customer.value.mobile) &&
     /.+@.+\..+/.test(customer.value.email)
-);
-
-const paymentModes = computed(
-  () => props.bookingData.selectedLocation?.paymentModes || []
 );
 
 const emitCustomer = () => {};
 
-const processPayment = () => {
-  console.log("FINAL BOOKING:", props.bookingData);
-  alert("Payment initiated");
+const processPayment = async () => {
+  try {
+    const payload = {
+      locationName: props.bookingData.selectedLocation.name,
+      startDate: props.bookingData.pickupDate,
+      endDate: props.bookingData.returnDate,
+      quantity: quantity.value,
+      paymentType: paymentType.value,
+      pickupType: props.bookingData.pickupType,
+      dropType: props.bookingData.dropType,
+      pickup: props.bookingData.pickup,
+      drop: props.bookingData.drop,
+      customer: {
+        ...customer.value,
+      },
+    };
+
+    const { data } = await axios.post(
+      "http://localhost:3000/api/order/bike-rentals/order",
+      payload
+    );
+
+    if (!data.success) {
+      alert(data.message || "Failed to create order");
+      return;
+    }
+
+    // Open Razorpay modal
+    const options = {
+      key: import.meta.env.VUE_APP_RAZORPAY_KEY_ID, // your Razorpay key
+      amount: data.payment.amount || payNowAmount.value * 100, // in paise
+      currency: "INR",
+      name: "Bike Rental",
+      description: `Booking #${data.orderId}`,
+      order_id: data.payment.id, // Razorpay order ID
+      handler(response) {
+        alert(
+          `Payment successful! Razorpay Payment ID: ${response.razorpay_payment_id}`
+        );
+      },
+      prefill: {
+        name: `${customer.value.firstName} ${customer.value.lastName}`,
+        email: customer.value.email,
+        contact: customer.value.mobileNumber,
+      },
+      theme: { color: "#ff8c00" },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (error) {
+    console.error("Payment error:", error);
+    alert("Something went wrong during payment.");
+  }
 };
 
 const goBack = () => emit("prev-step");

@@ -88,7 +88,7 @@
             <v-col cols="7">
               <p class="g2a-text-15">
                 Rental ({{ calculateDuration }}d x ₹{{
-                  bookingData.selectedLocation?.pricing.amount || 0
+                  bookingData.selectedLocation?.pricing?.amount || 0
                 }})
               </p>
             </v-col>
@@ -183,7 +183,7 @@ const dropoffDisplay = computed(() => {
 const rentalTotal = computed(() => {
   return (
     calculateDuration.value *
-    (props.bookingData.selectedLocation?.pricing.amount || 600) *
+    (props.bookingData.selectedLocation?.pricing?.amount || 600) *
     props.bookingData.quantity
   );
 });
