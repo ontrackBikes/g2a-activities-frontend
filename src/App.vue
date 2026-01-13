@@ -99,7 +99,7 @@ const booking = ref({
 const productInfo = ref({});
 const locationData = ref({ locations: [] });
 
-const currentStep = ref(3);
+const currentStep = ref(1);
 const stepComponents = {
   1: Step1LocationDates,
   2: Step2PickupDelivery,
