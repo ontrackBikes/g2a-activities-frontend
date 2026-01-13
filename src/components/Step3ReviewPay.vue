@@ -200,6 +200,8 @@ import moment from "moment";
 import { ref, computed, watch } from "vue";
 import axios from "axios";
 
+const rzp_key = import.meta.env.VITE_RAZORPAY_KEY_ID;
+
 const props = defineProps({
   bookingData: Object,
   rentalCost: Number,
@@ -292,7 +294,7 @@ const processPayment = async () => {
 
     // Open Razorpay modal
     const options = {
-      key: import.meta.env.VUE_APP_RAZORPAY_KEY_ID, // your Razorpay key
+      key: rzp_key, // your Razorpay key
       amount: data.payment.amount || payNowAmount.value * 100, // in paise
       currency: "INR",
       name: "Bike Rental",
