@@ -1,3 +1,4 @@
+// services/api.js
 import axios from "axios";
 
 const apiClient = axios.create({
@@ -8,7 +9,6 @@ const apiClient = axios.create({
   },
 });
 
-// Request interceptor for adding auth token if needed
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
@@ -20,7 +20,6 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor for handling errors globally
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -28,3 +27,5 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export default apiClient;

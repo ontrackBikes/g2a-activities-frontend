@@ -199,6 +199,7 @@
 import moment from "moment";
 import { ref, computed, watch } from "vue";
 import axios from "axios";
+import router from "@/router";
 
 const rzp_key = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
@@ -301,9 +302,10 @@ const processPayment = async () => {
       description: `Booking #${data.orderId}`,
       order_id: data.payment.id, // Razorpay order ID
       handler(response) {
-        alert(
+        console.log(
           `Payment successful! Razorpay Payment ID: ${response.razorpay_payment_id}`
         );
+        router.push(`/payment/status?order_id=${data.payment.id}`);
       },
       prefill: {
         name: `${customer.value.firstName} ${customer.value.lastName}`,

@@ -42,7 +42,13 @@
 
       <!-- QUANTITY -->
       <div class="mb-8">
-        <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4">QUANTITY</div>
+        <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4">
+          QUANTITY (Max
+          {{
+            bookingData?.selectedLocation?.maxQtyPerBooking ||
+            productInfo.maxQuantity
+          }})
+        </div>
         <div class="d-flex align-center">
           <v-btn icon variant="outlined" size="small" @click="decreaseQuantity">
             <v-icon>mdi-minus</v-icon>
@@ -307,7 +313,11 @@ watch(dropHotelName, (v) => emit("update", { dropHotelName: v }));
 
 // QUANTITY
 const increaseQuantity = () => {
-  if (props.bookingData.quantity < props.productInfo.maxQuantity) {
+  if (
+    props.bookingData.quantity <
+    (props.bookingData?.selectedLocation?.maxQtyPerBooking ||
+      props.productInfo.maxQuantity)
+  ) {
     emit("update", { quantity: props.bookingData.quantity + 1 });
   }
 };
