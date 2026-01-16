@@ -24,8 +24,8 @@ export default createVuetify({
           secondary: "#ffc107", // amber
           background: "#f5f5f5",
           surface: "#FAFAFA",
-          brandColor: "FFBB00",
-          brandColor2: "29339B",
+          brandColor: "#FFBB00",
+          brandColor2: "#29339B",
           error: "#FF6B36",
           successLight1: "#E2EDE2",
           successLight2: "#f0f6f0",

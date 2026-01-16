@@ -86,11 +86,11 @@
 
           <!-- Pending -->
           <template v-else>
-            <v-icon size="64" color="warning" class="mb-4">
+            <v-icon size="64" color="brandColor" class="mb-4">
               mdi-clock-outline
             </v-icon>
 
-            <h3 class="text-warning">Payment Pending</h3>
+            <h3 class="text-brandColor">Payment Pending</h3>
 
             <p class="text-medium-emphasis">
               We are waiting for confirmation from the bank

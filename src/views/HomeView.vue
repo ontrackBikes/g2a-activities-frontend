@@ -7,7 +7,7 @@
           <v-chip
             class="g2a-text-bold-600 text-uppercase"
             size="small"
-            color="warning"
+            color="brandColor"
             >{{ productInfo.label }}</v-chip
           >
           <div class="g2a-text-28 my-1 g2a-text-bold-600">
@@ -72,7 +72,7 @@ const booking = ref({
     email: "",
     mobile: "",
   },
-  paymentType: "full",
+  paymentType: "partial",
 });
 
 const productInfo = ref({});

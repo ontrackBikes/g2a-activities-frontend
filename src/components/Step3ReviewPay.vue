@@ -2,23 +2,26 @@
   <div>
     <!-- Main Content Card -->
     <v-card elevation="0" class="mb-6 g2a-rounded-border border">
-      <v-progress-linear color="warning" model-value="100" :height="6" />
-
-      <div class="d-flex justify-space-between px-4 mt-4">
-        <span class="g2a-text-13 text-grey">Step 3 of 3</span>
-        <span class="g2a-text-13 text-grey">Payment</span>
-      </div>
+      <v-progress-linear color="brandColor" model-value="100" :height="6" />
 
       <v-container>
+        <div class="d-flex justify-space-between">
+          <span class="g2a-text-13 text-grey">Step 3 of 3</span>
+          <span class="g2a-text-13 text-grey">Payment</span>
+        </div>
+
         <div class="g2a-text-22 g2a-text-bold-600 my-2">Review & Pay</div>
 
         <!-- Guest Details -->
-        <div>
-          <span class="text-blackLight2 g2a-text-bold-600">GUEST DETAILS</span>
 
-          <v-row class="my-2">
+        <div class="my-4">
+          <div class="my-4">
+            <p class="text-blackLight2 g2a-text-bold-600">Rider Details</p>
+          </div>
+          <v-row>
             <v-col cols="12" sm="2">
               <v-select
+                hide-details="auto"
                 v-model="customer.title"
                 :items="['Mr', 'Mrs', 'Ms', 'Dr']"
                 label="Title"
@@ -30,6 +33,7 @@
 
             <v-col cols="12" sm="5">
               <v-text-field
+                hide-details="auto"
                 v-model="customer.firstName"
                 label="First Name"
                 variant="outlined"
@@ -41,6 +45,7 @@
 
             <v-col cols="12" sm="5">
               <v-text-field
+                hide-details="auto"
                 v-model="customer.lastName"
                 label="Last Name"
                 variant="outlined"
@@ -51,9 +56,10 @@
             </v-col>
           </v-row>
 
-          <v-row class="mb-4">
+          <v-row>
             <v-col cols="12" sm="4">
               <v-select
+                hide-details="auto"
                 v-model="customer.countryCode"
                 :items="countryCodes"
                 label="Country Code"
@@ -65,6 +71,7 @@
 
             <v-col cols="12" sm="8">
               <v-text-field
+                hide-details="auto"
                 v-model="customer.mobile"
                 label="Mobile Number"
                 variant="outlined"
@@ -78,9 +85,10 @@
             </v-col>
           </v-row>
 
-          <v-row class="mb-4">
+          <v-row>
             <v-col cols="12">
               <v-text-field
+                hide-details="auto"
                 v-model="customer.email"
                 label="Email"
                 type="email"
@@ -98,6 +106,7 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
+                hide-details="auto"
                 v-model="customer.alternatePhone"
                 label="Alternate Mobile (Optional)"
                 variant="outlined"
@@ -113,12 +122,10 @@
         </div>
 
         <!-- Payment Modes -->
-        <v-card
-          elevation="0"
-          class="pa-6 mb-8 g2a-rounded-border"
-          style="background: #e5dac8; border: 1px dashed #ffb84d"
-        >
-          <p class="g2a-text-caption text-greyDark mb-6">PAYMENT MODES</p>
+        <v-card elevation="0" class="mt-4 g2a-rounded-border">
+          <div class="my-4">
+            <p class="text-blackLight2 g2a-text-bold-600">Payment Modes</p>
+          </div>
 
           <v-radio-group v-model="paymentType">
             <v-row
@@ -127,37 +134,39 @@
               :key="i"
               class="mb-4 cursor-pointer"
               align="center"
-              @click="paymentType = mode.paymentType"
             >
               <v-col cols="9">
                 <div class="d-flex">
                   <div>
-                    <v-radio :value="mode.paymentType" />
+                    <v-radio
+                      :value="mode.paymentType"
+                      :disabled="!mode.enabled"
+                    />
                   </div>
                   <div>
                     <p class="g2a-text-bold-600 mt-1">{{ mode.label }}</p>
                     <p class="g2a-text-14 text-greyDark">
-                      Secure online payment
+                      {{ mode.description || " Secure online payment" }}
                     </p>
                   </div>
                 </div>
               </v-col>
 
               <v-col align="end">
-                <span class="g2a-text-bold-700 g2a-text-18 text-error">
-                  ₹{{ mode.amount * quantity * duration }}
+                <span class="g2a-text-bold-700 g2a-text-18 text-darkGreen">
+                  ₹{{ mode.totalAmount }}
                 </span>
               </v-col>
             </v-row>
           </v-radio-group>
+        </v-card>
 
-          <v-divider class="my-4" />
-
+        <div>
           <p class="g2a-text-14 text-greyDark">
             By clicking Pay, you agree to the
-            <a href="#" class="text-error">Terms of Service</a>.
+            <a href="#" class="text-brandColor">terms of service</a>.
           </p>
-        </v-card>
+        </div>
       </v-container>
 
       <v-divider />
@@ -169,14 +178,15 @@
           </v-btn>
 
           <v-btn
-            color="error"
+            flat
+            color="brandColor"
             rounded="lg"
             size="large"
             :disabled="!isStep3Valid || !paymentType || loading"
             @click="processPayment"
             :loading="loading"
           >
-            Pay ₹{{ payNowAmount }}
+            Pay ₹{{ payNowAmountTotal }}
           </v-btn>
         </div>
       </v-alert>
@@ -240,19 +250,6 @@ const duration = computed(() => {
 
 const quantity = computed(() => props.bookingData.quantity || 1);
 
-const paymentModes = computed(
-  () => props.bookingData.selectedLocation?.paymentModes || []
-);
-
-const payNowAmount = computed(() => {
-  if (!paymentType.value) return 0;
-  const mode = paymentModes.value.find(
-    (m) => m.paymentType === paymentType.value
-  );
-  if (!mode) return 0;
-  return mode.amount * quantity.value * duration.value;
-});
-
 const isStep3Valid = computed(
   () =>
     customer.value.firstName &&
@@ -262,6 +259,81 @@ const isStep3Valid = computed(
 );
 
 const emitCustomer = () => {};
+
+const hotelDeliveryCharge = computed(() => {
+  const option = props.bookingData.selectedLocation?.deliveryOptions?.find(
+    (x) => x.type === props.bookingData.pickupType
+  );
+  return option?.onlineCharge || 0;
+});
+
+const hotelPickupCharge = computed(() => {
+  const option = props.bookingData.selectedLocation?.dropOptions?.find(
+    (x) => x.type === props.bookingData.dropType
+  );
+  return option?.onlineCharge || 0;
+});
+
+const rentalTotalCost = computed(() => {
+  const option = props.bookingData.selectedLocation?.paymentModes?.find(
+    (x) => x.paymentType === "full"
+  );
+  return option?.amount || 0;
+});
+
+const payNowAmount = computed(() => {
+  const option = props.bookingData.selectedLocation?.paymentModes?.find(
+    (x) => x.paymentType === props.bookingData.paymentType
+  );
+  return option?.amount || 0;
+});
+
+const rentalTotal = computed(() => {
+  return (
+    calculateDuration.value *
+      rentalTotalCost.value *
+      props.bookingData.quantity +
+    hotelDeliveryCharge.value +
+    hotelPickupCharge.value
+  );
+});
+
+const calculateDuration = computed(() => {
+  if (props.bookingData.pickupDate && props.bookingData.returnDate) {
+    const pickup = moment(props.bookingData.pickupDate);
+    const dropoff = moment(props.bookingData.returnDate);
+    return dropoff.diff(pickup, "days") || 1;
+  }
+  return 0;
+});
+
+const payNowAmountTotal = computed(() => {
+  return (
+    calculateDuration.value * payNowAmount.value * props.bookingData.quantity +
+    hotelDeliveryCharge.value +
+    hotelPickupCharge.value
+  );
+});
+
+const paymentModes = computed(() => {
+  const modes = props.bookingData.selectedLocation?.paymentModes || [];
+  const durationVal = calculateDuration.value || 1;
+  const quantityVal = props.bookingData.quantity || 1;
+
+  const deliveryCharge = hotelDeliveryCharge.value;
+  const dropCharge = hotelPickupCharge.value;
+
+  return modes.map((mode) => {
+    const base = mode.amount || 0;
+    const totalAmount =
+      base * quantityVal * durationVal + deliveryCharge + dropCharge;
+
+    return {
+      ...mode,
+      totalAmount,
+    };
+  });
+});
 
 const processPayment = async () => {
   loading.value = true;
@@ -322,6 +394,7 @@ const processPayment = async () => {
     snackbar.value = {
       show: true,
       message:
+        error.response.data.message ||
         error.response.data.errors?.[0]?.message ||
         "Something went wrong during payment.",
       color: "error",

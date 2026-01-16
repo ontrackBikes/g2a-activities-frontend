@@ -5,14 +5,11 @@
       <v-container>
         <v-row align="center" class="justify-space-between">
           <v-col cols="auto">
-            <div class="d-flex align-center">
-              <span class="g2a-text-22 g2a-text-bold-800 text-error">Go2</span>
-              <span class="g2a-text-22 g2a-text-bold-800">Andaman</span>
-            </div>
+            <v-img src="/public/assets/g2a_logo.png" width="180px"></v-img>
           </v-col>
           <v-col cols="auto">
             <span class="g2a-text-14 text-grey">Secure Booking</span>
-            <v-icon size="20" class="ml-2 text-green">mdi-lock</v-icon>
+            <v-icon size="20" class="ml-2 text-darkGreen">mdi-lock</v-icon>
           </v-col>
         </v-row>
       </v-container>
