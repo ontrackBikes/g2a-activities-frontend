@@ -244,11 +244,39 @@
 <script setup>
 import axios from "axios";
 import { ref, computed, watch, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 const props = defineProps({
   bookingData: Object,
   productInfo: Object,
 });
+
+const route = useRoute();
+const routeLocationName = computed(() => route.params.location);
+
+const fetchLocationFromRoute = async () => {
+  const locationName = routeLocationName.value;
+  if (!locationName) return;
+
+  try {
+    const res = await axios.get(
+      `http://localhost:3000/api/bike-rentals/location/${locationName}`
+    );
+
+    const location = res.data?.data;
+    if (!location) return;
+
+    emit("update", {
+      selectedLocation: location,
+    });
+  } catch (err) {
+    console.error("Failed to load location from route", err);
+  }
+};
+
+onMounted(fetchLocationFromRoute);
+
+watch(() => route.params.location, fetchLocationFromRoute);
 
 const emit = defineEmits(["update", "next-step", "prev-step"]);
 

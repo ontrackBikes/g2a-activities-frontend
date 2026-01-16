@@ -1,33 +1,29 @@
 <template>
   <div>
-    <!-- Card -->
     <v-card elevation="0" class="border g2a-rounded-border bg-white">
-      <v-progress-linear
-        color="brandColor"
-        model-value="33"
-        :height="6"
-      ></v-progress-linear>
+      <v-progress-linear color="brandColor" model-value="33" :height="6" />
+
       <div class="d-flex align-center justify-space-between px-4 mt-4">
         <span class="g2a-text-13 text-grey">Step 1 of 3</span>
-        <span class="g2a-text-13 text-grey"
-          ><span v-if="!selectLocation">Location & </span>Dates</span
-        >
+        <span class="g2a-text-13 text-grey">
+          <span v-if="!bookingData.selectedLocation">Location & </span>Dates
+        </span>
       </div>
 
       <v-container>
-        <div v-if="!selectLocation">
+        <!-- Locations -->
+        <div v-if="!bookingData.selectedLocation">
           <div class="g2a-text-22 g2a-text-bold-600 my-2">
             Select Location & Dates
           </div>
 
-          <!-- Locations -->
           <v-row class="my-2">
             <v-col
+              v-for="location in locationData.locations"
+              :key="location.id"
               cols="12"
               sm="6"
               md="4"
-              v-for="location in locationData.locations"
-              :key="location.id"
             >
               <v-card
                 elevation="0"
@@ -38,8 +34,9 @@
                 <div class="font-weight-bold g2a-text-15 text-center">
                   {{ location.name }}
                 </div>
+
                 <p
-                  v-if="selectedLocation?.name === location.name"
+                  v-if="bookingData.selectedLocation?.name === location.name"
                   class="text-brandColor text-caption g2a-text-bold-600 text-center"
                 >
                   <v-icon size="13">mdi-check-circle</v-icon>
@@ -50,16 +47,17 @@
           </v-row>
 
           <v-alert
+            v-for="(msg, i) in productInfo?.pickupDropMessages"
+            :key="i"
             class="my-2 py-2"
             type="info"
             variant="tonal"
             border="start"
-            v-for="(data, index) in productInfo?.pickupDropMessages"
-            :key="index"
           >
-            <span class="g2a-text-15 g2a-text-bold-500">{{ data }}</span>
+            <span class="g2a-text-15 g2a-text-bold-500">{{ msg }}</span>
           </v-alert>
         </div>
+
         <!-- Dates -->
         <v-row class="my-2">
           <v-col cols="12" md="6">
@@ -72,7 +70,7 @@
               variant="outlined"
               hide-details="auto"
               :min="minDate"
-              @update:model-value="validateDates"
+              @update:model-value="updateDates"
             />
           </v-col>
 
@@ -87,32 +85,40 @@
               hide-details="auto"
               :min="pickupDate || minDate"
               :max="maxDate"
-              @update:model-value="validateDates"
+              @update:model-value="updateDates"
             />
           </v-col>
         </v-row>
 
+        <!-- Operational Hours -->
         <v-alert color="background">
           <div class="g2a-text-bold-600 text-greyDark">
             Operational Hours
-            <span v-if="bookingData.selectedLocation?.isPeakMonth"
-              >(Peak Season)</span
-            >
+            <span v-if="bookingData.selectedLocation?.isPeakMonth">
+              (Peak Season)
+            </span>
           </div>
-          <div
-            class="text-greyDark"
-            v-if="bookingData.selectedLocation?.isPeakMonth"
-          >
-            Pickup/Dropoff: {{ bookingData.selectedLocation?.timings.season }}
-          </div>
-          <div class="text-greyDark" v-else>
+          <div class="text-greyDark">
             Pickup/Dropoff:
-            {{ bookingData.selectedLocation?.timings.offSeason }}
+            {{
+              bookingData.selectedLocation?.isPeakMonth
+                ? bookingData.selectedLocation?.timings.season
+                : bookingData.selectedLocation?.timings.offSeason
+            }}
           </div>
         </v-alert>
       </v-container>
 
       <v-divider />
+
+      <v-alert
+        v-if="errorMessage"
+        type="error"
+        variant="tonal"
+        class="mx-6 my-2"
+      >
+        {{ errorMessage }}
+      </v-alert>
 
       <!-- Footer -->
       <div class="d-flex align-center justify-space-between w-100 px-6 py-4">
@@ -138,10 +144,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import moment from "moment";
-
-/* -------------------- PROPS -------------------- */
+import axios from "axios";
 
 const props = defineProps({
   productInfo: Object,
@@ -151,74 +156,90 @@ const props = defineProps({
 
 const emit = defineEmits(["update", "next-step"]);
 
-/* -------------------- LOCAL STATE -------------------- */
-
-const selectedLocation = ref(props.bookingData.selectedLocation);
 const pickupDate = ref(props.bookingData.pickupDate);
 const returnDate = ref(props.bookingData.returnDate);
-
-/* -------------------- COMPUTED -------------------- */
+const loading = ref(false);
+const errorMessage = ref("");
 
 const minDate = computed(() => moment().add(2, "days").format("YYYY-MM-DD"));
-const maxDate = computed(() => moment().add(6, "month").format("YYYY-MM-DD"));
+const maxDate = computed(() => moment().add(6, "months").format("YYYY-MM-DD"));
 
-const isValid = computed(() => {
-  return selectedLocation.value && pickupDate.value && returnDate.value;
-});
+const isValid = computed(
+  () =>
+    props.bookingData.selectedLocation && pickupDate.value && returnDate.value
+);
 
-/* -------------------- METHODS -------------------- */
+/* -------------------- UI HELPERS -------------------- */
 
 const cardStyle = (location) => ({
   border:
-    selectedLocation.value?.name === location.name
+    props.bookingData.selectedLocation?.name === location.name
       ? "2px solid #FF6B36"
       : "1px solid #dde2e4",
   background:
-    selectedLocation.value?.name === location.name ? "#FFF5F2" : "#FFFFFF",
-  color: selectedLocation.value?.name === location.name ? "#D84316" : "#212121",
+    props.bookingData.selectedLocation?.name === location.name
+      ? "#FFF5F2"
+      : "#FFFFFF",
 });
 
-const emitUpdate = () => {
+/* -------------------- STATE UPDATES -------------------- */
+
+const selectLocation = (location) => {
+  emit("update", { selectedLocation: location });
+};
+
+const updateDates = () => {
+  if (
+    pickupDate.value &&
+    returnDate.value &&
+    moment(returnDate.value).isBefore(moment(pickupDate.value))
+  ) {
+    returnDate.value = "";
+  }
+
   emit("update", {
-    selectedLocation: selectedLocation.value,
     pickupDate: pickupDate.value,
     returnDate: returnDate.value,
   });
 };
 
-const selectLocation = (location) => {
-  selectedLocation.value = location;
-  emitUpdate();
-};
+/* -------------------- CONTINUE + API -------------------- */
 
-const validateDates = () => {
-  if (pickupDate.value && returnDate.value) {
-    if (moment(returnDate.value).isBefore(moment(pickupDate.value))) {
-      returnDate.value = "";
+const continueNext = async () => {
+  if (!isValid.value || loading.value) return;
+
+  loading.value = true;
+  errorMessage.value = "";
+
+  try {
+    const payload = {
+      locationName: props.bookingData.selectedLocation.name,
+      startDate: pickupDate.value,
+      endDate: returnDate.value,
+      quantity: props.bookingData.quantity || 1,
+      pickup: !!props.bookingData.pickupType,
+      drop: !!props.bookingData.dropType,
+    };
+
+    const { data } = await axios.post(
+      "http://localhost:3000/api/bike-rentals/check-availability",
+      payload
+    );
+
+    if (!data.success) {
+      errorMessage.value = data.message || "Not available for selected dates";
+      return;
     }
+
+    // optional: store availability response
+    emit("update", { availability: data.data });
+
+    emit("next-step");
+  } catch (err) {
+    errorMessage.value =
+      err.response?.data?.message || "Failed to check availability";
+  } finally {
+    loading.value = false;
   }
-  emitUpdate();
 };
-
-const continueNext = () => {
-  if (isValid.value) emit("next-step");
-};
-
-/* -------------------- SYNC FROM PARENT -------------------- */
-
-watch(
-  () => props.bookingData,
-  (val) => {
-    selectedLocation.value = val.selectedLocation;
-    pickupDate.value = val.pickupDate;
-    returnDate.value = val.returnDate;
-  },
-  { deep: true }
-);
 </script>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>
