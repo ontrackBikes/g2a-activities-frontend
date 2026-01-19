@@ -97,6 +97,7 @@
             <v-btn
               color="brandColor"
               rounded="lg"
+              flat
               size="large"
               :loading="loading"
               :disabled="!isValid"

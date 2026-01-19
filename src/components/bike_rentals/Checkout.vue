@@ -11,7 +11,9 @@
           </div>
 
           <div class="g2a-text-22 g2a-text-bold-600 my-2">Review & Pay</div>
-          <p class="text-blackLight2 g2a-text-bold-600">Rider Details</p>
+          <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4">
+            RIDER DETAILS
+          </div>
 
           <!-- Rider Details -->
           <div class="my-4">
@@ -59,6 +61,8 @@
                   hide-details="auto"
                   v-model="customer.countryCode"
                   :items="countryCodes"
+                  item-title="title"
+                  item-value="value"
                   label="Country Code"
                   variant="outlined"
                   density="comfortable"
@@ -119,7 +123,9 @@
 
           <!-- Payment Modes -->
           <v-card elevation="0" class="mt-4 g2a-rounded-border">
-            <p class="text-blackLight2 g2a-text-bold-600 my-4">Payment Modes</p>
+            <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4">
+              PAYMENT MODES
+            </div>
 
             <v-radio-group v-model="booking.paymentType">
               <v-row
@@ -135,6 +141,7 @@
                       <v-radio
                         :value="mode.paymentType"
                         :disabled="!mode.enabled"
+                        :style="!mode.enabled ? { color: 'red' } : {}"
                       />
                     </div>
                     <div class="ml-2">
@@ -196,15 +203,23 @@ import { useRouter } from "vue-router";
 import moment from "moment";
 import BookingSummary from "../BookingSummary.vue";
 import apiClient from "@/services/api";
+import countries_list from "@/store/local_datas/countries_list.json";
 
 const LOCAL_STORAGE_KEY = "bikeRentalBooking";
 const router = useRouter();
 
 const booking = ref({});
 const customer = ref({});
-const countryCodes = ["+91 (India)", "+1 (USA)", "+44 (UK)"];
+// const countryCodes = ["+91 (India)", "+1 (USA)", "+44 (UK)"];
 const loading = ref(false);
 const productInfo = ref({});
+
+const countryCodes = computed(() =>
+  countries_list.map((c) => ({
+    title: `${c.dial_code} (${c.abbr})`,
+    value: `${c.dial_code} (${c.abbr})`,
+  })),
+);
 
 const hotelDeliveryCharge = computed(() => {
   const option = booking.value.selectedLocation?.deliveryOptions?.find(

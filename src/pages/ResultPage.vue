@@ -14,9 +14,9 @@
 
           <!-- Success -->
           <template v-else-if="status === 'success'">
-            <v-icon size="64" color="success" class="mb-4">
-              mdi-check-circle
-            </v-icon>
+            <v-avatar size="74" class="mb-4" color="#E8F5E9">
+              <v-icon size="54" color="success"> mdi-check-circle </v-icon>
+            </v-avatar>
 
             <h3 class="text-success">Payment Successful</h3>
 
@@ -44,9 +44,9 @@
                 </v-list-item-subtitle>
               </v-list-item>
             </v-list>
-            <v-divider></v-divider>
+            <v-divider class="my-4"></v-divider>
             <!-- inside your Success template -->
-            <div class="mt-4">
+            <div>
               <p>
                 Our agent will get in touch with you shortly to confirm the
                 booking details. You can check your email or print the receipt
@@ -55,20 +55,20 @@
               <v-btn
                 flat
                 class="mt-5"
-                color="error"
+                color="brandColor"
                 rounded="lg"
                 size="large"
                 @click="printReceipt"
-                >Print <v-icon>mdi-printer</v-icon></v-btn
+                >Print <v-icon class="ml-1">mdi-printer</v-icon></v-btn
               >
             </div>
           </template>
 
           <!-- Failed -->
           <template v-else-if="status === 'failed'">
-            <v-icon size="64" color="error" class="mb-4">
-              mdi-close-circle
-            </v-icon>
+            <v-avatar size="74" class="mb-4" color="#FBE9E7">
+              <v-icon size="54" color="error"> mdi-close-circle </v-icon>
+            </v-avatar>
 
             <h3 class="text-error">Payment Failed</h3>
 
@@ -79,20 +79,26 @@
               }}
             </p>
 
-            <v-btn flat block color="error" class="mt-4" @click="retryPayment">
+            <v-btn
+              flat
+              block
+              color="brandColor"
+              class="mt-4"
+              @click="retryPayment"
+            >
               Home
             </v-btn>
           </template>
 
           <!-- Pending -->
           <template v-else>
-            <v-icon size="64" color="brandColor" class="mb-4">
-              mdi-clock-outline
-            </v-icon>
+            <v-avatar size="74" class="mb-4" color="#FFF8E1">
+              <v-icon size="54" color="brandColor"> mdi-clock-outline </v-icon>
+            </v-avatar>
 
             <h3 class="text-brandColor">Payment Pending</h3>
 
-            <p class="text-medium-emphasis">
+            <p class="text-medium-emphasis mt-2">
               We are waiting for confirmation from the bank
             </p>
 
@@ -125,7 +131,7 @@ const status = ref("pending"); // success | failed | pending
 const orderInfo = ref({});
 const notesData = ref({});
 const customerName = ref("");
-const orderId = route.params.orderId;
+const orderId = route.query.order_id;
 
 const fetchOrderStatus = async () => {
   loading.value = true;
@@ -179,7 +185,7 @@ const printReceipt = () => {
         </div>
         <p class="greeting">
           Hi ${customerName.value},<br/>
-          Thank you for choosing Go2Andaman for your ferry journey! We have successfully received your payment.
+          Thank you for choosing Go2Andaman for your ${notesData.value.productType}! We have successfully received your payment.
         </p>
 
         <table>
@@ -198,11 +204,11 @@ const printReceipt = () => {
           <tr>
             <th>Pickup / Drop</th>
             <td>${notesData.value.pickupType || "-"} - ${
-    notesData.value.pickup || "-"
-  }<br/>
+              notesData.value.pickup || "-"
+            }<br/>
                 ${notesData.value.dropType || "-"} - ${
-    notesData.value.drop || "-"
-  }</td>
+                  notesData.value.drop || "-"
+                }</td>
           </tr>
           <tr>
             <th>Pickup Hotel</th><td>${
@@ -216,8 +222,8 @@ const printReceipt = () => {
           </tr>
           <tr>
             <th>Booking Dates</th><td>${notesData.value.startDate || "-"} to ${
-    notesData.value.endDate || "-"
-  }</td>
+              notesData.value.endDate || "-"
+            }</td>
           </tr>
           <tr>
             <th>Quantity</th><td>${notesData.value.quantity || "-"}</td>

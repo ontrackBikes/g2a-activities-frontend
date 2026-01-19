@@ -32,7 +32,7 @@ const router = createRouter({
     },
 
     {
-      path: "/payment/:orderId",
+      path: "/payment/status",
       name: "PaymentResult",
       component: ResultPage,
     },

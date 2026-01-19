@@ -34,8 +34,8 @@
                   </v-avatar>
                   What's Included ?
                 </div>
-                <v-divider class="my-2" />
-                <v-row no-gutters>
+                <v-divider class="my-3" />
+                <v-row dense>
                   <v-col
                     v-for="(item, index) in productInfo.inclusions"
                     :key="index"
@@ -212,6 +212,7 @@
               <v-icon start>mdi-arrow-left</v-icon> BACK
             </v-btn>
             <v-btn
+              flat
               color="brandColor"
               rounded="lg"
               size="large"
