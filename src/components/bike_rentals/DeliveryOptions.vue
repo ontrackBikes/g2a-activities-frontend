@@ -225,6 +225,9 @@
         </v-container>
       </v-card>
     </v-col>
+    <v-col cols="12" md="4">
+      <booking-summary :booking-data="booking" :product-info="productInfo" />
+    </v-col>
   </v-row>
 </template>
 
@@ -233,6 +236,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import moment from "moment";
 import apiClient from "@/services/api";
+import BookingSummary from "../BookingSummary.vue";
 
 const LOCAL_STORAGE_KEY = "bikeRentalBooking";
 const route = useRoute();
