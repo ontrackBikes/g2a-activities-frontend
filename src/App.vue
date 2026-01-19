@@ -5,7 +5,7 @@
       <v-container>
         <v-row align="center" class="justify-space-between">
           <v-col cols="auto">
-            <v-img src="/public/assets/g2a_logo.png" width="180px"></v-img>
+            <v-img src="/assets/g2a_logo.png" width="180px"></v-img>
           </v-col>
           <v-col cols="auto">
             <span class="g2a-text-14 text-grey">Secure Booking</span>

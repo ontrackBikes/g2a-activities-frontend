@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bike Rentals Widget Test</title>
+
+    <!-- Widget CSS -->
+    <link
+      rel="stylesheet"
+      href="http://localhost:5173/dist/widgets/activities-bike-rentals-widget.css"
+    />
+  </head>
+  <body>
+    <!-- Auto-mount widget container -->
+    <div
+      id="activities-bike-rentals-widget"
+      data-activities-bike-rentals-widget-auto
+      data-api-base-url="http://localhost:3000/api"
+      data-location="Port Blair"
+      data-pickup-date="2026-01-18"
+      data-return-date="2026-01-19"
+      data-quantity="1"
+    ></div>
+
+    <!-- Widget JS (IIFE Build) -->
+    <script src="http://localhost:5173/dist/widgets/activities-bike-rentals-widget.iife.js"></script>
+
+    <!-- Optional: listen for resize events -->
+    <script>
+      window.addEventListener("activitiesBikeRentalsWidgetResize", (event) => {
+        console.log("Widget resized:", event.detail);
+      });
+    </script>
+  </body>
+</html>

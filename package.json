@@ -7,9 +7,24 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite --mode development",
+    "dev:staging": "vite --mode staging",
+    "build": "vite build --mode development && cp -R public/uploads dist/uploads",
+    "build:staging": "vite build --mode staging && cp -R public/uploads dist/uploads",
+    "build:production": "vite build --mode production && cp -R public/uploads dist/uploads",
+    "build:activities-bike-rentals-widget:dev": "vite build --config vite.activities-bike-rentals-widget.config.js --mode development",
+    "build:activities-bike-rentals-widget:staging": "vite build --config vite.activities-bike-rentals-widget.config.js --mode staging",
+    "build:activities-bike-rentals-widget:production": "vite build --config vite.activities-bike-rentals-widget.config.js --mode production",
+    "postbuild:activities-bike-rentals-widget": "mkdir -p dist/widgets && cp dist-activities-bike-rentals-widget/activities-bike-rentals-widget.iife.js dist-activities-bike-rentals-widget/activities-bike-rentals-widget.css dist/widgets/",
+    "build:all:dev": "npm run build && npm run build:activities-bike-rentals-widget:dev && npm run postbuild:activities-bike-rentals-widget",
+    "build:all:staging": "npm run build:staging && npm run build:activities-bike-rentals-widget:staging && npm run postbuild:activities-bike-rentals-widget",
+    "build:all:production": "npm run build:production && npm run build:activities-bike-rentals-widget:production && npm run postbuild:activities-bike-rentals-widget",
+    "build:all": "npm run build:all:production",
+    "preview": "vite preview",
+    "preview:staging": "vite preview --mode staging",
+    "preview:production": "vite preview --mode production",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -20,6 +35,7 @@
     "sass": "^1.97.2",
     "sass-loader": "^13.3.3",
     "sweetalert2": "^11.26.17",
+    "vite-plugin-vuetify": "^2.1.3",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4",
     "vuetify": "^3.11.6"

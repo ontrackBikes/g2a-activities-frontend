@@ -92,10 +92,8 @@
           <v-row dense no-gutters>
             <v-col cols="7">
               <p class="g2a-text-14">
-                Rental ({{ calculateDuration }}d x ₹{{
-                  bookingData.selectedLocation?.pricing?.amount || 0
-                }}
-                x {{ bookingData.quantity }} vehicle)
+                Rental ({{ calculateDuration }}d x ₹{{ rentalTotalCost || 0 }} x
+                {{ bookingData.quantity }} vehicle)
               </p>
             </v-col>
             <v-col cols="5" align="end">
@@ -192,10 +190,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  locationData: {
-    type: Object,
-    required: false,
-  },
 });
 
 const calculateDuration = computed(() => {
@@ -236,28 +230,28 @@ const dropoffDisplay = computed(() => {
 
 const hotelDeliveryCharge = computed(() => {
   const option = props.bookingData.selectedLocation?.deliveryOptions?.find(
-    (x) => x.type === props.bookingData.pickupType
+    (x) => x.type === props.bookingData.pickupType,
   );
   return option?.onlineCharge || 0;
 });
 
 const hotelPickupCharge = computed(() => {
   const option = props.bookingData.selectedLocation?.dropOptions?.find(
-    (x) => x.type === props.bookingData.dropType
+    (x) => x.type === props.bookingData.dropType,
   );
   return option?.onlineCharge || 0;
 });
 
 const rentalTotalCost = computed(() => {
   const option = props.bookingData.selectedLocation?.paymentModes?.find(
-    (x) => x.paymentType === "full"
+    (x) => x.paymentType === "full",
   );
   return option?.amount || 0;
 });
 
 const payNowAmount = computed(() => {
   const option = props.bookingData.selectedLocation?.paymentModes?.find(
-    (x) => x.paymentType === props.bookingData.paymentType
+    (x) => x.paymentType === props.bookingData.paymentType,
   );
   return option?.amount || 0;
 });
