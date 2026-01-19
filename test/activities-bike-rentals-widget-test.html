@@ -3,33 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bike Rentals Widget Test</title>
+    <title>Bike Rentals Widget</title>
 
-    <!-- Widget CSS -->
+    <!-- ===================== WIDGET CSS ===================== -->
+    <!-- Replace with your production path when deploying -->
     <link
       rel="stylesheet"
       href="http://localhost:5173/dist/widgets/activities-bike-rentals-widget.css"
     />
+
+    <!-- Optional: Custom page styles -->
+    <style>
+      body {
+        font-family: "Gilroy", sans-serif;
+        background: #f5f5f5;
+        margin: 0;
+        padding: 2rem;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #4c42d8; /* Ontrack brand color */
+      }
+
+      .widget-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+    </style>
   </head>
+
   <body>
-    <!-- Auto-mount widget container -->
+    <!-- ===================== WIDGET CONTAINER ===================== -->
     <div
       id="activities-bike-rentals-widget"
+      class="widget-container"
       data-activities-bike-rentals-widget-auto
       data-api-base-url="http://localhost:3000/api"
+      data-base-url="http://localhost:5173/"
       data-location="Port Blair"
       data-pickup-date="2026-01-18"
       data-return-date="2026-01-19"
       data-quantity="1"
     ></div>
 
-    <!-- Widget JS (IIFE Build) -->
+    <!-- ===================== WIDGET JS ===================== -->
+    <!-- Replace with your production path when deploying -->
     <script src="http://localhost:5173/dist/widgets/activities-bike-rentals-widget.iife.js"></script>
 
-    <!-- Optional: listen for resize events -->
+    <!-- ===================== OPTIONAL: RESIZE EVENT ===================== -->
     <script>
       window.addEventListener("activitiesBikeRentalsWidgetResize", (event) => {
         console.log("Widget resized:", event.detail);
+        // Example: adjust parent container dynamically
+        // document.querySelector(".widget-container").style.height = event.detail.height + "px";
       });
     </script>
   </body>

@@ -119,9 +119,13 @@ import moment from "moment";
 
 /* ---------------- PROPS ---------------- */
 const props = defineProps({
-  location: { type: String, default: null },
+  location: { type: String, default: "Port Blair" },
+  pickupDate: String,
+  returnDate: String,
+  quantity: { type: Number, default: 1 },
   apiBaseUrl: { type: String, default: "http://localhost:3000/api" },
-  onContinue: Function, // optional callback
+  onContinue: Function,
+  baseUrl: { type: String, required: true },
 });
 
 /* ---------------- STATE ---------------- */
@@ -129,8 +133,14 @@ const productInfo = ref({});
 const selectedLocation = ref(null);
 const locationNotFound = ref(false);
 
-const pickupDate = ref(moment().add(2, "days").format("YYYY-MM-DD"));
-const returnDate = ref(moment().add(3, "days").format("YYYY-MM-DD"));
+// Initialize from props if provided, fallback to defaults
+const pickupDate = ref(
+  props.pickupDate || moment().add(2, "days").format("YYYY-MM-DD"),
+);
+const returnDate = ref(
+  props.returnDate || moment().add(3, "days").format("YYYY-MM-DD"),
+);
+const quantity = ref(props.quantity);
 
 const loading = ref(false);
 const errorMessage = ref("");
@@ -161,11 +171,6 @@ const fetchProductInfo = async () => {
 };
 
 const fetchLocation = async () => {
-  if (!resolvedLocationName.value) {
-    locationNotFound.value = true;
-    return;
-  }
-
   try {
     const { data } = await apiClient.get(
       `${props.apiBaseUrl}/bike-rentals/location/${encodeURIComponent(resolvedLocationName.value)}`,
@@ -190,7 +195,7 @@ const continueNext = async () => {
       locationName: selectedLocation.value.name,
       startDate: pickupDate.value,
       endDate: returnDate.value,
-      quantity: 1,
+      quantity: quantity.value,
     };
 
     const { data } = await apiClient.post(
@@ -203,8 +208,19 @@ const continueNext = async () => {
       return;
     }
 
-    // Trigger callback if provided
-    if (props.onContinue) props.onContinue(payload);
+    const params = new URLSearchParams({
+      locationName: selectedLocation.value.name,
+      startDate: pickupDate.value,
+      endDate: returnDate.value,
+      quantity: quantity.value,
+    }).toString();
+
+    // window.location.href = `/select-pickup-delivery?${params}`;
+    // Or open in new tab:
+    window.open(`${props.baseUrl}/select-pickup-delivery?${params}`, "_blank");
+
+    // Trigger callback
+    // props.onContinue(payload);
   } catch (err) {
     errorMessage.value =
       err.response?.data?.message || "Availability check failed";
@@ -221,7 +237,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Active/focus states if needed */
 .active {
   border: 1px solid #006400;
   background: #f0f6f0;

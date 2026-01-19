@@ -9,15 +9,15 @@ import "@mdi/font/css/materialdesignicons.css";
 import "@/styles/variables.scss";
 import "@/assets/custom.css";
 
-// ✅ Updated widget component
-import BikeRentalsCheckAvailabilityWidget from "@/components/bikeRentalsCheckAvailabilityWidget.vue";
-
+// Widget component
 import moment from "moment";
+import BikeRentalsCheckAvailabilityWidget from "@/components/bikeRentalsCheckAvailabilityWidget.vue";
 
 class ActivitiesBikeRentalsEmbedWidget {
   constructor(config = {}) {
     this.config = {
       selector: "#activities-bike-rentals-widget",
+      baseUrl: import.meta.env.VITE_BASE_URL || "https://ferry.go2andaman.com",
       apiBaseUrl:
         import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
       location: null,
@@ -25,6 +25,7 @@ class ActivitiesBikeRentalsEmbedWidget {
       returnDate: null,
       quantity: 1,
       onContinue: null,
+
       ...config,
     };
 
@@ -34,7 +35,8 @@ class ActivitiesBikeRentalsEmbedWidget {
   }
 
   mount() {
-    const container = document.querySelector(this.config.selector);
+    // Select container
+    let container = document.querySelector(this.config.selector);
     if (!container) {
       console.error(
         `Activities Bike Rentals Widget: Container ${this.config.selector} not found`,
@@ -42,7 +44,7 @@ class ActivitiesBikeRentalsEmbedWidget {
       return false;
     }
 
-    // Clear container & append wrapper
+    // Clear container & create wrapper
     container.innerHTML = "";
     const wrapper = document.createElement("div");
     wrapper.className =
@@ -58,13 +60,29 @@ class ActivitiesBikeRentalsEmbedWidget {
         themes: {
           light: {
             colors: {
-              brandColor: "#FF6B36",
-              background: "#f5f5f5",
-              surface: "#ffffff",
-              error: "#F14336",
-              warning: "#F97D2C",
               success: "#006300",
+              primary: "#1e88e5", // blue
+              secondary: "#ffc107", // amber
+              background: "#f5f5f5",
+              surface: "#FAFAFA",
+              brandColor: "#FFBB00",
+              brandColor2: "#29339B",
+              error: "#FF6B36",
+              successLight1: "#E2EDE2",
+              successLight2: "#f0f6f0",
+              warningLight1: "#fffbf0",
+              warningLight2: "#fff8e2",
+              errorLight2: "#faf4f4",
+              infoLight: "#F2F6FF",
+              blue: "#29339b",
+              darkGreen: "#006400",
+              black: "#000",
+              blackLight1: "#212121",
+              blackLight2: "#616161",
               grey: "#808080",
+              greyLight: "#e1e1e1",
+              greyDark: "#666666",
+              warning: "#FB8C00",
               white: "#FFFFFF",
             },
           },
@@ -76,29 +94,37 @@ class ActivitiesBikeRentalsEmbedWidget {
       },
     });
 
-    // Prefill booking data
-    const bookingData = {
-      location: this.config.location,
+    // Mount Vue component with individual props
+    this.app = createApp(BikeRentalsCheckAvailabilityWidget, {
+      location: this.config.location || "Port Blair",
       pickupDate:
         this.config.pickupDate || moment().add(2, "days").format("YYYY-MM-DD"),
       returnDate:
         this.config.returnDate || moment().add(3, "days").format("YYYY-MM-DD"),
-      quantity: this.config.quantity,
-    };
-
-    // Mount Vue component
-    this.app = createApp(BikeRentalsCheckAvailabilityWidget, {
-      bookingData,
+      quantity: this.config.quantity || 1,
       apiBaseUrl: this.config.apiBaseUrl,
+      baseUrl: this.config.baseUrl,
       onContinue: (payload) => {
-        Object.assign(bookingData, payload);
-        this.config.onContinue?.(bookingData);
+        // ✅ Redirect to booking page
+        const params = new URLSearchParams({
+          location: payload.locationName,
+          startDate: payload.startDate,
+          endDate: payload.endDate,
+        }).toString();
+
+        // window.location.href = `/select-pickup-delivery?${params}`;
+        // Or open in new tab:
+        window.open(
+          `${this.config.baseUrl}/select-pickup-delivery?${params}`,
+          "_blank",
+        );
       },
     });
 
     this.app.use(vuetify);
     this.app.mount(wrapper);
 
+    // Setup auto-resize
     this.setupResizeHandling(wrapper);
     setTimeout(() => this.checkResize(wrapper), 100);
 
@@ -155,14 +181,19 @@ if (typeof window !== "undefined") {
       .forEach((el) => {
         new ActivitiesBikeRentalsEmbedWidget({
           selector: `#${el.id}`,
+          baseUrl:
+            el.dataset.baseUrl ||
+            import.meta.env.VITE_BASE_URL ||
+            "https://ferry.go2andaman.com",
           apiBaseUrl: el.dataset.apiBaseUrl,
-          location: el.dataset.location,
-          pickupDate: el.dataset.pickupDate,
-          returnDate: el.dataset.returnDate,
+          location: el.dataset.location || "Port Blair",
+          pickupDate:
+            el.dataset.pickupDate ||
+            moment().add(2, "days").format("YYYY-MM-DD"),
+          returnDate:
+            el.dataset.returnDate ||
+            moment().add(3, "days").format("YYYY-MM-DD"),
           quantity: el.dataset.quantity ? Number(el.dataset.quantity) : 1,
-          onContinue: (bookingData) => {
-            console.log("Step 1 complete – proceed to Step 2", bookingData);
-          },
         }).mount();
       });
   });
