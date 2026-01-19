@@ -202,25 +202,14 @@ const continueNext = async () => {
       `${props.apiBaseUrl}/bike-rentals/check-availability`,
       payload,
     );
+    console.log("🚀 ~ continueNext ~ data:", data);
 
     if (!data?.success) {
       errorMessage.value = data?.message || "Not available for selected dates";
       return;
     }
-
-    const params = new URLSearchParams({
-      locationName: selectedLocation.value.name,
-      startDate: pickupDate.value,
-      endDate: returnDate.value,
-      quantity: quantity.value,
-    }).toString();
-
-    // window.location.href = `/select-pickup-delivery?${params}`;
-    // Or open in new tab:
-    window.open(`${props.baseUrl}/select-pickup-delivery?${params}`, "_blank");
-
-    // Trigger callback
-    // props.onContinue(payload);
+    // trigger callback
+    props.onContinue?.(payload);
   } catch (err) {
     errorMessage.value =
       err.response?.data?.message || "Availability check failed";

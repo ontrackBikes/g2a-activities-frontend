@@ -105,15 +105,13 @@ class ActivitiesBikeRentalsEmbedWidget {
       apiBaseUrl: this.config.apiBaseUrl,
       baseUrl: this.config.baseUrl,
       onContinue: (payload) => {
-        // ✅ Redirect to booking page
+        // redirect logic here
         const params = new URLSearchParams({
           location: payload.locationName,
           startDate: payload.startDate,
           endDate: payload.endDate,
         }).toString();
 
-        // window.location.href = `/select-pickup-delivery?${params}`;
-        // Or open in new tab:
         window.open(
           `${this.config.baseUrl}/select-pickup-delivery?${params}`,
           "_blank",
