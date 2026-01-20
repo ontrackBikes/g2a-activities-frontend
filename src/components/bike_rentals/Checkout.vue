@@ -59,8 +59,8 @@
               <v-col cols="12" sm="4">
                 <v-select
                   hide-details="auto"
-                  v-model="customer.countryCode"
-                  :items="countryCodes"
+                  v-model="customer.countryAbbr"
+                  :items="countriesList"
                   item-title="title"
                   item-value="value"
                   label="Country Code"
@@ -78,8 +78,7 @@
                   variant="outlined"
                   density="comfortable"
                   :rules="[
-                    (v) => !!v || 'Required',
-                    (v) => /^[0-9]{10}$/.test(v) || 'Invalid number',
+                    (v) => validatePhoneNumber(v, customer.countryAbbr, false),
                   ]"
                   @update:model-value="saveCustomer"
                 />
@@ -194,31 +193,67 @@
     <v-col cols="12" md="4">
       <booking-summary :booking-data="booking" :product-info="productInfo" />
     </v-col>
+
+    <!-- error message -->
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      timeout="5000"
+      top
+      right
+    >
+      {{ snackbar.message }}
+      <template #actions>
+        <v-btn text @click="snackbar.show = false">Close</v-btn>
+      </template>
+    </v-snackbar>
   </v-row>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import moment from "moment";
 import BookingSummary from "../BookingSummary.vue";
 import apiClient from "@/services/api";
 import countries_list from "@/store/local_datas/countries_list.json";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const LOCAL_STORAGE_KEY = "bikeRentalBooking";
 const router = useRouter();
 
 const booking = ref({});
 const customer = ref({});
-// const countryCodes = ["+91 (India)", "+1 (USA)", "+44 (UK)"];
+// const countriesList = ["+91 (India)", "+1 (USA)", "+44 (UK)"];
 const loading = ref(false);
 const productInfo = ref({});
 
-const countryCodes = computed(() =>
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "error",
+});
+
+const countriesList = computed(() =>
   countries_list.map((c) => ({
     title: `${c.dial_code} (${c.abbr})`,
-    value: `${c.dial_code} (${c.abbr})`,
+    value: c.abbr,
+    dialCode: c.dial_code,
   })),
+);
+
+watch(
+  () => customer.value.countryAbbr,
+  (newAbbr) => {
+    const selectedCountry = countriesList.value.find(
+      (c) => c.value === newAbbr,
+    );
+    if (selectedCountry) {
+      customer.value.countryCode = `${selectedCountry.dialCode} (${selectedCountry.value})`;
+      saveCustomer();
+    }
+  },
+  { immediate: true },
 );
 
 const hotelDeliveryCharge = computed(() => {
@@ -283,11 +318,21 @@ const saveCustomer = () => {
 };
 
 const isStep3Valid = computed(() => {
+  const phoneValid =
+    validatePhoneNumber(
+      customer.value.mobile,
+      customer.value.countryAbbr,
+      false,
+    ) === true;
+  const emailValid =
+    !!customer.value.email && /.+@.+\..+/.test(customer.value.email);
+
   return (
-    customer.value.firstName &&
-    customer.value.lastName &&
-    customer.value.mobile &&
-    customer.value.email
+    !!customer.value.title &&
+    !!customer.value.firstName &&
+    !!customer.value.lastName &&
+    phoneValid &&
+    emailValid
   );
 });
 
@@ -342,7 +387,9 @@ const processPayment = async () => {
 
     new window.Razorpay(options).open();
   } catch (err) {
-    alert(err.response?.data?.message || err.message || "Payment failed");
+    const message =
+      err.response?.data?.message || err.message || "Payment failed";
+    showError(message);
   } finally {
     loading.value = false;
   }
@@ -357,4 +404,28 @@ onMounted(async () => {
   booking.value = localBooking || {};
   customer.value = booking.value.customer || {};
 });
+
+function validatePhoneNumber(value, countryAbbr, isOptional = false) {
+  if (!value && isOptional) return true;
+  if (!value) return "Phone number is required";
+
+  const isValidFormat = /^[0-9]+$/.test(value);
+  if (!isValidFormat) return "Only numbers allowed";
+
+  if (!countryAbbr) return "Select country code";
+
+  const phoneNumber = parsePhoneNumberFromString(value.toString(), countryAbbr);
+
+  return phoneNumber &&
+    phoneNumber.isValid() &&
+    phoneNumber.isPossible() &&
+    phoneNumber.nationalNumber === value
+    ? true
+    : `Invalid number for ${countryAbbr}`;
+}
+
+function showError(message) {
+  snackbar.value = { show: true, message, color: "error" };
+  setTimeout(() => (snackbar.value.show = false), 5000);
+}
 </script>
