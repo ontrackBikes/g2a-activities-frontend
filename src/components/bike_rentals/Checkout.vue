@@ -1,4 +1,12 @@
 <template>
+  <v-btn v-if="smAndDown" variant="text" class="mb-4" @click="goBack">
+    <v-icon start color="grey">mdi-arrow-left</v-icon>
+    <span
+      class="g2a-text-bold-500 g2a-text-15 text-greyDark"
+      style="letter-spacing: 0.05rem"
+      >BACK</span
+    >
+  </v-btn>
   <v-row>
     <v-col cols="12" md="8">
       <v-card elevation="0" class="mb-6 g2a-rounded-border border">
@@ -10,8 +18,11 @@
             <span class="g2a-text-13 text-grey">Payment</span>
           </div>
 
-          <div class="g2a-text-22 g2a-text-bold-600 my-2">Review & Pay</div>
-          <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4">
+          <div class="g2a-text-24 g2a-text-bold-600 my-4">Review & Pay</div>
+          <div
+            class="g2a-text-12 g2a-text-bold-600 text-grey my-4"
+            style="letter-spacing: 0.09rem"
+          >
             RIDER DETAILS
           </div>
 
@@ -20,7 +31,6 @@
             <v-row>
               <v-col cols="12" sm="2">
                 <v-select
-                  hide-details="auto"
                   v-model="customer.title"
                   :items="['Mr', 'Mrs', 'Ms', 'Dr']"
                   label="Title"
@@ -32,7 +42,6 @@
 
               <v-col cols="12" sm="5">
                 <v-text-field
-                  hide-details="auto"
                   v-model="customer.firstName"
                   label="First Name"
                   variant="outlined"
@@ -44,7 +53,6 @@
 
               <v-col cols="12" sm="5">
                 <v-text-field
-                  hide-details="auto"
                   v-model="customer.lastName"
                   label="Last Name"
                   variant="outlined"
@@ -58,7 +66,6 @@
             <v-row>
               <v-col cols="12" sm="4">
                 <v-select
-                  hide-details="auto"
                   v-model="customer.countryAbbr"
                   :items="countriesList"
                   item-title="title"
@@ -72,7 +79,6 @@
 
               <v-col cols="12" sm="8">
                 <v-text-field
-                  hide-details="auto"
                   v-model="customer.mobile"
                   label="Mobile Number"
                   variant="outlined"
@@ -88,7 +94,6 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  hide-details="auto"
                   v-model="customer.email"
                   label="Email"
                   type="email"
@@ -106,7 +111,6 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  hide-details="auto"
                   v-model="customer.alternatePhone"
                   label="Alternate Mobile (Optional)"
                   variant="outlined"
@@ -121,12 +125,15 @@
           </div>
 
           <!-- Payment Modes -->
-          <v-card elevation="0" class="mt-4 g2a-rounded-border">
-            <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4">
+          <v-card elevation="0" class="my-2 g2a-rounded-border">
+            <div
+              class="g2a-text-12 g2a-text-bold-600 text-grey my-4"
+              style="letter-spacing: 0.09rem"
+            >
               PAYMENT MODES
             </div>
 
-            <v-radio-group v-model="booking.paymentType">
+            <v-radio-group v-model="booking.paymentType" hide-details>
               <v-row
                 no-gutters
                 v-for="(mode, i) in paymentModes"
@@ -160,18 +167,23 @@
             </v-radio-group>
           </v-card>
 
-          <p class="g2a-text-14 text-greyDark mt-4">
+          <p class="g2a-text-14 text-greyDark">
             By clicking Pay, you agree to the
             <a href="#" class="text-brandColor">terms of service</a>.
           </p>
         </v-container>
 
-        <v-divider />
+        <v-divider v-if="!smAndDown" />
 
-        <v-alert color="background" density="compact" :icon="false">
-          <div class="d-flex justify-space-between align-center w-100">
-            <v-btn variant="text" color="#999" @click="goBack">
-              <v-icon start>mdi-arrow-left</v-icon> BACK
+        <v-container v-if="!smAndDown" class="bg-surface">
+          <div class="d-flex align-center justify-space-between">
+            <v-btn variant="text" @click="goBack">
+              <v-icon start color="grey">mdi-arrow-left</v-icon>
+              <span
+                class="g2a-text-bold-500 g2a-text-16 text-greyDark"
+                style="letter-spacing: 0.05rem"
+                >BACK</span
+              >
             </v-btn>
 
             <v-btn
@@ -183,14 +195,16 @@
               @click="processPayment"
               :loading="loading"
             >
-              Pay ₹{{ payNowAmountTotal }}
+              <span class="g2a-text-bold-600 g2a-text-16"
+                >Pay ₹{{ payNowAmountTotal }}</span
+              >
             </v-btn>
           </div>
-        </v-alert>
+        </v-container>
       </v-card>
     </v-col>
 
-    <v-col cols="12" md="4">
+    <v-col cols="12" md="4" :class="smAndDown ? 'mb-16' : ''">
       <booking-summary :booking-data="booking" :product-info="productInfo" />
     </v-col>
 
@@ -207,6 +221,42 @@
         <v-btn text @click="snackbar.show = false">Close</v-btn>
       </template>
     </v-snackbar>
+
+    <!-- Small screen sticky footer for Continue/Pay button -->
+    <v-sheet
+      v-if="smAndDown"
+      elevation="4"
+      class="position-fixed bottom-0 left-0 right-0 px-4 py-3 d-flex align-center"
+      style="z-index: 2000"
+    >
+      <v-row class="align-center">
+        <v-col cols="6">
+          <div class="g2a-text-12 text-decoration-line-through">
+            Total: ₹{{ totalAmount }}
+          </div>
+          <div class="d-flex align-center">
+            <span class="g2a-text-20 g2a-text-bold-700 text-brandColor"
+              >₹{{ payNowAmountTotal }}</span
+            >
+            <span class="ml-1 g2a-text-12">now</span>
+          </div>
+        </v-col>
+        <v-col cols="6">
+          <v-btn
+            block
+            flat
+            color="brandColor"
+            rounded="lg"
+            size="large"
+            :disabled="!isStep3Valid || !booking.paymentType || loading"
+            @click="processPayment"
+            :loading="loading"
+          >
+            <span class="g2a-text-bold-600 g2a-text-16">Pay Now </span>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-sheet>
   </v-row>
 </template>
 
@@ -218,6 +268,9 @@ import BookingSummary from "../BookingSummary.vue";
 import apiClient from "@/services/api";
 import countries_list from "@/store/local_datas/countries_list.json";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { useDisplay } from "vuetify";
+
+const { smAndDown } = useDisplay();
 
 const LOCAL_STORAGE_KEY = "bikeRentalBooking";
 const router = useRouter();
@@ -306,6 +359,22 @@ const payNowAmountTotal = computed(() => {
   const deliveryCharges = hotelDeliveryCharge.value + hotelPickupCharge.value;
 
   return (mode?.amount || 0) * quantity * days + deliveryCharges;
+});
+
+const totalAmount = computed(() => {
+  const quantity = booking.value.quantity || 1;
+  const days =
+    booking.value.pickupDate && booking.value.returnDate
+      ? moment(booking.value.returnDate).diff(
+          moment(booking.value.pickupDate),
+          "days",
+        ) || 1
+      : 1;
+
+  const baseMode = booking.value.selectedLocation?.paymentModes?.[0];
+  const deliveryCharges = hotelDeliveryCharge.value + hotelPickupCharge.value;
+
+  return (baseMode?.amount || 0) * quantity * days + deliveryCharges;
 });
 
 const saveBooking = () => {

@@ -2,7 +2,7 @@
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="5" lg="4">
-        <v-card variant="outlined" rounded="xl" class="pa-6 text-center">
+        <v-card variant="outlined" class="pa-6 text-center g2a-rounded-border">
           <!-- Loading -->
           <template v-if="loading">
             <v-progress-circular indeterminate size="48" class="mb-4" />

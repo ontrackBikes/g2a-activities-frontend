@@ -144,10 +144,12 @@
 
         <v-row dense no-gutters>
           <v-col cols="5">
-            <p class="g2a-text-bold-600 g2a-text-16 text-warning">Pay Later</p>
+            <p class="g2a-text-bold-600 g2a-text-16 text-brandColor">
+              Pay Later
+            </p>
           </v-col>
           <v-col cols="7" align="end">
-            <p class="g2a-text-bold-700 g2a-text-16 text-warning">
+            <p class="g2a-text-bold-700 g2a-text-16 text-brandColor">
               ₹{{ totalPrice - payNowAmountTotal }}
             </p>
           </v-col>
@@ -155,10 +157,10 @@
         <v-divider class="my-2"></v-divider>
         <v-row dense no-gutters>
           <v-col cols="5">
-            <p class="g2a-text-bold-600 g2a-text-18 text-darkGreen">Pay now</p>
+            <p class="g2a-text-bold-600 g2a-text-18 text-darkGreen1">Pay now</p>
           </v-col>
           <v-col cols="7" align="end">
-            <p class="g2a-text-bold-700 g2a-text-18 text-darkGreen">
+            <p class="g2a-text-bold-700 g2a-text-18 text-darkGreen1">
               ₹{{ payNowAmountTotal }}
             </p>
           </v-col>

@@ -55,7 +55,10 @@
             <!-- Dates -->
             <v-row class="my-2">
               <v-col cols="12" md="6">
-                <div class="g2a-text-12 g2a-text-bold-600 text-grey mb-2">
+                <div
+                  class="g2a-text-12 g2a-text-bold-600 text-grey mb-2"
+                  style="letter-spacing: 0.09rem"
+                >
                   PICKUP DATE
                 </div>
                 <v-text-field
@@ -63,11 +66,15 @@
                   type="date"
                   variant="outlined"
                   :min="minDate"
+                  hide-details="auto"
                 />
               </v-col>
 
               <v-col cols="12" md="6">
-                <div class="g2a-text-12 g2a-text-bold-600 text-grey mb-2">
+                <div
+                  class="g2a-text-12 g2a-text-bold-600 text-grey mb-2"
+                  style="letter-spacing: 0.09rem"
+                >
                   RETURN DATE
                 </div>
                 <v-text-field
@@ -76,6 +83,7 @@
                   variant="outlined"
                   :min="pickupDate"
                   :max="maxDate"
+                  hide-details="auto"
                 />
               </v-col>
             </v-row>
@@ -103,8 +111,8 @@
               :disabled="!isValid"
               @click="continueNext"
             >
-              Continue
-              <v-icon end>mdi-arrow-right</v-icon>
+              <span class="g2a-text-bold-600 g2a-text-16">Continue</span>
+              <v-icon end color="">mdi-arrow-right</v-icon>
             </v-btn>
           </div>
         </v-card>
