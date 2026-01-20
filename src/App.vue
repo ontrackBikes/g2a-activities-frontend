@@ -9,7 +9,7 @@
           </v-col>
           <v-col cols="auto">
             <span class="g2a-text-14 text-grey">Secure Booking</span>
-            <v-icon size="20" class="ml-2 text-darkGreen">mdi-lock</v-icon>
+            <v-icon size="20" class="ml-2 text-darkGreen1">mdi-lock</v-icon>
           </v-col>
         </v-row>
       </v-container>
