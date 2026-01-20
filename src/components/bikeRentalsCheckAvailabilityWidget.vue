@@ -123,7 +123,7 @@ const props = defineProps({
   pickupDate: String,
   returnDate: String,
   quantity: { type: Number, default: 1 },
-  apiBaseUrl: { type: String, default: "http://localhost:3000/api" },
+  apiBaseUrl: { type: String, default: import.meta.env.VITE_API_BASE_URL },
   onContinue: Function,
   baseUrl: { type: String, required: true },
 });

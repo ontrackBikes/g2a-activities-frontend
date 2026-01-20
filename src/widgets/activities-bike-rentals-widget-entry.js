@@ -18,8 +18,7 @@ class ActivitiesBikeRentalsEmbedWidget {
     this.config = {
       selector: "#activities-bike-rentals-widget",
       baseUrl: import.meta.env.VITE_BASE_URL || "https://ferry.go2andaman.com",
-      apiBaseUrl:
-        import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
+      apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
       location: null,
       pickupDate: null,
       returnDate: null,

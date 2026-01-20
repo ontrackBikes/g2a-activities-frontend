@@ -1,8 +1,10 @@
 // services/api.js
 import axios from "axios";
 
+const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const apiClient = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: VITE_API_BASE_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -17,7 +19,7 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 apiClient.interceptors.response.use(
@@ -25,7 +27,7 @@ apiClient.interceptors.response.use(
   (error) => {
     console.error("[API Error]", error.response?.data || error.message);
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiClient;

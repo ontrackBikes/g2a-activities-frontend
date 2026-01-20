@@ -144,7 +144,7 @@ const errorMessage = ref("");
 
 /* ---------------- COMPUTED ---------------- */
 const resolvedLocationName = computed(() => {
-  return props.locationName || route.query.location || null;
+  return props.locationName || route.query.location || "Port Blair";
 });
 
 const minDate = computed(() => moment().add(2, "days").format("YYYY-MM-DD"));
