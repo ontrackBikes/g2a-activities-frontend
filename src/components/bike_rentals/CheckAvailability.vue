@@ -48,7 +48,7 @@
 
           <div class="d-flex justify-space-between px-4 mt-4">
             <span class="g2a-text-13 text-grey">Step 1 of 3</span>
-            <span class="g2a-text-13 text-grey">Location & Dates</span>
+            <span class="g2a-text-13 text-grey">Dates</span>
           </div>
 
           <v-container>

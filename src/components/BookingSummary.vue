@@ -22,7 +22,7 @@
             </v-col>
 
             <v-col>
-              <p class="g2a-text-bold-600 g2a-text-14 mb-0">
+              <p class="g2a-text-bold-600 g2a-text-15 mb-0">
                 {{ productInfo.label }} -
                 {{ bookingData.selectedLocation?.name }}
               </p>

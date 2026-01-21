@@ -159,7 +159,7 @@
                   </div>
                 </v-col>
                 <v-col align="end">
-                  <span class="g2a-text-bold-700 g2a-text-18 text-darkGreen">
+                  <span class="g2a-text-bold-700 g2a-text-18 text-darkGreen1">
                     ₹{{ mode.totalAmount }}
                   </span>
                 </v-col>
@@ -235,7 +235,7 @@
             Total: ₹{{ totalAmount }}
           </div>
           <div class="d-flex align-center">
-            <span class="g2a-text-20 g2a-text-bold-700 text-brandColor"
+            <span class="g2a-text-20 g2a-text-bold-700 text-darkGreen1"
               >₹{{ payNowAmountTotal }}</span
             >
             <span class="ml-1 g2a-text-12">now</span>
