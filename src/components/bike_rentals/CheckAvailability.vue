@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- ❌ LOCATION NOT FOUND -->
+    <!-- LOCATION NOT FOUND -->
     <v-card
       v-if="locationNotFound"
       elevation="0"
@@ -19,7 +19,7 @@
       </v-alert>
     </v-card>
 
-    <!-- ✅ NORMAL FLOW -->
+    <!-- NORMAL FLOW -->
     <v-row v-else>
       <v-col cols="12" md="8">
         <!-- Header -->
@@ -233,13 +233,13 @@ const continueNext = async () => {
       return;
     }
 
-    // ✅ Build URL manually
+    //  Build URL manually
     const baseUrl = window.location.origin;
     const url = `${baseUrl}/select-pickup-delivery?location=${encodeURIComponent(
       selectedLocation.value.name,
     )}&startDate=${pickupDate.value}&endDate=${returnDate.value}`;
 
-    // ✅ Open in new tab
+    //  Open in new tab
     window.open(url, "_blank");
   } catch (err) {
     errorMessage.value =

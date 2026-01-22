@@ -104,7 +104,7 @@
           </v-row>
         </div>
 
-        <div class="my-2">
+        <div class="my-2" v-if="onlineChargeApplicableforDelivery">
           <v-row dense no-gutters>
             <v-col cols="7">
               <p class="g2a-text-14">Delivery Charge</p>
@@ -117,7 +117,7 @@
           </v-row>
         </div>
 
-        <div class="my-2">
+        <div class="my-2" v-if="onlineChargeApplicableforPickup">
           <v-row dense no-gutters>
             <v-col cols="7">
               <p class="g2a-text-14">Pickup Charge</p>
@@ -142,13 +142,13 @@
           </v-col>
         </v-row>
 
-        <v-row dense no-gutters>
-          <v-col cols="5">
+        <v-row dense no-gutters v-if="totalPrice - payNowAmountTotal > 0">
+          <v-col cols="7">
             <p class="g2a-text-bold-600 g2a-text-16 text-brandColor">
-              Pay Later
+              Pay After Confirmation
             </p>
           </v-col>
-          <v-col cols="7" align="end">
+          <v-col cols="5" align="end">
             <p class="g2a-text-bold-700 g2a-text-16 text-brandColor">
               ₹{{ totalPrice - payNowAmountTotal }}
             </p>
@@ -157,7 +157,7 @@
         <v-divider class="my-2"></v-divider>
         <v-row dense no-gutters>
           <v-col cols="5">
-            <p class="g2a-text-bold-600 g2a-text-18 text-darkGreen1">Pay now</p>
+            <p class="g2a-text-bold-600 g2a-text-18 text-darkGreen1">Payable</p>
           </v-col>
           <v-col cols="7" align="end">
             <p class="g2a-text-bold-700 g2a-text-18 text-darkGreen1">
@@ -191,6 +191,16 @@ const props = defineProps({
   bookingData: {
     type: Object,
     required: true,
+  },
+  onlineChargeApplicableforDelivery: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  onlineChargeApplicableforPickup: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
 });
 

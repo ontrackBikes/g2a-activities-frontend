@@ -114,7 +114,10 @@
                   <div class="ml-3">
                     <div class="g2a-text-bold-600">
                       {{ opt.title }}
-                      <span class="text-darkGreen1">
+                      <span
+                        class="text-darkGreen1"
+                        v-if="opt.onlineChargeApplicable"
+                      >
                         ({{
                           opt.onlineCharge === 0
                             ? "FREE"
@@ -150,6 +153,12 @@
                   density="compact"
                   hide-details="auto"
                 />
+
+                <v-container v-if="opt.infoText">
+                  <v-alert color="info" variant="tonal" border="start">
+                    {{ opt.infoText }}
+                  </v-alert>
+                </v-container>
               </v-card>
             </v-radio-group>
           </section>
@@ -213,27 +222,21 @@
                   density="compact"
                   hide-details="auto"
                 />
+
+                <v-container v-if="opt.infoText">
+                  <v-alert color="info" variant="tonal" border="start">
+                    {{ opt.infoText }}
+                  </v-alert>
+                </v-container>
               </v-card>
             </v-radio-group>
           </section>
-
-          <!-- <v-alert v-if="errorMessage" type="error" variant="tonal">{{
-            errorMessage
-          }}</v-alert> -->
         </v-container>
 
         <v-divider v-if="!smAndDown" />
 
         <v-container v-if="!smAndDown" class="bg-surface">
           <div class="text-end">
-            <!-- <v-btn variant="text" @click="router.back()">
-              <v-icon start color="grey">mdi-arrow-left</v-icon>
-              <span
-                class="g2a-text-bold-500 g2a-text-16 text-greyDark"
-                style="letter-spacing: 0.05rem"
-                >BACK</span
-              >
-            </v-btn> -->
             <v-btn
               flat
               color="brandColor"
@@ -256,7 +259,13 @@
     </v-col>
 
     <v-col cols="12" md="4" :class="smAndDown ? 'mb-16' : ''">
-      <booking-summary :booking-data="booking" :product-info="productInfo" />
+      <booking-summary
+        :booking-data="booking"
+        :product-info="productInfo"
+        :online-charge-applicablefor-delivery="true"
+        :online-charge-applicablefor-pickup="false"
+        :showPayNow="false"
+      />
     </v-col>
 
     <v-sheet
@@ -267,14 +276,11 @@
     >
       <v-row class="align-center">
         <v-col cols="6">
-          <div class="g2a-text-12 text-decoration-line-through">
-            Total: ₹{{ totalAmount }}
-          </div>
+          <div class="g2a-text-12">Payable</div>
           <div class="d-flex align-center">
             <span class="g2a-text-20 g2a-text-bold-700 text-darkGreen1"
               >₹{{ payNowAmountTotal }}</span
             >
-            <span class="ml-1 g2a-text-12">now</span>
           </div>
         </v-col>
         <v-col cols="6"
@@ -335,7 +341,7 @@ const DEFAULT_BOOKING = {
     email: "",
     mobile: "",
   },
-  paymentType: "partial",
+  paymentType: "full",
 };
 
 const booking = ref(
@@ -479,6 +485,27 @@ const fetchLocationInfo = async () => {
       `/bike-rentals/location/${encodeURIComponent(name)}`,
     );
     if (data?.success) booking.value.selectedLocation = data.data;
+
+    console.log(data);
+    console.log(data.data?.paymentModes);
+
+    const paymentModes = data.data?.paymentModes;
+
+    const enabledPaymentModes = paymentModes.find((x) => {
+      return x.enabled == true;
+    });
+    console.log(
+      "🚀 ~ fetchLocationInfo ~ enabledPaymentModes:",
+      enabledPaymentModes,
+    );
+
+    booking.value.paymentType = enabledPaymentModes.paymentType;
+
+    // check enabled from paymentModes
+    // CHECK WHAT ALL PAYMENT OPTIONS ARE AVAILABLE
+    // THE FIRST ENABLED PAYMENT OPTION WILL BE DEFAULT
+    //
+
     saveBooking();
   } catch (err) {
     console.error("Failed to fetch location info", err);
@@ -492,6 +519,7 @@ const fetchProductInfo = async () => {
     if (data?.success) {
       productInfo.value = data.product;
       booking.value.productInfo = data.product;
+
       saveBooking();
     }
   } catch (err) {

@@ -125,7 +125,12 @@
           </div>
 
           <!-- Payment Modes -->
-          <v-card elevation="0" class="my-2 g2a-rounded-border">
+          <!-- only show if the payment modes are more than 1 -->
+          <v-card
+            elevation="0"
+            class="my-2 g2a-rounded-border"
+            v-if="paymentModes > 0"
+          >
             <div
               class="g2a-text-12 g2a-text-bold-600 text-grey my-4"
               style="letter-spacing: 0.09rem"
@@ -326,6 +331,10 @@ const hotelPickupCharge = computed(() => {
 const paymentModes = computed(() => {
   if (!booking.value.selectedLocation?.paymentModes) return [];
   const quantity = booking.value.quantity || 1;
+  const enabledPaymentModes =
+    booking.value.selectedLocation?.paymentModes.filter((x) => {
+      x.enabled == true;
+    });
   const days =
     booking.value.pickupDate && booking.value.returnDate
       ? moment(booking.value.returnDate).diff(
@@ -336,7 +345,7 @@ const paymentModes = computed(() => {
 
   const deliveryCharges = hotelDeliveryCharge.value + hotelPickupCharge.value;
 
-  return booking.value.selectedLocation.paymentModes.map((mode) => ({
+  return enabledPaymentModes.map((mode) => ({
     ...mode,
     totalAmount: (mode.amount || 0) * quantity * days + deliveryCharges,
   }));

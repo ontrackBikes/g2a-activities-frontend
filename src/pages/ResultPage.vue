@@ -49,10 +49,9 @@
             <div>
               <p>
                 Our agent will get in touch with you shortly to confirm the
-                booking details. You can check your email or print the receipt
-                for your records.
+                booking details.
               </p>
-              <v-btn
+              <!-- <v-btn
                 flat
                 class="mt-5"
                 color="brandColor"
@@ -60,7 +59,10 @@
                 size="large"
                 @click="printReceipt"
                 >Print <v-icon class="ml-1">mdi-printer</v-icon></v-btn
-              >
+              > -->
+
+              <div>In case need immediate assistance</div>
+              <div><a href="tel:080-45686588">080-45686588</a></div>
             </div>
           </template>
 
