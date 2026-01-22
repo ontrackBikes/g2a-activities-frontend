@@ -15,7 +15,7 @@
       </v-container>
     </v-app-bar>
 
-    <v-main>
+    <v-main class="bg-surface">
       <router-view></router-view>
     </v-main>
   </v-app>

@@ -87,34 +87,39 @@
                 />
               </v-col>
             </v-row>
+
+            <v-alert
+              v-if="errorMessage"
+              type="error"
+              variant="tonal"
+              class="my-2"
+            >
+              {{ errorMessage }}
+            </v-alert>
           </v-container>
 
           <v-divider />
 
-          <v-alert
-            v-if="errorMessage"
-            type="error"
-            variant="tonal"
-            class="mx-6 my-2"
-          >
-            {{ errorMessage }}
-          </v-alert>
-
-          <!-- Footer -->
-          <div class="d-flex justify-end px-6 py-4">
-            <v-btn
-              color="brandColor"
-              rounded="lg"
-              flat
-              size="large"
-              :loading="loading"
-              :disabled="!isValid"
-              @click="continueNext"
-            >
-              <span class="g2a-text-bold-600 g2a-text-16">Continue</span>
-              <v-icon end color="">mdi-arrow-right</v-icon>
-            </v-btn>
-          </div>
+          <v-container class="bg-surface">
+            <div class="text-end">
+              <v-btn
+                color="brandColor"
+                rounded="lg"
+                flat
+                size="large"
+                :loading="loading"
+                :disabled="!isValid"
+                @click="continueNext"
+              >
+                <span
+                  class="g2a-text-bold-600 g2a-text-16"
+                  style="letter-spacing: 0.05rem"
+                  >Continue</span
+                >
+                <v-icon end>mdi-arrow-right</v-icon>
+              </v-btn>
+            </div>
+          </v-container>
         </v-card>
       </v-col>
     </v-row>

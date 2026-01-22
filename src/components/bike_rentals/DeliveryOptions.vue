@@ -373,6 +373,30 @@ watch([pickupType, dropType, () => booking.value.quantity], () => {
   saveBooking();
 });
 
+// Watch pickupType changes
+watch(pickupType, (val) => {
+  booking.value.pickupType = val;
+  if (val === "self-pickup") {
+    booking.value.pickupHotelName = "";
+  }
+  if (val === "hotel") {
+    booking.value.pickup = "";
+  }
+  saveBooking();
+});
+
+// Watch dropType changes
+watch(dropType, (val) => {
+  booking.value.dropType = val;
+  if (val === "self-drop") {
+    booking.value.dropHotelName = "";
+  }
+  if (val === "hotel") {
+    booking.value.drop = "";
+  }
+  saveBooking();
+});
+
 // Quantity
 const increaseQuantity = () => {
   if (booking.value.quantity < maxQuantity.value) {
