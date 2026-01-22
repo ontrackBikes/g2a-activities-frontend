@@ -103,17 +103,22 @@
             <h3 class="text-brandColor">Payment Pending</h3>
 
             <p class="text-medium-emphasis mt-2">
-              We are waiting for confirmation from the bank
+              {{
+                orderInfo.reason ||
+                "We are waiting for confirmation from the bank"
+              }}
             </p>
 
             <v-btn
               flat
               block
-              color="primary"
+              color="brandColor"
               class="mt-4"
-              @click="fetchOrderStatus"
+              rounded="xl"
+              size="x-large"
+              @click="retryPayment"
             >
-              Refresh Status
+              Home
             </v-btn>
           </template>
         </v-card>
