@@ -104,19 +104,14 @@
             <div class="text-end">
               <v-btn
                 color="brandColor"
-                rounded="lg"
+                rounded="xl"
                 flat
-                size="large"
+                size="x-large"
                 :loading="loading"
                 :disabled="!isValid"
                 @click="continueNext"
               >
-                <span
-                  class="g2a-text-bold-600 g2a-text-16"
-                  style="letter-spacing: 0.05rem"
-                  >Continue</span
-                >
-                <v-icon end>mdi-arrow-right</v-icon>
+                Continue
               </v-btn>
             </div>
           </v-container>

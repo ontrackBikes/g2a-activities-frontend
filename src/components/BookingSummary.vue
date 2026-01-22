@@ -1,6 +1,6 @@
 <template>
-  <div class="sticky">
-    <v-card elevation="0" sticky class="g2a-rounded-border border bg-white">
+  <div>
+    <v-card elevation="0" class="g2a-rounded-border border bg-white">
       <v-alert color="background"
         ><div class="g2a-text-20 g2a-text-bold-600">
           Booking Summary
@@ -291,9 +291,4 @@ const totalPrice = computed(() => {
 });
 </script>
 
-<style scoped>
-.sticky {
-  position: sticky !important;
-  top: 80px !important;
-}
-</style>
+<style scoped></style>

@@ -86,6 +86,8 @@
               block
               color="brandColor"
               class="mt-4"
+              rounded="xl"
+              size="x-large"
               @click="retryPayment"
             >
               Home

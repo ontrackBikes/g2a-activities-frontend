@@ -1,5 +1,5 @@
 <template>
-  <v-btn v-if="smAndDown" variant="text" class="mb-4" @click="goBack">
+  <v-btn variant="text" class="mb-4" @click="router.go(-1)" rounded="xl">
     <v-icon start color="grey">mdi-arrow-left</v-icon>
     <span
       class="g2a-text-bold-500 g2a-text-15 text-greyDark"
@@ -7,6 +7,7 @@
       >BACK</span
     >
   </v-btn>
+
   <v-row>
     <v-col cols="12" md="8">
       <v-card elevation="0" class="mb-6 g2a-rounded-border border">
@@ -31,6 +32,7 @@
             <v-row>
               <v-col cols="12" sm="2">
                 <v-select
+                  hide-details="auto"
                   v-model="customer.title"
                   :items="['Mr', 'Mrs', 'Ms', 'Dr']"
                   label="Title"
@@ -42,6 +44,7 @@
 
               <v-col cols="12" sm="5">
                 <v-text-field
+                  hide-details="auto"
                   v-model="customer.firstName"
                   label="First Name"
                   variant="outlined"
@@ -53,6 +56,7 @@
 
               <v-col cols="12" sm="5">
                 <v-text-field
+                  hide-details="auto"
                   v-model="customer.lastName"
                   label="Last Name"
                   variant="outlined"
@@ -66,6 +70,7 @@
             <v-row>
               <v-col cols="12" sm="4">
                 <v-select
+                  hide-details="auto"
                   v-model="customer.countryAbbr"
                   :items="countriesList"
                   item-title="title"
@@ -79,6 +84,7 @@
 
               <v-col cols="12" sm="8">
                 <v-text-field
+                  hide-details="auto"
                   v-model="customer.mobile"
                   label="Mobile Number"
                   variant="outlined"
@@ -94,6 +100,7 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
+                  hide-details="auto"
                   v-model="customer.email"
                   label="Email"
                   type="email"
@@ -111,6 +118,7 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
+                  hide-details="auto"
                   v-model="customer.alternatePhone"
                   label="Alternate Mobile (Optional)"
                   variant="outlined"
@@ -129,7 +137,7 @@
           <v-card
             elevation="0"
             class="my-2 g2a-rounded-border"
-            v-if="paymentModes > 0"
+            v-if="paymentModes.length > 1"
           >
             <div
               class="g2a-text-12 g2a-text-bold-600 text-grey my-4"
@@ -155,7 +163,10 @@
                         :style="!mode.enabled ? { color: 'red' } : {}"
                       />
                     </div>
-                    <div class="ml-2">
+                    <div
+                      class="ml-2"
+                      @click="booking.paymentType = mode.paymentType"
+                    >
                       <p class="g2a-text-bold-600 mt-1">{{ mode.label }}</p>
                       <p class="g2a-text-14 text-greyDark">
                         {{ mode.description || "Secure online payment" }}
@@ -171,46 +182,35 @@
               </v-row>
             </v-radio-group>
           </v-card>
-
-          <p class="g2a-text-14 text-greyDark">
-            By clicking Pay, you agree to the
-            <a href="#" class="text-brandColor">terms of service</a>.
-          </p>
-        </v-container>
-
-        <v-divider v-if="!smAndDown" />
-
-        <v-container v-if="!smAndDown" class="bg-surface">
-          <div class="d-flex align-center justify-space-between">
-            <v-btn variant="text" @click="goBack">
-              <v-icon start color="grey">mdi-arrow-left</v-icon>
-              <span
-                class="g2a-text-bold-500 g2a-text-16 text-greyDark"
-                style="letter-spacing: 0.05rem"
-                >BACK</span
-              >
-            </v-btn>
-
-            <v-btn
-              flat
-              color="brandColor"
-              rounded="lg"
-              size="large"
-              :disabled="!isStep3Valid || !booking.paymentType || loading"
-              @click="processPayment"
-              :loading="loading"
-            >
-              <span class="g2a-text-bold-600 g2a-text-16"
-                >Pay ₹{{ payNowAmountTotal }}</span
-              >
-            </v-btn>
-          </div>
         </v-container>
       </v-card>
     </v-col>
 
     <v-col cols="12" md="4" :class="smAndDown ? 'mb-16' : ''">
-      <booking-summary :booking-data="booking" :product-info="productInfo" />
+      <div class="sticky">
+        <booking-summary :booking-data="booking" :product-info="productInfo" />
+        <div class="mt-4">
+          <p class="g2a-text-14 text-greyDark my-3">
+            By clicking "Pay", you agree to the
+            <a href="#" class="text-brandColor">terms of service</a>.
+          </p>
+          <v-btn
+            v-if="!smAndDown"
+            block
+            flat
+            color="brandColor"
+            rounded="xl"
+            size="x-large"
+            :disabled="!isFormValid || !booking.paymentType || loading"
+            @click="processPayment"
+            :loading="loading"
+          >
+            <span class="g2a-text-bold-600 g2a-text-16"
+              >Pay ₹{{ payNowAmountTotal }}</span
+            >
+          </v-btn>
+        </div>
+      </div>
     </v-col>
 
     <!-- error message -->
@@ -236,14 +236,11 @@
     >
       <v-row class="align-center">
         <v-col cols="6">
-          <div class="g2a-text-12 text-decoration-line-through">
-            Total: ₹{{ totalAmount }}
-          </div>
+          <div class="g2a-text-12">Payable</div>
           <div class="d-flex align-center">
             <span class="g2a-text-20 g2a-text-bold-700 text-darkGreen1"
               >₹{{ payNowAmountTotal }}</span
             >
-            <span class="ml-1 g2a-text-12">now</span>
           </div>
         </v-col>
         <v-col cols="6">
@@ -251,9 +248,9 @@
             block
             flat
             color="brandColor"
-            rounded="lg"
+            rounded="xl"
             size="large"
-            :disabled="!isStep3Valid || !booking.paymentType || loading"
+            :disabled="!isFormValid || !booking.paymentType || loading"
             @click="processPayment"
             :loading="loading"
           >
@@ -269,20 +266,21 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import moment from "moment";
+import { useDisplay } from "vuetify";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
 import BookingSummary from "../BookingSummary.vue";
 import apiClient from "@/services/api";
 import countries_list from "@/store/local_datas/countries_list.json";
-import { parsePhoneNumberFromString } from "libphonenumber-js";
-import { useDisplay } from "vuetify";
 
+/* ------------------ SETUP ------------------ */
 const { smAndDown } = useDisplay();
-
-const LOCAL_STORAGE_KEY = "bikeRentalBooking";
 const router = useRouter();
+const LOCAL_STORAGE_KEY = "bikeRentalBooking";
 
+/* ------------------ STATE ------------------ */
 const booking = ref({});
 const customer = ref({});
-// const countriesList = ["+91 (India)", "+1 (USA)", "+44 (UK)"];
 const loading = ref(false);
 const productInfo = ref({});
 
@@ -292,6 +290,7 @@ const snackbar = ref({
   color: "error",
 });
 
+/* ------------------ COUNTRIES ------------------ */
 const countriesList = computed(() =>
   countries_list.map((c) => ({
     title: `${c.dial_code} (${c.abbr})`,
@@ -302,106 +301,98 @@ const countriesList = computed(() =>
 
 watch(
   () => customer.value.countryAbbr,
-  (newAbbr) => {
-    const selectedCountry = countriesList.value.find(
-      (c) => c.value === newAbbr,
-    );
-    if (selectedCountry) {
-      customer.value.countryCode = `${selectedCountry.dialCode} (${selectedCountry.value})`;
+  (abbr) => {
+    const country = countriesList.value.find((c) => c.value === abbr);
+    if (country) {
+      customer.value.countryCode = `${country.dialCode} (${country.value})`;
       saveCustomer();
     }
   },
   { immediate: true },
 );
 
-const hotelDeliveryCharge = computed(() => {
-  const option = booking.value.selectedLocation?.deliveryOptions?.find(
+/* ------------------ HELPERS ------------------ */
+const rentalDays = computed(() => {
+  if (!booking.value.pickupDate || !booking.value.returnDate) return 1;
+  return Math.max(
+    moment(booking.value.returnDate).diff(
+      moment(booking.value.pickupDate),
+      "days",
+    ),
+    1,
+  );
+});
+
+const quantity = computed(() => booking.value.quantity || 1);
+
+/* ------------------ DELIVERY / PICKUP ------------------ */
+const selectedDeliveryOption = computed(() =>
+  booking.value.selectedLocation?.deliveryOptions?.find(
     (x) => x.type === booking.value.pickupType,
-  );
-  return option?.onlineCharge || 0;
-});
+  ),
+);
 
-const hotelPickupCharge = computed(() => {
-  const option = booking.value.selectedLocation?.dropOptions?.find(
+const selectedDropOption = computed(() =>
+  booking.value.selectedLocation?.dropOptions?.find(
     (x) => x.type === booking.value.dropType,
-  );
-  return option?.onlineCharge || 0;
-});
+  ),
+);
 
+const deliveryCharge = computed(() =>
+  selectedDeliveryOption.value?.onlineChargeApplicable
+    ? selectedDeliveryOption.value?.onlineCharge || 0
+    : 0,
+);
+
+const pickupCharge = computed(() =>
+  selectedDropOption.value?.onlineChargeApplicable
+    ? selectedDropOption.value?.onlineCharge || 0
+    : 0,
+);
+
+/* ------------------ PAYMENT MODES ------------------ */
 const paymentModes = computed(() => {
-  if (!booking.value.selectedLocation?.paymentModes) return [];
-  const quantity = booking.value.quantity || 1;
-  const enabledPaymentModes =
-    booking.value.selectedLocation?.paymentModes.filter((x) => {
-      x.enabled == true;
-    });
-  const days =
-    booking.value.pickupDate && booking.value.returnDate
-      ? moment(booking.value.returnDate).diff(
-          moment(booking.value.pickupDate),
-          "days",
-        ) || 1
-      : 1;
+  const modes = booking.value.selectedLocation?.paymentModes || [];
+  if (!modes.length) return [];
 
-  const deliveryCharges = hotelDeliveryCharge.value + hotelPickupCharge.value;
+  const extraCharges = deliveryCharge.value + pickupCharge.value;
 
-  return enabledPaymentModes.map((mode) => ({
-    ...mode,
-    totalAmount: (mode.amount || 0) * quantity * days + deliveryCharges,
-  }));
+  return modes
+    .filter((m) => m.enabled)
+    .map((mode) => ({
+      ...mode,
+      totalAmount:
+        (Number(mode.amount) || 0) * quantity.value * rentalDays.value +
+        extraCharges,
+    }));
 });
 
+/* auto-select first enabled payment mode */
+watch(
+  paymentModes,
+  (modes) => {
+    if (!booking.value.paymentType && modes.length) {
+      booking.value.paymentType = modes[0].paymentType;
+      saveBooking();
+    }
+  },
+  { immediate: true },
+);
+
+/* ------------------ TOTALS ------------------ */
 const payNowAmountTotal = computed(() => {
-  const selected = booking.value.paymentType;
-  const mode = booking.value.selectedLocation?.paymentModes?.find(
-    (x) => x.paymentType === selected,
+  const selected = paymentModes.value.find(
+    (m) => m.paymentType === booking.value.paymentType,
   );
-  const quantity = booking.value.quantity || 1;
-  const days =
-    booking.value.pickupDate && booking.value.returnDate
-      ? moment(booking.value.returnDate).diff(
-          moment(booking.value.pickupDate),
-          "days",
-        ) || 1
-      : 1;
-
-  const deliveryCharges = hotelDeliveryCharge.value + hotelPickupCharge.value;
-
-  return (mode?.amount || 0) * quantity * days + deliveryCharges;
+  return selected?.totalAmount || 0;
 });
 
-const totalAmount = computed(() => {
-  const quantity = booking.value.quantity || 1;
-  const days =
-    booking.value.pickupDate && booking.value.returnDate
-      ? moment(booking.value.returnDate).diff(
-          moment(booking.value.pickupDate),
-          "days",
-        ) || 1
-      : 1;
-
-  const baseMode = booking.value.selectedLocation?.paymentModes?.[0];
-  const deliveryCharges = hotelDeliveryCharge.value + hotelPickupCharge.value;
-
-  return (baseMode?.amount || 0) * quantity * days + deliveryCharges;
-});
-
-const saveBooking = () => {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(booking.value));
-};
-
-const saveCustomer = () => {
-  booking.value.customer = { ...customer.value };
-  saveBooking();
-};
-
-const isStep3Valid = computed(() => {
+/* ------------------ FORM ------------------ */
+const isFormValid = computed(() => {
   const phoneValid =
-    validatePhoneNumber(
-      customer.value.mobile,
-      customer.value.countryAbbr,
-      false,
-    ) === true;
+    validatePhoneNumber(customer.value.mobile, customer.value.countryAbbr) ===
+    true;
+
   const emailValid =
     !!customer.value.email && /.+@.+\..+/.test(customer.value.email);
 
@@ -414,36 +405,48 @@ const isStep3Valid = computed(() => {
   );
 });
 
-const fetchProductInfo = async () => {
+/* ------------------ STORAGE ------------------ */
+function saveBooking() {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(booking.value));
+}
+
+function saveCustomer() {
+  booking.value.customer = { ...customer.value };
+  saveBooking();
+}
+
+/* ------------------ API ------------------ */
+async function fetchProductInfo() {
   try {
     const { data } = await apiClient.get("/bike-rentals/product-info");
-    if (data.success) productInfo.value = data.product;
-  } catch (err) {
-    console.error("Failed to fetch product info", err);
+    if (data?.success) productInfo.value = data.product;
+  } catch {
+    showError("Unable to load product info");
   }
-};
+}
 
-const processPayment = async () => {
+/* ------------------ PAYMENT ------------------ */
+async function processPayment() {
   loading.value = true;
   try {
     const payload = {
       locationName: booking.value.selectedLocation.name,
       startDate: booking.value.pickupDate,
       endDate: booking.value.returnDate,
-      quantity: booking.value.quantity,
+      quantity: quantity.value,
       paymentType: booking.value.paymentType,
       pickupType: booking.value.pickupType,
       dropType: booking.value.dropType,
       pickup: booking.value.pickup,
       drop: booking.value.drop,
-      dropHotelName: booking.value.dropHotelName || "",
       pickupHotelName: booking.value.pickupHotelName || "",
+      dropHotelName: booking.value.dropHotelName || "",
       customer: { ...customer.value },
     };
 
     const { data } = await apiClient.post("/order/bike-rentals/order", payload);
-    if (!data.success)
-      throw new Error(data.message || "Failed to create order");
+
+    if (!data?.success) throw new Error(data?.message);
 
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -452,58 +455,69 @@ const processPayment = async () => {
       name: "Bike Rental",
       description: `Booking #${data.orderId}`,
       order_id: data.payment.id,
-      handler(response) {
+      handler() {
         router.push(`/payment/status?order_id=${data.payment.id}`);
+      },
+      modal: {
+        ondismiss() {
+          router.push(`/payment/status?order_id=${data.payment.id}`);
+        },
       },
       prefill: {
         name: `${customer.value.firstName} ${customer.value.lastName}`,
         email: customer.value.email,
         contact: customer.value.mobile,
       },
-      theme: { color: "#ff8c00" },
+      theme: { color: "#4C42D8" },
     };
 
     new window.Razorpay(options).open();
   } catch (err) {
-    const message =
-      err.response?.data?.message || err.message || "Payment failed";
-    showError(message);
+    showError(err?.message || "Payment failed");
   } finally {
     loading.value = false;
   }
-};
+}
 
-const goBack = () => router.back();
+/* ------------------ VALIDATION ------------------ */
+function validatePhoneNumber(value, countryAbbr) {
+  if (!value) return "Phone number required";
+  if (!/^[0-9]+$/.test(value)) return "Only numbers allowed";
+  if (!countryAbbr) return "Select country";
 
-onMounted(async () => {
-  await fetchProductInfo();
-  const localBooking = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-  if (!localBooking?.selectedLocation) router.push("/step-1");
-  booking.value = localBooking || {};
-  customer.value = booking.value.customer || {};
-});
-
-function validatePhoneNumber(value, countryAbbr, isOptional = false) {
-  if (!value && isOptional) return true;
-  if (!value) return "Phone number is required";
-
-  const isValidFormat = /^[0-9]+$/.test(value);
-  if (!isValidFormat) return "Only numbers allowed";
-
-  if (!countryAbbr) return "Select country code";
-
-  const phoneNumber = parsePhoneNumberFromString(value.toString(), countryAbbr);
-
-  return phoneNumber &&
-    phoneNumber.isValid() &&
-    phoneNumber.isPossible() &&
-    phoneNumber.nationalNumber === value
-    ? true
-    : `Invalid number for ${countryAbbr}`;
+  const phone = parsePhoneNumberFromString(value, countryAbbr);
+  return phone?.isValid() ? true : "Invalid phone number";
 }
 
 function showError(message) {
   snackbar.value = { show: true, message, color: "error" };
-  setTimeout(() => (snackbar.value.show = false), 5000);
 }
+
+/* ------------------ INIT ------------------ */
+onMounted(async () => {
+  await fetchProductInfo();
+
+  try {
+    const stored = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    if (!stored?.selectedLocation) {
+      router.push("/step-1");
+      return;
+    }
+    booking.value = stored;
+    customer.value = stored.customer || {};
+  } catch {
+    router.push("/step-1");
+  }
+});
 </script>
+
+<style scoped>
+.active {
+  border: 1px solid #ffbb00 !important;
+  background: #ffbb0018;
+}
+.sticky {
+  position: sticky !important;
+  top: 80px !important;
+}
+</style>

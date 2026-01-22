@@ -1,8 +1,15 @@
 <template>
+  <v-btn variant="text" class="mb-4" @click="router.go(-1)" rounded="xl">
+    <v-icon start color="grey">mdi-arrow-left</v-icon>
+    <span
+      class="g2a-text-bold-500 g2a-text-15 text-greyDark"
+      style="letter-spacing: 0.05rem"
+      >BACK</span
+    >
+  </v-btn>
   <v-row>
     <v-col cols="12" md="8">
       <v-card elevation="0" class="mb-6 g2a-rounded-border border bg-white">
-        <!-- PROGRESS BAR -->
         <v-progress-linear color="brandColor" :model-value="66" height="6" />
 
         <v-container>
@@ -21,9 +28,7 @@
           <section class="my-4" v-if="productInfo.inclusions?.length">
             <v-card class="border bg-light g2a-rounded-border" elevation="0">
               <v-container>
-                <div
-                  class="g2a-text-bold-600 text-blackLight3 d-flex align-center"
-                >
+                <div class="g2a-text-bold-600 d-flex align-center">
                   <v-avatar
                     color="darkGreen1"
                     variant="tonal"
@@ -37,15 +42,15 @@
                 <v-divider class="my-3" />
                 <v-row dense>
                   <v-col
-                    v-for="(item, index) in productInfo.inclusions"
-                    :key="index"
+                    v-for="(item, i) in productInfo.inclusions"
+                    :key="i"
                     cols="12"
                     sm="6"
                     class="d-flex align-center"
                   >
-                    <v-icon color="darkGreen1" size="20" class="mr-2"
-                      >mdi-check-circle</v-icon
-                    >
+                    <v-icon color="darkGreen1" size="20" class="mr-2">
+                      mdi-check-circle
+                    </v-icon>
                     <span class="g2a-text-15">{{ item }}</span>
                   </v-col>
                 </v-row>
@@ -55,68 +60,57 @@
 
           <!-- QUANTITY -->
           <section class="my-6">
-            <div
-              class="g2a-text-12 g2a-text-bold-600 text-grey my-4"
-              style="letter-spacing: 0.1rem"
-            >
+            <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4">
               QUANTITY (Max {{ maxQuantity }})
             </div>
-            <div class="d-flex align-center my-2">
+            <div class="d-flex align-center">
               <v-btn
                 icon
                 variant="outlined"
-                color="grey"
                 :disabled="booking.quantity <= 1"
-                size="small"
-                @click="decreaseQuantity"
+                @click="changeQty(-1)"
               >
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
-              <div class="mx-6 g2a-text-bold-600 g2a-text-24">
+              <div class="mx-6 g2a-text-24 g2a-text-bold-600">
                 {{ booking.quantity }}
               </div>
-              <v-btn
-                icon
-                variant="outlined"
-                color="grey"
-                size="small"
-                @click="increaseQuantity"
-              >
+              <v-btn icon variant="outlined" @click="changeQty(1)">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </div>
           </section>
 
-          <v-divider class="my-5"></v-divider>
+          <v-divider class="my-5" />
 
           <!-- PICKUP -->
-          <section class="my-4">
-            <div
-              class="g2a-text-bold-600 my-4 d-flex align-center"
-              style="letter-spacing: 0.04rem"
-            >
+          <section>
+            <div class="g2a-text-bold-600 my-4 d-flex align-center">
               <v-icon color="brandColor" class="mr-2"
                 >mdi-arrow-right-circle</v-icon
               >
               GETTING THE VEHICLE
             </div>
-            <v-radio-group v-model="pickupType">
+
+            <v-radio-group v-model="booking.pickupType">
               <v-card
-                v-for="(opt, i) in pickupOptions"
-                :key="i"
+                v-for="opt in pickupOptions"
+                :key="opt.type"
                 class="my-2 py-4 g2a-rounded-border"
                 variant="outlined"
-                @click="pickupType = opt.type"
-                :class="{ active: pickupType === opt.type }"
+                :class="{ active: booking.pickupType === opt.type }"
               >
-                <div class="d-flex align-center px-4">
-                  <v-radio :value="opt.type" color="brandColor" />
+                <div
+                  class="d-flex align-center px-4 my-2"
+                  @click="booking.pickupType = opt.type"
+                >
+                  <v-radio :value="opt.type" />
                   <div class="ml-3">
                     <div class="g2a-text-bold-600">
                       {{ opt.title }}
                       <span
-                        class="text-darkGreen1"
                         v-if="opt.onlineChargeApplicable"
+                        class="text-darkGreen1"
                       >
                         ({{
                           opt.onlineCharge === 0
@@ -131,7 +125,8 @@
 
                 <v-select
                   v-if="
-                    pickupType === 'self-pickup' && opt.type === 'self-pickup'
+                    booking.pickupType === 'self-pickup' &&
+                    opt.type === 'self-pickup'
                   "
                   v-model="booking.pickup"
                   :items="pickupAndDropPoints"
@@ -139,19 +134,18 @@
                   item-value="name"
                   label="Select Outlet"
                   class="px-4 my-4"
-                  variant="outlined"
                   density="compact"
-                  hide-details="auto"
+                  variant="outlined"
                 />
 
                 <v-text-field
-                  v-if="pickupType === 'hotel' && opt.type === 'hotel'"
+                  hide-details="auto"
+                  v-if="booking.pickupType === 'hotel' && opt.type === 'hotel'"
                   v-model="booking.pickupHotelName"
                   label="Hotel Name"
                   class="px-4 my-4"
-                  variant="outlined"
                   density="compact"
-                  hide-details="auto"
+                  variant="outlined"
                 />
 
                 <v-container v-if="opt.infoText">
@@ -165,30 +159,30 @@
 
           <!-- DROP -->
           <section class="mt-4">
-            <div
-              class="g2a-text-bold-600 my-4 d-flex align-center"
-              style="letter-spacing: 0.04rem"
-            >
+            <div class="g2a-text-bold-600 my-4 d-flex align-center">
               <v-icon color="brandColor" class="mr-2"
                 >mdi-arrow-left-circle</v-icon
               >
               RETURNING THE VEHICLE
             </div>
-            <v-radio-group v-model="dropType" color="brandColor" hide-details>
+
+            <v-radio-group v-model="booking.dropType">
               <v-card
-                v-for="(opt, i) in dropOptions"
-                :key="i"
+                v-for="opt in dropOptions"
+                :key="opt.type"
                 class="my-2 py-4 g2a-rounded-border"
                 variant="outlined"
-                @click="dropType = opt.type"
-                :class="{ active: dropType === opt.type }"
+                :class="{ active: booking.dropType === opt.type }"
               >
-                <div class="d-flex align-center px-4">
+                <div class="d-flex align-center px-4 my-2">
                   <v-radio :value="opt.type" />
                   <div class="ml-3">
                     <div class="g2a-text-bold-600">
                       {{ opt.title }}
-                      <span class="text-darkGreen1">
+                      <span
+                        v-if="opt.onlineChargeApplicable"
+                        class="text-darkGreen1"
+                      >
                         ({{
                           opt.onlineCharge === 0
                             ? "FREE"
@@ -201,26 +195,27 @@
                 </div>
 
                 <v-select
-                  v-if="dropType === 'self-drop' && opt.type === 'self-drop'"
+                  v-if="
+                    booking.dropType === 'self-drop' && opt.type === 'self-drop'
+                  "
                   v-model="booking.drop"
                   :items="pickupAndDropPoints"
                   item-title="name"
                   item-value="name"
                   label="Select Outlet"
                   class="px-4 my-4"
-                  variant="outlined"
                   density="compact"
-                  hide-details="auto"
+                  variant="outlined"
                 />
 
                 <v-text-field
-                  v-if="dropType === 'hotel' && opt.type === 'hotel'"
+                  hide-details="auto"
+                  v-if="booking.dropType === 'hotel' && opt.type === 'hotel'"
                   v-model="booking.dropHotelName"
                   label="Hotel Name"
-                  class="px-4 my-4"
-                  variant="outlined"
+                  class="px-4"
                   density="compact"
-                  hide-details="auto"
+                  variant="outlined"
                 />
 
                 <v-container v-if="opt.infoText">
@@ -231,41 +226,39 @@
               </v-card>
             </v-radio-group>
           </section>
-        </v-container>
 
-        <v-divider v-if="!smAndDown" />
-
-        <v-container v-if="!smAndDown" class="bg-surface">
-          <div class="text-end">
-            <v-btn
-              flat
-              color="brandColor"
-              rounded="lg"
-              size="large"
-              :loading="loading"
-              :disabled="!isStep2Valid"
-              @click="goNext"
-            >
-              <span
-                class="g2a-text-bold-600 g2a-text-16"
-                style="letter-spacing: 0.05rem"
-                >Continue</span
-              >
-              <v-icon end>mdi-arrow-right</v-icon>
-            </v-btn>
-          </div>
+          <section class="mb-4">
+            <v-alert v-if="errorMessage" type="error" variant="tonal" class="">
+              {{ errorMessage }}
+            </v-alert>
+          </section>
         </v-container>
       </v-card>
     </v-col>
 
+    <!-- SUMMARY -->
     <v-col cols="12" md="4" :class="smAndDown ? 'mb-16' : ''">
-      <booking-summary
-        :booking-data="booking"
-        :product-info="productInfo"
-        :online-charge-applicablefor-delivery="true"
-        :online-charge-applicablefor-pickup="false"
-        :showPayNow="false"
-      />
+      <div class="sticky">
+        <booking-summary
+          :booking-data="booking"
+          :product-info="productInfo"
+          :online-charge-applicablefor-delivery="onlineChargeDelivery"
+          :online-charge-applicablefor-pickup="onlineChargePickup"
+        />
+        <div class="mt-5" v-if="!smAndDown">
+          <v-btn
+            :loading="loading"
+            :disabled="!isFormValid"
+            @click="goNext"
+            flat
+            color="brandColor"
+            rounded="xl"
+            size="x-large"
+            block
+            >Next</v-btn
+          >
+        </div>
+      </div>
     </v-col>
 
     <v-sheet
@@ -275,33 +268,19 @@
       style="z-index: 2000"
     >
       <v-row class="align-center">
-        <v-col cols="6">
-          <div class="g2a-text-12">Payable</div>
-          <div class="d-flex align-center">
-            <span class="g2a-text-20 g2a-text-bold-700 text-darkGreen1"
-              >₹{{ payNowAmountTotal }}</span
-            >
-          </div>
-        </v-col>
-        <v-col cols="6"
-          ><v-btn
-            flat
-            block
-            color="brandColor"
-            rounded="lg"
-            size="large"
+        <v-col cols="12">
+          <v-btn
             :loading="loading"
-            :disabled="!isStep2Valid"
+            :disabled="!isFormValid"
             @click="goNext"
+            flat
+            color="brandColor"
+            rounded="xl"
+            size="large"
+            block
+            >Next</v-btn
           >
-            <span
-              class="g2a-text-bold-600 g2a-text-16"
-              style="letter-spacing: 0.05rem"
-              >Continue</span
-            >
-            <v-icon end>mdi-arrow-right</v-icon>
-          </v-btn></v-col
-        >
+        </v-col>
       </v-row>
     </v-sheet>
   </v-row>
@@ -314,202 +293,107 @@ import moment from "moment";
 import apiClient from "@/services/api";
 import BookingSummary from "../BookingSummary.vue";
 import { useDisplay } from "vuetify";
-
 const { smAndDown } = useDisplay();
 
 const LOCAL_STORAGE_KEY = "bikeRentalBooking";
 const route = useRoute();
 const router = useRouter();
 
-const DEFAULT_BOOKING = {
-  selectedLocation: null,
-  pickupDate: moment().add(2, "days").format("YYYY-MM-DD"),
-  returnDate: moment().add(3, "days").format("YYYY-MM-DD"),
-  quantity: 1,
-  pickupType: "self-pickup",
-  pickup: null,
-  pickupHotelName: "",
-  dropType: "self-drop",
-  drop: null,
-  dropHotelName: "",
-  availability: null,
-  productInfo: null,
-  customer: {
-    title: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    mobile: "",
-  },
-  paymentType: "full",
+/* ------------------ SAFE STORAGE ------------------ */
+const safeParse = (key, fallback) => {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || fallback;
+  } catch {
+    return fallback;
+  }
 };
 
+/* ------------------ STATE ------------------ */
 const booking = ref(
-  JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || { ...DEFAULT_BOOKING },
+  safeParse(LOCAL_STORAGE_KEY, {
+    selectedLocation: null,
+    pickupDate: moment().add(2, "days").format("YYYY-MM-DD"),
+    returnDate: moment().add(3, "days").format("YYYY-MM-DD"),
+    quantity: 1,
+    pickupType: "self-pickup",
+    dropType: "self-drop",
+    paymentType: null,
+  }),
 );
+
 const productInfo = ref({});
 const pickupAndDropPoints = ref([]);
-const loading = ref(false);
-const errorMessage = ref("");
 
-const pickupType = ref(booking.value.pickupType);
-const dropType = ref(booking.value.dropType);
+/* ------------------ watchers ------------------ */
 
+watch(
+  () => booking.value.pickupType,
+  (val) => {
+    if (val !== "self-pickup") booking.value.pickup = null;
+    if (val == "self-pickup") booking.value.pickupHotelName = null;
+  },
+);
+
+watch(
+  () => booking.value.dropType,
+  (val) => {
+    if (val !== "self-drop") booking.value.drop = null;
+    if (val == "self-drop") booking.value.dropHotelName = null;
+  },
+);
+
+/* ------------------ COMPUTED ------------------ */
 const pickupOptions = computed(
   () => booking.value.selectedLocation?.deliveryOptions || [],
 );
 const dropOptions = computed(
   () => booking.value.selectedLocation?.dropOptions || [],
 );
-const maxQuantity = computed(
-  () =>
-    booking.value.selectedLocation?.maxQtyPerBooking ||
-    productInfo.value.maxQuantity ||
-    5,
+
+const selectedDeliveryOption = computed(() =>
+  pickupOptions.value.find((x) => x.type === booking.value.pickupType),
+);
+const selectedDropOption = computed(() =>
+  dropOptions.value.find((x) => x.type === booking.value.dropType),
 );
 
-// Save booking to localStorage
+const onlineChargeDelivery = computed(
+  () => !!selectedDeliveryOption.value?.onlineChargeApplicable,
+);
+const onlineChargePickup = computed(
+  () => !!selectedDropOption.value?.onlineChargeApplicable,
+);
+
+const maxQuantity = computed(
+  () => booking.value.selectedLocation?.maxQtyPerBooking || 5,
+);
+
+/* ------------------ METHODS ------------------ */
 const saveBooking = () =>
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(booking.value));
 
-// Watchers
-watch([pickupType, dropType, () => booking.value.quantity], () => {
-  booking.value.pickupType = pickupType.value;
-  booking.value.dropType = dropType.value;
-  saveBooking();
-});
-
-// Watch pickupType changes
-watch(pickupType, (val) => {
-  booking.value.pickupType = val;
-  if (val === "self-pickup") {
-    booking.value.pickupHotelName = "";
-  }
-  if (val === "hotel") {
-    booking.value.pickup = "";
-  }
-  saveBooking();
-});
-
-// Watch dropType changes
-watch(dropType, (val) => {
-  booking.value.dropType = val;
-  if (val === "self-drop") {
-    booking.value.dropHotelName = "";
-  }
-  if (val === "hotel") {
-    booking.value.drop = "";
-  }
-  saveBooking();
-});
-
-// Quantity
-const increaseQuantity = () => {
-  if (booking.value.quantity < maxQuantity.value) {
-    booking.value.quantity++;
-    saveBooking();
-  }
-};
-const decreaseQuantity = () => {
-  if (booking.value.quantity > 1) {
-    booking.value.quantity--;
+const changeQty = (delta) => {
+  const next = booking.value.quantity + delta;
+  if (next >= 1 && next <= maxQuantity.value) {
+    booking.value.quantity = next;
     saveBooking();
   }
 };
 
-// Validation
-const isStep2Valid = computed(() => {
-  if (pickupType.value === "self-pickup" && !booking.value.pickup) return false;
-  if (pickupType.value === "hotel" && !booking.value.pickupHotelName)
-    return false;
-  if (dropType.value === "self-drop" && !booking.value.drop) return false;
-  if (dropType.value === "hotel" && !booking.value.dropHotelName) return false;
-  return true;
-});
-
-const hotelDeliveryCharge = computed(() => {
-  const option = booking.value.selectedLocation?.deliveryOptions?.find(
-    (x) => x.type === booking.value.pickupType,
-  );
-  return option?.onlineCharge || 0;
-});
-
-const hotelPickupCharge = computed(() => {
-  const option = booking.value.selectedLocation?.dropOptions?.find(
-    (x) => x.type === booking.value.dropType,
-  );
-  return option?.onlineCharge || 0;
-});
-
-const payNowAmountTotal = computed(() => {
-  const selected = booking.value.paymentType;
-  const mode = booking.value.selectedLocation?.paymentModes?.find(
-    (x) => x.paymentType === selected,
-  );
-  const quantity = booking.value.quantity || 1;
-  const days =
-    booking.value.pickupDate && booking.value.returnDate
-      ? moment(booking.value.returnDate).diff(
-          moment(booking.value.pickupDate),
-          "days",
-        ) || 1
-      : 1;
-
-  const deliveryCharges = hotelDeliveryCharge.value + hotelPickupCharge.value;
-
-  return (mode?.amount || 0) * quantity * days + deliveryCharges;
-});
-
-const totalAmount = computed(() => {
-  const quantity = booking.value.quantity || 1;
-  const days =
-    booking.value.pickupDate && booking.value.returnDate
-      ? moment(booking.value.returnDate).diff(
-          moment(booking.value.pickupDate),
-          "days",
-        ) || 1
-      : 1;
-
-  const baseMode = booking.value.selectedLocation?.paymentModes?.[0];
-  const deliveryCharges = hotelDeliveryCharge.value + hotelPickupCharge.value;
-
-  return (baseMode?.amount || 0) * quantity * days + deliveryCharges;
-});
-
-// Fetch location info
+/* ------------------ API ------------------ */
 const fetchLocationInfo = async () => {
-  try {
-    const name = booking.value.selectedLocation?.name;
-    if (!name) return;
-    const { data } = await apiClient.get(
-      `/bike-rentals/location/${encodeURIComponent(name)}`,
-    );
-    if (data?.success) booking.value.selectedLocation = data.data;
+  const name = booking.value.selectedLocation?.name;
+  if (!name) return;
 
-    console.log(data);
-    console.log(data.data?.paymentModes);
+  const { data } = await apiClient.get(
+    `/bike-rentals/location/${encodeURIComponent(name)}`,
+  );
 
-    const paymentModes = data.data?.paymentModes;
+  booking.value.selectedLocation = data.data;
+  booking.value.paymentType =
+    data.data.paymentModes.find((m) => m.enabled)?.paymentType || null;
 
-    const enabledPaymentModes = paymentModes.find((x) => {
-      return x.enabled == true;
-    });
-    console.log(
-      "🚀 ~ fetchLocationInfo ~ enabledPaymentModes:",
-      enabledPaymentModes,
-    );
-
-    booking.value.paymentType = enabledPaymentModes.paymentType;
-
-    // check enabled from paymentModes
-    // CHECK WHAT ALL PAYMENT OPTIONS ARE AVAILABLE
-    // THE FIRST ENABLED PAYMENT OPTION WILL BE DEFAULT
-    //
-
-    saveBooking();
-  } catch (err) {
-    console.error("Failed to fetch location info", err);
-  }
+  saveBooking();
 };
 
 // Fetch product info
@@ -519,7 +403,6 @@ const fetchProductInfo = async () => {
     if (data?.success) {
       productInfo.value = data.product;
       booking.value.productInfo = data.product;
-
       saveBooking();
     }
   } catch (err) {
@@ -527,46 +410,79 @@ const fetchProductInfo = async () => {
   }
 };
 
-// Fetch pickup/drop points
 const fetchPickupDropPoints = async () => {
-  try {
-    const name = booking.value.selectedLocation?.name;
-    if (!name) return;
-    const { data } = await apiClient.get(
-      `/bike-rentals/pickup-drop-points/${encodeURIComponent(name)}`,
-    );
-    pickupAndDropPoints.value = data?.data || [];
-  } catch (err) {
-    pickupAndDropPoints.value = [];
-  }
+  const name = booking.value.selectedLocation?.name;
+  if (!name) return;
+
+  const { data } = await apiClient.get(
+    `/bike-rentals/pickup-drop-points/${encodeURIComponent(name)}`,
+  );
+  pickupAndDropPoints.value = data?.data || [];
 };
 
-// Check availability
+const isFormValid = computed(() => {
+  const b = booking.value;
+
+  // location must exist
+  if (!b.selectedLocation) return false;
+
+  // quantity safety
+  if (!b.quantity || b.quantity < 1) return false;
+
+  /* ---------- PICKUP VALIDATION ---------- */
+  if (b.pickupType === "self-pickup") {
+    if (!b.pickup) return false;
+  }
+
+  if (b.pickupType === "hotel") {
+    if (!b.pickupHotelName?.trim()) return false;
+  }
+
+  /* ---------- DROP VALIDATION ---------- */
+  if (b.dropType === "self-drop") {
+    if (!b.drop) return false;
+  }
+
+  if (b.dropType === "hotel") {
+    if (!b.dropHotelName?.trim()) return false;
+  }
+
+  return true;
+});
+
+const loading = ref(false);
+const errorMessage = ref("");
+
 const checkAvailability = async () => {
-  if (
-    !booking.value.selectedLocation?.name ||
-    !booking.value.pickupDate ||
-    !booking.value.returnDate
-  )
+  const b = booking.value;
+
+  if (!b.selectedLocation?.name || !b.pickupDate || !b.returnDate) {
+    errorMessage.value = "Missing booking details";
     return false;
+  }
+
   loading.value = true;
   errorMessage.value = "";
+
   try {
     const payload = {
-      locationName: booking.value.selectedLocation.name,
-      startDate: booking.value.pickupDate,
-      endDate: booking.value.returnDate,
-      quantity: booking.value.quantity,
+      locationName: b.selectedLocation.name,
+      startDate: b.pickupDate,
+      endDate: b.returnDate,
+      quantity: b.quantity,
     };
+
     const { data } = await apiClient.post(
       "/bike-rentals/check-availability",
       payload,
     );
-    if (!data.success) {
-      errorMessage.value = data.message || "Not available";
+
+    if (!data?.success) {
+      errorMessage.value = data?.message || "Vehicle not available";
       return false;
     }
-    booking.value.availability = data.data;
+
+    b.availability = data.data;
     saveBooking();
     return true;
   } catch (err) {
@@ -578,10 +494,18 @@ const checkAvailability = async () => {
   }
 };
 
-// Initialize
+const goNext = async () => {
+  if (!isFormValid.value) return;
+  const ok = await checkAvailability();
+  if (ok) {
+    router.push("/bike-rentals-checkout");
+  }
+};
+
+/* ------------------ INIT ------------------ */
 onMounted(async () => {
   const { location, startDate, endDate } = route.query;
-  if (!location || !startDate || !endDate) return router.push("/");
+  if (!location) return router.push("/");
 
   booking.value.selectedLocation = {
     name: decodeURIComponent(location).replace(/-/g, " "),
@@ -590,24 +514,19 @@ onMounted(async () => {
   booking.value.returnDate = endDate;
   saveBooking();
 
-  await fetchLocationInfo();
   await fetchProductInfo();
+  await fetchLocationInfo();
   await fetchPickupDropPoints();
-
-  const ok = await checkAvailability();
-  if (!ok) router.push("/");
 });
-
-// Go next
-const goNext = async () => {
-  const ok = await checkAvailability();
-  if (ok) router.push("/bike-rentals-checkout");
-};
 </script>
 
 <style scoped>
 .active {
   border: 1px solid #ffbb00 !important;
   background: #ffbb0018;
+}
+.sticky {
+  position: sticky !important;
+  top: 80px !important;
 }
 </style>
