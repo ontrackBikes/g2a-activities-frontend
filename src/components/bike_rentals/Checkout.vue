@@ -184,6 +184,17 @@
           </v-card>
         </v-container>
       </v-card>
+      <div class="mt-5">
+        <v-alert
+          class="mb-2"
+          color="error"
+          variant="tonal"
+          v-for="(error, index) in errorMessages"
+          :key="index"
+        >
+          {{ error.message }}
+        </v-alert>
+      </div>
     </v-col>
 
     <v-col cols="12" md="4" :class="smAndDown ? 'mb-16' : ''">
@@ -283,7 +294,7 @@ const booking = ref({});
 const customer = ref({});
 const loading = ref(false);
 const productInfo = ref({});
-
+const errorMessages = ref([]);
 const snackbar = ref({
   show: false,
   message: "",
@@ -428,6 +439,7 @@ async function fetchProductInfo() {
 /* ------------------ PAYMENT ------------------ */
 async function processPayment() {
   loading.value = true;
+  errorMessages.value = [];
   try {
     const payload = {
       locationName: booking.value.selectedLocation.name,
@@ -473,6 +485,7 @@ async function processPayment() {
 
     new window.Razorpay(options).open();
   } catch (err) {
+    errorMessages.value = err.response?.data?.errors;
     showError(err?.message || "Payment failed");
   } finally {
     loading.value = false;
