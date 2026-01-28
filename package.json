@@ -9,9 +9,9 @@
   "scripts": {
     "dev": "vite --mode development",
     "dev:staging": "vite --mode staging",
-    "build": "vite build --mode development && cp -R public/uploads dist/uploads",
-    "build:staging": "vite build --mode staging && cp -R public/uploads dist/uploads",
-    "build:production": "vite build --mode production && cp -R public/uploads dist/uploads",
+    "build": "vite build --mode development",
+    "build:staging": "vite build --mode staging",
+    "build:production": "vite build --mode production",
     "build:activities-bike-rentals-widget:dev": "vite build --config vite.activities-bike-rentals-widget.config.js --mode development",
     "build:activities-bike-rentals-widget:staging": "vite build --config vite.activities-bike-rentals-widget.config.js --mode staging",
     "build:activities-bike-rentals-widget:production": "vite build --config vite.activities-bike-rentals-widget.config.js --mode production",
