@@ -11,6 +11,7 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+dist-activities-bike-rentals-widget
 coverage
 *.local
 
@@ -36,4 +37,4 @@ coverage
 __screenshots__/
 .env
 .env.*
-.env.local
+!.env.example

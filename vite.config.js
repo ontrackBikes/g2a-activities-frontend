@@ -12,8 +12,19 @@ export default defineConfig({
     },
   },
 
-  /* ✅ THIS MUST BE AT ROOT LEVEL */
   server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+
+  // ✅ Same proxy for `npm run preview`
+  preview: {
+    port: 5173,
     proxy: {
       "/api": {
         target: "http://localhost:3000",
