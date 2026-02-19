@@ -109,52 +109,53 @@
 
       <!-- Policies Section -->
       <v-card v-if="productInfo.policies" elevation="0" class="border g2a-rounded-border mb-4">
-        <v-container>
+        <v-container class="pa-5">
+
           <!-- Security Deposit -->
-          <div v-if="productInfo.policies.securityDeposit" class="mb-4">
-            <div class="d-flex align-center mb-2">
-              <v-icon color="brandColor" class="mr-2">mdi-shield-check</v-icon>
-              <span class="g2a-text-bold-600 g2a-text-16">Security Deposit</span>
+          <div v-if="productInfo.policies.securityDeposit" class="mb-8">
+            <div class="d-flex align-center mb-3">
+              <v-icon color="brandColor" size="28" class="mr-3">mdi-shield-check</v-icon>
+              <span style="font-size: 1.2rem; font-weight: 700; letter-spacing: 0.01rem">Security Deposit</span>
             </div>
-            <v-alert color="warning" variant="tonal" border="start">
-              <div class="g2a-text-14 mb-2">
-                <strong>₹{{ productInfo.policies.securityDeposit.amount }}</strong> refundable deposit required at
-                pickup
+            <v-alert color="warning" variant="tonal" border="start" class="pa-4">
+              <div style="font-size: 1.05rem; font-weight: 700" class="mb-2">
+                ₹{{ productInfo.policies.securityDeposit.amount }} refundable deposit required at pickup
               </div>
-              <div class="g2a-text-13 text-greyDark">
+              <div style="font-size: 0.95rem; line-height: 1.6" class="text-greyDark mb-1">
                 {{ productInfo.policies.securityDeposit.description }}
               </div>
-              <div class="g2a-text-12 text-greyDark mt-2">
+              <div style="font-size: 0.9rem; line-height: 1.6" class="text-greyDark mt-2">
                 {{ productInfo.policies.securityDeposit.refundConditions }}
               </div>
             </v-alert>
           </div>
 
           <!-- Damage Policy -->
-          <div v-if="productInfo.policies.damagePolicy" class="mb-4">
-            <div class="d-flex align-center mb-2">
-              <v-icon color="error" class="mr-2">mdi-alert-circle</v-icon>
-              <span class="g2a-text-bold-600 g2a-text-16">Damage Policy</span>
+          <div v-if="productInfo.policies.damagePolicy" class="mb-8">
+            <div class="d-flex align-center mb-3">
+              <v-icon color="error" size="28" class="mr-3">mdi-alert-circle</v-icon>
+              <span style="font-size: 1.2rem; font-weight: 700; letter-spacing: 0.01rem">Damage Policy</span>
             </div>
-            <p class="g2a-text-14 text-greyDark">
+            <p style="font-size: 0.95rem; line-height: 1.7" class="text-greyDark mb-0">
               {{ productInfo.policies.damagePolicy }}
             </p>
           </div>
 
           <!-- Cancellation Policy -->
           <div v-if="productInfo.policies.cancellationPolicy">
-            <div class="d-flex align-center mb-2">
-              <v-icon color="info" class="mr-2">mdi-information</v-icon>
-              <span class="g2a-text-bold-600 g2a-text-16">
+            <div class="d-flex align-center mb-3">
+              <v-icon color="info" size="28" class="mr-3">mdi-information</v-icon>
+              <span style="font-size: 1.2rem; font-weight: 700; letter-spacing: 0.01rem">
                 {{ productInfo.policies.cancellationPolicy.title || "Cancellation Policy" }}
               </span>
             </div>
-            <ul class="g2a-text-14 text-greyDark pl-6">
+            <ul style="font-size: 0.95rem; line-height: 1.8; padding-left: 1.5rem" class="text-greyDark">
               <li v-for="(term, index) in productInfo.policies.cancellationPolicy.terms" :key="index" class="mb-1">
                 {{ term }}
               </li>
             </ul>
           </div>
+
         </v-container>
       </v-card>
 
