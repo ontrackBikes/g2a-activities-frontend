@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="max-width: 1260px; margin: 0 auto; padding: 0 16px;">
     <!-- ❌ LOCATION NOT FOUND -->
     <v-card
       v-if="locationNotFound"

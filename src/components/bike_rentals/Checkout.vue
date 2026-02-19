@@ -1,11 +1,7 @@
 <template>
   <v-btn variant="text" class="mb-4" @click="router.go(-1)" rounded="xl">
     <v-icon start color="grey">mdi-arrow-left</v-icon>
-    <span
-      class="g2a-text-bold-500 g2a-text-15 text-greyDark"
-      style="letter-spacing: 0.05rem"
-      >BACK</span
-    >
+    <span class="g2a-text-bold-500 g2a-text-15 text-greyDark" style="letter-spacing: 0.05rem">BACK</span>
   </v-btn>
 
   <v-row>
@@ -16,14 +12,11 @@
         <v-container>
           <div class="d-flex justify-space-between">
             <span class="g2a-text-13 text-grey">Step 3 of 3</span>
-            <span class="g2a-text-13 text-grey">Payment</span>
+            <!-- <span class="g2a-text-13 text-grey">Payment</span> -->
           </div>
 
           <div class="g2a-text-24 g2a-text-bold-600 my-4">Review & Pay</div>
-          <div
-            class="g2a-text-12 g2a-text-bold-600 text-grey my-4"
-            style="letter-spacing: 0.09rem"
-          >
+          <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4" style="letter-spacing: 0.09rem">
             RIDER DETAILS
           </div>
 
@@ -31,142 +24,72 @@
           <div class="my-4">
             <v-row>
               <v-col cols="12" sm="2">
-                <v-select
-                  hide-details="auto"
-                  v-model="customer.title"
-                  :items="['Mr', 'Mrs', 'Ms', 'Dr']"
-                  label="Title"
-                  variant="outlined"
-                  density="comfortable"
-                  @update:model-value="saveCustomer"
-                />
+                <v-select hide-details="auto" v-model="customer.title" :items="['Mr', 'Mrs', 'Ms', 'Dr']" label="Title"
+                  variant="outlined" density="comfortable" @update:model-value="saveCustomer" />
               </v-col>
 
               <v-col cols="12" sm="5">
-                <v-text-field
-                  hide-details="auto"
-                  v-model="customer.firstName"
-                  label="First Name"
-                  variant="outlined"
-                  density="comfortable"
-                  :rules="[(v) => !!v || 'Required']"
-                  @update:model-value="saveCustomer"
-                />
+                <v-text-field hide-details="auto" v-model="customer.firstName" label="First Name" variant="outlined"
+                  density="comfortable" :rules="[(v) => !!v || 'Required']" @update:model-value="saveCustomer" />
               </v-col>
 
               <v-col cols="12" sm="5">
-                <v-text-field
-                  hide-details="auto"
-                  v-model="customer.lastName"
-                  label="Last Name"
-                  variant="outlined"
-                  density="comfortable"
-                  :rules="[(v) => !!v || 'Required']"
-                  @update:model-value="saveCustomer"
-                />
+                <v-text-field hide-details="auto" v-model="customer.lastName" label="Last Name" variant="outlined"
+                  density="comfortable" :rules="[(v) => !!v || 'Required']" @update:model-value="saveCustomer" />
               </v-col>
             </v-row>
 
             <v-row>
               <v-col cols="12" sm="4">
-                <v-select
-                  hide-details="auto"
-                  v-model="customer.countryAbbr"
-                  :items="countriesList"
-                  item-title="title"
-                  item-value="value"
-                  label="Country Code"
-                  variant="outlined"
-                  density="comfortable"
-                  @update:model-value="saveCustomer"
-                />
+                <v-select hide-details="auto" v-model="customer.countryAbbr" :items="countriesList" item-title="title"
+                  item-value="value" label="Country Code" variant="outlined" density="comfortable"
+                  @update:model-value="saveCustomer" />
               </v-col>
 
               <v-col cols="12" sm="8">
-                <v-text-field
-                  hide-details="auto"
-                  v-model="customer.mobile"
-                  label="Mobile Number"
-                  variant="outlined"
-                  density="comfortable"
-                  :rules="[
+                <v-text-field hide-details="auto" v-model="customer.mobile" label="Mobile Number" variant="outlined"
+                  density="comfortable" :rules="[
                     (v) => validatePhoneNumber(v, customer.countryAbbr, false),
-                  ]"
-                  @update:model-value="saveCustomer"
-                />
+                  ]" @update:model-value="saveCustomer" />
               </v-col>
             </v-row>
 
             <v-row>
               <v-col cols="12">
-                <v-text-field
-                  hide-details="auto"
-                  v-model="customer.email"
-                  label="Email"
-                  type="email"
-                  variant="outlined"
-                  density="comfortable"
-                  :rules="[
+                <v-text-field hide-details="auto" v-model="customer.email" label="Email" type="email" variant="outlined"
+                  density="comfortable" :rules="[
                     (v) => !!v || 'Required',
                     (v) => /.+@.+\..+/.test(v) || 'Invalid email',
-                  ]"
-                  @update:model-value="saveCustomer"
-                />
+                  ]" @update:model-value="saveCustomer" />
               </v-col>
             </v-row>
 
             <v-row>
               <v-col cols="12">
-                <v-text-field
-                  hide-details="auto"
-                  v-model="customer.alternatePhone"
-                  label="Alternate Mobile (Optional)"
-                  variant="outlined"
-                  density="comfortable"
-                  :rules="[
+                <v-text-field hide-details="auto" v-model="customer.alternatePhone" label="Alternate Mobile (Optional)"
+                  variant="outlined" density="comfortable" :rules="[
                     (v) => !v || /^[0-9]{10}$/.test(v) || 'Invalid number',
-                  ]"
-                  @update:model-value="saveCustomer"
-                />
+                  ]" @update:model-value="saveCustomer" />
               </v-col>
             </v-row>
           </div>
 
           <!-- Payment Modes -->
           <!-- only show if the payment modes are more than 1 -->
-          <v-card
-            elevation="0"
-            class="my-2 g2a-rounded-border"
-            v-if="paymentModes.length > 1"
-          >
-            <div
-              class="g2a-text-12 g2a-text-bold-600 text-grey my-4"
-              style="letter-spacing: 0.09rem"
-            >
+          <v-card elevation="0" class="my-2 g2a-rounded-border" v-if="paymentModes.length > 1">
+            <div class="g2a-text-12 g2a-text-bold-600 text-grey my-4" style="letter-spacing: 0.09rem">
               PAYMENT MODES
             </div>
 
             <v-radio-group v-model="booking.paymentType" hide-details>
-              <v-row
-                no-gutters
-                v-for="(mode, i) in paymentModes"
-                :key="i"
-                class="mb-4 cursor-pointer"
-                align="center"
-              >
+              <v-row no-gutters v-for="(mode, i) in paymentModes" :key="i" class="mb-4 cursor-pointer" align="center">
                 <v-col cols="9">
                   <div class="d-flex">
                     <div>
-                      <v-radio
-                        :value="mode.paymentType"
-                        :disabled="!mode.enabled"
-                        :style="!mode.enabled ? { color: 'red' } : {}"
-                      />
+                      <v-radio :value="mode.paymentType" :disabled="!mode.enabled"
+                        :style="!mode.enabled ? { color: 'red' } : {}" />
                     </div>
-                    <div
-                      class="ml-2"
-                      @click="booking.paymentType = mode.paymentType"
-                    >
+                    <div class="ml-2" @click="booking.paymentType = mode.paymentType">
                       <p class="g2a-text-bold-600 mt-1">{{ mode.label }}</p>
                       <p class="g2a-text-14 text-greyDark">
                         {{ mode.description || "Secure online payment" }}
@@ -185,13 +108,7 @@
         </v-container>
       </v-card>
       <div class="mt-5">
-        <v-alert
-          class="mb-2"
-          color="error"
-          variant="tonal"
-          v-for="(error, index) in errorMessages"
-          :key="index"
-        >
+        <v-alert class="mb-2" color="error" variant="tonal" v-for="(error, index) in errorMessages" :key="index">
           {{ error.message }}
         </v-alert>
       </div>
@@ -201,37 +118,70 @@
       <div class="sticky">
         <booking-summary :booking-data="booking" :product-info="productInfo" />
         <div class="mt-4">
+          <!-- Policies Section -->
+          <v-card v-if="productInfo.policies" elevation="0" class="border g2a-rounded-border mb-4">
+            <v-container>
+              <!-- Security Deposit -->
+              <div v-if="productInfo.policies.securityDeposit" class="mb-4">
+                <div class="d-flex align-center mb-2">
+                  <v-icon color="brandColor" class="mr-2">mdi-shield-check</v-icon>
+                  <span class="g2a-text-bold-600 g2a-text-16">Security Deposit</span>
+                </div>
+                <v-alert color="warning" variant="tonal" border="start">
+                  <div class="g2a-text-14 mb-2">
+                    <strong>₹{{ productInfo.policies.securityDeposit.amount }}</strong> refundable deposit required at
+                    pickup
+                  </div>
+                  <div class="g2a-text-13 text-greyDark">
+                    {{ productInfo.policies.securityDeposit.description }}
+                  </div>
+                  <div class="g2a-text-12 text-greyDark mt-2">
+                    {{ productInfo.policies.securityDeposit.refundConditions }}
+                  </div>
+                </v-alert>
+              </div>
+
+              <!-- Damage Policy -->
+              <div v-if="productInfo.policies.damagePolicy" class="mb-4">
+                <div class="d-flex align-center mb-2">
+                  <v-icon color="error" class="mr-2">mdi-alert-circle</v-icon>
+                  <span class="g2a-text-bold-600 g2a-text-16">Damage Policy</span>
+                </div>
+                <p class="g2a-text-14 text-greyDark">
+                  {{ productInfo.policies.damagePolicy }}
+                </p>
+              </div>
+
+              <!-- Cancellation Policy -->
+              <div v-if="productInfo.policies.cancellationPolicy">
+                <div class="d-flex align-center mb-2">
+                  <v-icon color="info" class="mr-2">mdi-information</v-icon>
+                  <span class="g2a-text-bold-600 g2a-text-16">
+                    {{ productInfo.policies.cancellationPolicy.title || "Cancellation Policy" }}
+                  </span>
+                </div>
+                <ul class="g2a-text-14 text-greyDark pl-6">
+                  <li v-for="(term, index) in productInfo.policies.cancellationPolicy.terms" :key="index" class="mb-1">
+                    {{ term }}
+                  </li>
+                </ul>
+              </div>
+            </v-container>
+          </v-card>
           <p class="g2a-text-14 text-greyDark my-3">
             By clicking "Pay", you agree to the
             <a href="#" class="text-brandColor">terms of service</a>.
           </p>
-          <v-btn
-            v-if="!smAndDown"
-            block
-            flat
-            color="brandColor"
-            rounded="xl"
-            size="x-large"
-            :disabled="!isFormValid || !booking.paymentType || loading"
-            @click="processPayment"
-            :loading="loading"
-          >
-            <span class="g2a-text-bold-600 g2a-text-16"
-              >Pay ₹{{ payNowAmountTotal }}</span
-            >
+          <v-btn v-if="!smAndDown" block flat color="brandColor" rounded="xl" size="x-large"
+            :disabled="!isFormValid || !booking.paymentType || loading" @click="processPayment" :loading="loading">
+            <span class="g2a-text-bold-600 g2a-text-16">Pay ₹{{ payNowAmountTotal }}</span>
           </v-btn>
         </div>
       </div>
     </v-col>
 
     <!-- error message -->
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      timeout="5000"
-      top
-      right
-    >
+    <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="5000" top right>
       {{ snackbar.message }}
       <template #actions>
         <v-btn text @click="snackbar.show = false">Close</v-btn>
@@ -239,32 +189,18 @@
     </v-snackbar>
 
     <!-- Small screen sticky footer for Continue/Pay button -->
-    <v-sheet
-      v-if="smAndDown"
-      elevation="4"
-      class="position-fixed bottom-0 left-0 right-0 px-4 py-3 d-flex align-center"
-      style="z-index: 2000"
-    >
+    <v-sheet v-if="smAndDown" elevation="4" class="position-fixed bottom-0 left-0 right-0 px-4 py-3 d-flex align-center"
+      style="z-index: 2000">
       <v-row class="align-center">
         <v-col cols="6">
           <div class="g2a-text-12">Payable</div>
           <div class="d-flex align-center">
-            <span class="g2a-text-20 g2a-text-bold-700 text-darkGreen1"
-              >₹{{ payNowAmountTotal }}</span
-            >
+            <span class="g2a-text-20 g2a-text-bold-700 text-darkGreen1">₹{{ payNowAmountTotal }}</span>
           </div>
         </v-col>
         <v-col cols="6">
-          <v-btn
-            block
-            flat
-            color="brandColor"
-            rounded="xl"
-            size="large"
-            :disabled="!isFormValid || !booking.paymentType || loading"
-            @click="processPayment"
-            :loading="loading"
-          >
+          <v-btn block flat color="brandColor" rounded="xl" size="large"
+            :disabled="!isFormValid || !booking.paymentType || loading" @click="processPayment" :loading="loading">
             <span class="g2a-text-bold-600 g2a-text-16">Pay Now </span>
           </v-btn>
         </v-col>
@@ -529,6 +465,7 @@ onMounted(async () => {
   border: 1px solid #ffbb00 !important;
   background: #ffbb0018;
 }
+
 .sticky {
   position: sticky !important;
   top: 80px !important;

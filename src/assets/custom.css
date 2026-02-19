@@ -542,3 +542,10 @@ input {
     /* 24px */
   }
 }
+
+/* Max width constraint for content */
+.g2a-max-width {
+  max-width: 1260px;
+  width: 100%;
+  margin: 0 auto;
+}

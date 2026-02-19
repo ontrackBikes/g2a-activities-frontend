@@ -1,11 +1,7 @@
 <template>
   <v-btn variant="text" class="mb-4" @click="router.go(-1)" rounded="xl">
     <v-icon start color="grey">mdi-arrow-left</v-icon>
-    <span
-      class="g2a-text-bold-500 g2a-text-15 text-greyDark"
-      style="letter-spacing: 0.05rem"
-      >BACK</span
-    >
+    <span class="g2a-text-bold-500 g2a-text-15 text-greyDark" style="letter-spacing: 0.05rem">BACK</span>
   </v-btn>
   <v-row>
     <v-col cols="12" md="8">
@@ -17,7 +13,7 @@
           <section>
             <div class="d-flex justify-space-between">
               <span class="g2a-text-13 text-grey">Step 2 of 3</span>
-              <span class="g2a-text-13 text-grey">Details</span>
+              <!-- <span class="g2a-text-13 text-grey">Details</span> -->
             </div>
             <div class="g2a-text-24 g2a-text-bold-600 my-4">
               Pickup & Delivery
@@ -29,25 +25,15 @@
             <v-card class="border bg-light g2a-rounded-border" elevation="0">
               <v-container>
                 <div class="g2a-text-bold-600 d-flex align-center">
-                  <v-avatar
-                    color="darkGreen1"
-                    variant="tonal"
-                    size="34"
-                    class="mr-2"
-                  >
+                  <v-avatar color="darkGreen1" variant="tonal" size="34" class="mr-2">
                     <v-icon size="22" icon="mdi-motorbike" />
                   </v-avatar>
                   What's Included ?
                 </div>
                 <v-divider class="my-3" />
                 <v-row dense>
-                  <v-col
-                    v-for="(item, i) in productInfo.inclusions"
-                    :key="i"
-                    cols="12"
-                    sm="6"
-                    class="d-flex align-center"
-                  >
+                  <v-col v-for="(item, i) in productInfo.inclusions" :key="i" cols="12" sm="6"
+                    class="d-flex align-center">
                     <v-icon color="darkGreen1" size="20" class="mr-2">
                       mdi-check-circle
                     </v-icon>
@@ -64,12 +50,7 @@
               QUANTITY (Max {{ maxQuantity }})
             </div>
             <div class="d-flex align-center">
-              <v-btn
-                icon
-                variant="outlined"
-                :disabled="booking.quantity <= 1"
-                @click="changeQty(-1)"
-              >
+              <v-btn icon variant="outlined" :disabled="booking.quantity <= 1" @click="changeQty(-1)">
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
               <div class="mx-6 g2a-text-24 g2a-text-bold-600">
@@ -86,145 +67,77 @@
           <!-- PICKUP -->
           <section>
             <div class="g2a-text-bold-600 my-4 d-flex align-center">
-              <v-icon color="brandColor" class="mr-2"
-                >mdi-arrow-right-circle</v-icon
-              >
+              <v-icon color="brandColor" class="mr-2">mdi-arrow-right-circle</v-icon>
               GETTING THE VEHICLE
             </div>
 
-            <v-radio-group v-model="booking.pickupType">
-              <v-card
-                v-for="opt in pickupOptions"
-                :key="opt.type"
-                class="my-2 py-4 g2a-rounded-border"
-                variant="outlined"
-                :class="{ active: booking.pickupType === opt.type }"
-              >
-                <div
-                  class="d-flex align-center px-4 my-2"
-                  @click="booking.pickupType = opt.type"
-                >
-                  <v-radio :value="opt.type" />
-                  <div class="ml-3">
-                    <div class="g2a-text-bold-600">
-                      {{ opt.title }}
-                      <span
-                        v-if="opt.onlineChargeApplicable"
-                        class="text-darkGreen1"
-                      >
-                        ({{
-                          opt.onlineCharge === 0
-                            ? "FREE"
-                            : "₹" + opt.onlineCharge
-                        }})
+            <v-card elevation="0" class="border g2a-rounded-border pa-4">
+              <v-radio-group v-model="booking.pickupType" inline hide-details class="mb-4">
+                <v-radio v-for="opt in pickupOptions" :key="opt.type" :value="opt.type" class="mr-6">
+                  <template v-slot:label>
+                    <div class="d-flex align-center">
+                      <span class="g2a-text-bold-600 mr-2">{{ opt.title }}</span>
+                      <span v-if="opt.onlineChargeApplicable" class="text-darkGreen1 g2a-text-14">
+                        ({{ opt.onlineCharge === 0 ? "FREE" : "₹" + opt.onlineCharge }})
                       </span>
                     </div>
-                    <div class="g2a-text-12 text-greyDark">{{ opt.label }}</div>
-                  </div>
-                </div>
+                  </template>
+                </v-radio>
+              </v-radio-group>
 
-                <v-select
-                  v-if="
-                    booking.pickupType === 'self-pickup' &&
-                    opt.type === 'self-pickup'
-                  "
-                  v-model="booking.pickup"
-                  :items="pickupAndDropPoints"
-                  item-title="name"
-                  item-value="name"
-                  label="Select Outlet"
-                  class="px-4 my-4"
-                  density="compact"
-                  variant="outlined"
-                />
+              <!-- Self Pickup Dropdown -->
+              <v-select v-if="booking.pickupType === 'self-pickup'" v-model="booking.pickup"
+                :items="pickupAndDropPoints" item-title="name" item-value="name" label="Select Pickup Point"
+                variant="outlined" density="comfortable" prepend-inner-icon="mdi-map-marker" />
 
-                <v-text-field
-                  hide-details="auto"
-                  v-if="booking.pickupType === 'hotel' && opt.type === 'hotel'"
-                  v-model="booking.pickupHotelName"
-                  label="Hotel Name"
-                  class="px-4 my-4"
-                  density="compact"
-                  variant="outlined"
-                />
+              <!-- Hotel Pickup Input -->
+              <v-text-field v-if="booking.pickupType === 'hotel'" v-model="booking.pickupHotelName" label="Hotel Name"
+                variant="outlined" density="comfortable" prepend-inner-icon="mdi-hotel"
+                placeholder="Enter your hotel name" />
 
-                <v-container v-if="opt.infoText">
-                  <v-alert color="info" variant="tonal" border="start">
-                    {{ opt.infoText }}
-                  </v-alert>
-                </v-container>
-              </v-card>
-            </v-radio-group>
+              <!-- Info Text -->
+              <v-alert v-if="selectedDeliveryOption?.infoText" color="info" variant="tonal" border="start" class="mt-3">
+                {{ selectedDeliveryOption.infoText }}
+              </v-alert>
+            </v-card>
           </section>
 
           <!-- DROP -->
           <section class="mt-4">
             <div class="g2a-text-bold-600 my-4 d-flex align-center">
-              <v-icon color="brandColor" class="mr-2"
-                >mdi-arrow-left-circle</v-icon
-              >
+              <v-icon color="brandColor" class="mr-2">mdi-arrow-left-circle</v-icon>
               RETURNING THE VEHICLE
             </div>
 
-            <v-radio-group v-model="booking.dropType">
-              <v-card
-                v-for="opt in dropOptions"
-                :key="opt.type"
-                class="my-2 py-4 g2a-rounded-border"
-                variant="outlined"
-                :class="{ active: booking.dropType === opt.type }"
-              >
-                <div class="d-flex align-center px-4 my-2">
-                  <v-radio :value="opt.type" />
-                  <div class="ml-3">
-                    <div class="g2a-text-bold-600">
-                      {{ opt.title }}
-                      <span
-                        v-if="opt.onlineChargeApplicable"
-                        class="text-darkGreen1"
-                      >
-                        ({{
-                          opt.onlineCharge === 0
-                            ? "FREE"
-                            : "₹" + opt.onlineCharge
-                        }})
+            <v-card elevation="0" class="border g2a-rounded-border pa-4">
+              <v-radio-group v-model="booking.dropType" inline hide-details class="mb-4">
+                <v-radio v-for="opt in dropOptions" :key="opt.type" :value="opt.type" class="mr-6">
+                  <template v-slot:label>
+                    <div class="d-flex align-center">
+                      <span class="g2a-text-bold-600 mr-2">{{ opt.title }}</span>
+                      <span v-if="opt.onlineChargeApplicable" class="text-darkGreen1 g2a-text-14">
+                        ({{ opt.onlineCharge === 0 ? "FREE" : "₹" + opt.onlineCharge }})
                       </span>
                     </div>
-                    <div class="g2a-text-12 text-greyDark">{{ opt.label }}</div>
-                  </div>
-                </div>
+                  </template>
+                </v-radio>
+              </v-radio-group>
 
-                <v-select
-                  v-if="
-                    booking.dropType === 'self-drop' && opt.type === 'self-drop'
-                  "
-                  v-model="booking.drop"
-                  :items="pickupAndDropPoints"
-                  item-title="name"
-                  item-value="name"
-                  label="Select Outlet"
-                  class="px-4 my-4"
-                  density="compact"
-                  variant="outlined"
-                />
+              <!-- Self Drop Dropdown -->
+              <v-select v-if="booking.dropType === 'self-drop'" v-model="booking.drop" :items="pickupAndDropPoints"
+                item-title="name" item-value="name" label="Select Drop Point" variant="outlined" density="comfortable"
+                prepend-inner-icon="mdi-map-marker" />
 
-                <v-text-field
-                  hide-details="auto"
-                  v-if="booking.dropType === 'hotel' && opt.type === 'hotel'"
-                  v-model="booking.dropHotelName"
-                  label="Hotel Name"
-                  class="px-4"
-                  density="compact"
-                  variant="outlined"
-                />
+              <!-- Hotel Drop Input -->
+              <v-text-field v-if="booking.dropType === 'hotel'" v-model="booking.dropHotelName" label="Hotel Name"
+                variant="outlined" density="comfortable" prepend-inner-icon="mdi-hotel"
+                placeholder="Enter your hotel name" />
 
-                <v-container v-if="opt.infoText">
-                  <v-alert color="info" variant="tonal" border="start">
-                    {{ opt.infoText }}
-                  </v-alert>
-                </v-container>
-              </v-card>
-            </v-radio-group>
+              <!-- Info Text -->
+              <v-alert v-if="selectedDropOption?.infoText" color="info" variant="tonal" border="start" class="mt-3">
+                {{ selectedDropOption.infoText }}
+              </v-alert>
+            </v-card>
           </section>
 
           <section class="mb-4">
@@ -239,47 +152,22 @@
     <!-- SUMMARY -->
     <v-col cols="12" md="4" :class="smAndDown ? 'mb-16' : ''">
       <div class="sticky">
-        <booking-summary
-          :booking-data="booking"
-          :product-info="productInfo"
+        <booking-summary :booking-data="booking" :product-info="productInfo"
           :online-charge-applicablefor-delivery="onlineChargeDelivery"
-          :online-charge-applicablefor-pickup="onlineChargePickup"
-        />
+          :online-charge-applicablefor-pickup="onlineChargePickup" />
         <div class="mt-5" v-if="!smAndDown">
-          <v-btn
-            :loading="loading"
-            :disabled="!isFormValid"
-            @click="goNext"
-            flat
-            color="brandColor"
-            rounded="xl"
-            size="x-large"
-            block
-            >Next</v-btn
-          >
+          <v-btn :loading="loading" :disabled="!isFormValid" @click="goNext" flat color="brandColor" rounded="xl"
+            size="x-large" block>Next</v-btn>
         </div>
       </div>
     </v-col>
 
-    <v-sheet
-      v-if="smAndDown"
-      elevation="4"
-      class="position-fixed bottom-0 left-0 right-0 px-4 py-3 d-flex align-center"
-      style="z-index: 2000"
-    >
+    <v-sheet v-if="smAndDown" elevation="4" class="position-fixed bottom-0 left-0 right-0 px-4 py-3 d-flex align-center"
+      style="z-index: 2000">
       <v-row class="align-center">
         <v-col cols="12">
-          <v-btn
-            :loading="loading"
-            :disabled="!isFormValid"
-            @click="goNext"
-            flat
-            color="brandColor"
-            rounded="xl"
-            size="large"
-            block
-            >Next</v-btn
-          >
+          <v-btn :loading="loading" :disabled="!isFormValid" @click="goNext" flat color="brandColor" rounded="xl"
+            size="large" block>Next</v-btn>
         </v-col>
       </v-row>
     </v-sheet>
@@ -420,6 +308,27 @@ const fetchPickupDropPoints = async () => {
   pickupAndDropPoints.value = data?.data || [];
 };
 
+/* ------------------ SET DEFAULTS AFTER FETCHING ------------------ */
+const setDefaultPickupDrop = () => {
+  // Set default pickup point if self-pickup is selected and no point is set
+  if (booking.value.pickupType === "self-pickup" && !booking.value.pickup) {
+    const firstPickupPoint = pickupAndDropPoints.value.find((p) => p.pickup);
+    if (firstPickupPoint) {
+      booking.value.pickup = firstPickupPoint.name;
+      saveBooking();
+    }
+  }
+
+  // Set default drop point if self-drop is selected and no point is set
+  if (booking.value.dropType === "self-drop" && !booking.value.drop) {
+    const firstDropPoint = pickupAndDropPoints.value.find((p) => p.drop);
+    if (firstDropPoint) {
+      booking.value.drop = firstDropPoint.name;
+      saveBooking();
+    }
+  }
+};
+
 const isFormValid = computed(() => {
   const b = booking.value;
 
@@ -517,6 +426,7 @@ onMounted(async () => {
   await fetchProductInfo();
   await fetchLocationInfo();
   await fetchPickupDropPoints();
+  setDefaultPickupDrop(); // ✅ Add this line
 });
 </script>
 
@@ -525,6 +435,7 @@ onMounted(async () => {
   border: 1px solid #ffbb00 !important;
   background: #ffbb0018;
 }
+
 .sticky {
   position: sticky !important;
   top: 80px !important;
