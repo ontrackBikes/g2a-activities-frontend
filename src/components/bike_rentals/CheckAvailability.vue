@@ -1,11 +1,7 @@
 <template>
-  <div>
-    <!-- LOCATION NOT FOUND -->
-    <v-card
-      v-if="locationNotFound"
-      elevation="0"
-      class="border g2a-rounded-border bg-white pa-6"
-    >
+  <div style="max-width: 1260px; margin: 0 auto; padding: 0 16px;">
+    <!-- ❌ LOCATION NOT FOUND -->
+    <v-card v-if="locationNotFound" elevation="0" class="border g2a-rounded-border bg-white pa-6">
       <h2 class="g2a-text-22 g2a-text-bold-600 mb-2">
         Rentals not available for this location
       </h2>
@@ -24,11 +20,7 @@
       <v-col cols="12" md="8">
         <!-- Header -->
         <div class="pb-4">
-          <v-chip
-            class="g2a-text-bold-600 text-uppercase"
-            size="small"
-            color="brandColor"
-          >
+          <v-chip class="g2a-text-bold-600 text-uppercase" size="small" color="brandColor">
             {{ productInfo.label || "Loading..." }}
           </v-chip>
 
@@ -55,45 +47,25 @@
             <!-- Dates -->
             <v-row class="my-2">
               <v-col cols="12" md="6">
-                <div
-                  class="g2a-text-12 g2a-text-bold-600 text-grey mb-2"
-                  style="letter-spacing: 0.09rem"
-                >
+                <div class="g2a-text-12 g2a-text-bold-600 text-grey mb-2" style="letter-spacing: 0.09rem">
                   PICKUP DATE
                 </div>
-                <v-text-field
-                  v-model="pickupDate"
-                  type="date"
-                  variant="outlined"
-                  :min="minDate"
-                  hide-details="auto"
-                />
+                <v-text-field v-model="pickupDate" type="date" variant="outlined" :min="minDate" :max="maxDate"
+                  hide-details="auto" :error="!!pickupDate && !isDateAllowed(pickupDate)"
+                  :error-messages="!!pickupDate && !isDateAllowed(pickupDate) ? 'This date is not available' : ''" />
               </v-col>
 
               <v-col cols="12" md="6">
-                <div
-                  class="g2a-text-12 g2a-text-bold-600 text-grey mb-2"
-                  style="letter-spacing: 0.09rem"
-                >
+                <div class="g2a-text-12 g2a-text-bold-600 text-grey mb-2" style="letter-spacing: 0.09rem">
                   RETURN DATE
                 </div>
-                <v-text-field
-                  v-model="returnDate"
-                  type="date"
-                  variant="outlined"
-                  :min="pickupDate"
-                  :max="maxDate"
-                  hide-details="auto"
-                />
+                <v-text-field v-model="returnDate" type="date" variant="outlined" :min="pickupDate" :max="maxDate"
+                  hide-details="auto" :error="!!returnDate && !isDateAllowed(returnDate)"
+                  :error-messages="!!returnDate && !isDateAllowed(returnDate) ? 'This date is not available' : ''" />
               </v-col>
             </v-row>
 
-            <v-alert
-              v-if="errorMessage"
-              type="error"
-              variant="tonal"
-              class="my-2"
-            >
+            <v-alert v-if="errorMessage" type="error" variant="tonal" class="my-2">
               {{ errorMessage }}
             </v-alert>
           </v-container>
@@ -102,15 +74,8 @@
 
           <v-container class="bg-surface">
             <div class="text-end">
-              <v-btn
-                color="brandColor"
-                rounded="xl"
-                flat
-                size="x-large"
-                :loading="loading"
-                :disabled="!isValid"
-                @click="continueNext"
-              >
+              <v-btn color="brandColor" rounded="xl" flat size="x-large" :loading="loading" :disabled="!isValid"
+                @click="continueNext">
                 Continue
               </v-btn>
             </div>
@@ -122,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import moment from "moment";
 import apiClient from "@/services/api";
@@ -156,16 +121,62 @@ const resolvedLocationName = computed(() => {
 });
 
 const minDate = computed(() => moment().add(2, "days").format("YYYY-MM-DD"));
-
 const maxDate = computed(() => moment().add(6, "months").format("YYYY-MM-DD"));
+
+// Combined set of all blackout dates (location + product level)
+const blackoutDateSet = computed(() => {
+  const locationDates = selectedLocation.value?.blackoutDates || [];
+  const productDates = productInfo.value?.blackoutDates || [];
+  return new Set([...locationDates, ...productDates]);
+});
+
+// Returns true if the date string is selectable (not blacked out)
+const isDateAllowed = (dateStr) => {
+  return !blackoutDateSet.value.has(moment(dateStr).format("YYYY-MM-DD"));
+};
+
+// Finds the next valid (non-blacked-out) date on or after a given date
+const nextAllowedDate = (fromDate) => {
+  let candidate = moment(fromDate);
+  const limit = moment(maxDate.value);
+  while (candidate.isSameOrBefore(limit)) {
+    if (isDateAllowed(candidate.format("YYYY-MM-DD"))) {
+      return candidate.format("YYYY-MM-DD");
+    }
+    candidate.add(1, "day");
+  }
+  return null;
+};
 
 const isValid = computed(() => {
   return (
     selectedLocation.value &&
     pickupDate.value &&
     returnDate.value &&
+    isDateAllowed(pickupDate.value) &&
+    isDateAllowed(returnDate.value) &&
     !loading.value
   );
+});
+
+/* ---------------- WATCHERS ---------------- */
+
+// When pickup date changes, check if return date is still valid.
+// If return date is now before the new pickup date, or is a blackout date, reset it.
+watch(pickupDate, (newPickup) => {
+  if (!returnDate.value) return;
+
+  const needsReset =
+    moment(returnDate.value).isSameOrBefore(moment(newPickup)) ||
+    !isDateAllowed(returnDate.value);
+
+  if (needsReset) {
+    // Find the first valid date that is at least 1 day after the new pickup
+    const candidate = nextAllowedDate(
+      moment(newPickup).add(1, "day").format("YYYY-MM-DD"),
+    );
+    returnDate.value = candidate || "";
+  }
 });
 
 /* ---------------- API ---------------- */
@@ -188,9 +199,7 @@ const fetchLocation = async () => {
 
   try {
     const { data } = await apiClient.get(
-      `/bike-rentals/location/${encodeURIComponent(
-        resolvedLocationName.value,
-      )}`,
+      `/bike-rentals/location/${encodeURIComponent(resolvedLocationName.value)}`,
     );
 
     if (data?.success && data.data) {
@@ -228,13 +237,11 @@ const continueNext = async () => {
       return;
     }
 
-    //  Build URL manually
     const baseUrl = window.location.origin;
     const url = `${baseUrl}/select-pickup-delivery?location=${encodeURIComponent(
       selectedLocation.value.name,
     )}&startDate=${pickupDate.value}&endDate=${returnDate.value}`;
 
-    //  Open in new tab
     window.open(url, "_blank");
   } catch (err) {
     errorMessage.value =
