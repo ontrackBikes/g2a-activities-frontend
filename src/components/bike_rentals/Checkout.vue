@@ -12,7 +12,6 @@
         <v-container>
           <div class="d-flex justify-space-between">
             <span class="g2a-text-13 text-grey">Step 3 of 3</span>
-            <!-- <span class="g2a-text-13 text-grey">Payment</span> -->
           </div>
 
           <div class="g2a-text-24 g2a-text-bold-600 my-4">Review & Pay</div>
@@ -107,6 +106,58 @@
           </v-card>
         </v-container>
       </v-card>
+
+      <!-- Policies Section -->
+      <v-card v-if="productInfo.policies" elevation="0" class="border g2a-rounded-border mb-4">
+        <v-container>
+          <!-- Security Deposit -->
+          <div v-if="productInfo.policies.securityDeposit" class="mb-4">
+            <div class="d-flex align-center mb-2">
+              <v-icon color="brandColor" class="mr-2">mdi-shield-check</v-icon>
+              <span class="g2a-text-bold-600 g2a-text-16">Security Deposit</span>
+            </div>
+            <v-alert color="warning" variant="tonal" border="start">
+              <div class="g2a-text-14 mb-2">
+                <strong>₹{{ productInfo.policies.securityDeposit.amount }}</strong> refundable deposit required at
+                pickup
+              </div>
+              <div class="g2a-text-13 text-greyDark">
+                {{ productInfo.policies.securityDeposit.description }}
+              </div>
+              <div class="g2a-text-12 text-greyDark mt-2">
+                {{ productInfo.policies.securityDeposit.refundConditions }}
+              </div>
+            </v-alert>
+          </div>
+
+          <!-- Damage Policy -->
+          <div v-if="productInfo.policies.damagePolicy" class="mb-4">
+            <div class="d-flex align-center mb-2">
+              <v-icon color="error" class="mr-2">mdi-alert-circle</v-icon>
+              <span class="g2a-text-bold-600 g2a-text-16">Damage Policy</span>
+            </div>
+            <p class="g2a-text-14 text-greyDark">
+              {{ productInfo.policies.damagePolicy }}
+            </p>
+          </div>
+
+          <!-- Cancellation Policy -->
+          <div v-if="productInfo.policies.cancellationPolicy">
+            <div class="d-flex align-center mb-2">
+              <v-icon color="info" class="mr-2">mdi-information</v-icon>
+              <span class="g2a-text-bold-600 g2a-text-16">
+                {{ productInfo.policies.cancellationPolicy.title || "Cancellation Policy" }}
+              </span>
+            </div>
+            <ul class="g2a-text-14 text-greyDark pl-6">
+              <li v-for="(term, index) in productInfo.policies.cancellationPolicy.terms" :key="index" class="mb-1">
+                {{ term }}
+              </li>
+            </ul>
+          </div>
+        </v-container>
+      </v-card>
+
       <div class="mt-5">
         <v-alert class="mb-2" color="error" variant="tonal" v-for="(error, index) in errorMessages" :key="index">
           {{ error.message }}
@@ -118,56 +169,6 @@
       <div class="sticky">
         <booking-summary :booking-data="booking" :product-info="productInfo" />
         <div class="mt-4">
-          <!-- Policies Section -->
-          <v-card v-if="productInfo.policies" elevation="0" class="border g2a-rounded-border mb-4">
-            <v-container>
-              <!-- Security Deposit -->
-              <div v-if="productInfo.policies.securityDeposit" class="mb-4">
-                <div class="d-flex align-center mb-2">
-                  <v-icon color="brandColor" class="mr-2">mdi-shield-check</v-icon>
-                  <span class="g2a-text-bold-600 g2a-text-16">Security Deposit</span>
-                </div>
-                <v-alert color="warning" variant="tonal" border="start">
-                  <div class="g2a-text-14 mb-2">
-                    <strong>₹{{ productInfo.policies.securityDeposit.amount }}</strong> refundable deposit required at
-                    pickup
-                  </div>
-                  <div class="g2a-text-13 text-greyDark">
-                    {{ productInfo.policies.securityDeposit.description }}
-                  </div>
-                  <div class="g2a-text-12 text-greyDark mt-2">
-                    {{ productInfo.policies.securityDeposit.refundConditions }}
-                  </div>
-                </v-alert>
-              </div>
-
-              <!-- Damage Policy -->
-              <div v-if="productInfo.policies.damagePolicy" class="mb-4">
-                <div class="d-flex align-center mb-2">
-                  <v-icon color="error" class="mr-2">mdi-alert-circle</v-icon>
-                  <span class="g2a-text-bold-600 g2a-text-16">Damage Policy</span>
-                </div>
-                <p class="g2a-text-14 text-greyDark">
-                  {{ productInfo.policies.damagePolicy }}
-                </p>
-              </div>
-
-              <!-- Cancellation Policy -->
-              <div v-if="productInfo.policies.cancellationPolicy">
-                <div class="d-flex align-center mb-2">
-                  <v-icon color="info" class="mr-2">mdi-information</v-icon>
-                  <span class="g2a-text-bold-600 g2a-text-16">
-                    {{ productInfo.policies.cancellationPolicy.title || "Cancellation Policy" }}
-                  </span>
-                </div>
-                <ul class="g2a-text-14 text-greyDark pl-6">
-                  <li v-for="(term, index) in productInfo.policies.cancellationPolicy.terms" :key="index" class="mb-1">
-                    {{ term }}
-                  </li>
-                </ul>
-              </div>
-            </v-container>
-          </v-card>
           <p class="g2a-text-14 text-greyDark my-3">
             By clicking "Pay", you agree to the
             <a href="#" class="text-brandColor">terms of service</a>.

@@ -1,11 +1,11 @@
 <template>
   <div>
     <v-card elevation="0" class="g2a-rounded-border border bg-white">
-      <v-alert color="background"
-        ><div class="g2a-text-20 g2a-text-bold-600">
+      <v-alert color="background">
+        <div class="g2a-text-20 g2a-text-bold-600">
           Booking Summary
-        </div></v-alert
-      >
+        </div>
+      </v-alert>
       <v-divider />
       <v-container>
         <!-- Bike Image and Title -->
@@ -13,11 +13,7 @@
           <v-row align="center" no-gutters>
             <v-col cols="auto" class="me-3">
               <v-card class="rounded-lg" elevation="0" width="100" height="60">
-                <v-img
-                  cover
-                  height="80"
-                  :src="productInfo.productThumbnailUrl"
-                />
+                <v-img cover height="80" :src="productInfo.productThumbnailUrl" />
               </v-card>
             </v-col>
 
@@ -27,10 +23,7 @@
                 {{ bookingData.selectedLocation?.name }}
               </p>
               <p class="g2a-text-13 text-grey mb-0">
-                {{ bookingData.quantity }} Vehicle<span
-                  v-if="bookingData.quantity > 1"
-                  >s</span
-                >
+                {{ bookingData.quantity }} Vehicle<span v-if="bookingData.quantity > 1">s</span>
               </p>
             </v-col>
           </v-row>
@@ -47,9 +40,7 @@
             </v-col>
             <v-col cols="7" align="end">
               <p class="g2a-text-bold-500 g2a-text-14">
-                {{ calculateDuration }} Day<span v-if="calculateDuration > 1"
-                  >s</span
-                >
+                {{ calculateDuration }} Day<span v-if="calculateDuration > 1">s</span>
               </p>
             </v-col>
           </v-row>
@@ -98,7 +89,7 @@
             </v-col>
             <v-col cols="5" align="end">
               <p class="g2a-text-bold-500 g2a-text-15">
-                ₹{{ rentalTotalCost }}
+                ₹{{ calculateDuration * rentalTotalCost * bookingData.quantity }}
               </p>
             </v-col>
           </v-row>
@@ -271,8 +262,8 @@ const payNowAmount = computed(() => {
 const rentalTotal = computed(() => {
   return (
     calculateDuration.value *
-      rentalTotalCost.value *
-      props.bookingData.quantity +
+    rentalTotalCost.value *
+    props.bookingData.quantity +
     hotelDeliveryCharge.value +
     hotelPickupCharge.value
   );

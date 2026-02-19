@@ -54,9 +54,9 @@
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
               <div class="mx-6 g2a-text-24 g2a-text-bold-600">
-                {{ booking.quantity }}
+                {{ booking.quantity }} Bike{{ booking.quantity > 1 ? 's' : '' }}
               </div>
-              <v-btn icon variant="outlined" @click="changeQty(1)">
+              <v-btn icon variant="outlined" :disabled="booking.quantity >= maxQuantity" @click="changeQty(1)">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </div>
