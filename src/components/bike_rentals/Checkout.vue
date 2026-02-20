@@ -400,7 +400,7 @@ async function processPayment() {
 
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: data.payment.amount * 100,
+      amount: data.payment.amount,
       currency: "INR",
       name: "Bike Rental",
       description: `Booking #${data.orderId}`,

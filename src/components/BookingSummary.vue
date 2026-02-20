@@ -38,7 +38,7 @@
             <v-col cols="5">
               <p class="g2a-text-13 text-grey">Duration</p>
             </v-col>
-            <v-col cols="7" align="end">
+            <v-col cols="7" class="text-right">
               <p class="g2a-text-bold-500 g2a-text-14">
                 {{ calculateDuration }} Day<span v-if="calculateDuration > 1">s</span>
               </p>
@@ -50,7 +50,7 @@
             <v-col cols="5">
               <p class="g2a-text-13 text-grey">Dates</p>
             </v-col>
-            <v-col cols="7" align="end">
+            <v-col cols="7" class="text-right">
               <p class="g2a-text-bold-500 g2a-text-14">{{ formatDateRange }}</p>
             </v-col>
           </v-row>
@@ -60,7 +60,7 @@
             <v-col cols="5">
               <p class="g2a-text-13 text-grey">Pickup</p>
             </v-col>
-            <v-col cols="7" align="end">
+            <v-col cols="7" class="text-right">
               <p class="g2a-text-bold-500 g2a-text-14">{{ pickupDisplay }}</p>
             </v-col>
           </v-row>
@@ -70,7 +70,7 @@
             <v-col cols="5">
               <p class="g2a-text-13 text-grey">Dropoff</p>
             </v-col>
-            <v-col cols="7" align="end">
+            <v-col cols="7" class="text-right">
               <p class="g2a-text-bold-500 g2a-text-14">{{ dropoffDisplay }}</p>
             </v-col>
           </v-row>
@@ -87,7 +87,7 @@
                 {{ bookingData.quantity }} vehicle)
               </p>
             </v-col>
-            <v-col cols="5" align="end">
+            <v-col cols="5" class="text-right">
               <p class="g2a-text-bold-500 g2a-text-15">
                 ₹{{ calculateDuration * rentalTotalCost * bookingData.quantity }}
               </p>
@@ -100,7 +100,7 @@
             <v-col cols="7">
               <p class="g2a-text-14">Delivery Charge</p>
             </v-col>
-            <v-col cols="5" align="end">
+            <v-col cols="5" class="text-right">
               <p class="g2a-text-bold-500 g2a-text-15">
                 ₹{{ hotelDeliveryCharge }}
               </p>
@@ -113,7 +113,7 @@
             <v-col cols="7">
               <p class="g2a-text-14">Pickup Charge</p>
             </v-col>
-            <v-col cols="5" align="end">
+            <v-col cols="5" class="text-right">
               <p class="g2a-text-bold-500 g2a-text-15">
                 ₹{{ hotelPickupCharge }}
               </p>
@@ -128,7 +128,7 @@
           <v-col cols="5">
             <p class="g2a-text-bold-600 g2a-text-16">Total</p>
           </v-col>
-          <v-col cols="7" align="end">
+          <v-col cols="7" class="text-right">
             <p class="g2a-text-bold-700 g2a-text-16">₹{{ totalPrice }}</p>
           </v-col>
         </v-row>
@@ -139,7 +139,7 @@
               Pay After Confirmation
             </p>
           </v-col>
-          <v-col cols="5" align="end">
+          <v-col cols="5" class="text-right">
             <p class="g2a-text-bold-700 g2a-text-16 text-brandColor">
               ₹{{ totalPrice - payNowAmountTotal }}
             </p>
@@ -150,7 +150,7 @@
           <v-col cols="5">
             <p class="g2a-text-bold-600 g2a-text-18 text-darkGreen1">Payable</p>
           </v-col>
-          <v-col cols="7" align="end">
+          <v-col cols="7" class="text-right">
             <p class="g2a-text-bold-700 g2a-text-18 text-darkGreen1">
               ₹{{ payNowAmountTotal }}
             </p>

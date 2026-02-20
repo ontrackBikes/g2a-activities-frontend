@@ -112,7 +112,7 @@
 
               <!-- Self Pickup Dropdown -->
               <v-select v-if="booking.pickupType === 'self-pickup'" v-model="booking.pickup"
-                :items="pickupAndDropPoints" item-title="name" item-value="name" label="Select Pickup Point"
+                :items="availablePickupPoints" item-title="name" item-value="name" label="Select Pickup Point"
                 variant="outlined" density="comfortable" prepend-inner-icon="mdi-map-marker" />
 
               <!-- Hotel Pickup Input -->
@@ -174,7 +174,7 @@
               </v-radio-group>
 
               <!-- Self Drop Dropdown -->
-              <v-select v-if="booking.dropType === 'self-drop'" v-model="booking.drop" :items="pickupAndDropPoints"
+              <v-select v-if="booking.dropType === 'self-drop'" v-model="booking.drop" :items="availableDropPoints"
                 item-title="name" item-value="name" label="Select Drop Point" variant="outlined" density="comfortable"
                 prepend-inner-icon="mdi-map-marker" />
 
@@ -284,8 +284,17 @@ watch(
 const pickupOptions = computed(
   () => booking.value.selectedLocation?.deliveryOptions || [],
 );
+
+const availablePickupPoints = computed(() =>
+  pickupAndDropPoints.value.filter((p) => p.pickup === true)
+);
+
 const dropOptions = computed(
   () => booking.value.selectedLocation?.dropOptions || [],
+);
+
+const availableDropPoints = computed(() =>
+  pickupAndDropPoints.value.filter((p) => p.drop === true)
 );
 
 const selectedDeliveryOption = computed(() =>
@@ -375,6 +384,28 @@ const setDefaultPickupDrop = () => {
     if (firstDropPoint) {
       booking.value.drop = firstDropPoint.name;
       saveBooking();
+    }
+  }
+};
+
+const validateStoredPickupDrop = () => {
+  // Clear stored pickup if it's no longer a valid pickup point
+  if (booking.value.pickup) {
+    const stillValid = pickupAndDropPoints.value.some(
+      (p) => p.name === booking.value.pickup && p.pickup === true
+    );
+    if (!stillValid) {
+      booking.value.pickup = null;
+    }
+  }
+
+  // Clear stored drop if it's no longer a valid drop point
+  if (booking.value.drop) {
+    const stillValid = pickupAndDropPoints.value.some(
+      (p) => p.name === booking.value.drop && p.drop === true
+    );
+    if (!stillValid) {
+      booking.value.drop = null;
     }
   }
 };
@@ -476,7 +507,9 @@ onMounted(async () => {
   await fetchProductInfo();
   await fetchLocationInfo();
   await fetchPickupDropPoints();
-  setDefaultPickupDrop(); // ✅ Add this line
+  setDefaultPickupDrop();
+  validateStoredPickupDrop(); // clears stale values first
+  setDefaultPickupDrop();     // then re-picks from valid points
 });
 </script>
 
