@@ -66,9 +66,34 @@
 
           <!-- PICKUP -->
           <section>
-            <div class="g2a-text-bold-600 my-4 d-flex align-center">
-              <v-icon color="brandColor" class="mr-2">mdi-arrow-right-circle</v-icon>
-              GETTING THE VEHICLE
+            <!-- Desktop: Header + Timing on same line -->
+            <div class="d-none d-sm-flex justify-space-between align-center my-4">
+              <div class="g2a-text-bold-600 d-flex align-center">
+                <v-icon color="brandColor" class="mr-2">mdi-arrow-right-circle</v-icon>
+                GETTING THE VEHICLE
+              </div>
+              <div v-if="booking.selectedLocation?.timings" class="text-grey g2a-text-14 d-flex align-center">
+                <v-icon size="18" class="mr-2">mdi-clock-outline</v-icon>
+                <span>
+                  Pickup:
+                  <strong class="text-black">{{ booking.selectedLocation.timings.season }}</strong>
+                </span>
+              </div>
+            </div>
+
+            <!-- Mobile: Header and Timing stacked -->
+            <div class="d-flex d-sm-none flex-column my-4">
+              <div class="g2a-text-bold-600 d-flex align-center mb-2">
+                <v-icon color="brandColor" class="mr-2">mdi-arrow-right-circle</v-icon>
+                GETTING THE VEHICLE
+              </div>
+              <div v-if="booking.selectedLocation?.timings" class="text-grey g2a-text-13 d-flex align-center">
+                <v-icon size="16" class="mr-1">mdi-clock-outline</v-icon>
+                <span>
+                  Pickup:
+                  <strong class="text-black">{{ booking.selectedLocation.timings.season }}</strong>
+                </span>
+              </div>
             </div>
 
             <v-card elevation="0" class="border g2a-rounded-border pa-4">
@@ -104,9 +129,34 @@
 
           <!-- DROP -->
           <section class="mt-4">
-            <div class="g2a-text-bold-600 my-4 d-flex align-center">
-              <v-icon color="brandColor" class="mr-2">mdi-arrow-left-circle</v-icon>
-              RETURNING THE VEHICLE
+            <!-- Desktop: Header + Timing on same line -->
+            <div class="d-none d-sm-flex justify-space-between align-center my-4">
+              <div class="g2a-text-bold-600 d-flex align-center">
+                <v-icon color="brandColor" class="mr-2">mdi-arrow-left-circle</v-icon>
+                RETURNING THE VEHICLE
+              </div>
+              <div v-if="booking.selectedLocation?.timings" class="text-grey g2a-text-14 d-flex align-center">
+                <v-icon size="18" class="mr-2">mdi-clock-outline</v-icon>
+                <span>
+                  Drop-off:
+                  <strong class="text-black">{{ booking.selectedLocation.timings.season }}</strong>
+                </span>
+              </div>
+            </div>
+
+            <!-- Mobile: Header and Timing stacked -->
+            <div class="d-flex d-sm-none flex-column my-4">
+              <div class="g2a-text-bold-600 d-flex align-center mb-2">
+                <v-icon color="brandColor" class="mr-2">mdi-arrow-left-circle</v-icon>
+                RETURNING THE VEHICLE
+              </div>
+              <div v-if="booking.selectedLocation?.timings" class="text-grey g2a-text-13 d-flex align-center">
+                <v-icon size="16" class="mr-1">mdi-clock-outline</v-icon>
+                <span>
+                  Drop-off:
+                  <strong class="text-black">{{ booking.selectedLocation.timings.season }}</strong>
+                </span>
+              </div>
             </div>
 
             <v-card elevation="0" class="border g2a-rounded-border pa-4">
