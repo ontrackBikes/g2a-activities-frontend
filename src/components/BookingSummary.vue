@@ -215,21 +215,19 @@ const formatDateRange = computed(() => {
 });
 
 const pickupDisplay = computed(() => {
-  if (props.bookingData.pickupType === "self-pickup") {
-    return "Self Pickup";
-  } else if (props.bookingData.pickupType === "hotel") {
-    return "Hotel Pickup";
-  }
-  return "Not Selected";
+  const b = props.bookingData;
+  const time = b.pickupTime ? ` (${b.pickupTime})` : "";
+  if (b.pickupType === "hotel") return `Hotel Pickup${time}`;
+  if (b.pickup) return `Self Pickup${time}`;
+  return "—";
 });
 
 const dropoffDisplay = computed(() => {
-  if (props.bookingData.dropType === "self-drop") {
-    return "Self Drop";
-  } else if (props.bookingData.dropType === "hotel") {
-    return "Hotel Drop";
-  }
-  return "Not Selected";
+  const b = props.bookingData;
+  const time = b.pickupTime ? ` (${b.pickupTime})` : "";
+  if (b.dropType === "hotel") return `Hotel Drop${time}`;
+  if (b.drop) return `Self Drop${time}`;
+  return "—";
 });
 
 const hotelDeliveryCharge = computed(() => {
