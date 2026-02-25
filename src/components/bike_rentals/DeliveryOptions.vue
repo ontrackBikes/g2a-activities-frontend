@@ -66,37 +66,38 @@
 
           <!-- PICKUP -->
           <section>
-            <!-- Desktop: Header + Timing on same line -->
+            <!-- Desktop -->
             <div class="d-none d-sm-flex justify-space-between align-center my-4">
               <div class="g2a-text-bold-600 d-flex align-center">
                 <v-icon color="brandColor" class="mr-2">mdi-arrow-right-circle</v-icon>
                 GETTING THE VEHICLE
               </div>
-              <div v-if="booking.selectedLocation?.timings" class="text-grey g2a-text-14 d-flex align-center">
-                <v-icon size="18" class="mr-2">mdi-clock-outline</v-icon>
-                <span>
-                  Pickup:
-                  <strong class="text-black">{{ booking.selectedLocation.timings.season }}</strong>
-                </span>
-              </div>
             </div>
 
-            <!-- Mobile: Header and Timing stacked -->
-            <div class="d-flex d-sm-none flex-column my-4">
-              <div class="g2a-text-bold-600 d-flex align-center mb-2">
-                <v-icon color="brandColor" class="mr-2">mdi-arrow-right-circle</v-icon>
-                GETTING THE VEHICLE
-              </div>
-              <div v-if="booking.selectedLocation?.timings" class="text-grey g2a-text-13 d-flex align-center">
-                <v-icon size="16" class="mr-1">mdi-clock-outline</v-icon>
-                <span>
-                  Pickup:
-                  <strong class="text-black">{{ booking.selectedLocation.timings.season }}</strong>
-                </span>
-              </div>
+            <!-- Mobile -->
+            <div class="d-flex d-sm-none align-center my-4">
+              <v-icon color="brandColor" class="mr-2">mdi-arrow-right-circle</v-icon>
+              <span class="g2a-text-bold-600">GETTING THE VEHICLE</span>
             </div>
 
             <v-card elevation="0" class="border g2a-rounded-border pa-4">
+
+              <!-- Time Slot Dropdown -->
+              <div class="mb-4">
+                <v-select v-model="booking.pickupTime" :items="availableTimeSlots" label="Select Pickup Time"
+                  variant="outlined" density="comfortable" prepend-inner-icon="mdi-clock-outline" hide-details="auto"
+                  @update:model-value="saveBooking" />
+                <div v-if="booking.pickupTime" class="g2a-text-12 text-grey mt-2">
+                  <v-icon size="14" class="mr-1">mdi-information-outline</v-icon>
+                  Vehicle return time will be
+                  <strong class="text-black">{{ booking.pickupTime }}</strong>
+                  on the return date.
+                </div>
+              </div>
+
+              <v-divider class="mb-4" />
+
+              <!-- Pickup Type Radio -->
               <v-radio-group v-model="booking.pickupType" inline hide-details class="mb-4">
                 <v-radio v-for="opt in pickupOptions" :key="opt.type" :value="opt.type" class="mr-6">
                   <template v-slot:label>
@@ -124,42 +125,43 @@
               <v-alert v-if="selectedDeliveryOption?.infoText" color="info" variant="tonal" border="start" class="mt-3">
                 {{ selectedDeliveryOption.infoText }}
               </v-alert>
+
             </v-card>
           </section>
 
           <!-- DROP -->
           <section class="mt-4">
-            <!-- Desktop: Header + Timing on same line -->
+            <!-- Desktop: Header -->
             <div class="d-none d-sm-flex justify-space-between align-center my-4">
               <div class="g2a-text-bold-600 d-flex align-center">
                 <v-icon color="brandColor" class="mr-2">mdi-arrow-left-circle</v-icon>
                 RETURNING THE VEHICLE
               </div>
-              <div v-if="booking.selectedLocation?.timings" class="text-grey g2a-text-14 d-flex align-center">
-                <v-icon size="18" class="mr-2">mdi-clock-outline</v-icon>
-                <span>
-                  Drop-off:
-                  <strong class="text-black">{{ booking.selectedLocation.timings.season }}</strong>
-                </span>
-              </div>
             </div>
 
-            <!-- Mobile: Header and Timing stacked -->
-            <div class="d-flex d-sm-none flex-column my-4">
-              <div class="g2a-text-bold-600 d-flex align-center mb-2">
-                <v-icon color="brandColor" class="mr-2">mdi-arrow-left-circle</v-icon>
-                RETURNING THE VEHICLE
-              </div>
-              <div v-if="booking.selectedLocation?.timings" class="text-grey g2a-text-13 d-flex align-center">
-                <v-icon size="16" class="mr-1">mdi-clock-outline</v-icon>
-                <span>
-                  Drop-off:
-                  <strong class="text-black">{{ booking.selectedLocation.timings.season }}</strong>
-                </span>
-              </div>
+            <!-- Mobile: Header -->
+            <div class="d-flex d-sm-none align-center my-4">
+              <v-icon color="brandColor" class="mr-2">mdi-arrow-left-circle</v-icon>
+              <span class="g2a-text-bold-600">RETURNING THE VEHICLE</span>
             </div>
 
             <v-card elevation="0" class="border g2a-rounded-border pa-4">
+
+              <!-- Drop Time Display (auto-set from pickup time) -->
+              <div v-if="booking.pickupTime" class="mb-4 d-flex align-center">
+                <v-icon size="18" class="mr-2 text-grey">mdi-clock-outline</v-icon>
+                <span class="g2a-text-14 text-grey">
+                  Return by: <strong class="text-black">{{ booking.pickupTime }}</strong> on your return date
+                </span>
+              </div>
+              <div v-else class="mb-4 d-flex align-center">
+                <v-icon size="18" class="mr-2 text-grey">mdi-clock-outline</v-icon>
+                <span class="g2a-text-14 text-grey">Select a pickup time above to set your return time</span>
+              </div>
+
+              <v-divider class="mb-4" />
+
+              <!-- Drop Type Radio -->
               <v-radio-group v-model="booking.dropType" inline hide-details class="mb-4">
                 <v-radio v-for="opt in dropOptions" :key="opt.type" :value="opt.type" class="mr-6">
                   <template v-slot:label>
@@ -187,6 +189,7 @@
               <v-alert v-if="selectedDropOption?.infoText" color="info" variant="tonal" border="start" class="mt-3">
                 {{ selectedDropOption.infoText }}
               </v-alert>
+
             </v-card>
           </section>
 
@@ -233,14 +236,14 @@ import BookingSummary from "../BookingSummary.vue";
 import { useDisplay } from "vuetify";
 const { smAndDown } = useDisplay();
 
-const LOCAL_STORAGE_KEY = "bikeRentalBooking";
+const SESSION_STORAGE_KEY = "bikeRentalBooking";
 const route = useRoute();
 const router = useRouter();
 
 /* ------------------ SAFE STORAGE ------------------ */
 const safeParse = (key, fallback) => {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(sessionStorage.getItem(key)) || fallback;
   } catch {
     return fallback;
   }
@@ -248,7 +251,7 @@ const safeParse = (key, fallback) => {
 
 /* ------------------ STATE ------------------ */
 const booking = ref(
-  safeParse(LOCAL_STORAGE_KEY, {
+  safeParse(SESSION_STORAGE_KEY, {
     selectedLocation: null,
     pickupDate: moment().add(2, "days").format("YYYY-MM-DD"),
     returnDate: moment().add(3, "days").format("YYYY-MM-DD"),
@@ -256,6 +259,7 @@ const booking = ref(
     pickupType: "self-pickup",
     dropType: "self-drop",
     paymentType: null,
+    pickupTime: null,    // ← ADD THIS
   }),
 );
 
@@ -297,6 +301,10 @@ const availableDropPoints = computed(() =>
   pickupAndDropPoints.value.filter((p) => p.drop === true)
 );
 
+const availableTimeSlots = computed(
+  () => booking.value.selectedLocation?.timings?.availableTimeSlots || [],
+);
+
 const selectedDeliveryOption = computed(() =>
   pickupOptions.value.find((x) => x.type === booking.value.pickupType),
 );
@@ -317,7 +325,7 @@ const maxQuantity = computed(
 
 /* ------------------ METHODS ------------------ */
 const saveBooking = () =>
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(booking.value));
+  sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(booking.value));
 
 const changeQty = (delta) => {
   const next = booking.value.quantity + delta;
@@ -418,6 +426,8 @@ const isFormValid = computed(() => {
 
   // quantity safety
   if (!b.quantity || b.quantity < 1) return false;
+
+  if (!b.pickupTime) return false;
 
   /* ---------- PICKUP VALIDATION ---------- */
   if (b.pickupType === "self-pickup") {

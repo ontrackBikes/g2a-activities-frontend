@@ -40,7 +40,8 @@
             </v-col>
             <v-col cols="7" class="text-right">
               <p class="g2a-text-bold-500 g2a-text-14">
-                {{ calculateDuration }} Day<span v-if="calculateDuration > 1">s</span>
+                {{ calculateDuration * 24 }} hrs ({{ calculateDuration }} Day<span
+                  v-if="calculateDuration > 1">s</span>)
               </p>
             </v-col>
           </v-row>

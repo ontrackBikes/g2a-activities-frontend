@@ -1,11 +1,7 @@
 <template>
   <v-container class="my-1">
-    <router-view
-      :product-info="productInfo"
-      :booking-data="booking"
-      :location-data="locationData"
-      @update="updateBooking"
-    />
+    <router-view :product-info="productInfo" :booking-data="booking" :location-data="locationData"
+      @update="updateBooking" />
   </v-container>
 </template>
 
@@ -16,7 +12,7 @@ import moment from "moment";
 import BookingSummary from "../components/BookingSummary.vue";
 import apiClient from "@/services/api";
 
-const LOCAL_STORAGE_KEY = "bikeRentalBooking";
+const SESSION_STORAGE_KEY = "bikeRentalBooking";
 
 const booking = ref({
   selectedLocation: null,
@@ -75,7 +71,7 @@ const updateBooking = (payload) => {
 watch(
   booking,
   (val) => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(val));
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(val));
   },
   { deep: true },
 );

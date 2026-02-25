@@ -225,7 +225,7 @@ import countries_list from "@/store/local_datas/countries_list.json";
 /* ------------------ SETUP ------------------ */
 const { smAndDown } = useDisplay();
 const router = useRouter();
-const LOCAL_STORAGE_KEY = "bikeRentalBooking";
+const SESSION_STORAGE_KEY = "bikeRentalBooking";
 
 /* ------------------ STATE ------------------ */
 const booking = ref({});
@@ -356,7 +356,7 @@ const isFormValid = computed(() => {
 
 /* ------------------ STORAGE ------------------ */
 function saveBooking() {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(booking.value));
+  sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(booking.value));
 }
 
 function saveCustomer() {
@@ -391,6 +391,7 @@ async function processPayment() {
       drop: booking.value.drop,
       pickupHotelName: booking.value.pickupHotelName || "",
       dropHotelName: booking.value.dropHotelName || "",
+      pickupTime: booking.value.pickupTime,
       customer: { ...customer.value },
     };
 
@@ -449,7 +450,7 @@ onMounted(async () => {
   await fetchProductInfo();
 
   try {
-    const stored = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    const stored = JSON.parse(sessionStorage.getItem(SESSION_STORAGE_KEY));
     if (!stored?.selectedLocation) {
       router.push("/step-1");
       return;
