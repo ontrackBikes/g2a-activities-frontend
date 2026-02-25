@@ -9,12 +9,12 @@
   "scripts": {
     "dev": "vite --mode development",
     "dev:staging": "vite --mode staging",
-    "build": "cross-env NODE_ENV=production vite build --mode development",
-    "build:staging": "cross-env NODE_ENV=production vite build --mode staging",
-    "build:production": "cross-env NODE_ENV=production vite build --mode production",
-    "build:activities-bike-rentals-widget:dev": "cross-env NODE_ENV=production vite build --config vite.activities-bike-rentals-widget.config.js --mode development",
-    "build:activities-bike-rentals-widget:staging": "cross-env NODE_ENV=production vite build --config vite.activities-bike-rentals-widget.config.js --mode staging",
-    "build:activities-bike-rentals-widget:production": "cross-env NODE_ENV=production vite build --config vite.activities-bike-rentals-widget.config.js --mode production",
+    "build": "vite build --mode development",
+    "build:staging": "vite build --mode staging",
+    "build:production": "vite build --mode production",
+    "build:activities-bike-rentals-widget:dev": "vite build --config vite.activities-bike-rentals-widget.config.js --mode development",
+    "build:activities-bike-rentals-widget:staging": "vite build --config vite.activities-bike-rentals-widget.config.js --mode staging",
+    "build:activities-bike-rentals-widget:production": "vite build --config vite.activities-bike-rentals-widget.config.js --mode production",
     "postbuild:activities-bike-rentals-widget": "shx mkdir -p dist/widgets && shx cp dist-activities-bike-rentals-widget/activities-bike-rentals-widget.iife.js dist/widgets/ && shx cp dist-activities-bike-rentals-widget/activities-bike-rentals-widget.css dist/widgets/",
     "build:all:dev": "npm run build && npm run build:activities-bike-rentals-widget:dev && npm run postbuild:activities-bike-rentals-widget",
     "build:all:staging": "npm run build:staging && npm run build:activities-bike-rentals-widget:staging && npm run postbuild:activities-bike-rentals-widget",
@@ -43,7 +43,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.3",
-    "cross-env": "^10.1.0",
     "shx": "^0.4.0",
     "vite": "^7.3.0",
     "vite-plugin-vue-devtools": "^8.0.5"
