@@ -90,11 +90,11 @@ const router = createRouter({
         //   name: "ActivitiesList",
         //   component: ActivitiesList,
         // },
-        // {
-        //   path: "/activities/:id",
-        //   name: "ProductDetail",
-        //   component: ProductDetails,
-        // },
+        {
+          path: "/activities/:id",
+          name: "ProductDetail",
+          component: ProductDetails,
+        },
       ],
     },
 
