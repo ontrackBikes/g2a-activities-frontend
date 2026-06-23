@@ -7,6 +7,7 @@ import DeliveryOptions from "@/components/bike_rentals/DeliveryOptions.vue";
 import CheckAvailability from "@/components/bike_rentals/CheckAvailability.vue";
 import HomePage from "@/components/activities/HomePage.vue";
 import ActivitiesList from "@/views/Activitieslistview.vue";
+import ProductDetails from "@/components/activities/ProductDetails.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,6 +41,11 @@ const router = createRouter({
           path: "/activities-list",
           name: "ActivitiesList",
           component: ActivitiesList,
+        },
+        {
+          path: "/activities/:id",
+          name: "ProductDetail",
+          component: ProductDetails,
         },
       ],
     },

@@ -24,6 +24,7 @@
           rounded="lg"
           elevation="0"
           class="pa-4 d-flex flex-column align-center justify-center text-center h-100"
+          :to="category.route"
         >
           <v-icon :icon="category.icon" size="40" color="brandColor2" />
 
@@ -185,34 +186,42 @@ const categories = ref([
   {
     name: "Scuba Diving",
     icon: "mdi-diving-scuba-mask",
+    route: "/activities-list",
   },
   {
     name: "Kayaking",
     icon: "mdi-kayaking",
+    route: "/kayaking",
   },
   {
     name: "Exclusive Experiences",
     icon: "mdi-star-four-points",
+    route: "/experiences",
   },
   {
     name: "Day Trips",
     icon: "mdi-island",
+    route: "/day-trip",
   },
   {
     name: "Water Sports",
     icon: "mdi-water",
+    route: "/water-sports",
   },
   {
     name: "Nature Walks",
     icon: "mdi-tree",
+    route: "/nature-walks",
   },
   {
     name: "Getting Around",
     icon: "mdi-car",
+    route: "/get-around",
   },
   {
     name: "History & Culture",
     icon: "mdi-bank",
+    route: "/history-and-culture",
   },
 ]);
 

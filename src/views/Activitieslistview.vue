@@ -351,6 +351,9 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 // ─── Category Nav ─────────────────────────────────────────────────────────────
 const categories = ref([
@@ -389,6 +392,12 @@ function exploreAll() {
 function onProductClick(product) {
   // TODO: router.push({ name: 'ActivityDetail', params: { id: product.id } })
   console.log("Product clicked:", product.id);
+  router.push({
+    name: "ProductDetail",
+    params: {
+      id: product.id,
+    },
+  });
 }
 function onPromoClick() {
   // TODO: handle promo CTA navigation
@@ -409,6 +418,7 @@ const categoryData = ref({
     totalProducts: 12,
     avgRating: "4.8",
     locations: 4,
+
     promo: {
       tag: "Licensed Charter Boats",
       title: "Check These Brilliant Scuba Courses Out!",
@@ -426,7 +436,7 @@ const categoryData = ref({
         products: [
           // TODO: GET /v1/products?category=scuba&subcategory=dsd
           {
-            id: "dsd-havelock",
+            id: "1",
             name: "Boat DSD at Havelock",
             location: "Havelock Island",
             duration: "3 hrs",
@@ -441,7 +451,7 @@ const categoryData = ref({
             img: null,
           },
           {
-            id: "dsd-neil",
+            id: "2",
             name: "Boat DSD at Neil",
             location: "Neil Island",
             duration: "3 hrs",
@@ -455,7 +465,7 @@ const categoryData = ref({
             img: null,
           },
           {
-            id: "dsd-portblair",
+            id: "3",
             name: "Boat DSD at Port Blair",
             location: "Port Blair",
             duration: "3 hrs",
