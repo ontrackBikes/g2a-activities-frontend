@@ -5,6 +5,7 @@ import HomeView from "../views/HomeView.vue";
 import Checkout from "@/components/bike_rentals/Checkout.vue";
 import DeliveryOptions from "@/components/bike_rentals/DeliveryOptions.vue";
 import CheckAvailability from "@/components/bike_rentals/CheckAvailability.vue";
+import HomePage from "@/components/activities/HomePage.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -27,6 +28,12 @@ const router = createRouter({
           path: "/bike-rentals-checkout",
           name: "Step3",
           component: Checkout,
+        },
+
+        {
+          path: "/activities",
+          name: "Activities",
+          component: HomePage,
         },
       ],
     },
