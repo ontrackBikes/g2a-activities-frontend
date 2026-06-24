@@ -38,7 +38,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import ProductCard from "./ProductCard.vue";
+import ProductCard from "./cards/ProductCard.vue";
 
 const props = defineProps({
   collection: {

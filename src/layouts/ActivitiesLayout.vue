@@ -30,6 +30,10 @@
       ></product-collection-section>
     </template>
 
+    <activities-product-list
+      :category-slug="route.params.id"
+    />
+
     <div class="my-4">
       <router-view />
     </div>
@@ -37,6 +41,7 @@
 </template>
 
 <script setup>
+import ActivitiesProductList from "@/components/activities/ActivitiesProductList.vue";
 import ProductCollectionSection from "@/components/activities/ProductCollectionSection.vue";
 import apiClient from "@/services/api";
 import { computed, onMounted, ref, watch } from "vue";
@@ -97,7 +102,7 @@ const collections = ref([]);
 const loadCollections = async () => {
   try {
     const response = await apiClient.get(
-      "/v1/product-collections/with-products?entity_type=category",
+      `/v1/product-collections/with-products?entity_type=category&entity_slug=${route.params.id}`,
     );
 
     collections.value = response.data?.data || [];

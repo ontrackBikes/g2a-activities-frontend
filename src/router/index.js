@@ -17,6 +17,9 @@ import WaterSportsView from "@/views/activities/WaterSportsView.vue";
 import DayTripsView from "@/views/activities/DayTripsView.vue";
 import KayakingView from "@/views/activities/KayakingView.vue";
 import ProductLayout from "@/layouts/ProductLayout.vue";
+import ActivitiesHome from "@/views/activities/ActivitiesHome.vue";
+import ActivitiesCategory from "@/views/activities/ActivitiesCategory.vue";
+import ActivitiesProductType from "@/views/activities/ActivitiesProductType.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,85 +43,59 @@ const router = createRouter({
           name: "Step3",
           component: Checkout,
         },
-        {
-          path: "/v2",
-          name: "Activities",
-          component: HomePage,
-        },
-        {
-          path: "/v2",
-          component: ActivitiesLayout,
-          children: [
-            // {
-            //   path: "/",
-            //   name: "ActivitiesHome",
-            //   component: ActivityHomeView,
-            // },
-            // {
-            //   path: "/:id",
-            //   name: "ActivitiesHome",
-            //   component: ActivityHomeView,
-            // },
-            // {
-            //   path: "scuba",
-            //   name: "Scuba",
-            //   component: ScubaView,
-            // },
-            // {
-            //   path: "kayaking",
-            //   name: "Kayaking",
-            //   component: KayakingView,
-            // },
-            // {
-            //   path: "day-trips",
-            //   name: "DayTrips",
-            //   component: DayTripsView,
-            // },
-            // {
-            //   path: "water-sports",
-            //   name: "WaterSports",
-            //   component: WaterSportsView,
-            // },
-            // {
-            //   path: "getting-around",
-            //   name: "GettingAround",
-            //   component: GettingAroundView,
-            // },
-            // {
-            //   path: "history",
-            //   name: "History",
-            //   component: HistoryView,
-            // },
-          ],
-        },
 
-        {
-          path: "/v2/:id",
-          component: ActivitiesLayout,
-          children: [
-            {
-              path: "/",
-              name: "ActivitiesHome",
-              component: ActivityHomeView,
-            },
-            {
-              path: ":id",
-              name: "ActivitiesCategory",
-              component: ProductLayout,
-            },
-          ]
-          },
+        // {
+        //   path: "/v2",
+        //   component: ActivitiesLayout,
+        //   children: [
+
+        //   ],
+        // },
+
+        // {
+        //   path: "/v2/:id",
+        //   component: ActivitiesLayout,
+        //   children: [
+        //     {
+        //       path: "/",
+        //       name: "ActivitiesHome",
+        //       component: ActivityHomeView,
+        //     },
+        //     {
+        //       path: ":id",
+        //       name: "ActivitiesCategory",
+        //       component: ProductLayout,
+        //     },
+        //   ]
+        //   },
         // {
         //   path: "/activities-list",
         //   name: "ActivitiesList",
         //   component: ActivitiesList,
         // },
         {
-          path: "/activities/:id",
+          path: "/activities/product/:slug",
           name: "ProductDetail",
           component: ProductDetails,
         },
       ],
+    },
+    {
+      path: "/v2",
+      name: "Activities",
+      component: ActivitiesHome,
+    },
+
+    {
+      path: "/activities/:category",
+      name: "ActivitiesCategory",
+      component: ActivitiesCategory,
+    },
+
+    {
+      path: "/activities/:category/:productType",
+      name: "ActivitiesProductType",
+      component: ActivitiesProductType,
     },
 
     {
