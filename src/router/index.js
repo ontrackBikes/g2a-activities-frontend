@@ -16,6 +16,7 @@ import GettingAroundView from "@/views/activities/GettingAroundView.vue";
 import WaterSportsView from "@/views/activities/WaterSportsView.vue";
 import DayTripsView from "@/views/activities/DayTripsView.vue";
 import KayakingView from "@/views/activities/KayakingView.vue";
+import ProductLayout from "@/layouts/ProductLayout.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -48,43 +49,65 @@ const router = createRouter({
           path: "/v2",
           component: ActivitiesLayout,
           children: [
+            // {
+            //   path: "/",
+            //   name: "ActivitiesHome",
+            //   component: ActivityHomeView,
+            // },
+            // {
+            //   path: "/:id",
+            //   name: "ActivitiesHome",
+            //   component: ActivityHomeView,
+            // },
+            // {
+            //   path: "scuba",
+            //   name: "Scuba",
+            //   component: ScubaView,
+            // },
+            // {
+            //   path: "kayaking",
+            //   name: "Kayaking",
+            //   component: KayakingView,
+            // },
+            // {
+            //   path: "day-trips",
+            //   name: "DayTrips",
+            //   component: DayTripsView,
+            // },
+            // {
+            //   path: "water-sports",
+            //   name: "WaterSports",
+            //   component: WaterSportsView,
+            // },
+            // {
+            //   path: "getting-around",
+            //   name: "GettingAround",
+            //   component: GettingAroundView,
+            // },
+            // {
+            //   path: "history",
+            //   name: "History",
+            //   component: HistoryView,
+            // },
+          ],
+        },
+
+        {
+          path: "/v2/:id",
+          component: ActivitiesLayout,
+          children: [
             {
-              path: "",
+              path: "/",
               name: "ActivitiesHome",
               component: ActivityHomeView,
             },
             {
-              path: "scuba",
-              name: "Scuba",
-              component: ScubaView,
+              path: ":id",
+              name: "ActivitiesCategory",
+              component: ProductLayout,
             },
-            {
-              path: "kayaking",
-              name: "Kayaking",
-              component: KayakingView,
-            },
-            {
-              path: "day-trips",
-              name: "DayTrips",
-              component: DayTripsView,
-            },
-            {
-              path: "water-sports",
-              name: "WaterSports",
-              component: WaterSportsView,
-            },
-            {
-              path: "getting-around",
-              name: "GettingAround",
-              component: GettingAroundView,
-            },
-            {
-              path: "history",
-              name: "History",
-              component: HistoryView,
-            },
-          ],
-        },
+          ]
+          },
         // {
         //   path: "/activities-list",
         //   name: "ActivitiesList",

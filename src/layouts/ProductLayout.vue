@@ -4,25 +4,24 @@
       Explore {{ categorySlug.replaceAll("-", " ") }}
     </h1>
 
-    <v-row>
+    <!-- <v-row>
       <v-col cols="6" md="2" v-for="cat in categories" :key="cat.id">
         <v-card
           variant="outlined"
           rounded="lg"
           class="cursor-pointer h-100"
-          @click="setCategory(cat.slug)"
+          @click="setCategory(cat)"
         >
-        
           <v-container class="text-center py-6">
             <v-icon :icon="cat.icon" size="36" color="primary" />
-            
+
             <div class="mt-3 font-weight-medium">
               {{ cat.name }}
             </div>
           </v-container>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
 
     <template v-for="collection in collections" :key="collection.id">
       <product-collection-section
@@ -97,7 +96,7 @@ const collections = ref([]);
 const loadCollections = async () => {
   try {
     const response = await apiClient.get(
-      "/v1/product-collections/with-products?entity_type=category",
+      "/v1/product-collections/with-products?entity_type=product_type",
     );
 
     collections.value = response.data?.data || [];
@@ -109,9 +108,13 @@ const loadCollections = async () => {
 /**
  * Navigate to Product Type
  */
-const setCategory = (slug) => {
+const setCategory = (productType) => {
   router.push({
-    path: `${route.path}/${slug}`,
+    name: "ActivitiesCategory",
+    params: {
+      id: categorySlug.value,
+      slug: productType.slug,
+    },
   });
 };
 
