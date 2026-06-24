@@ -2,7 +2,7 @@
   <div class="activities-list-page">
     <!-- Category Nav Tabs -->
     <div class="category-nav-wrapper">
-      <v-container class="g2a-container-width py-0">
+      <v-container class="py-0">
         <div class="category-nav no-scrollbar">
           <button
             v-for="cat in categories"
@@ -18,9 +18,9 @@
       </v-container>
     </div>
 
-    <v-container class="g2a-container-width">
+    <div class="my-4">
       <router-view></router-view>
-    </v-container>
+    </div>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ const categories = [
     key: "v2",
     label: "Home",
     icon: "mdi-home",
-    route: "ActivitiesHome",
+    route: "Activities",
   },
   {
     key: "scuba",
@@ -89,11 +89,12 @@ function setCategory(category) {
 /* ── Category Nav ── */
 .category-nav-wrapper {
   position: sticky;
-  top: 0;
-  z-index: 10;
+  top: 70px;
+  z-index: 9999;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
 }
 
 .category-nav {

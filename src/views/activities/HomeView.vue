@@ -1,334 +1,311 @@
 <template>
   <div class="activities-list-page">
-
-    <v-container class="g2a-container-width pt-6 pb-10">
-      <!-- Hero Banner for active category -->
-      <div
-        class="category-hero mb-8"
-        :style="{ backgroundImage: `url(${activeData.heroImg})` }"
-      >
-        <div class="category-hero__overlay">
-          <v-chip size="small" color="brandColor" class="mb-3">
-            <v-icon icon="mdi-fire" size="12" class="me-1" />
-            <span class="g2a-text-10 g2a-text-bold-600">{{
-              activeData.badge
-            }}</span>
-          </v-chip>
-          <div class="g2a-title-1 text-white">{{ activeData.title }}</div>
-          <div class="g2a-subtitle-0 text-white mt-1" style="opacity: 0.85">
-            {{ activeData.subtitle }}
+    <!-- Hero Banner for active category -->
+    <div
+      class="category-hero mb-8"
+      :style="{ backgroundImage: `url(${activeData.heroImg})` }"
+    >
+      <div class="category-hero__overlay">
+        <v-chip size="small" color="brandColor" class="mb-3">
+          <v-icon icon="mdi-fire" size="12" class="me-1" />
+          <span class="g2a-text-10 g2a-text-bold-600">{{
+            activeData.badge
+          }}</span>
+        </v-chip>
+        <div class="g2a-title-1 text-white">{{ activeData.title }}</div>
+        <div class="g2a-subtitle-0 text-white mt-1" style="opacity: 0.85">
+          {{ activeData.subtitle }}
+        </div>
+        <div class="d-flex align-center ga-4 mt-4">
+          <div class="stat-pill">
+            <v-icon icon="mdi-ticket-outline" size="14" class="me-1" />
+            {{ activeData.totalProducts }} Experiences
           </div>
-          <div class="d-flex align-center ga-4 mt-4">
-            <div class="stat-pill">
-              <v-icon icon="mdi-ticket-outline" size="14" class="me-1" />
-              {{ activeData.totalProducts }} Experiences
-            </div>
-            <div class="stat-pill">
-              <v-icon icon="mdi-star" size="14" color="amber" class="me-1" />
-              {{ activeData.avgRating }} Avg Rating
-            </div>
-            <div class="stat-pill">
-              <v-icon icon="mdi-map-marker" size="14" class="me-1" />
-              {{ activeData.locations }} Locations
-            </div>
+          <div class="stat-pill">
+            <v-icon icon="mdi-star" size="14" color="amber" class="me-1" />
+            {{ activeData.avgRating }} Avg Rating
+          </div>
+          <div class="stat-pill">
+            <v-icon icon="mdi-map-marker" size="14" class="me-1" />
+            {{ activeData.locations }} Locations
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Most Popular Sidebar + Main Content layout -->
-      <v-row>
-        <!-- Main content -->
-        <v-col cols="12" md="8">
-          <!-- Ticket Groups: rendered per section -->
-          <div
-            v-for="group in activeData.groups"
-            :key="group.title"
-            class="mb-8"
-          >
-            <div class="d-flex align-center justify-space-between mb-4">
-              <div>
-                <div class="g2a-subtitle-dark">{{ group.title }}</div>
-                <div class="g2a-text-12 text-greyDark mt-1">
-                  {{ group.description }}
-                </div>
+    <!-- Most Popular Sidebar + Main Content layout -->
+    <v-row>
+      <!-- Main content -->
+      <v-col cols="12" md="8">
+        <!-- Ticket Groups: rendered per section -->
+        <div v-for="group in activeData.groups" :key="group.title" class="mb-8">
+          <div class="d-flex align-center justify-space-between mb-4">
+            <div>
+              <div class="g2a-subtitle-dark">{{ group.title }}</div>
+              <div class="g2a-text-12 text-greyDark mt-1">
+                {{ group.description }}
               </div>
-              <v-chip
-                v-if="group.tag"
-                size="small"
-                :color="group.tagColor || 'brandColor2'"
-                variant="tonal"
-              >
-                <span class="g2a-text-10 g2a-text-bold-600">{{
-                  group.tag
-                }}</span>
-              </v-chip>
             </div>
+            <v-chip
+              v-if="group.tag"
+              size="small"
+              :color="group.tagColor || 'brandColor2'"
+              variant="tonal"
+            >
+              <span class="g2a-text-10 g2a-text-bold-600">{{ group.tag }}</span>
+            </v-chip>
+          </div>
 
-            <v-row>
-              <v-col
-                v-for="product in group.products"
-                :key="product.id"
-                cols="12"
-                sm="6"
+          <v-row>
+            <v-col
+              v-for="product in group.products"
+              :key="product.id"
+              cols="12"
+              sm="6"
+            >
+              <v-card
+                variant="outlined"
+                rounded="lg"
+                elevation="0"
+                class="product-card h-100"
+                @click="onProductClick(product)"
               >
-                <v-card
-                  variant="outlined"
-                  rounded="lg"
-                  elevation="0"
-                  class="product-card h-100"
-                  @click="onProductClick(product)"
+                <!-- Product image (optional — only if product.img exists) -->
+                <v-img
+                  v-if="product.img"
+                  :src="product.img"
+                  height="140"
+                  cover
+                  class="product-card__img"
                 >
-                  <!-- Product image (optional — only if product.img exists) -->
-                  <v-img
-                    v-if="product.img"
-                    :src="product.img"
-                    height="140"
-                    cover
-                    class="product-card__img"
-                  >
-                    <div class="d-flex justify-space-between pa-2">
-                      <v-chip
-                        v-if="product.badge"
-                        size="x-small"
-                        :color="product.badgeColor || 'brandColor'"
-                        class="g2a-text-bold-600"
-                      >
-                        {{ product.badge }}
-                      </v-chip>
-                    </div>
-                  </v-img>
-
-                  <!-- No image: compact text-only card (like the wireframe) -->
-                  <div v-else class="product-card__no-img pa-4">
+                  <div class="d-flex justify-space-between pa-2">
                     <v-chip
                       v-if="product.badge"
                       size="x-small"
-                      :color="product.badgeColor || 'brandColor2'"
-                      variant="tonal"
-                      class="mb-3 g2a-text-bold-600"
+                      :color="product.badgeColor || 'brandColor'"
+                      class="g2a-text-bold-600"
                     >
                       {{ product.badge }}
                     </v-chip>
-                    <div class="price-label g2a-text-12 text-greyDark">
-                      starts
-                    </div>
-                    <div class="d-flex align-baseline ga-1 mt-1">
-                      <span
-                        class="g2a-text-18 g2a-text-bold-700 text-brandColor2"
-                      >
-                        ₹{{ product.price.toLocaleString("en-IN") }}
-                      </span>
-                      <span
-                        v-if="product.originalPrice"
-                        class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
-                      >
-                        ₹{{ product.originalPrice.toLocaleString("en-IN") }}
-                      </span>
-                      <v-chip
-                        v-if="product.discount"
-                        size="x-small"
-                        color="success"
-                        class="ms-1 g2a-text-bold-600"
-                      >
-                        {{ product.discount }}% OFF
-                      </v-chip>
-                    </div>
                   </div>
+                </v-img>
 
-                  <v-card-text class="pt-2 pb-3">
-                    <div class="g2a-text-14 g2a-text-bold-600 mb-1">
-                      {{ product.name }}
-                    </div>
-                    <div
-                      class="d-flex align-center justify-space-between g2a-text-12 text-greyDark"
-                    >
-                      <div class="d-flex align-center">
-                        <v-icon icon="mdi-map-marker" size="12" class="me-1" />
-                        {{ product.location }}
-                      </div>
-                      <div class="d-flex align-center">
-                        <v-icon
-                          icon="mdi-clock-outline"
-                          size="12"
-                          class="me-1"
-                        />
-                        {{ product.duration }}
-                      </div>
-                    </div>
-
-                    <!-- Price row (only for cards WITH image) -->
-                    <div
-                      v-if="product.img"
-                      class="d-flex align-baseline ga-1 mt-2"
-                    >
-                      <span class="g2a-text-12 text-greyDark">starts</span>
-                      <span
-                        class="g2a-text-16 g2a-text-bold-700 text-brandColor2 ms-1"
-                      >
-                        ₹{{ product.price.toLocaleString("en-IN") }}
-                      </span>
-                      <span
-                        v-if="product.originalPrice"
-                        class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
-                      >
-                        ₹{{ product.originalPrice.toLocaleString("en-IN") }}
-                      </span>
-                      <v-chip
-                        v-if="product.discount"
-                        size="x-small"
-                        color="success"
-                        class="ms-1"
-                      >
-                        {{ product.discount }}% OFF
-                      </v-chip>
-                    </div>
-
-                    <div class="d-flex align-center mt-2 ga-1">
-                      <v-icon icon="mdi-star" size="12" color="amber" />
-                      <span class="g2a-text-12 g2a-text-bold-600">{{
-                        product.rating
-                      }}</span>
-                      <span class="g2a-text-12 text-greyDark"
-                        >({{ product.reviews }})</span
-                      >
-                      <v-spacer />
-                      <div
-                        class="d-flex align-center g2a-text-11 text-greyDark"
-                      >
-                        <v-icon
-                          icon="mdi-account-group"
-                          size="12"
-                          class="me-1"
-                        />
-                        {{ product.seatsLeft }} left
-                      </div>
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </div>
-
-          <!-- Promo Banner -->
-          <v-card
-            v-if="activeData.promo"
-            rounded="lg"
-            elevation="0"
-            class="promo-banner pa-5 d-flex align-center justify-space-between"
-          >
-            <div>
-              <div class="d-flex align-center mb-2 ga-2">
-                <v-chip
-                  size="small"
-                  color="brandColor"
-                  class="g2a-text-bold-600"
-                >
-                  {{ activeData.promo.tag }}
-                </v-chip>
-              </div>
-              <div class="g2a-subtitle-dark">{{ activeData.promo.title }}</div>
-              <div class="g2a-text-12 text-greyDark mt-1">
-                {{ activeData.promo.subtitle }}
-              </div>
-              <v-btn
-                variant="outlined"
-                rounded="lg"
-                size="small"
-                color="brandColor2"
-                class="mt-4 g2a-text-bold-600"
-                @click="onPromoClick"
-              >
-                {{ activeData.promo.cta }}
-              </v-btn>
-            </div>
-            <v-img
-              v-if="activeData.promo.img"
-              :src="activeData.promo.img"
-              width="120"
-              height="120"
-              cover
-              rounded="lg"
-              class="flex-shrink-0 ms-4"
-            />
-          </v-card>
-        </v-col>
-
-        <!-- Sidebar: Most Popular -->
-        <v-col cols="12" md="4">
-          <div class="sidebar-sticky">
-            <div class="d-flex align-center mb-4">
-              <v-icon
-                icon="mdi-trophy-outline"
-                size="18"
-                color="brandColor2"
-                class="me-2"
-              />
-              <div class="g2a-subtitle-1 g2a-text-bold-600">Most Popular</div>
-            </div>
-
-            <v-card
-              v-for="item in activeData.popular"
-              :key="item.id"
-              variant="outlined"
-              rounded="lg"
-              elevation="0"
-              class="popular-card mb-3 pa-3"
-              @click="onProductClick(item)"
-            >
-              <div class="d-flex align-center ga-3">
-                <!-- thumb -->
-                <v-img
-                  :src="item.img || 'https://via.placeholder.com/72'"
-                  width="72"
-                  height="72"
-                  cover
-                  rounded="lg"
-                  class="flex-shrink-0"
-                />
-                <div class="flex-grow-1 min-width-0">
+                <!-- No image: compact text-only card (like the wireframe) -->
+                <div v-else class="product-card__no-img pa-4">
                   <v-chip
-                    v-if="item.badge"
+                    v-if="product.badge"
                     size="x-small"
-                    :color="item.badgeColor || 'brandColor'"
-                    class="mb-1 g2a-text-bold-600"
+                    :color="product.badgeColor || 'brandColor2'"
+                    variant="tonal"
+                    class="mb-3 g2a-text-bold-600"
                   >
-                    {{ item.badge }}
+                    {{ product.badge }}
                   </v-chip>
-                  <div class="g2a-text-13 g2a-text-bold-600 truncate-two-lines">
-                    {{ item.name }}
+                  <div class="price-label g2a-text-12 text-greyDark">
+                    starts
                   </div>
-                  <div class="g2a-text-12 text-greyDark mt-1">
-                    {{ item.duration }}
-                  </div>
-                  <div
-                    class="g2a-text-13 g2a-text-bold-700 text-brandColor2 mt-1"
-                  >
-                    ₹{{ item.price.toLocaleString("en-IN") }}
+                  <div class="d-flex align-baseline ga-1 mt-1">
+                    <span
+                      class="g2a-text-18 g2a-text-bold-700 text-brandColor2"
+                    >
+                      ₹{{ product.price.toLocaleString("en-IN") }}
+                    </span>
+                    <span
+                      v-if="product.originalPrice"
+                      class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
+                    >
+                      ₹{{ product.originalPrice.toLocaleString("en-IN") }}
+                    </span>
+                    <v-chip
+                      v-if="product.discount"
+                      size="x-small"
+                      color="success"
+                      class="ms-1 g2a-text-bold-600"
+                    >
+                      {{ product.discount }}% OFF
+                    </v-chip>
                   </div>
                 </div>
-                <v-icon
-                  icon="mdi-chevron-right"
-                  size="18"
-                  color="greyDark"
-                  class="flex-shrink-0"
-                />
-              </div>
-            </v-card>
 
+                <v-card-text class="pt-2 pb-3">
+                  <div class="g2a-text-14 g2a-text-bold-600 mb-1">
+                    {{ product.name }}
+                  </div>
+                  <div
+                    class="d-flex align-center justify-space-between g2a-text-12 text-greyDark"
+                  >
+                    <div class="d-flex align-center">
+                      <v-icon icon="mdi-map-marker" size="12" class="me-1" />
+                      {{ product.location }}
+                    </div>
+                    <div class="d-flex align-center">
+                      <v-icon icon="mdi-clock-outline" size="12" class="me-1" />
+                      {{ product.duration }}
+                    </div>
+                  </div>
+
+                  <!-- Price row (only for cards WITH image) -->
+                  <div
+                    v-if="product.img"
+                    class="d-flex align-baseline ga-1 mt-2"
+                  >
+                    <span class="g2a-text-12 text-greyDark">starts</span>
+                    <span
+                      class="g2a-text-16 g2a-text-bold-700 text-brandColor2 ms-1"
+                    >
+                      ₹{{ product.price.toLocaleString("en-IN") }}
+                    </span>
+                    <span
+                      v-if="product.originalPrice"
+                      class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
+                    >
+                      ₹{{ product.originalPrice.toLocaleString("en-IN") }}
+                    </span>
+                    <v-chip
+                      v-if="product.discount"
+                      size="x-small"
+                      color="success"
+                      class="ms-1"
+                    >
+                      {{ product.discount }}% OFF
+                    </v-chip>
+                  </div>
+
+                  <div class="d-flex align-center mt-2 ga-1">
+                    <v-icon icon="mdi-star" size="12" color="amber" />
+                    <span class="g2a-text-12 g2a-text-bold-600">{{
+                      product.rating
+                    }}</span>
+                    <span class="g2a-text-12 text-greyDark"
+                      >({{ product.reviews }})</span
+                    >
+                    <v-spacer />
+                    <div class="d-flex align-center g2a-text-11 text-greyDark">
+                      <v-icon icon="mdi-account-group" size="12" class="me-1" />
+                      {{ product.seatsLeft }} left
+                    </div>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
+
+        <!-- Promo Banner -->
+        <v-card
+          v-if="activeData.promo"
+          rounded="lg"
+          elevation="0"
+          class="promo-banner pa-5 d-flex align-center justify-space-between"
+        >
+          <div>
+            <div class="d-flex align-center mb-2 ga-2">
+              <v-chip size="small" color="brandColor" class="g2a-text-bold-600">
+                {{ activeData.promo.tag }}
+              </v-chip>
+            </div>
+            <div class="g2a-subtitle-dark">{{ activeData.promo.title }}</div>
+            <div class="g2a-text-12 text-greyDark mt-1">
+              {{ activeData.promo.subtitle }}
+            </div>
             <v-btn
               variant="outlined"
               rounded="lg"
-              block
+              size="small"
               color="brandColor2"
-              class="mt-2 g2a-text-bold-600"
-              @click="exploreAll"
+              class="mt-4 g2a-text-bold-600"
+              @click="onPromoClick"
             >
-              Explore All
+              {{ activeData.promo.cta }}
             </v-btn>
           </div>
-        </v-col>
-      </v-row>
-    </v-container>
+          <v-img
+            v-if="activeData.promo.img"
+            :src="activeData.promo.img"
+            width="120"
+            height="120"
+            cover
+            rounded="lg"
+            class="flex-shrink-0 ms-4"
+          />
+        </v-card>
+      </v-col>
+
+      <!-- Sidebar: Most Popular -->
+      <v-col cols="12" md="4">
+        <div class="sidebar-sticky">
+          <div class="d-flex align-center mb-4">
+            <v-icon
+              icon="mdi-trophy-outline"
+              size="18"
+              color="brandColor2"
+              class="me-2"
+            />
+            <div class="g2a-subtitle-1 g2a-text-bold-600">Most Popular</div>
+          </div>
+
+          <v-card
+            v-for="item in activeData.popular"
+            :key="item.id"
+            variant="outlined"
+            rounded="lg"
+            elevation="0"
+            class="popular-card mb-3 pa-3"
+            @click="onProductClick(item)"
+          >
+            <div class="d-flex align-center ga-3">
+              <!-- thumb -->
+              <v-img
+                :src="item.img || 'https://via.placeholder.com/72'"
+                width="72"
+                height="72"
+                cover
+                rounded="lg"
+                class="flex-shrink-0"
+              />
+              <div class="flex-grow-1 min-width-0">
+                <v-chip
+                  v-if="item.badge"
+                  size="x-small"
+                  :color="item.badgeColor || 'brandColor'"
+                  class="mb-1 g2a-text-bold-600"
+                >
+                  {{ item.badge }}
+                </v-chip>
+                <div class="g2a-text-13 g2a-text-bold-600 truncate-two-lines">
+                  {{ item.name }}
+                </div>
+                <div class="g2a-text-12 text-greyDark mt-1">
+                  {{ item.duration }}
+                </div>
+                <div
+                  class="g2a-text-13 g2a-text-bold-700 text-brandColor2 mt-1"
+                >
+                  ₹{{ item.price.toLocaleString("en-IN") }}
+                </div>
+              </div>
+              <v-icon
+                icon="mdi-chevron-right"
+                size="18"
+                color="greyDark"
+                class="flex-shrink-0"
+              />
+            </div>
+          </v-card>
+
+          <v-btn
+            variant="outlined"
+            rounded="lg"
+            block
+            color="brandColor2"
+            class="mt-2 g2a-text-bold-600"
+            @click="exploreAll"
+          >
+            Explore All
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -704,7 +681,6 @@ const categoryData = ref({
       },
     ],
   },
-
 });
 
 // Fallback for categories without full data yet
@@ -725,7 +701,6 @@ const fallbackData = {
 const activeData = computed(
   () => categoryData.value[activeCategory.value] || fallbackData,
 );
-
 </script>
 
 <style scoped>

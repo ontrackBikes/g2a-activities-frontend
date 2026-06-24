@@ -40,7 +40,7 @@ const router = createRouter({
           component: Checkout,
         },
         {
-          path: "/activities",
+          path: "/v2",
           name: "Activities",
           component: HomePage,
         },

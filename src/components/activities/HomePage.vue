@@ -186,42 +186,42 @@ const categories = ref([
   {
     name: "Scuba Diving",
     icon: "mdi-diving-scuba-mask",
-    route: "/activities-list",
+    route: "/v2/scuba",
   },
   {
     name: "Kayaking",
     icon: "mdi-kayaking",
-    route: "/kayaking",
+    route: "/v2/kayaking",
   },
   {
     name: "Exclusive Experiences",
     icon: "mdi-star-four-points",
-    route: "/experiences",
+    route: "/v2/experiences",
   },
   {
     name: "Day Trips",
     icon: "mdi-island",
-    route: "/day-trip",
+    route: "/v2/day-trips",
   },
   {
     name: "Water Sports",
     icon: "mdi-water",
-    route: "/water-sports",
+    route: "/v2/water-sports",
   },
   {
     name: "Nature Walks",
     icon: "mdi-tree",
-    route: "/nature-walks",
+    route: "/v2/nature-walks",
   },
   {
     name: "Getting Around",
     icon: "mdi-car",
-    route: "/get-around",
+    route: "/v2/getting-around",
   },
   {
     name: "History & Culture",
     icon: "mdi-bank",
-    route: "/history-and-culture",
+    route: "/v2/history",
   },
 ]);
 
