@@ -180,50 +180,40 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import apiClient from "@/services/api";
 
-const categories = ref([
-  {
-    name: "Scuba Diving",
-    icon: "mdi-diving-scuba-mask",
-    route: "/v2/scuba",
-  },
-  {
-    name: "Kayaking",
-    icon: "mdi-kayaking",
-    route: "/v2/kayaking",
-  },
-  {
-    name: "Exclusive Experiences",
-    icon: "mdi-star-four-points",
-    route: "/v2/experiences",
-  },
-  {
-    name: "Day Trips",
-    icon: "mdi-island",
-    route: "/v2/day-trips",
-  },
-  {
-    name: "Water Sports",
-    icon: "mdi-water",
-    route: "/v2/water-sports",
-  },
-  {
-    name: "Nature Walks",
-    icon: "mdi-tree",
-    route: "/v2/nature-walks",
-  },
-  {
-    name: "Getting Around",
-    icon: "mdi-car",
-    route: "/v2/getting-around",
-  },
-  {
-    name: "History & Culture",
-    icon: "mdi-bank",
-    route: "/v2/history",
-  },
-]);
+const categories = ref([]);
+const categoryIcons = {
+  "Water Sports": "mdi-water",
+  "Day Trips": "mdi-island",
+  "Exclusive Experiences": "mdi-star-four-points",
+  "Getting Around": "mdi-car",
+  "History & Culture": "mdi-bank",
+  "Treks and Walks": "mdi-hiking",
+  Stargazing: "mdi-telescope",
+  "Scuba Diving": "mdi-diving-scuba-mask",
+  Kayaking: "mdi-kayaking",
+};
+
+const loadCategories = async () => {
+  try {
+    const response = await apiClient.get("/v1/product-categories");
+
+    categories.value = (response.data?.data || []).map((category) => ({
+      id: category.id,
+      name: category.name,
+      icon: categoryIcons[category.name] || "mdi-shape-outline",
+      route: `/v2/${category.slug}`,
+    }));
+  } catch (error) {
+    console.error("[HomePage] loadCategories", error);
+  }
+};
+
+onMounted(async () => {
+  await loadCategories();
+});
 
 const recommendations = ref([
   {
