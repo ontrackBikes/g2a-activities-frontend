@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <!-- Categories -->
     <div class="d-flex align-center g2a-subtitle g2a-text-bold-600 mb-4">
       <v-icon
@@ -176,7 +176,7 @@
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script setup>

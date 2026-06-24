@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-4 pa-md-6">
+  <div>
     <!-- Loading State -->
     <div
       v-if="isLoading"
@@ -404,7 +404,7 @@
         </v-col>
       </v-row>
     </template>
-  </v-container>
+  </div>
 </template>
 
 <script setup>
