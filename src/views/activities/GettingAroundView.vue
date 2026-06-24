@@ -1,334 +1,311 @@
 <template>
   <div class="activities-list-page">
-
-    <v-container class="g2a-container-width pt-6 pb-10">
-      <!-- Hero Banner for active category -->
-      <div
-        class="category-hero mb-8"
-        :style="{ backgroundImage: `url(${activeData.heroImg})` }"
-      >
-        <div class="category-hero__overlay">
-          <v-chip size="small" color="brandColor" class="mb-3">
-            <v-icon icon="mdi-fire" size="12" class="me-1" />
-            <span class="g2a-text-10 g2a-text-bold-600">{{
-              activeData.badge
-            }}</span>
-          </v-chip>
-          <div class="g2a-title-1 text-white">{{ activeData.title }}</div>
-          <div class="g2a-subtitle-0 text-white mt-1" style="opacity: 0.85">
-            {{ activeData.subtitle }}
+    <!-- Hero Banner for active category -->
+    <div
+      class="category-hero mb-8"
+      :style="{ backgroundImage: `url(${activeData.heroImg})` }"
+    >
+      <div class="category-hero__overlay">
+        <v-chip size="small" color="brandColor" class="mb-3">
+          <v-icon icon="mdi-fire" size="12" class="me-1" />
+          <span class="g2a-text-10 g2a-text-bold-600">{{
+            activeData.badge
+          }}</span>
+        </v-chip>
+        <div class="g2a-title-1 text-white">{{ activeData.title }}</div>
+        <div class="g2a-subtitle-0 text-white mt-1" style="opacity: 0.85">
+          {{ activeData.subtitle }}
+        </div>
+        <div class="d-flex align-center ga-4 mt-4">
+          <div class="stat-pill">
+            <v-icon icon="mdi-ticket-outline" size="14" class="me-1" />
+            {{ activeData.totalProducts }} Experiences
           </div>
-          <div class="d-flex align-center ga-4 mt-4">
-            <div class="stat-pill">
-              <v-icon icon="mdi-ticket-outline" size="14" class="me-1" />
-              {{ activeData.totalProducts }} Experiences
-            </div>
-            <div class="stat-pill">
-              <v-icon icon="mdi-star" size="14" color="amber" class="me-1" />
-              {{ activeData.avgRating }} Avg Rating
-            </div>
-            <div class="stat-pill">
-              <v-icon icon="mdi-map-marker" size="14" class="me-1" />
-              {{ activeData.locations }} Locations
-            </div>
+          <div class="stat-pill">
+            <v-icon icon="mdi-star" size="14" color="amber" class="me-1" />
+            {{ activeData.avgRating }} Avg Rating
+          </div>
+          <div class="stat-pill">
+            <v-icon icon="mdi-map-marker" size="14" class="me-1" />
+            {{ activeData.locations }} Locations
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Most Popular Sidebar + Main Content layout -->
-      <v-row>
-        <!-- Main content -->
-        <v-col cols="12" md="8">
-          <!-- Ticket Groups: rendered per section -->
-          <div
-            v-for="group in activeData.groups"
-            :key="group.title"
-            class="mb-8"
-          >
-            <div class="d-flex align-center justify-space-between mb-4">
-              <div>
-                <div class="g2a-subtitle-dark">{{ group.title }}</div>
-                <div class="g2a-text-12 text-greyDark mt-1">
-                  {{ group.description }}
-                </div>
+    <!-- Most Popular Sidebar + Main Content layout -->
+    <v-row>
+      <!-- Main content -->
+      <v-col cols="12" md="8">
+        <!-- Ticket Groups: rendered per section -->
+        <div v-for="group in activeData.groups" :key="group.title" class="mb-8">
+          <div class="d-flex align-center justify-space-between mb-4">
+            <div>
+              <div class="g2a-subtitle-dark">{{ group.title }}</div>
+              <div class="g2a-text-12 text-greyDark mt-1">
+                {{ group.description }}
               </div>
-              <v-chip
-                v-if="group.tag"
-                size="small"
-                :color="group.tagColor || 'brandColor2'"
-                variant="tonal"
-              >
-                <span class="g2a-text-10 g2a-text-bold-600">{{
-                  group.tag
-                }}</span>
-              </v-chip>
             </div>
+            <v-chip
+              v-if="group.tag"
+              size="small"
+              :color="group.tagColor || 'brandColor2'"
+              variant="tonal"
+            >
+              <span class="g2a-text-10 g2a-text-bold-600">{{ group.tag }}</span>
+            </v-chip>
+          </div>
 
-            <v-row>
-              <v-col
-                v-for="product in group.products"
-                :key="product.id"
-                cols="12"
-                sm="6"
+          <v-row>
+            <v-col
+              v-for="product in group.products"
+              :key="product.id"
+              cols="12"
+              sm="6"
+            >
+              <v-card
+                variant="outlined"
+                rounded="lg"
+                elevation="0"
+                class="product-card h-100"
+                @click="onProductClick(product)"
               >
-                <v-card
-                  variant="outlined"
-                  rounded="lg"
-                  elevation="0"
-                  class="product-card h-100"
-                  @click="onProductClick(product)"
+                <!-- Product image (optional — only if product.img exists) -->
+                <v-img
+                  v-if="product.img"
+                  :src="product.img"
+                  height="150"
+                  cover
+                  class="product-card__img"
                 >
-                  <!-- Product image (optional — only if product.img exists) -->
-                  <v-img
-                    v-if="product.img"
-                    :src="product.img"
-                    height="140"
-                    cover
-                    class="product-card__img"
-                  >
-                    <div class="d-flex justify-space-between pa-2">
-                      <v-chip
-                        v-if="product.badge"
-                        size="x-small"
-                        :color="product.badgeColor || 'brandColor'"
-                        class="g2a-text-bold-600"
-                      >
-                        {{ product.badge }}
-                      </v-chip>
-                    </div>
-                  </v-img>
-
-                  <!-- No image: compact text-only card (like the wireframe) -->
-                  <div v-else class="product-card__no-img pa-4">
+                  <div class="d-flex justify-space-between pa-2">
                     <v-chip
                       v-if="product.badge"
                       size="x-small"
-                      :color="product.badgeColor || 'brandColor2'"
-                      variant="tonal"
-                      class="mb-3 g2a-text-bold-600"
+                      :color="product.badgeColor || 'brandColor'"
+                      class="g2a-text-bold-600"
                     >
                       {{ product.badge }}
                     </v-chip>
-                    <div class="price-label g2a-text-12 text-greyDark">
-                      starts
-                    </div>
-                    <div class="d-flex align-baseline ga-1 mt-1">
-                      <span
-                        class="g2a-text-18 g2a-text-bold-700 text-brandColor2"
-                      >
-                        ₹{{ product.price.toLocaleString("en-IN") }}
-                      </span>
-                      <span
-                        v-if="product.originalPrice"
-                        class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
-                      >
-                        ₹{{ product.originalPrice.toLocaleString("en-IN") }}
-                      </span>
-                      <v-chip
-                        v-if="product.discount"
-                        size="x-small"
-                        color="success"
-                        class="ms-1 g2a-text-bold-600"
-                      >
-                        {{ product.discount }}% OFF
-                      </v-chip>
-                    </div>
                   </div>
+                </v-img>
 
-                  <v-card-text class="pt-2 pb-3">
-                    <div class="g2a-text-14 g2a-text-bold-600 mb-1">
-                      {{ product.name }}
-                    </div>
-                    <div
-                      class="d-flex align-center justify-space-between g2a-text-12 text-greyDark"
-                    >
-                      <div class="d-flex align-center">
-                        <v-icon icon="mdi-map-marker" size="12" class="me-1" />
-                        {{ product.location }}
-                      </div>
-                      <div class="d-flex align-center">
-                        <v-icon
-                          icon="mdi-clock-outline"
-                          size="12"
-                          class="me-1"
-                        />
-                        {{ product.duration }}
-                      </div>
-                    </div>
-
-                    <!-- Price row (only for cards WITH image) -->
-                    <div
-                      v-if="product.img"
-                      class="d-flex align-baseline ga-1 mt-2"
-                    >
-                      <span class="g2a-text-12 text-greyDark">starts</span>
-                      <span
-                        class="g2a-text-16 g2a-text-bold-700 text-brandColor2 ms-1"
-                      >
-                        ₹{{ product.price.toLocaleString("en-IN") }}
-                      </span>
-                      <span
-                        v-if="product.originalPrice"
-                        class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
-                      >
-                        ₹{{ product.originalPrice.toLocaleString("en-IN") }}
-                      </span>
-                      <v-chip
-                        v-if="product.discount"
-                        size="x-small"
-                        color="success"
-                        class="ms-1"
-                      >
-                        {{ product.discount }}% OFF
-                      </v-chip>
-                    </div>
-
-                    <div class="d-flex align-center mt-2 ga-1">
-                      <v-icon icon="mdi-star" size="12" color="amber" />
-                      <span class="g2a-text-12 g2a-text-bold-600">{{
-                        product.rating
-                      }}</span>
-                      <span class="g2a-text-12 text-greyDark"
-                        >({{ product.reviews }})</span
-                      >
-                      <v-spacer />
-                      <div
-                        class="d-flex align-center g2a-text-11 text-greyDark"
-                      >
-                        <v-icon
-                          icon="mdi-account-group"
-                          size="12"
-                          class="me-1"
-                        />
-                        {{ product.seatsLeft }} left
-                      </div>
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </div>
-
-          <!-- Promo Banner -->
-          <v-card
-            v-if="activeData.promo"
-            rounded="lg"
-            elevation="0"
-            class="promo-banner pa-5 d-flex align-center justify-space-between"
-          >
-            <div>
-              <div class="d-flex align-center mb-2 ga-2">
-                <v-chip
-                  size="small"
-                  color="brandColor"
-                  class="g2a-text-bold-600"
-                >
-                  {{ activeData.promo.tag }}
-                </v-chip>
-              </div>
-              <div class="g2a-subtitle-dark">{{ activeData.promo.title }}</div>
-              <div class="g2a-text-12 text-greyDark mt-1">
-                {{ activeData.promo.subtitle }}
-              </div>
-              <v-btn
-                variant="outlined"
-                rounded="lg"
-                size="small"
-                color="brandColor2"
-                class="mt-4 g2a-text-bold-600"
-                @click="onPromoClick"
-              >
-                {{ activeData.promo.cta }}
-              </v-btn>
-            </div>
-            <v-img
-              v-if="activeData.promo.img"
-              :src="activeData.promo.img"
-              width="120"
-              height="120"
-              cover
-              rounded="lg"
-              class="flex-shrink-0 ms-4"
-            />
-          </v-card>
-        </v-col>
-
-        <!-- Sidebar: Most Popular -->
-        <v-col cols="12" md="4">
-          <div class="sidebar-sticky">
-            <div class="d-flex align-center mb-4">
-              <v-icon
-                icon="mdi-trophy-outline"
-                size="18"
-                color="brandColor2"
-                class="me-2"
-              />
-              <div class="g2a-subtitle-1 g2a-text-bold-600">Most Popular</div>
-            </div>
-
-            <v-card
-              v-for="item in activeData.popular"
-              :key="item.id"
-              variant="outlined"
-              rounded="lg"
-              elevation="0"
-              class="popular-card mb-3 pa-3"
-              @click="onProductClick(item)"
-            >
-              <div class="d-flex align-center ga-3">
-                <!-- thumb -->
-                <v-img
-                  :src="item.img || 'https://via.placeholder.com/72'"
-                  width="72"
-                  height="72"
-                  cover
-                  rounded="lg"
-                  class="flex-shrink-0"
-                />
-                <div class="flex-grow-1 min-width-0">
+                <!-- No image: compact text-only card (like the wireframe) -->
+                <div v-else class="product-card__no-img pa-4">
                   <v-chip
-                    v-if="item.badge"
+                    v-if="product.badge"
                     size="x-small"
-                    :color="item.badgeColor || 'brandColor'"
-                    class="mb-1 g2a-text-bold-600"
+                    :color="product.badgeColor || 'brandColor2'"
+                    variant="tonal"
+                    class="mb-3 g2a-text-bold-600"
                   >
-                    {{ item.badge }}
+                    {{ product.badge }}
                   </v-chip>
-                  <div class="g2a-text-13 g2a-text-bold-600 truncate-two-lines">
-                    {{ item.name }}
+                  <div class="price-label g2a-text-12 text-greyDark">
+                    starts
                   </div>
-                  <div class="g2a-text-12 text-greyDark mt-1">
-                    {{ item.duration }}
-                  </div>
-                  <div
-                    class="g2a-text-13 g2a-text-bold-700 text-brandColor2 mt-1"
-                  >
-                    ₹{{ item.price.toLocaleString("en-IN") }}
+                  <div class="d-flex align-baseline ga-1 mt-1">
+                    <span
+                      class="g2a-text-18 g2a-text-bold-700 text-brandColor2"
+                    >
+                      ₹{{ product.price.toLocaleString("en-IN") }}
+                    </span>
+                    <span
+                      v-if="product.originalPrice"
+                      class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
+                    >
+                      ₹{{ product.originalPrice.toLocaleString("en-IN") }}
+                    </span>
+                    <v-chip
+                      v-if="product.discount"
+                      size="x-small"
+                      color="success"
+                      class="ms-1 g2a-text-bold-600"
+                    >
+                      {{ product.discount }}% OFF
+                    </v-chip>
                   </div>
                 </div>
-                <v-icon
-                  icon="mdi-chevron-right"
-                  size="18"
-                  color="greyDark"
-                  class="flex-shrink-0"
-                />
-              </div>
-            </v-card>
 
+                <v-card-text class="pt-2 pb-3">
+                  <div class="g2a-text-14 g2a-text-bold-600 mb-1">
+                    {{ product.name }}
+                  </div>
+                  <div
+                    class="d-flex align-center justify-space-between g2a-text-12 text-greyDark"
+                  >
+                    <div class="d-flex align-center">
+                      <v-icon icon="mdi-map-marker" size="12" class="me-1" />
+                      {{ product.location }}
+                    </div>
+                    <div class="d-flex align-center">
+                      <v-icon icon="mdi-clock-outline" size="12" class="me-1" />
+                      {{ product.duration }}
+                    </div>
+                  </div>
+
+                  <!-- Price row (only for cards WITH image) -->
+                  <div
+                    v-if="product.img"
+                    class="d-flex align-baseline ga-1 mt-2"
+                  >
+                    <span class="g2a-text-12 text-greyDark">starts</span>
+                    <span
+                      class="g2a-text-16 g2a-text-bold-700 text-brandColor2 ms-1"
+                    >
+                      ₹{{ product.price.toLocaleString("en-IN") }}
+                    </span>
+                    <span
+                      v-if="product.originalPrice"
+                      class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
+                    >
+                      ₹{{ product.originalPrice.toLocaleString("en-IN") }}
+                    </span>
+                    <v-chip
+                      v-if="product.discount"
+                      size="x-small"
+                      color="success"
+                      class="ms-1"
+                    >
+                      {{ product.discount }}% OFF
+                    </v-chip>
+                  </div>
+
+                  <div class="d-flex align-center mt-2 ga-1">
+                    <v-icon icon="mdi-star" size="12" color="amber" />
+                    <span class="g2a-text-12 g2a-text-bold-600">{{
+                      product.rating
+                    }}</span>
+                    <span class="g2a-text-12 text-greyDark"
+                      >({{ product.reviews }})</span
+                    >
+                    <v-spacer />
+                    <div class="d-flex align-center g2a-text-11 text-greyDark">
+                      <v-icon icon="mdi-account-group" size="12" class="me-1" />
+                      {{ product.seatsLeft }} left
+                    </div>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
+
+        <!-- Promo Banner -->
+        <v-card
+          v-if="activeData.promo"
+          rounded="lg"
+          elevation="0"
+          class="promo-banner pa-5 d-flex align-center justify-space-between"
+        >
+          <div>
+            <div class="d-flex align-center mb-2 ga-2">
+              <v-chip size="small" color="brandColor" class="g2a-text-bold-600">
+                {{ activeData.promo.tag }}
+              </v-chip>
+            </div>
+            <div class="g2a-subtitle-dark">{{ activeData.promo.title }}</div>
+            <div class="g2a-text-12 text-greyDark mt-1">
+              {{ activeData.promo.subtitle }}
+            </div>
             <v-btn
               variant="outlined"
               rounded="lg"
-              block
+              size="small"
               color="brandColor2"
-              class="mt-2 g2a-text-bold-600"
-              @click="exploreAll"
+              class="mt-4 g2a-text-bold-600"
+              @click="onPromoClick"
             >
-              Explore All
+              {{ activeData.promo.cta }}
             </v-btn>
           </div>
-        </v-col>
-      </v-row>
-    </v-container>
+          <v-img
+            v-if="activeData.promo.img"
+            :src="activeData.promo.img"
+            width="120"
+            height="120"
+            cover
+            rounded="lg"
+            class="flex-shrink-0 ms-4"
+          />
+        </v-card>
+      </v-col>
+
+      <!-- Sidebar: Most Popular -->
+      <v-col cols="12" md="4">
+        <div class="sidebar-sticky">
+          <div class="d-flex align-center mb-4">
+            <v-icon
+              icon="mdi-trophy-outline"
+              size="18"
+              color="brandColor2"
+              class="me-2"
+            />
+            <div class="g2a-subtitle-1 g2a-text-bold-600">Most Popular</div>
+          </div>
+
+          <v-card
+            v-for="item in activeData.popular"
+            :key="item.id"
+            variant="outlined"
+            rounded="lg"
+            elevation="0"
+            class="popular-card mb-3 pa-3"
+            @click="onProductClick(item)"
+          >
+            <div class="d-flex align-center ga-3">
+              <!-- thumb -->
+              <v-img
+                :src="item.img || 'https://via.placeholder.com/72'"
+                width="72"
+                height="72"
+                cover
+                rounded="lg"
+                class="flex-shrink-0"
+              />
+              <div class="flex-grow-1 min-width-0">
+                <v-chip
+                  v-if="item.badge"
+                  size="x-small"
+                  :color="item.badgeColor || 'brandColor'"
+                  class="mb-1 g2a-text-bold-600"
+                >
+                  {{ item.badge }}
+                </v-chip>
+                <div class="g2a-text-13 g2a-text-bold-600 truncate-two-lines">
+                  {{ item.name }}
+                </div>
+                <div class="g2a-text-12 text-greyDark mt-1">
+                  {{ item.duration }}
+                </div>
+                <div
+                  class="g2a-text-13 g2a-text-bold-700 text-brandColor2 mt-1"
+                >
+                  ₹{{ item.price.toLocaleString("en-IN") }}
+                </div>
+              </div>
+              <v-icon
+                icon="mdi-chevron-right"
+                size="18"
+                color="greyDark"
+                class="flex-shrink-0"
+              />
+            </div>
+          </v-card>
+
+          <v-btn
+            variant="outlined"
+            rounded="lg"
+            block
+            color="brandColor2"
+            class="mt-2 g2a-text-bold-600"
+            @click="exploreAll"
+          >
+            Explore All
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -350,7 +327,7 @@ const categories = ref([
   { key: "history", label: "History & Culture", icon: "mdi-bank" },
 ]);
 
-const activeCategory = ref("scuba");
+const activeCategory = ref("getting-around");
 const activeLocation = ref("All");
 
 function exploreAll() {
@@ -377,334 +354,184 @@ function onPromoClick() {
 // Replace `products`, `groups`, `popular` etc. with real API calls once backend is ready.
 
 const categoryData = ref({
-  scuba: {
-    heroImg: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200",
-    badge: "Most Booked",
-    title: "Scuba Diving",
+  "getting-around": {
+    heroImg:
+      "https://go2andaman.com/wp-content/uploads/2025/10/SCOOTY-RENTAL-IMG2025-8-e1763714893701.jpg",
+    badge: "Travel Essential",
+    title: "Getting Around",
     subtitle:
-      "Dive into crystal waters with expert instructors — beginner to advanced.",
-    totalProducts: 12,
+      "Reliable airport, jetty and island taxi transfers across Port Blair, Havelock and Neil Island.",
+    totalProducts: 4,
     avgRating: "4.8",
-    locations: 4,
+    locations: 3,
 
     promo: {
-      tag: "Licensed Charter Boats",
-      title: "Check These Brilliant Scuba Courses Out!",
+      tag: "Private Transfers",
+      title: "Pre-Book Your Airport & Jetty Transfers",
       subtitle:
-        "PADI & SSI certified programs across Havelock, Neil & Port Blair.",
-      cta: "Check out now",
-      img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300",
+        "Comfortable vehicles, professional drivers and timely pickups across the Andaman Islands.",
+      cta: "Book Transfer",
+      img: "https://go2andaman.com/wp-content/uploads/2025/09/airport-transfer-andaman.jpg",
     },
+
     groups: [
       {
-        title: "Choose your ticket",
-        description: "Perfect for first-timers — no experience needed.",
-        tag: "Beginner Friendly",
+        title: "Airport & Jetty Transfers",
+        description:
+          "Convenient point-to-point transfers for a hassle-free journey.",
+        tag: "Most Booked",
         tagColor: "success",
+
         products: [
-          // TODO: GET /v1/products?category=scuba&subcategory=dsd
           {
-            id: "1",
-            name: "Boat DSD at Havelock",
-            location: "Havelock Island",
-            duration: "3 hrs",
-            price: 6500,
-            originalPrice: 7800,
+            id: "airport-transfer",
+            name: "Airport Transfers",
+            location: "Port Blair",
+            duration: "As per schedule",
+            price: 800,
+            originalPrice: 1000,
             discount: 20,
             rating: 4.8,
-            reviews: 214,
-            seatsLeft: 12,
+            reviews: 412,
+            seatsLeft: 18,
             badge: "Best Seller",
             badgeColor: "brandColor",
-            img: null,
+            img: "https://go2andaman.com/wp-content/uploads/2025/10/AIRPORT-IMG2025-36-e1763718232427.jpg",
           },
           {
-            id: "2",
-            name: "Boat DSD at Neil",
-            location: "Neil Island",
-            duration: "3 hrs",
-            price: 6500,
-            originalPrice: 7800,
+            id: "port-blair-airport-jetty-transfer",
+            name: "Port Blair Airport / Jetty Transfer Taxi",
+            location: "Port Blair",
+            duration: "30 - 60 mins",
+            price: 1200,
+            originalPrice: 1500,
             discount: 20,
             rating: 4.7,
-            reviews: 98,
+            reviews: 286,
+            seatsLeft: 12,
+            badge: "Popular",
+            badgeColor: "info",
+            img: "https://go2andaman.com/wp-content/uploads/2025/10/AIRPORT-IMG2025-4.jpg",
+          },
+          {
+            id: "neil-jetty-transfer",
+            name: "Neil Jetty Transfer Taxi",
+            location: "Neil Island",
+            duration: "15 - 30 mins",
+            price: 700,
+            originalPrice: 900,
+            discount: 22,
+            rating: 4.8,
+            reviews: 174,
             seatsLeft: 8,
             badge: null,
-            img: null,
+            img: "https://go2andaman.com/wp-content/uploads/2025/10/IMG20250929123306.jpg",
           },
           {
-            id: "3",
-            name: "Boat DSD at Port Blair",
-            location: "Port Blair",
-            duration: "3 hrs",
-            price: 6500,
-            originalPrice: 7800,
-            discount: 20,
-            rating: 4.6,
-            reviews: 54,
-            seatsLeft: 15,
-            badge: null,
-            img: null,
-          },
-        ],
-      },
-      {
-        title: "For PADI / SSI Certified Divers",
-        description: "Fun dives for certified divers at premier dive sites.",
-        tag: "Certified Divers",
-        tagColor: "info",
-        products: [
-          // TODO: GET /v1/products?category=scuba&subcategory=fun-dive
-          {
-            id: "fundive-havelock",
-            name: "Fun Dive at Havelock",
+            id: "havelock-jetty-transfer",
+            name: "Havelock Jetty Transfer Taxi",
             location: "Havelock Island",
-            duration: "3 hrs",
-            price: 6500,
-            originalPrice: null,
-            discount: null,
+            duration: "20 - 40 mins",
+            price: 800,
+            originalPrice: 1000,
+            discount: 20,
             rating: 4.9,
-            reviews: 187,
-            seatsLeft: 6,
-            badge: null,
-            img: null,
-          },
-          {
-            id: "fundive-neil",
-            name: "Fun Dive at Neil",
-            location: "Neil Island",
-            duration: "3.5 hrs",
-            price: 6500,
-            originalPrice: null,
-            discount: null,
-            rating: 4.7,
-            reviews: 72,
+            reviews: 324,
             seatsLeft: 10,
-            badge: null,
-            img: null,
-          },
-          {
-            id: "fundive-portblair",
-            name: "Fun Dive at Port Blair",
-            location: "Port Blair",
-            duration: "5 hrs",
-            price: 6500,
-            originalPrice: null,
-            discount: null,
-            rating: 4.5,
-            reviews: 43,
-            seatsLeft: 4,
-            badge: null,
-            img: null,
+            badge: "Top Rated",
+            badgeColor: "amber",
+            img: "https://go2andaman.com/wp-content/uploads/2025/10/IMG20250929123433.jpg",
           },
         ],
       },
-    ],
-    popular: [
-      // TODO: GET /v1/products?category=scuba&sort=popular&limit=3
       {
-        id: "aow-havelock",
-        name: "Advanced Open Water in Havelock",
-        duration: "02 – 03 days",
-        price: 27000,
-        rating: 4.7,
-        badge: "Most Popular",
-        badgeColor: "brandColor",
-        img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200",
-      },
-      {
-        id: "ow-havelock",
-        name: "Open Water Diver Course",
-        duration: "3 days",
-        price: 32000,
-        rating: 4.5,
-        badge: null,
-        img: "https://images.unsplash.com/photo-1551244072-5d12893278bc?w=200",
-      },
-      {
-        id: "night-dive",
-        name: "Night Dive at Havelock",
-        duration: "2 hrs",
-        price: 8500,
-        rating: 4.8,
-        badge: "Rare",
-        badgeColor: "deep-purple",
-        img: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200",
-      },
-    ],
-  },
+        title: "Bike Rentals",
+        description: "The most fun way to get around on the islands.",
+        tag: "₹ 600 onwards",
+        tagColor: "success",
 
-  kayaking: {
-    heroImg:
-      "https://go2andaman.com/wp-content/uploads/2025/08/pexels-ladyfern-photos-3113238-scaled-e1726571324856.jpg",
-    badge: "Nature Favourite",
-    title: "Kayaking",
-    subtitle: "Paddle through mangroves, bioluminescent bays and hidden coves.",
-    totalProducts: 6,
-    avgRating: "4.6",
-    locations: 3,
-    promo: {
-      tag: "Night Special",
-      title: "Night Kayaking — A Glow You Won't Forget",
-      subtitle:
-        "Paddle through bioluminescent waters after dark. Limited slots.",
-      cta: "Book Night Kayaking",
-      img: "https://go2andaman.com/wp-content/uploads/2025/09/Nightkayaking-havelock-andaman2.jpg",
-    },
-    groups: [
-      {
-        title: "Mangrove Kayaking",
-        description: "Guided tours through ancient mangrove forests.",
-        tag: null,
         products: [
-          // TODO: GET /v1/products?category=kayaking&subcategory=mangrove
           {
-            id: "kayak-baratang",
-            name: "Mangrove Kayaking – Baratang",
-            location: "Baratang",
-            duration: "2.5 hrs",
-            price: 3500,
-            originalPrice: 4000,
-            discount: 15,
-            rating: 4.6,
-            reviews: 88,
-            seatsLeft: 10,
-            badge: "Nature",
-            img: "https://go2andaman.com/wp-content/uploads/2025/08/pexels-ladyfern-photos-3113238-scaled-e1726571324856.jpg",
-          },
-          {
-            id: "kayak-havelock",
-            name: "Sunrise Kayaking – Havelock",
-            location: "Havelock Island",
-            duration: "2 hrs",
-            price: 3000,
-            originalPrice: null,
-            discount: null,
-            rating: 4.5,
-            reviews: 61,
-            seatsLeft: 8,
-            badge: null,
-            img: "https://images.unsplash.com/photo-1511496579429-5948af745576?w=600",
-          },
-        ],
-      },
-    ],
-    popular: [
-      {
-        id: "night-kayak",
-        name: "Night Kayaking – Port Blair",
-        duration: "3 hrs",
-        price: 3500,
-        rating: 4.2,
-        badge: "Exclusive",
-        badgeColor: "deep-purple",
-        img: "https://go2andaman.com/wp-content/uploads/2025/09/Nightkayaking-havelock-andaman2.jpg",
-      },
-    ],
-  },
-
-  // TODO: Add data for remaining categories:
-  // "experiences", "day-trips", "water-sports", "nature", "getting-around", "history"
-  // following the same shape as "scuba" above.
-  "day-trips": {
-    heroImg:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200",
-    badge: "Fan Favourite",
-    title: "Day Trips",
-    subtitle:
-      "Island-hop and explore the Andamans' most spectacular destinations.",
-    totalProducts: 8,
-    avgRating: "4.7",
-    locations: 5,
-    promo: null,
-    groups: [
-      {
-        title: "From Port Blair",
-        description: "Full-day guided trips departing from Port Blair.",
-        tag: null,
-        products: [
-          // TODO: GET /v1/products?category=day-trips&departure=port-blair
-          {
-            id: "baratang-tour",
-            name: "Baratang Island",
+            id: "bike-rental-in-port-blair",
+            name: "Bike Rental - Port Blair",
             location: "Port Blair",
-            duration: "12 hrs",
-            price: 7500,
-            originalPrice: 10000,
-            discount: 25,
+            duration: "As per day",
+            price: 600,
+            originalPrice: 1000,
+            discount: 20,
             rating: 4.8,
             reviews: 312,
-            seatsLeft: 5,
-            badge: "Mystical",
-            badgeColor: "deep-purple",
-            img: "https://go2andaman.com/wp-content/uploads/2025/09/go2andaman_baratang_8505-2.jpg",
+            seatsLeft: 18,
+            badge: "Best Seller",
+            badgeColor: "brandColor",
+            img: "https://go2andaman.com/wp-content/uploads/2025/10/SCOOTY-RENTAL-IMG2025-22-e1763714249500.jpg",
           },
           {
-            id: "jolly-buoy",
-            name: "Jolly Buoy Island",
-            location: "Port Blair",
-            duration: "9 hrs",
-            price: 3975,
-            originalPrice: 4599,
-            discount: 15,
-            rating: 4.5,
-            reviews: 196,
-            seatsLeft: 20,
-            badge: "Zero Pollution",
-            badgeColor: "success",
-            img: "https://go2andaman.com/wp-content/uploads/2025/09/Jolly-Buoy_0001_DSC_0598.jpg",
-          },
-        ],
-      },
-      {
-        title: "From Havelock",
-        description: "Adventure day trips from Havelock Island.",
-        tag: "Rare",
-        tagColor: "deep-purple",
-        products: [
-          // TODO: GET /v1/products?category=day-trips&departure=havelock
-          {
-            id: "barren-island",
-            name: "Barren Island – Active Volcano",
+            id: "bike-rental-in-havelock",
+            name: "Bike Rental - Havelock",
             location: "Havelock",
-            duration: "10–12 hrs",
-            price: 25000,
-            originalPrice: 30000,
+            duration: "Per day",
+            price: 700,
+            originalPrice: 1500,
             discount: 20,
-            rating: 4.9,
-            reviews: 47,
-            seatsLeft: 6,
-            badge: "Rare Activity",
-            badgeColor: "error",
-            img: "https://go2andaman.com/wp-content/uploads/2025/09/IMG_5380-rotated.jpg",
+            rating: 4.7,
+            reviews: 286,
+            seatsLeft: 12,
+            badge: "Popular",
+            badgeColor: "info",
+            img: "https://go2andaman.com/wp-content/uploads/2025/10/SCOOTY-RENTAL-IMG2025-16-e1763713589117.jpg",
+          },
+          {
+            id: "bike-rental-in-neil",
+            name: "Bike Rental - Neil Island",
+            location: "Neil Island",
+            duration: "15 - 30 mins",
+            price: 700,
+            originalPrice: 900,
+            discount: 22,
+            rating: 4.8,
+            reviews: 174,
+            seatsLeft: 8,
+            badge: null,
+            img: "https://go2andaman.com/wp-content/uploads/2025/10/SCOOTY-RENTAL-IMG2025-18.jpg",
           },
         ],
       },
     ],
+
     popular: [
       {
-        id: "baratang-pop",
-        name: "Baratang Island Day Trip",
-        duration: "12 hrs",
-        price: 7500,
+        id: "airport-transfer",
+        name: "Airport Transfers",
+        duration: "Flexible",
+        price: 800,
         rating: 4.8,
         badge: "Best Seller",
         badgeColor: "brandColor",
-        img: "https://go2andaman.com/wp-content/uploads/2025/09/go2andaman_baratang_8505-2.jpg",
+        img: "https://go2andaman.com/wp-content/uploads/2025/10/AIRPORT-IMG2025-36-e1763718232427.jpg",
       },
       {
-        id: "barren-pop",
-        name: "Barren Island Volcano Trip",
-        duration: "10–12 hrs",
-        price: 25000,
+        id: "port-blair-airport-jetty-transfer",
+        name: "Port Blair Airport / Jetty Transfer Taxi",
+        duration: "30 - 60 mins",
+        price: 1200,
+        rating: 4.7,
+        badge: "Popular",
+        badgeColor: "info",
+        img: "https://go2andaman.com/wp-content/uploads/2025/10/AIRPORT-IMG2025-4.jpg",
+      },
+      {
+        id: "bike=rental-port-blair",
+        name: "Bike Rental - Port Blair",
+        duration: "Per day",
+        price: 600,
         rating: 4.9,
-        badge: "Rare",
-        badgeColor: "error",
-        img: "https://go2andaman.com/wp-content/uploads/2025/09/IMG_5380-rotated.jpg",
+        badge: "Top Rated",
+        badgeColor: "amber",
+        img: "https://go2andaman.com/wp-content/uploads/2025/10/SCOOTY-RENTAL-IMG2025-22-e1763714249500.jpg",
       },
     ],
   },
-
 });
 
 // Fallback for categories without full data yet
@@ -725,7 +552,6 @@ const fallbackData = {
 const activeData = computed(
   () => categoryData.value[activeCategory.value] || fallbackData,
 );
-
 </script>
 
 <style scoped>
@@ -832,7 +658,7 @@ const activeData = computed(
 /* ── Popular Sidebar ── */
 .sidebar-sticky {
   position: sticky;
-  top: 70px;
+  top: 135px;
 }
 
 .popular-card {
