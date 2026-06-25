@@ -29,7 +29,7 @@
         />
       </v-col>
       <v-col cols="12" lg="4">
-        <ActivityGallery :images="product.images" @select="selectImage" />
+        <ActivityGallery :images="product.images" @select="openLightbox" />
       </v-col>
 
       <v-col cols="12" lg="8">
