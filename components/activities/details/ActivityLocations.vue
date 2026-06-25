@@ -1,32 +1,27 @@
 <template>
-  <div>
-    <div class="g2a-subtitle mb-4">
-      Available At
-    </div>
+  <div v-if="locations.length">
+    <div class="g2a-subtitle-dark mb-4">Available At</div>
 
-    <v-row>
-      <v-col
-        cols="12"
-        md="4"
+    <div class="d-flex flex-wrap ga-2">
+      <v-chip
         v-for="location in locations"
         :key="location.id"
+        rounded="lg"
+        variant="tonal"
+        color="brandColor2"
+        prepend-icon="mdi-map-marker-outline"
       >
-        <v-card variant="outlined">
-          <v-card-text>
-            <v-icon
-              icon="mdi-map-marker"
-              class="me-2"
-            />
-            {{ location.name }}
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+        {{ location.name }}
+      </v-chip>
+    </div>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  locations: Array,
+  locations: {
+    type: Array,
+    default: () => [],
+  },
 });
 </script>

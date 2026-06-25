@@ -1,20 +1,19 @@
 <template>
   <div>
-    <div class="g2a-subtitle mb-4">
-      About This Activity
-    </div>
+    <div class="g2a-subtitle-dark mb-4">About This Activity</div>
 
-    <div>
+    <div class="g2a-text-14">
       {{ expanded ? description : shortText }}
     </div>
 
-    <v-btn
+    <a
       v-if="description?.length > 180"
-      variant="text"
+      class="text-brandColor2 g2a-text-12 g2a-text-bold-600"
       @click="expanded = !expanded"
+      style="cursor: pointer"
     >
       {{ expanded ? "Read Less" : "Read More" }}
-    </v-btn>
+    </a>
   </div>
 </template>
 
@@ -30,7 +29,7 @@ const expanded = ref(false);
 const shortText = computed(() => {
   if (!props.description) return "";
   return props.description.length > 180
-    ? props.description.slice(0,180)+"..."
+    ? props.description.slice(0, 180) + "..."
     : props.description;
 });
 </script>

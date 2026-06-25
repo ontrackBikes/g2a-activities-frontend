@@ -1,18 +1,27 @@
 <template>
-  <v-card
-    variant="outlined"
-    class="sticky-card"
-  >
-    <v-card-text>
+  <div class="sticky-card">
+    <v-card variant="outlined" rounded="xl" elevation="0" class="pa-5">
+      <div class="mb-4">
+        <div class="g2a-text-12 text-greyDark">Starting from</div>
 
-      <div class="g2a-subtitle mb-4">
-        Book Your Ticket
+        <div class="d-flex align-end ga-1">
+          <span class="g2a-text-28 g2a-text-bold-700 text-brandColor2">
+            ₹{{ price }}
+          </span>
+
+          <span class="g2a-text-13 text-greyDark mb-1"> / person </span>
+        </div>
       </div>
 
       <v-text-field
         v-model="date"
         type="date"
-        label="Date"
+        label="Select Date"
+        density="comfortable"
+        variant="outlined"
+        rounded="lg"
+        hide-details
+        class="mb-3"
       />
 
       <v-select
@@ -21,36 +30,53 @@
         :items="slots"
         item-title="slot_name"
         item-value="id"
-        label="Slot"
+        label="Choose Slot"
+        density="comfortable"
+        variant="outlined"
+        rounded="lg"
+        hide-details
+        class="mb-3"
       />
 
-      <v-text-field
-        v-model="guests"
-        type="number"
-        label="Guests"
-      />
+      <div
+        class="d-flex align-center justify-space-between pa-3 rounded-lg mb-4"
+        style="border: 1px solid rgba(0, 0, 0, 0.12)"
+      >
+        <span class="g2a-text-13 g2a-text-bold-600"> Guests </span>
 
-      <div class="d-flex justify-space-between mt-4">
-        <div>
-          <div class="g2a-text-20 font-weight-bold">
-            ₹{{ price }}
-          </div>
+        <div class="d-flex align-center ga-2">
+          <v-btn
+            icon
+            size="x-small"
+            variant="outlined"
+            @click="guests > 1 && guests--"
+          >
+            <v-icon icon="mdi-minus" />
+          </v-btn>
 
-          <div class="text-caption">
-            Starting Price
-          </div>
+          <span class="g2a-text-14 g2a-text-bold-600">
+            {{ guests }}
+          </span>
+
+          <v-btn icon size="x-small" variant="outlined" @click="guests++">
+            <v-icon icon="mdi-plus" />
+          </v-btn>
         </div>
-
-        <v-btn
-          color="primary"
-          size="large"
-        >
-          Check Availability
-        </v-btn>
       </div>
 
-    </v-card-text>
-  </v-card>
+      <div class="d-flex justify-space-between align-center mb-4">
+        <span class="g2a-text-13 g2a-text-bold-600"> Total </span>
+
+        <span class="g2a-text-18 g2a-text-bold-700 text-brandColor2">
+          ₹{{ price * guests }}
+        </span>
+      </div>
+
+      <v-btn block size="large" flat color="brandColor" rounded="xl">
+        Check Availability
+      </v-btn>
+    </v-card>
+  </div>
 </template>
 
 <script setup>

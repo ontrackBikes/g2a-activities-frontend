@@ -8,6 +8,17 @@
   </v-alert>
 
   <template v-else-if="product">
+    <!-- Breadcrumb -->
+    <div class="d-flex align-center ga-1 g2a-text-13 text-greyDark mb-3">
+      <span class="cursor-pointer" @click="$router.push('/v2')"
+        >Activities</span
+      >
+      <v-icon icon="mdi-chevron-right" size="14" />
+      <span class="text-brandColor2 g2a-text-bold-600 truncate-two-lines">{{
+        product.name
+      }}</span>
+    </div>
+
     <v-row>
       <!-- Main Content -->
       <v-col cols="12" lg="8">
@@ -16,13 +27,18 @@
           :image="selectedImage"
           :location="locationText"
         />
+      </v-col>
+      <v-col cols="12" lg="4">
+        <ActivityGallery :images="product.images" @select="selectImage" />
+      </v-col>
 
-        <div class="mt-4">
-          <ActivityGallery :images="product.images" @select="selectImage" />
+      <v-col cols="12" lg="8">
+        <div class="">
+          <ActivityAbout :description="product.short_description" />
         </div>
 
-        <div class="mt-8">
-          <ActivityAbout :description="product.short_description" />
+        <div v-if="product.thingsToKnow?.length" class="mt-8">
+          <ActivityThingsToKnow :items="product.thingsToKnow" />
         </div>
 
         <div v-if="product.highlights?.length" class="mt-8">
@@ -37,14 +53,15 @@
           <ActivityLocations :locations="locations" />
         </div>
 
-        <div v-if="product.thingsToKnow?.length" class="mt-8">
-          <ActivityThingsToKnow :items="product.thingsToKnow" />
-        </div>
-
         <div
-          v-if="product.inclusions?.length || product.exclusions?.length"
+          v-if="
+            product.inclusions?.some((i) => i.active) ||
+            product.exclusions?.some((e) => e.active)
+          "
           class="mt-8"
         >
+          <div class="g2a-subtitle-dark mb-4">What's Included</div>
+
           <v-row>
             <v-col cols="12" md="6">
               <ActivityInclusions :inclusions="product.inclusions" />
@@ -99,6 +116,7 @@ import ActivityTerms from "../../../components/activities/details/ActivityTerms.
 import ActivityBookingCard from "../../../components/activities/details/ActivityBookingCard.vue";
 import ActivityRelatedProducts from "../../../components/activities/details/ActivityRelatedProducts.vue";
 import ActivityHero from "../../../components/activities/details/ActivityHero.vue";
+import ActivityGallery from "../../../components/activities/details/ActivityGallery.vue";
 
 const route = useRoute();
 

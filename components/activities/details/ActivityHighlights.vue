@@ -1,28 +1,34 @@
 <template>
-  <div>
-    <div class="g2a-subtitle mb-4">
-      Highlights
-    </div>
+  <div v-if="activeHighlights.length">
+    <div class="g2a-subtitle-dark mb-4">Highlights</div>
 
-    <v-row>
-      <v-col
-        cols="12"
-        md="6"
-        v-for="item in highlights"
-        :key="item.id"
-      >
-        <v-card variant="outlined">
-          <v-card-text>
-            {{ item.content }}
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <div v-for="item in activeHighlights" :key="item.id" class="d-flex mb-3">
+      <v-icon
+        icon="mdi-star-circle-outline"
+        size="18"
+        color="amber-darken-2"
+        class="flex-shrink-0 mr-2"
+        style="margin-top: 1px"
+      />
+
+      <div class="g2a-text-14 text-greyDark">
+        {{ item.content }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
-  highlights: Array,
+import { computed } from "vue";
+
+const props = defineProps({
+  highlights: {
+    type: Array,
+    default: () => [],
+  },
 });
+
+const activeHighlights = computed(() =>
+  props.highlights.filter((item) => item.active),
+);
 </script>
