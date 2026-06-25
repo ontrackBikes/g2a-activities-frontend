@@ -6,9 +6,11 @@
     class="product-card h-100"
     @click="$emit('click', product)"
   >
+
+
     <!-- Image -->
     <div class="product-card__img-wrap">
-      <v-img :src="primaryImage || fallbackImg" height="185" cover>
+      <v-img :src="getImageUrl(product) || fallbackImg" height="185" cover>
         <template #placeholder>
           <div
             class="product-card__img-placeholder d-flex align-center justify-center fill-height"
@@ -194,15 +196,11 @@ const fallbackImg =
   "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600";
 
 // ── Computed ──────────────────────────────────────────────────────
-const primaryImage = computed(() => {
+const getImageUrl = ((product) => {
   // vendor-product images take priority, then product-level images
-  const imgs =
-    props.product.vendorProduct?.images || props.product.images || [];
-  return (
-    imgs.find((i) => i.sort_order === 1)?.image_url ||
-    imgs[0]?.image_url ||
-    null
-  );
+
+  return product.thumbnail_url ||
+    product.vendorProduct?.images 
 });
 
 const firstTag = computed(() => props.product.tags?.[0] || null);

@@ -13,17 +13,17 @@
       >
         <div>
           <div
-            class="g2a-text-20 g2a-text-bold-700"
+            class="g2a-title-2"
           >
             {{ collection.name }}
           </div>
 
-          <div
+          <!-- <div
             v-if="collection.description"
-            class="g2a-text-12 text-greyDark mt-1"
+            class="g2a-text-bold-500 text-grey text-no-wrap mt-1"
           >
             {{ collection.description }}
-          </div>
+          </div> -->
         </div>
 
         <v-btn

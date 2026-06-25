@@ -1,14 +1,8 @@
 <template>
   <div>
     <div class="d-flex align-center my-4">
-      <v-icon
-        icon="mdi-compass-outline"
-        size="20"
-        color="brandColor2"
-        class="me-2"
-      />
-
-      <div class="g2a-subtitle g2a-text-bold-600">
+    
+      <div class="g2a-title-2">
         What are you looking for today?
       </div>
     </div>
