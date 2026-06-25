@@ -6,7 +6,7 @@
 
     <location-grid class="mt-8" />
 
-    <product-filters class="mt-8" @change="filters = $event" />
+    <!-- <product-filters class="mt-8" @change="filters = $event" /> -->
     <InfiniteProductList class="mt-8" :sort="filters.sort" />
   </div>
 </template>

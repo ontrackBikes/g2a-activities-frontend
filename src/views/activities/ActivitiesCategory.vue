@@ -47,7 +47,7 @@
     </template>
 
     <!-- Filters -->
-    <ProductFilters class="mb-6" @change="updateFilters" />
+    <!-- <ProductFilters class="mb-6" @change="updateFilters" /> -->
 
     <!-- Products -->
     <InfiniteProductList :category-slug="categorySlug" :filters="filters" />

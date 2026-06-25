@@ -8,12 +8,7 @@
   >
     <!-- Image -->
     <div class="product-card__img-wrap">
-      <v-img
-        :src="primaryImage || fallbackImg"
-        height="185"
-        cover
-        class="product-card__img"
-      >
+      <v-img :src="primaryImage || fallbackImg" height="185" cover>
         <template #placeholder>
           <div
             class="product-card__img-placeholder d-flex align-center justify-center fill-height"
@@ -23,9 +18,7 @@
         </template>
 
         <!-- Top badges -->
-        <div
-          class="product-card__badges d-flex align-start justify-space-between pa-2"
-        >
+        <div class="d-flex align-start justify-space-between pa-2">
           <div class="d-flex flex-column ga-1">
             <v-chip
               v-if="product.featured"
@@ -69,7 +62,7 @@
         <v-chip
           size="x-small"
           color="brandColor2"
-          class="g2a-text-10 g2a-text-bold-600 text-white"
+          class="g2a-text-10 g2a-text-bold-600 text-whte"
         >
           {{ product.category.name }}
         </v-chip>
@@ -77,7 +70,7 @@
     </div>
 
     <!-- Content -->
-    <v-card-text class="product-card__content pa-3 pb-3">
+    <v-card-text class="mt-2 pa-3 pb-3">
       <!-- Name -->
       <div class="g2a-text-14 g2a-text-bold-600 truncate-two-lines mb-2">
         {{ product.name }}
@@ -94,7 +87,7 @@
             class="me-1"
             color="brandColor2"
           />
-          {{ product.location?.name || "Andaman" }}
+          {{ locationText }}
         </div>
         <div v-if="product.duration" class="d-flex align-center">
           <v-icon icon="mdi-clock-outline" size="13" class="me-1" />
@@ -178,6 +171,22 @@ const props = defineProps({
   },
 });
 
+const locationText = computed(() => {
+  const locations = props.product.locations || [];
+
+  if (!locations.length) return "Andaman";
+
+  if (locations.length === 1) {
+    return locations[0].name;
+  }
+
+  if (locations.length === 2) {
+    return locations.map((l) => l.name).join(", ");
+  }
+
+  return `${locations[0].name} +${locations.length - 1}`;
+});
+
 defineEmits(["click"]);
 
 const wishlisted = ref(false);
@@ -234,19 +243,6 @@ function toggleWishlist() {
   position: relative;
 }
 
-.product-card__img {
-  border-radius: 8px 8px 0 0;
-}
-
-.product-card__img-placeholder {
-  background: #f0f2ff;
-}
-
-.product-card__badges {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), transparent);
-  border-radius: 8px 8px 0 0;
-}
-
 .product-card__wishlist {
   flex-shrink: 0;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15) !important;
@@ -255,16 +251,8 @@ function toggleWishlist() {
 /* Category pill overlapping image bottom */
 .product-card__category-pill {
   position: absolute;
-  bottom: -10px;
-  left: 12px;
+  bottom: -23px;
+  left: 260px;
   z-index: 1;
-}
-
-.product-card__content {
-  padding-top: 18px !important;
-}
-
-.product-card__arrow {
-  flex-shrink: 0;
 }
 </style>

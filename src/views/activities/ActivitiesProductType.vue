@@ -12,21 +12,15 @@
     </div>
 
     <!-- Collections -->
-    <template
-      v-for="collection in collections"
-      :key="collection.id"
-    >
-      <ProductCollectionSection
-        :collection="collection"
-        class="mb-10"
-      />
+    <template v-for="collection in collections" :key="collection.id">
+      <ProductCollectionSection :collection="collection" class="mb-10" />
     </template>
 
     <!-- Filters -->
-    <ProductFilters
+    <!-- <ProductFilters
       class="mb-6"
       @change="updateFilters"
-    />
+    /> -->
 
     <!-- Products -->
     <InfiniteProductList
@@ -39,12 +33,7 @@
 <script setup>
 import apiClient from "@/services/api";
 
-import {
-  ref,
-  computed,
-  onMounted,
-  watch,
-} from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 
 import { useRoute } from "vue-router";
 
@@ -57,53 +46,36 @@ const route = useRoute();
 const collections = ref([]);
 const filters = ref({});
 
-const categorySlug = computed(
-  () => route.params.category
-);
+const categorySlug = computed(() => route.params.category);
 
-const productTypeSlug = computed(
-  () => route.params.productType
-);
+const productTypeSlug = computed(() => route.params.productType);
 
 const title = computed(() =>
   productTypeSlug.value
     ?.replaceAll("-", " ")
-    ?.replace(/\b\w/g, (c) =>
-      c.toUpperCase()
-    )
+    ?.replace(/\b\w/g, (c) => c.toUpperCase()),
 );
 
-const loadCollections =
-  async () => {
-    try {
-      const response =
-        await apiClient.get(
-          "/v1/product-collections/with-products",
-          {
-            params: {
-              entity_type:
-                "product_type",
+const loadCollections = async () => {
+  try {
+    const response = await apiClient.get(
+      "/v1/product-collections/with-products",
+      {
+        params: {
+          entity_type: "product_type",
 
-              entity_slug:
-                productTypeSlug.value,
-            },
-          }
-        );
+          entity_slug: productTypeSlug.value,
+        },
+      },
+    );
 
-      collections.value =
-        response.data?.data ||
-        [];
-    } catch (err) {
-      console.error(
-        "[ActivitiesProductType]",
-        err
-      );
-    }
-  };
+    collections.value = response.data?.data || [];
+  } catch (err) {
+    console.error("[ActivitiesProductType]", err);
+  }
+};
 
-const updateFilters = (
-  value
-) => {
+const updateFilters = (value) => {
   filters.value = value;
 };
 
@@ -111,7 +83,7 @@ watch(
   () => route.params.productType,
   () => {
     loadCollections();
-  }
+  },
 );
 
 onMounted(loadCollections);
