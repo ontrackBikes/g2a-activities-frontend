@@ -33,9 +33,9 @@ defineProps({
 
 const openProduct = (product) => {
   router.push({
-    name: "ProductDetails",
-
+    name: "ProductDetail",
     params: {
+      category: product.category_slug,
       slug: product.slug,
     },
   });

@@ -1,19 +1,21 @@
 <template>
-  <div class="my-6">
+  <div class="my-4">
     <!-- Header -->
     <div class="mb-8">
-      <div class="g2a-title text-capitalize">
+      <div class="g2a-text-24 g2a-text-bold-700">
         {{ categoryName }}
       </div>
 
-      <div class="g2a-text-14 text-medium-emphasis mt-2">
+      <div class="g2a-text-14 text-medium-emphasis">
         Discover the best experiences, activities and tours.
       </div>
     </div>
 
     <!-- Product Types -->
     <div v-if="productTypes.length" class="mb-10">
-      <div class="g2a-subtitle mb-4">Explore by Activity Type</div>
+      <div class="g2a-subtitle g2a-text-bold-700 mb-4">
+        Explore by Activity Type
+      </div>
 
       <v-row>
         <v-col

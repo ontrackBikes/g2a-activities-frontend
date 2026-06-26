@@ -1,14 +1,7 @@
 <template>
   <div>
     <div class="d-flex align-center mb-4">
-      <v-icon
-        icon="mdi-map-marker-radius-outline"
-        size="20"
-        color="brandColor2"
-        class="me-2"
-      />
-
-      <div class="g2a-subtitle g2a-text-bold-600">Explore by Location</div>
+      <div class="g2a-subtitle g2a-text-bold-700">Explore by Location</div>
     </div>
 
     <v-row>

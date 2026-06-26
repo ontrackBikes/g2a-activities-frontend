@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="my-4">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="g2a-title text-capitalize">
+      <div class="g2a-text-24 g2a-text-bold-700">
         {{ title }}
-      </h1>
+      </div>
 
-      <div class="g2a-text-14 text-medium-emphasis mt-2">
+      <div class="g2a-text-14 text-medium-emphasis">
         Explore experiences and activities.
       </div>
     </div>

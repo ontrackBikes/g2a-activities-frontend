@@ -1,20 +1,10 @@
 <template>
   <div v-if="collections.length">
-
-    <div
-      v-for="collection in collections"
-      :key="collection.id"
-      class="mb-10"
-    >
-  
+    <div v-for="collection in collections" :key="collection.id" class="mb-10">
       <!-- Header -->
-      <div
-        class="d-flex align-center justify-space-between mb-4"
-      >
+      <div class="d-flex align-center justify-space-between mb-4">
         <div>
-          <div
-            class="g2a-title-2"
-          >
+          <div class="g2a-subtitle g2a-text-bold-700">
             {{ collection.name }}
           </div>
 
@@ -37,35 +27,21 @@
       </div>
 
       <!-- Products -->
-      <v-slide-group
-        show-arrows
-      >
+      <v-slide-group show-arrows>
         <v-slide-group-item
           v-for="product in collection.products"
           :key="product.slug"
         >
-          <div
-            class="mr-4"
-            style="width:280px"
-          >
-            <ProductCard
-              :product="product"
-              @click="openProduct"
-            />
+          <div class="mr-4" style="width: 280px">
+            <ProductCard :product="product" @click="openProduct" />
           </div>
         </v-slide-group-item>
       </v-slide-group>
     </div>
   </div>
 
-  <div
-    v-else-if="loading"
-    class="py-8 text-center"
-  >
-    <v-progress-circular
-      indeterminate
-      color="primary"
-    />
+  <div v-else-if="loading" class="py-8 text-center">
+    <v-progress-circular indeterminate color="primary" />
   </div>
 </template>
 
@@ -73,11 +49,7 @@
 import apiClient from "@/services/api";
 import ProductCard from "@/components/activities/cards/ProductCard.vue";
 
-import {
-  ref,
-  watch,
-  onMounted,
-} from "vue";
+import { ref, watch, onMounted } from "vue";
 
 import { useRouter } from "vue-router";
 
@@ -113,53 +85,33 @@ const loadCollections = async () => {
     };
 
     if (props.entitySlug) {
-      params.entity_slug =
-        props.entitySlug;
+      params.entity_slug = props.entitySlug;
     }
 
-    const response =
-      await apiClient.get(
-        "/v1/product-collections/with-products",
-        {
-          params,
-        }
-      );
-
-    collections.value =
-      response.data?.data || [];
-  } catch (err) {
-    console.error(
-      "[ProductCollectionSection]",
-      err
+    const response = await apiClient.get(
+      "/v1/product-collections/with-products",
+      {
+        params,
+      },
     );
+
+    collections.value = response.data?.data || [];
+  } catch (err) {
+    console.error("[ProductCollectionSection]", err);
   } finally {
     loading.value = false;
   }
 };
 
-const openProduct = (
-  product
-) => {
-  router.push(
-    `/activities/product/${product.slug}`
-  );
+const openProduct = (product) => {
+  router.push(`/activities/product/${product.slug}`);
 };
 
-const viewCollection = (
-  collection
-) => {
-  router.push(
-    `/collections/${collection.slug}`
-  );
+const viewCollection = (collection) => {
+  router.push(`/collections/${collection.slug}`);
 };
 
-watch(
-  () => [
-    props.entityType,
-    props.entitySlug,
-  ],
-  loadCollections
-);
+watch(() => [props.entityType, props.entitySlug], loadCollections);
 
 onMounted(loadCollections);
 </script>

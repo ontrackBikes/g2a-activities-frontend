@@ -17,7 +17,7 @@
     </ProductFilter>
 
     <!-- ─── Main grid ─────────────────────────────────────────────── -->
-    <v-container class="g2a-container-width pt-4 pb-10">
+    <div class="my-4">
       <!-- Skeleton: first load -->
       <v-row v-if="loading && products.length === 0">
         <v-col v-for="n in 6" :key="n" cols="12" sm="6" lg="4">
@@ -79,14 +79,14 @@
       <!-- End of list -->
       <div
         v-if="!hasMore && products.length > 0"
-        class="d-flex flex-column align-center py-8 text-center"
+        class="d-flex flex-column align-center text-center"
       >
         <v-divider class="w-100 mb-4" />
         <div class="g2a-text-12 text-greyDark">
           You've seen all {{ totalCount }} activities
         </div>
       </div>
-    </v-container>
+    </div>
   </div>
 </template>
 

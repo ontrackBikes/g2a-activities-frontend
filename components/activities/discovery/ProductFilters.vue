@@ -4,7 +4,7 @@
          FILTER BAR
     ═══════════════════════════════════════════════ -->
     <div class="filter-bar-wrap">
-      <v-container class="g2a-container-width py-0">
+      <div class="px-3">
         <div class="d-flex align-center ga-2 py-3 no-scrollbar overflow-x-auto">
           <!-- Filter button -->
           <v-btn
@@ -151,7 +151,7 @@
             <slot name="results-count" />
           </div>
         </div>
-      </v-container>
+      </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════
@@ -561,6 +561,7 @@ function onPriceChange([min, max]) {
   position: sticky;
   top: 0;
   z-index: 10;
+  border-radius: 12px;
 }
 
 .quick-menu-item {

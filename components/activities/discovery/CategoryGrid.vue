@@ -1,8 +1,7 @@
 <template>
   <div>
     <div class="d-flex align-center my-4">
-    
-      <div class="g2a-title-2">
+      <div class="g2a-text-24 g2a-text-bold-700">
         What are you looking for today?
       </div>
     </div>

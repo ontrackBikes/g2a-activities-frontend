@@ -9,7 +9,7 @@
 
   <template v-else-if="product">
     <!-- Breadcrumb -->
-    <div class="d-flex align-center ga-1 g2a-text-13 text-greyDark mb-3">
+    <div class="d-flex align-center ga-1 g2a-text-13 text-greyDark my-4">
       <span class="cursor-pointer" @click="$router.push('/v2')"
         >Activities</span
       >
@@ -100,7 +100,7 @@
 <script setup>
 import apiClient from "@/services/api";
 
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 
 import { useRoute } from "vue-router";
 
@@ -152,24 +152,35 @@ const selectImage = (index) => {
 const loadProduct = async () => {
   try {
     loading.value = true;
+    error.value = null;
 
     const response = await apiClient.get(
       `/v1/products/app/products-list/${route.params.slug}`,
     );
 
-    product.value = response.data?.data;
-
-    slots.value = response.data?.data?.slots || [];
-
-    relatedProducts.value = response.data?.data?.related_products || [];
+    product.value = response.data.data;
+    slots.value = response.data.data.slots || [];
+    relatedProducts.value = response.data.data.related_products || [];
   } catch (err) {
     console.error(err);
-
     error.value = "Failed to load product";
   } finally {
     loading.value = false;
   }
 };
+
+watch(
+  () => [route.params.category, route.params.slug],
+  async () => {
+    selectedImageIndex.value = 0;
+    await loadProduct();
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  },
+);
 
 onMounted(loadProduct);
 </script>
