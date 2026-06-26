@@ -47,7 +47,7 @@
 
 <script setup>
 import apiClient from "@/services/api";
-import ProductCard from "@/components/activities/cards/ProductCard.vue";
+import ProductCard from "@/components/activities/discovery/cards/ProductCard.vue";
 
 import { ref, watch, onMounted } from "vue";
 
@@ -104,7 +104,7 @@ const loadCollections = async () => {
 };
 
 const openProduct = (product) => {
-  router.push(`/activities/product/${product.slug}`);
+  router.push(`/product/${product.slug}`);
 };
 
 const viewCollection = (collection) => {

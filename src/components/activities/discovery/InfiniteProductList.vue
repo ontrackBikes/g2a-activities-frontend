@@ -100,7 +100,7 @@ import {
   nextTick,
 } from "vue";
 import apiClient from "@/services/api";
-import ProductCard from "@/components/activities/cards/ProductCard.vue";
+import ProductCard from "@/components/activities/discovery/cards/ProductCard.vue";
 import ProductFilter from "./ProductFilters.vue";
 import { useRouter } from "vue-router";
 
@@ -239,7 +239,7 @@ function resetFilters() {
 
 // ─── Navigation ──────────────────────────────────────────────────
 function openProduct(product) {
-  router.push(`/activities/product/${product.slug}`);
+  router.push(`/product/${product.slug}`);
 }
 
 // ─── Watch: filters v-model → refetch ────────────────────────────

@@ -63,11 +63,9 @@ import { computed, ref, watch, onMounted } from "vue";
 
 import { useRoute, useRouter } from "vue-router";
 
-import ProductFilters from "../../../components/activities/discovery/ProductFilters.vue";
+import InfiniteProductList from "../../components/activities/discovery/InfiniteProductList.vue";
 
-import InfiniteProductList from "../../../components/activities/discovery/InfiniteProductList.vue";
-
-import ProductCollectionSection from "../../../components/activities/discovery/ProductCollectionSection.vue";
+import ProductCollectionSection from "../../components/activities/discovery/ProductCollectionSection.vue";
 
 const router = useRouter();
 const route = useRoute();

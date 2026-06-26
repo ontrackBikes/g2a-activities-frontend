@@ -8,13 +8,6 @@
       >
         {{ collection.name }}
       </div>
-
-      <!-- <v-btn
-        variant="text"
-        size="small"
-      >
-        View All
-      </v-btn> -->
     </div>
 
     <v-slide-group show-arrows>
@@ -38,7 +31,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import ProductCard from "./cards/ProductCard.vue";
+import ProductCard from "./discovery/cards/ProductCard.vue";
 
 const props = defineProps({
   collection: {
@@ -51,7 +44,7 @@ const router = useRouter();
 
 const onProductClick = (product) => {
   router.push(
-    `/activities/product/${product.slug}`
+    `/product/${product.slug}`
   );
 };
 </script>

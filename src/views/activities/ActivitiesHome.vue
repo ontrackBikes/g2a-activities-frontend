@@ -14,11 +14,11 @@
 <script setup>
 const filters = ref({});
 
-import ProductCollectionSection from "../../../components/activities/discovery/ProductCollectionSection.vue";
+import ProductCollectionSection from "../../components/activities/discovery/ProductCollectionSection.vue";
 
-import InfiniteProductList from "../../../components/activities/discovery/InfiniteProductList.vue";
-import CategoryGrid from "../../../components/activities/discovery/CategoryGrid.vue";
-import ProductFilters from "../../../components/activities/discovery/ProductFilters.vue";
+import InfiniteProductList from "../../components/activities/discovery/InfiniteProductList.vue";
+import CategoryGrid from "../../components/activities/discovery/CategoryGrid.vue";
+import ProductFilters from "../../components/activities/discovery/ProductFilters.vue";
 import { ref } from "vue";
-import LocationGrid from "../../../components/activities/location/LocationGrid.vue";
+import LocationGrid from "../../components/activities/discovery/LocationGrid.vue";
 </script>

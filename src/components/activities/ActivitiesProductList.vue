@@ -47,7 +47,7 @@ import {
 import { useRouter } from "vue-router";
 import apiClient from "@/services/api";
 
-import ProductCard from "./cards/ProductCard.vue";
+import ProductCard from "./discovery/cards/ProductCard.vue";
 
 const router = useRouter();
 
@@ -178,7 +178,7 @@ const openProduct = (
   product
 ) => {
   router.push(
-    `/activities/product/${product.slug}`
+    `/product/${product.slug}`
   );
 };
 

@@ -22,7 +22,7 @@
     <v-row>
       <!-- Main Content -->
       <v-col cols="12" lg="8">
-        <activity-hero
+        <product-hero
           :title="product.name"
           :image="selectedImage"
           :location="locationText"
@@ -91,7 +91,13 @@
 
       <!-- Booking Sidebar -->
       <v-col cols="12" lg="4">
-        <ActivityBookingCard :slots="slots" :price="product.starting_price" />
+        <!-- <ActivityBookingCard :slots="slots" :price="product.starting_price" /> -->
+         <ActivityBookingCard
+    :booking-template="product.bookingTemplate"
+    :slots="slots"
+    :price="product.starting_price"
+    @submit="checkAvailability"
+/>
       </v-col>
     </v-row>
   </template>
@@ -104,19 +110,19 @@ import { ref, computed, onMounted, watch } from "vue";
 
 import { useRoute } from "vue-router";
 
-import ActivityAbout from "../../../components/activities/details/ActivityAbout.vue";
-import ActivityHighlights from "../../../components/activities/details/ActivityHighlights.vue";
-import ActivityTags from "../../../components/activities/details/ActivityTags.vue";
-import ActivityLocations from "../../../components/activities/details/ActivityLocations.vue";
-import ActivityThingsToKnow from "../../../components/activities/details/ActivityThingsToKnow.vue";
-import ActivityInclusions from "../../../components/activities/details/ActivityInclusions.vue";
-import ActivityExclusions from "../../../components/activities/details/ActivityExclusions.vue";
-import ActivityFaqs from "../../../components/activities/details/ActivityFaqs.vue";
-import ActivityTerms from "../../../components/activities/details/ActivityTerms.vue";
-import ActivityBookingCard from "../../../components/activities/details/ActivityBookingCard.vue";
-import ActivityRelatedProducts from "../../../components/activities/details/ActivityRelatedProducts.vue";
-import ActivityHero from "../../../components/activities/details/ActivityHero.vue";
-import ActivityGallery from "../../../components/activities/details/ActivityGallery.vue";
+import ActivityAbout from "../../components/activities/product/ActivityAbout.vue";
+import ActivityHighlights from "../../components/activities/product/ActivityHighlights.vue";
+import ActivityTags from "../../components/activities/product/ActivityTags.vue";
+import ActivityLocations from "../../components/activities/product/ActivityLocations.vue";
+import ActivityThingsToKnow from "../../components/activities/product/ActivityThingsToKnow.vue";
+import ActivityInclusions from "../../components/activities/product/ActivityInclusions.vue";
+import ActivityExclusions from "../../components/activities/product/ActivityExclusions.vue";
+import ActivityFaqs from "../../components/activities/product/ActivityFaqs.vue";
+import ActivityTerms from "../../components/activities/product/ActivityTerms.vue";
+import ActivityBookingCard from "../../components/activities/booking-fields/ActivityBookingCard.vue";
+import ActivityRelatedProducts from "../../components/activities/product/ActivityRelatedProducts.vue";
+import ProductHero from "../../components/activities/product/ProductHero.vue";
+import ActivityGallery from "../../components/activities/product/ActivityGallery.vue";
 
 const route = useRoute();
 
@@ -145,6 +151,40 @@ const selectedImage = computed(() => {
   return product.value?.thumbnail_url || "";
 });
 
+
+const checkAvailability = (form) => {
+  console.log(form);
+
+  /*
+  Example for scuba
+
+  {
+      travel_date: "2026-07-20",
+      slot: 3,
+      guests: 2
+  }
+
+  Example bike rental
+
+  {
+      travel_date: "...",
+      pickup_location: "...",
+      drop_location: "..."
+  }
+
+  Example ferry
+
+  {
+      travel_date: "...",
+      route: "...",
+      passengers: 4
+  }
+  */
+
+  // Next:
+  // POST /availability
+};
+
 const selectImage = (index) => {
   selectedImageIndex.value = index;
 };
@@ -155,7 +195,7 @@ const loadProduct = async () => {
     error.value = null;
 
     const response = await apiClient.get(
-      `/v1/products/app/products-list/${route.params.slug}`,
+      `/v1/products/app/products-list/${route.params.productType}`,
     );
 
     product.value = response.data.data;
