@@ -178,7 +178,7 @@ const openProduct = (
   product
 ) => {
   router.push(
-    `/product/${product.slug}`
+    `/product/${product.productType.slug}/${product.slug}`
   );
 };
 

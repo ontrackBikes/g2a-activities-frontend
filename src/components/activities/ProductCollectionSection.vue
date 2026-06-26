@@ -43,8 +43,9 @@ const props = defineProps({
 const router = useRouter();
 
 const onProductClick = (product) => {
-  router.push(
-    `/product/${product.slug}`
-  );
+  console.log("🚀 ~ onProductClick ~ product:", product)
+  // router.push(
+  //   `/product/${product.slug}`
+  // );
 };
 </script>

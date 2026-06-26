@@ -239,7 +239,7 @@ function resetFilters() {
 
 // ─── Navigation ──────────────────────────────────────────────────
 function openProduct(product) {
-  router.push(`/product/${product.slug}`);
+  router.push(`/${product.product_type.category.slug}/${product.product_type.slug}/${product.slug}`);
 }
 
 // ─── Watch: filters v-model → refetch ────────────────────────────

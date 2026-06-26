@@ -7,13 +7,6 @@
           <div class="g2a-subtitle g2a-text-bold-700">
             {{ collection.name }}
           </div>
-
-          <!-- <div
-            v-if="collection.description"
-            class="g2a-text-bold-500 text-grey text-no-wrap mt-1"
-          >
-            {{ collection.description }}
-          </div> -->
         </div>
 
         <v-btn
@@ -104,7 +97,9 @@ const loadCollections = async () => {
 };
 
 const openProduct = (product) => {
-  router.push(`/product/${product.slug}`);
+  router.push(
+    `/${product.productType.category.slug}/${product.productType.slug}/${product.slug}`,
+  );
 };
 
 const viewCollection = (collection) => {
