@@ -38,22 +38,6 @@
               {{ firstTag.name }}
             </v-chip>
           </div>
-
-          <!-- Wishlist button -->
-          <v-btn
-            icon
-            size="x-small"
-            variant="flat"
-            color="white"
-            class="product-card__wishlist"
-            @click.stop="toggleWishlist"
-          >
-            <v-icon
-              :icon="wishlisted ? 'mdi-heart' : 'mdi-heart-outline'"
-              :color="wishlisted ? 'error' : 'greyDark'"
-              size="16"
-            />
-          </v-btn>
         </div>
       </v-img>
 
@@ -217,10 +201,6 @@ function formatPrice(val) {
   if (!val && val !== 0) return "—";
   return Number(val).toLocaleString("en-IN");
 }
-
-function toggleWishlist() {
-  wishlisted.value = !wishlisted.value;
-}
 </script>
 
 <style scoped>
@@ -239,11 +219,6 @@ function toggleWishlist() {
 
 .product-card__img-wrap {
   position: relative;
-}
-
-.product-card__wishlist {
-  flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Category pill overlapping image bottom */
