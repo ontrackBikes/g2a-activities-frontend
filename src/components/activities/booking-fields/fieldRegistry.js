@@ -6,11 +6,8 @@ import ReturnDateField from "./fields/ReturnDateField.vue";
 
 export default {
   travel_date: DateField,
-
   slot: SlotField,
-
   guests: GuestsField,
   pickup_date: PickupDateField,
-
   return_date: ReturnDateField,
 };
