@@ -29,28 +29,28 @@
         />
       </v-col>
       <v-col cols="12" lg="4">
-        <ActivityGallery :images="product.images" @select="openLightbox" />
+        <ProductGallery :images="product.images" @select="openLightbox" />
       </v-col>
 
       <v-col cols="12" lg="8">
         <div class="">
-          <ActivityAbout :description="product.short_description" />
+          <ProductAbout :description="product.short_description" />
         </div>
 
         <div v-if="product.thingsToKnow?.length" class="mt-8">
-          <ActivityThingsToKnow :items="product.thingsToKnow" />
+          <ProductThingsToKnow :items="product.thingsToKnow" />
         </div>
 
         <div v-if="product.highlights?.length" class="mt-8">
-          <ActivityHighlights :highlights="product.highlights" />
+          <ProductHighlights :highlights="product.highlights" />
         </div>
 
         <div v-if="product.tags?.length" class="mt-8">
-          <ActivityTags :tags="product.tags" />
+          <ProductTags :tags="product.tags" />
         </div>
 
         <div v-if="locations.length" class="mt-8">
-          <ActivityLocations :locations="locations" />
+          <ProductLocations :locations="locations" />
         </div>
 
         <div
@@ -64,25 +64,25 @@
 
           <v-row>
             <v-col cols="12" md="6">
-              <ActivityInclusions :inclusions="product.inclusions" />
+              <ProductInclusions :inclusions="product.inclusions" />
             </v-col>
 
             <v-col cols="12" md="6">
-              <ActivityExclusions :exclusions="product.exclusions" />
+              <ProductExclusions :exclusions="product.exclusions" />
             </v-col>
           </v-row>
         </div>
 
         <div v-if="product.faqs?.length" class="mt-8">
-          <ActivityFaqs :faqs="product.faqs" />
+          <ProductFaqs :faqs="product.faqs" />
         </div>
 
         <div v-if="product.terms?.length" class="mt-8">
-          <ActivityTerms :terms="product.terms" />
+          <ProductTerms :terms="product.terms" />
         </div>
 
         <div v-if="relatedProducts.length" class="mt-10">
-          <ActivityRelatedProducts
+          <ProductRelated
             title="You May Also Like"
             :products="relatedProducts"
           />
@@ -92,11 +92,11 @@
       <!-- Booking Sidebar -->
       <v-col cols="12" lg="4">
         <!-- <ActivityBookingCard :slots="slots" :price="product.starting_price" /> -->
-         <ActivityBookingCard
-            :booking-template="product.bookingTemplate"
-            :slots="slots"
-            :price="product.starting_price"
-            @submit="checkAvailability"
+        <ActivityBookingCard
+          :booking-template="product.bookingTemplate"
+          :slots="slots"
+          :price="product.starting_price"
+          @submit="checkAvailability"
         />
       </v-col>
     </v-row>
@@ -110,19 +110,19 @@ import { ref, computed, onMounted, watch } from "vue";
 
 import { useRoute } from "vue-router";
 
-import ActivityAbout from "../../components/activities/product/ActivityAbout.vue";
-import ActivityHighlights from "../../components/activities/product/ActivityHighlights.vue";
-import ActivityTags from "../../components/activities/product/ActivityTags.vue";
-import ActivityLocations from "../../components/activities/product/ActivityLocations.vue";
-import ActivityThingsToKnow from "../../components/activities/product/ActivityThingsToKnow.vue";
-import ActivityInclusions from "../../components/activities/product/ActivityInclusions.vue";
-import ActivityExclusions from "../../components/activities/product/ActivityExclusions.vue";
-import ActivityFaqs from "../../components/activities/product/ActivityFaqs.vue";
-import ActivityTerms from "../../components/activities/product/ActivityTerms.vue";
+import ProductAbout from "../../components/activities/product/ProductAbout.vue";
+import ProductHighlights from "../../components/activities/product/ProductHighlights.vue";
+import ProductTags from "../../components/activities/product/ProductTags.vue";
+import ProductLocations from "../../components/activities/product/ProductLocations.vue";
+import ProductThingsToKnow from "../../components/activities/product/ProductThingsToKnow.vue";
+import ProductInclusions from "../../components/activities/product/ProductInclusions.vue";
+import ProductExclusions from "../../components/activities/product/ProductExclusions.vue";
+import ProductFaqs from "../../components/activities/product/ProductFaqs.vue";
+import ProductTerms from "../../components/activities/product/ProductTerms.vue";
 import ActivityBookingCard from "../../components/activities/booking-fields/ActivityBookingCard.vue";
-import ActivityRelatedProducts from "../../components/activities/product/ActivityRelatedProducts.vue";
+import ProductRelated from "../../components/activities/product/ProductRelated.vue";
 import ProductHero from "../../components/activities/product/ProductHero.vue";
-import ActivityGallery from "../../components/activities/product/ActivityGallery.vue";
+import ProductGallery from "../../components/activities/product/ProductGallery.vue";
 import { saveBooking } from "@/store/booking.js";
 import router from "@/router/index.js";
 
