@@ -90,6 +90,16 @@ const booking = bookingStore;
 
 const customer = computed({
   get() {
+    if (!booking.form.customer) {
+      booking.form.customer = {
+        first_name: "",
+        last_name: "",
+        mobile: "",
+        email: "",
+        country: "",
+      };
+    }
+
     return booking.form.customer;
   },
 

@@ -10,15 +10,13 @@
       </div>
 
       <div class="g2a-text-13 text-medium-emphasis mt-1">
-        Select travel class and preferred seats.
+        Select your travel class and preferred seating for each passenger.
       </div>
     </v-card-title>
 
     <v-divider />
 
     <v-card-text>
-
-      <!-- Travel Class -->
 
       <v-select
         v-model="ferry.travel_class"
@@ -27,10 +25,9 @@
         item-value="code"
         label="Travel Class"
         variant="outlined"
-        class="mb-5"
+        density="comfortable"
+        class="mb-6"
       />
-
-      <!-- Passenger Seat -->
 
       <v-row
         v-for="(passenger,index) in participants"
@@ -41,13 +38,10 @@
           <v-card
             variant="tonal"
             rounded="lg"
-            class="pa-4 mb-3"
+            class="pa-4 mb-4"
           >
-
             <div class="g2a-text-bold-600 mb-4">
-
               Passenger {{ index + 1 }}
-
             </div>
 
             <v-row>
@@ -56,27 +50,25 @@
                 cols="12"
                 md="6"
               >
-
                 <v-select
                   v-model="passenger.seat_preference"
                   :items="seatPreferences"
                   label="Seat Preference"
                   variant="outlined"
+                  density="comfortable"
                 />
-
               </v-col>
 
               <v-col
                 cols="12"
                 md="6"
               >
-
                 <v-text-field
                   v-model="passenger.seat_number"
-                  label="Seat Number (Optional)"
+                  label="Preferred Seat (Optional)"
                   variant="outlined"
+                  density="comfortable"
                 />
-
               </v-col>
 
             </v-row>
@@ -96,16 +88,33 @@ import { bookingStore } from "@/store/booking";
 
 const booking = bookingStore;
 
+const defaultFerry = {
+  travel_class: "economy",
+};
+
 const ferry = computed({
   get() {
+    if (!booking.form.ferry) {
+      booking.form.ferry = {
+        ...defaultFerry,
+      };
+    }
+
     return booking.form.ferry;
   },
-  set(v) {
-    booking.form.ferry = v;
+
+  set(value) {
+    booking.form.ferry = value;
   },
 });
 
-const participants = computed(() => booking.form.participants);
+const participants = computed(() => {
+  if (!booking.form.participants) {
+    booking.form.participants = [];
+  }
+
+  return booking.form.participants;
+});
 
 const travelClasses = [
   {

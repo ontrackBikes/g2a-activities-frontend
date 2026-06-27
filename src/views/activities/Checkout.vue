@@ -1,8 +1,8 @@
 <template>
   <v-container
+    v-if="booking.product"
     fluid
     class="py-8"
-    v-if="booking.product"
   >
     <v-row>
 
@@ -29,22 +29,68 @@
     </v-row>
   </v-container>
 
+  <!-- Loading -->
+
   <div
-    v-else
+    v-else-if="loading"
     class="text-center py-16"
   >
     <v-progress-circular
       indeterminate
       size="60"
+      color="primary"
     />
   </div>
+
+  <!-- Empty Booking -->
+
+  <v-container
+    v-else
+    class="py-16 text-center"
+  >
+    <v-icon
+      size="80"
+      color="grey"
+    >
+      mdi-cart-outline
+    </v-icon>
+
+    <div class="text-h5 mt-4">
+      No booking found
+    </div>
+
+    <div class="text-medium-emphasis mt-2">
+      Please select an activity first.
+    </div>
+
+    <v-btn
+      class="mt-6"
+      color="brandColor"
+      @click="$router.push('/')"
+    >
+      Browse Activities
+    </v-btn>
+  </v-container>
 </template>
 
 <script setup>
+import { onMounted, ref } from "vue";
+
 import CheckoutRenderer from "@/components/activities/checkout/CheckoutRenderer.vue";
 import CheckoutSidebar from "@/components/activities/checkout/CheckoutSidebar.vue";
-import { bookingStore } from "@/store/booking";
 
+import {
+  bookingStore,
+  loadBooking,
+} from "@/store/booking";
 
 const booking = bookingStore;
+
+const loading = ref(true);
+
+onMounted(() => {
+  loadBooking();
+
+  loading.value = false;
+});
 </script>

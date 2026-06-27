@@ -16,11 +16,6 @@
       <ProductCollectionSection :collection="collection" class="mb-10" />
     </template>
 
-    <!-- Filters -->
-    <!-- <ProductFilters
-      class="mb-6"
-      @change="updateFilters"
-    /> -->
 
     <!-- Products -->
     <InfiniteProductList

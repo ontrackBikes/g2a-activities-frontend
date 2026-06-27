@@ -22,16 +22,12 @@
         multiple
         variant="accordion"
       >
-
         <v-expansion-panel
           v-for="(participant,index) in participants"
           :key="index"
         >
-
           <v-expansion-panel-title>
-
             Participant {{ index + 1 }}
-
           </v-expansion-panel-title>
 
           <v-expansion-panel-text>
@@ -43,8 +39,6 @@
                 :key="field"
               >
 
-                <!-- First Name -->
-
                 <v-col
                   v-if="field==='first_name'"
                   cols="12"
@@ -54,10 +48,9 @@
                     v-model="participant.first_name"
                     label="First Name"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- Last Name -->
 
                 <v-col
                   v-if="field==='last_name'"
@@ -68,10 +61,9 @@
                     v-model="participant.last_name"
                     label="Last Name"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- Age -->
 
                 <v-col
                   v-if="field==='age'"
@@ -80,13 +72,12 @@
                 >
                   <v-text-field
                     v-model.number="participant.age"
-                    label="Age"
                     type="number"
+                    label="Age"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- Gender -->
 
                 <v-col
                   v-if="field==='gender'"
@@ -98,10 +89,9 @@
                     :items="genders"
                     label="Gender"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- Nationality -->
 
                 <v-col
                   v-if="field==='nationality'"
@@ -113,10 +103,9 @@
                     :items="nationalities"
                     label="Nationality"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- Weight -->
 
                 <v-col
                   v-if="field==='weight'"
@@ -128,10 +117,9 @@
                     type="number"
                     label="Weight (kg)"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- Height -->
 
                 <v-col
                   v-if="field==='height'"
@@ -143,10 +131,9 @@
                     type="number"
                     label="Height (cm)"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- Shoe Size -->
 
                 <v-col
                   v-if="field==='shoe_size'"
@@ -157,10 +144,9 @@
                     v-model="participant.shoe_size"
                     label="Shoe Size"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- Passport -->
 
                 <v-col
                   v-if="field==='passport_number'"
@@ -171,10 +157,9 @@
                     v-model="participant.passport_number"
                     label="Passport Number"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
-
-                <!-- ID -->
 
                 <v-col
                   v-if="field==='id_number'"
@@ -185,6 +170,7 @@
                     v-model="participant.id_number"
                     label="Government ID"
                     variant="outlined"
+                    density="comfortable"
                   />
                 </v-col>
 
@@ -237,36 +223,50 @@ const fields = computed(() => {
   );
 });
 
-const participants = computed(
-  () => booking.form.participants
-);
-
-watch(
-  () => booking.form.guests,
-  (count) => {
-
-    while (
-      booking.form.participants.length < count
-    ) {
-      booking.form.participants.push({
-        first_name: "",
-        last_name: "",
-        age: null,
-        gender: "",
-        nationality: "Indian",
-        weight: null,
-        height: null,
-        shoe_size: "",
-        passport_number: "",
-        id_number: "",
-      });
+const participants = computed({
+  get() {
+    if (!booking.form.participants) {
+      booking.form.participants = [];
     }
 
-    booking.form.participants.splice(count);
+    return booking.form.participants;
+  },
+
+  set(value) {
+    booking.form.participants = value;
+  },
+});
+
+const createParticipant = () => ({
+  first_name: "",
+  last_name: "",
+  age: null,
+  gender: "",
+  nationality: "Indian",
+  weight: null,
+  height: null,
+  shoe_size: "",
+  passport_number: "",
+  id_number: "",
+  seat_preference: "",
+  seat_number: "",
+});
+
+watch(
+  () => Number(booking.form.guests || 1),
+  (count) => {
+
+    while (participants.value.length < count) {
+      participants.value.push(createParticipant());
+    }
+
+    if (participants.value.length > count) {
+      participants.value.splice(count);
+    }
 
   },
   {
     immediate: true,
-  }
+  },
 );
 </script>

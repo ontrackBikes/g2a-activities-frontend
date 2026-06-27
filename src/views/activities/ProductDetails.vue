@@ -93,11 +93,11 @@
       <v-col cols="12" lg="4">
         <!-- <ActivityBookingCard :slots="slots" :price="product.starting_price" /> -->
          <ActivityBookingCard
-    :booking-template="product.bookingTemplate"
-    :slots="slots"
-    :price="product.starting_price"
-    @submit="checkAvailability"
-/>
+            :booking-template="product.bookingTemplate"
+            :slots="slots"
+            :price="product.starting_price"
+            @submit="checkAvailability"
+        />
       </v-col>
     </v-row>
   </template>
@@ -123,6 +123,8 @@ import ActivityBookingCard from "../../components/activities/booking-fields/Acti
 import ActivityRelatedProducts from "../../components/activities/product/ActivityRelatedProducts.vue";
 import ProductHero from "../../components/activities/product/ProductHero.vue";
 import ActivityGallery from "../../components/activities/product/ActivityGallery.vue";
+import { saveBooking } from "@/store/booking.js";
+import router from "@/router/index.js";
 
 const route = useRoute();
 
@@ -151,38 +153,19 @@ const selectedImage = computed(() => {
   return product.value?.thumbnail_url || "";
 });
 
+const checkAvailability = async (form) => {
+  // Later:
+  // await api.post("/availability", form)
 
-const checkAvailability = (form) => {
-  console.log(form);
+  saveBooking({
+    product: product.value,
+    bookingTemplate: product.value.bookingTemplate,
+    form,
+  });
 
-  /*
-  Example for scuba
-
-  {
-      travel_date: "2026-07-20",
-      slot: 3,
-      guests: 2
-  }
-
-  Example bike rental
-
-  {
-      travel_date: "...",
-      pickup_location: "...",
-      drop_location: "..."
-  }
-
-  Example ferry
-
-  {
-      travel_date: "...",
-      route: "...",
-      passengers: 4
-  }
-  */
-
-  // Next:
-  // POST /availability
+  router.push({
+    name: "Checkout",
+  });
 };
 
 const selectImage = (index) => {

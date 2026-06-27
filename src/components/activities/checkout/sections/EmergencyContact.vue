@@ -8,12 +8,15 @@
       <div class="g2a-subtitle">
         Emergency Contact
       </div>
+
+      <div class="g2a-text-13 text-medium-emphasis mt-1">
+        We'll contact this person only in case of an emergency.
+      </div>
     </v-card-title>
 
     <v-divider />
 
     <v-card-text>
-
       <v-row>
 
         <v-col
@@ -69,7 +72,6 @@
         </v-col>
 
       </v-row>
-
     </v-card-text>
   </v-card>
 </template>
@@ -91,10 +93,24 @@ const relationships = [
   "Other",
 ];
 
+const defaultEmergencyContact = {
+  name: "",
+  mobile: "",
+  relationship: "",
+  email: "",
+};
+
 const contact = computed({
   get() {
+    if (!booking.form.emergency_contact) {
+      booking.form.emergency_contact = {
+        ...defaultEmergencyContact,
+      };
+    }
+
     return booking.form.emergency_contact;
   },
+
   set(value) {
     booking.form.emergency_contact = value;
   },

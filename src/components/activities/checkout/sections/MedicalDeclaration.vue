@@ -43,8 +43,8 @@
         variant="tonal"
         class="mt-4"
       >
-        Certain medical conditions may require approval from the dive
-        instructor before participation.
+        Certain medical conditions may require approval from the dive instructor
+        before participation.
       </v-alert>
 
     </v-card-text>
@@ -57,10 +57,27 @@ import { bookingStore } from "@/store/booking";
 
 const booking = bookingStore;
 
+const defaultMedical = {
+  asthma: false,
+  heart_disease: false,
+  epilepsy: false,
+  pregnant: false,
+  diabetes: false,
+  recent_surgery: false,
+  ear_problem: false,
+  other: false,
+  other_details: "",
+};
+
 const medical = computed({
   get() {
+    if (!booking.form.medical) {
+      booking.form.medical = { ...defaultMedical };
+    }
+
     return booking.form.medical;
   },
+
   set(value) {
     booking.form.medical = value;
   },
@@ -93,7 +110,7 @@ const questions = [
   },
   {
     key: "ear_problem",
-    label: "I have Ear / Sinus problems",
+    label: "I have Ear / Sinus Problems",
   },
   {
     key: "other",
@@ -102,8 +119,6 @@ const questions = [
 ];
 
 const hasMedicalIssue = computed(() => {
-  return Object.entries(medical.value)
-    .filter(([key]) => key !== "other_details")
-    .some(([, value]) => value === true);
+  return questions.some((question) => medical.value[question.key]);
 });
 </script>

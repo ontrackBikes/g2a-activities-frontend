@@ -8,6 +8,10 @@
       <div class="g2a-subtitle">
         Liability Waiver
       </div>
+
+      <div class="g2a-text-13 text-medium-emphasis mt-1">
+        Please read the declaration carefully before continuing.
+      </div>
     </v-card-title>
 
     <v-divider />
@@ -20,7 +24,7 @@
         class="mb-5"
       >
         Adventure activities involve inherent risks. Please read and accept
-        the declaration before proceeding.
+        this declaration before proceeding.
       </v-alert>
 
       <v-card
@@ -33,7 +37,7 @@
           I understand that participation in this activity involves certain
           risks. I confirm that the information provided is true and accurate.
           I agree to follow all instructions provided by the operator and
-          release the organizer from liabilities arising from my negligence.
+          release the organizer from liabilities arising from my own negligence.
         </p>
 
         <p class="mt-4">
@@ -43,7 +47,7 @@
       </v-card>
 
       <v-checkbox
-        v-model="booking.form.waiver.accepted"
+        v-model="waiver.accepted"
         color="primary"
         hide-details
       >
@@ -57,7 +61,28 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { bookingStore } from "@/store/booking";
 
 const booking = bookingStore;
+
+const defaultWaiver = {
+  accepted: false,
+};
+
+const waiver = computed({
+  get() {
+    if (!booking.form.waiver) {
+      booking.form.waiver = {
+        ...defaultWaiver,
+      };
+    }
+
+    return booking.form.waiver;
+  },
+
+  set(value) {
+    booking.form.waiver = value;
+  },
+});
 </script>
