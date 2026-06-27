@@ -77,7 +77,7 @@
       </div>
 
       <!-- End of list -->
-      <div
+      <!-- <div
         v-if="!hasMore && products.length > 0"
         class="d-flex flex-column align-center text-center"
       >
@@ -85,7 +85,7 @@
         <div class="g2a-text-12 text-greyDark">
           You've seen all {{ totalCount }} activities
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -239,7 +239,9 @@ function resetFilters() {
 
 // ─── Navigation ──────────────────────────────────────────────────
 function openProduct(product) {
-  router.push(`/${product.product_type.category.slug}/${product.product_type.slug}/${product.slug}`);
+  router.push(
+    `/${product.product_type.category.slug}/${product.product_type.slug}/${product.slug}`,
+  );
 }
 
 // ─── Watch: filters v-model → refetch ────────────────────────────

@@ -1,13 +1,7 @@
 <template>
-  <v-card
-    rounded="xl"
-    variant="outlined"
-    elevation="0"
-  >
+  <v-card rounded="lg" variant="outlined" elevation="0">
     <v-card-title class="py-4">
-      <div class="g2a-subtitle">
-        Medical Declaration
-      </div>
+      <div class="g2a-subtitle">Medical Declaration</div>
 
       <div class="g2a-text-13 text-medium-emphasis mt-1">
         Please answer honestly. Your safety is our highest priority.
@@ -17,7 +11,6 @@
     <v-divider />
 
     <v-card-text>
-
       <v-checkbox
         v-for="question in questions"
         :key="question.key"
@@ -46,7 +39,6 @@
         Certain medical conditions may require approval from the dive instructor
         before participation.
       </v-alert>
-
     </v-card-text>
   </v-card>
 </template>

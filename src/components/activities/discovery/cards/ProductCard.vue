@@ -6,8 +6,6 @@
     class="product-card h-100"
     @click="$emit('click', product)"
   >
-
-
     <!-- Image -->
     <div class="product-card__img-wrap">
       <v-img :src="getImageUrl(product) || fallbackImg" height="185" cover>
@@ -115,10 +113,13 @@
       </div>
 
       <!-- Divider -->
-      <v-divider class="mb-2" />
+      <v-divider v-if="product.starting_price" class="mb-2" />
 
       <!-- Price row -->
-      <div class="d-flex align-center justify-space-between">
+      <div
+        v-if="product.starting_price"
+        class="d-flex align-center justify-space-between"
+      >
         <div>
           <div class="g2a-text-11 text-greyDark">starts from</div>
           <div class="d-flex align-baseline ga-1">
@@ -196,12 +197,11 @@ const fallbackImg =
   "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600";
 
 // ── Computed ──────────────────────────────────────────────────────
-const getImageUrl = ((product) => {
+const getImageUrl = (product) => {
   // vendor-product images take priority, then product-level images
 
-  return product.thumbnail_url ||
-    product.vendorProduct?.images 
-});
+  return product.thumbnail_url || product.vendorProduct?.images;
+};
 
 const firstTag = computed(() => props.product.tags?.[0] || null);
 

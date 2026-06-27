@@ -1,19 +1,12 @@
 <template>
-  <v-card
-    rounded="xl"
-    variant="outlined"
-    elevation="0"
-  >
+  <v-card rounded="lg" variant="outlined" elevation="0">
     <v-card-title class="py-4">
-      <div class="g2a-subtitle">
-        Payment Summary
-      </div>
+      <div class="g2a-subtitle">Payment Summary</div>
     </v-card-title>
 
     <v-divider />
 
     <v-card-text>
-
       <div class="summary-row">
         <span>Activity</span>
         <strong>{{ booking.product?.name || "-" }}</strong>
@@ -37,9 +30,7 @@
       <v-divider class="my-5" />
 
       <div class="summary-row align-center">
-        <span class="g2a-text-bold-600">
-          Total Payable
-        </span>
+        <span class="g2a-text-bold-600"> Total Payable </span>
 
         <div class="g2a-title text-brandColor2">
           ₹{{ total.toLocaleString() }}
@@ -48,6 +39,7 @@
 
       <v-btn
         block
+        flat
         size="large"
         rounded="xl"
         color="brandColor"
@@ -56,7 +48,6 @@
       >
         Continue to Payment
       </v-btn>
-
     </v-card-text>
   </v-card>
 </template>
@@ -86,9 +77,7 @@ const formattedDate = computed(() => {
     return "-";
   }
 
-  return new Date(
-    booking.form.travel_date
-  ).toLocaleDateString("en-IN", {
+  return new Date(booking.form.travel_date).toLocaleDateString("en-IN", {
     day: "numeric",
     month: "short",
     year: "numeric",

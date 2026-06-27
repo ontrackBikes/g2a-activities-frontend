@@ -1,25 +1,14 @@
 <template>
-  <v-card
-    rounded="xl"
-    variant="outlined"
-    elevation="0"
-  >
+  <v-card rounded="lg" variant="outlined" elevation="0">
     <v-card-title class="py-4">
-      <div class="g2a-subtitle">
-        Customer Details
-      </div>
+      <div class="g2a-subtitle">Customer Details</div>
     </v-card-title>
 
     <v-divider />
 
     <v-card-text>
-
       <v-row>
-
-        <v-col
-          cols="12"
-          md="6"
-        >
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="customer.first_name"
             label="First Name"
@@ -28,10 +17,7 @@
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="6"
-        >
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="customer.last_name"
             label="Last Name"
@@ -40,10 +26,7 @@
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="6"
-        >
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="customer.mobile"
             label="Mobile Number"
@@ -53,10 +36,7 @@
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="6"
-        >
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="customer.email"
             label="Email Address"
@@ -75,9 +55,7 @@
             density="comfortable"
           />
         </v-col>
-
       </v-row>
-
     </v-card-text>
   </v-card>
 </template>

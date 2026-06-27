@@ -8,6 +8,7 @@ import ProductDetails from "@/views/activities/ProductDetails.vue";
 import ActivitiesProductType from "@/views/activities/ActivitiesProductType.vue";
 import ActivitiesCategory from "@/views/activities/ActivitiesCategory.vue";
 import ActivitiesHome from "@/views/activities/ActivitiesHome.vue";
+import ActivitySearch from "@/layouts/ActivitySearch.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,12 @@ const router = createRouter({
           path: "",
           name: "ActivitiesHome",
           component: ActivitiesHome,
+        },
+
+        {
+          path: "/search",
+          name: "Search",
+          component: ActivitySearch,
         },
 
         {

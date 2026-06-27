@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="d-flex align-center justify-space-between mb-4">
         <div>
-          <div class="g2a-subtitle g2a-text-bold-700">
+          <div class="g2a-subtitle-dark">
             {{ collection.name }}
           </div>
         </div>

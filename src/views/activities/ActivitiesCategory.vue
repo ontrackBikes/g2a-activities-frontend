@@ -13,9 +13,7 @@
 
     <!-- Product Types -->
     <div v-if="productTypes.length" class="mb-10">
-      <div class="g2a-subtitle g2a-text-bold-700 mb-4">
-        Explore by Activity Type
-      </div>
+      <div class="g2a-subtitle-dark mb-4">Explore by Activity Type</div>
 
       <v-row>
         <v-col

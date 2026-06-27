@@ -145,7 +145,7 @@ const openLightbox = (index) => {
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .gallery-overlay {
