@@ -296,13 +296,8 @@
             <!-- Tag -->
             <template v-if="activeTab === 'tag'">
               <div v-if="!tags.length" class="g2a-text-12 text-greyDark pa-1">
-                <v-progress-circular
-                  indeterminate
-                  size="14"
-                  color="brandColor2"
-                  class="me-1"
-                />
-                Loading…
+                
+                No tags available
               </div>
               <div
                 v-for="tag in tags"
@@ -485,6 +480,7 @@ const TABS = [
   { key: "tag", label: "Tag" },
   { key: "productType", label: "Product Type" },
 ];
+
 
 const SORT_OPTIONS = [
   { value: "recommended", label: "Recommended" },

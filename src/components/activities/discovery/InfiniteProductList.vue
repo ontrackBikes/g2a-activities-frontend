@@ -160,9 +160,21 @@ const hasMore = computed(() => products.value.length < totalCount.value);
 async function loadFilterMeta() {
   try {
     const [locRes, tagRes, ptRes] = await Promise.all([
-      apiClient.get("/v1/locations/options"),
-      apiClient.get("/v1/product-tags"),
-      apiClient.get("/v1/product-types"),
+      apiClient.get("/v1/locations/options", {
+        params: {
+          category_slug: props.categorySlug,
+        },
+      }),
+      apiClient.get("/v1/product-tags/api", {
+        params: {
+          category_slug: props.categorySlug,
+        },
+      }),
+      apiClient.get("/v1/product-types", {
+        params: {
+          category_slug: props.categorySlug,
+        },
+      }),
     ]);
     locations.value = locRes.data?.data || locRes.data || [];
     tags.value = tagRes.data?.data || tagRes.data || [];
