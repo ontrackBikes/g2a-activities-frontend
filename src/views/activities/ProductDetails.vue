@@ -38,12 +38,12 @@
           <ProductAbout :description="product.short_description" />
         </div>
 
-        <div v-if="product.thingsToKnow?.length" class="mt-8">
-          <ProductThingsToKnow :items="product.thingsToKnow" />
-        </div>
-
         <div v-if="product.highlights?.length" class="mt-8">
           <ProductHighlights :highlights="product.highlights" />
+        </div>
+
+        <div v-if="product.thingsToKnow?.length" class="mt-8">
+          <ProductThingsToKnow :items="product.thingsToKnow" />
         </div>
 
         <div v-if="product.tags?.length" class="mt-8">

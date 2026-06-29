@@ -1,8 +1,6 @@
 <template>
   <div v-if="activeItems.length">
-    <div class="g2a-title-heading mb-3">
-      Things to Know
-    </div>
+    <div class="g2a-title-heading mb-3">Things to Know</div>
 
     <ul class="things-list g2a-text-18">
       <li
@@ -17,7 +15,7 @@
           class="mt-1"
         />
 
-        <span class="text-greyDark">
+        <span class="g2a-text-18 font-weight-medium line-height-relaxed">
           {{ item.content }}
         </span>
       </li>
@@ -36,9 +34,7 @@ const props = defineProps({
 });
 
 const activeItems = computed(() =>
-  props.items.filter(
-    item => item?.active && item?.content?.trim()
-  )
+  props.items.filter((item) => item?.active && item?.content?.trim()),
 );
 </script>
 

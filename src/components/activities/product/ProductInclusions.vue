@@ -6,9 +6,7 @@
     height="100%"
   >
     <v-card-text>
-      <div class="g2a-title-4 mb-4 text-brandColor2">
-        Included
-      </div>
+      <div class="g2a-title-4 mb-4 text-brandColor2">Included</div>
 
       <div
         v-for="item in activeInclusions"
@@ -17,7 +15,7 @@
       >
         <v-icon
           icon="mdi-check"
-          size="16"
+          size="18"
           color="success"
           class="mt-1 flex-shrink-0"
         />

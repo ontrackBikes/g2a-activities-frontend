@@ -6,9 +6,7 @@
     height="100%"
   >
     <v-card-text>
-      <div class="g2a-title-4  mb-4 text-error">
-        Not Included
-      </div>
+      <div class="g2a-title-4 mb-4 text-error">Not Included</div>
 
       <div
         v-for="item in activeExclusions"
@@ -17,7 +15,7 @@
       >
         <v-icon
           icon="mdi-close"
-          size="16"
+          size="18"
           color="error"
           class="mt-1 flex-shrink-0"
         />
