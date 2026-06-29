@@ -26,6 +26,7 @@
           :title="product.name"
           :image="selectedImage"
           :location="locationText"
+          :thumbnail_url="product.thumbnail_url"
         />
       </v-col>
       <v-col cols="12" lg="4">

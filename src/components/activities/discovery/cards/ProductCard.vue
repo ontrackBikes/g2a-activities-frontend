@@ -40,24 +40,25 @@
           </div>
         </div>
       </v-img>
-
-      <!-- Category pill overlapping bottom of image -->
-      <div v-if="product.category" class="product-card__category-pill">
-        <v-chip
-          size="x-small"
-          color="brandColor2"
-          class="g2a-text-10 g2a-text-bold-600 text-whte"
-        >
-          {{ product.category.name }}
-        </v-chip>
-      </div>
     </div>
 
     <!-- Content -->
-    <v-card-text class="mt-3 pa-3 pb-3">
+    <v-card-text class="mt-2 pa-3 pb-3">
       <!-- Name -->
-      <div class="g2a-text-14 g2a-text-bold-600 truncate-two-lines mb-2">
-        {{ product.name }}
+      <div
+        class="d-flex align-center justify-space-between g2a-text-14 g2a-text-bold-600 truncate-two-lines mb-2"
+      >
+        <span> {{ product.name }}</span>
+
+        <span v-if="product.category">
+          <v-chip
+            size="x-small"
+            color="brandColor2"
+            class="g2a-text-10 g2a-text-bold-600 text-whte"
+          >
+            {{ product.category.name }}
+          </v-chip></span
+        >
       </div>
 
       <!-- Location + Duration row -->
@@ -219,13 +220,5 @@ function formatPrice(val) {
 
 .product-card__img-wrap {
   position: relative;
-}
-
-/* Category pill overlapping image bottom */
-.product-card__category-pill {
-  position: absolute;
-  bottom: -22px;
-  left: 10px;
-  z-index: 1;
 }
 </style>

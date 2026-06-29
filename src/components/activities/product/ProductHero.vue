@@ -1,7 +1,7 @@
 <template>
   <v-card rounded="lg" elevation="0" class="overflow-hidden">
     <v-img
-      :src="image"
+      :src="thumbnail_url"
       height="400"
       cover
       rounded="lg"
@@ -34,5 +34,6 @@ defineProps({
   title: String,
   image: String,
   location: String,
+  thumbnail_url: String,
 });
 </script>
