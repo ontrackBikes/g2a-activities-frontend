@@ -6,7 +6,7 @@
     height="100%"
   >
     <v-card-text>
-      <div class="g2a-text-15 g2a-text-bold-600 mb-4 text-error">
+      <div class="g2a-title-4  mb-4 text-error">
         Not Included
       </div>
 
@@ -22,7 +22,7 @@
           class="mt-1 flex-shrink-0"
         />
 
-        <span class="g2a-text-14">
+        <span class="g2a-text-18">
           {{ item.content }}
         </span>
       </div>

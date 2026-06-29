@@ -61,7 +61,7 @@
           "
           class="mt-8"
         >
-          <div class="g2a-subtitle-dark mb-4">What's Included</div>
+          <div class="g2a-title-heading mb-3">What's Included</div>
 
           <v-row>
             <v-col cols="12" md="6">

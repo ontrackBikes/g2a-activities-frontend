@@ -4,9 +4,10 @@
     variant="accordion"
     elevation="0"
     class="term-panels"
+    
   >
     <v-expansion-panel>
-      <v-expansion-panel-title class="g2a-text-15 g2a-text-bold-600">
+      <v-expansion-panel-title class="g2a-title-heading">
         Terms & Conditions
       </v-expansion-panel-title>
 
@@ -23,7 +24,7 @@
             class="flex-shrink-0 mt-1"
           />
 
-          <span class="g2a-text-14 text-grey-darken-2">
+          <span class="g2a-text-18 text-grey-darken-2">
             {{ item.content }}
           </span>
         </div>

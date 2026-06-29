@@ -1,27 +1,27 @@
 <template>
   <div v-if="activeItems.length">
-    <div class="g2a-subtitle-dark mb-4">Things To Know</div>
+    <div class="g2a-title-heading mb-3">
+      Things to Know
+    </div>
 
-    <v-row>
-      <v-col v-for="(col, index) in chunkedItems" :key="index" cols="12" sm="6">
-        <div
-          v-for="item in col"
-          :key="item.id"
-          class="d-flex align-start ga-2 mb-3"
-        >
-          <v-icon
-            icon="mdi-check-circle-outline"
-            size="16"
-            color="brandColor2"
-            class="mt-1 flex-shrink-0"
-          />
+    <ul class="things-list g2a-text-18">
+      <li
+        v-for="(item, index) in activeItems"
+        :key="item.id || index"
+        class="things-item"
+      >
+        <v-icon
+          icon="mdi-check-circle-outline"
+          size="18"
+          color="success"
+          class="mt-1"
+        />
 
-          <span class="g2a-text-14 text-greyDark">
-            {{ item.content }}
-          </span>
-        </div>
-      </v-col>
-    </v-row>
+        <span class="text-greyDark">
+          {{ item.content }}
+        </span>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -35,12 +35,28 @@ const props = defineProps({
   },
 });
 
-const activeItems = computed(() => props.items.filter((item) => item.active));
-
-const chunkedItems = computed(() => {
-  const items = activeItems.value;
-  const size = Math.ceil(items.length / 2);
-
-  return [items.slice(0, size), items.slice(size)].filter((col) => col.length);
-});
+const activeItems = computed(() =>
+  props.items.filter(
+    item => item?.active && item?.content?.trim()
+  )
+);
 </script>
+
+<style scoped>
+.things-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.things-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.6;
+}
+
+.things-item:last-child {
+  margin-bottom: 0;
+}
+</style>

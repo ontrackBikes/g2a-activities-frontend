@@ -8,7 +8,7 @@
       gradient="to top, rgba(0,0,0,.75), rgba(0,0,0,.15)"
     >
       <div class="fill-height d-flex flex-column justify-end pa-6">
-        <div class="g2a-title g2a-text-bold-600 text-white">
+        <div class="g2a-title-heading text-white">
           {{ title }}
         </div>
 

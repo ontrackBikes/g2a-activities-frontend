@@ -131,16 +131,15 @@
               hide-details
               clearable
               rounded="xl"
-              class="flex-grow-1 bg-white"
+              class="flex-grow-1"
             />
             <v-btn
-              variant="text"
-              color="grey-darken-3"
+              icon="mdi-close"
+              variant="icon"
               rounded="xl"
-              class="text-none g2a-text-14 font-weight-bold"
               @click="closeSearchDialog"
             >
-              Cancel
+              
             </v-btn>
           </v-container>
         </div>

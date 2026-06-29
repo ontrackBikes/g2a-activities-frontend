@@ -1,14 +1,14 @@
 <template>
   <div v-if="activeFaqs.length">
-    <div class="g2a-subtitle-dark mb-4">FAQ's</div>
+    <div class="g2a-title-heading mb-3">FAQ's</div>
 
     <v-expansion-panels variant="accordion" elevation="0" class="faq-panels">
       <v-expansion-panel v-for="faq in activeFaqs" :key="faq.id">
-        <v-expansion-panel-title class="g2a-text-15 g2a-text-bold-600">
+        <v-expansion-panel-title class="g2a-title-4 g2a-text-bold-600">
           {{ faq.question }}
         </v-expansion-panel-title>
 
-        <v-expansion-panel-text class="g2a-text-14 text-grey-darken-2">
+        <v-expansion-panel-text class="g2a-text-18 text-grey-darken-2 py-4">
           {{ faq.answer }}
         </v-expansion-panel-text>
       </v-expansion-panel>

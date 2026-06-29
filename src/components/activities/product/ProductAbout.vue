@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="g2a-subtitle-dark mb-4">About This Activity</div>
+    <div class="g2a-title-heading mb-4">About</div>
 
-    <div class="g2a-text-14">
+    <div class="g2a-text-18">
       {{ expanded ? description : shortText }}
     </div>
 

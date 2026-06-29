@@ -27,7 +27,7 @@
       <!-- Total -->
 
       <div class="d-flex justify-space-between align-center mb-5">
-        <span class="g2a-text-13 g2a-text-bold-600"> Total </span>
+        <span class="g2a-title-4 g2a-text-bold-600"> Total </span>
 
         <span class="g2a-text-20 g2a-text-bold-700 text-brandColor2">
           ₹{{ totalPrice }}
@@ -116,6 +116,6 @@ const submit = () => {
 <style scoped>
 .sticky-card {
   position: sticky;
-  top: 90px;
+  top: 30px;
 }
 </style>
