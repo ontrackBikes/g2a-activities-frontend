@@ -69,7 +69,7 @@ const activityColors = {
   "Water Sports": "blue",
   "Day Trips": "orange",
   "Exclusive Experiences": "purple",
-  "Getting Around": "grey",
+  "Getting Around": "pink",
   "History & Culture": "amber",
   "Treks and Walks": "green",
   Stargazing: "deep-purple",

@@ -22,7 +22,7 @@
       <v-row class="ga-y-2">
         <v-col v-for="i in 4" :key="i" cols="12" sm="6" class="pa-2">
           <v-skeleton-loader
-            class="border rounded-xl bg-white"
+            class="border rounded-xl"
             type="list-item-avatar-two-line"
           />
         </v-col>

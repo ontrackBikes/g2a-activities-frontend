@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card elevation="0" class="g2a-rounded-border border bg-white">
+    <v-card elevation="0" class="g2a-rounded-border border">
       <v-alert color="background">
         <div class="g2a-text-20 g2a-text-bold-600">
           Booking Summary

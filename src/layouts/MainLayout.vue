@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app >
     <v-app-bar app height="76" flat class="border-b">
       <v-container
         fluid
@@ -12,9 +12,9 @@
           >
             <img
               :src="
-                isDark ? '/assets/g2a_logo_dark.png' : '/assets/g2a_logo.png'
+                isDark ? '/assets/g2a_logo_dark.png' : '/assets/g2a_logo_light.png'
               "
-              :height="mobile ? 22 : 40"
+              :width="mobile ? 180 : 180"
               alt="Go2Andaman"
             />
           </RouterLink>
@@ -48,9 +48,9 @@
           style="max-width: 480px"
         >
           <v-text-field
+            variant="outlined"
             readonly
             prepend-inner-icon="mdi-magnify"
-            variant="solo"
             flat
             density="comfortable"
             hide-details
@@ -119,7 +119,7 @@
         class="d-flex flex-column h-100"
         :rounded="mobile ? false : 'xl'"
       >
-        <div class="bg-white border-b py-4">
+        <div class="border-b py-4">
           <v-container class="px-4 d-flex align-center ga-3">
             <v-text-field
               v-model="searchTerm"
