@@ -144,7 +144,5 @@ onMounted(async () => {
     box-shadow 0.15s ease;
 }
 
-.v-card:hover {
-  transform: translateY(-2px);
-}
+
 </style>

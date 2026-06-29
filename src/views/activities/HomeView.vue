@@ -739,9 +739,7 @@ const activeData = computed(
   white-space: nowrap;
 }
 
-.cat-tab:hover {
-  color: rgb(var(--v-theme-brandColor2));
-}
+
 
 .cat-tab.active {
   color: rgb(var(--v-theme-brandColor2));
@@ -790,10 +788,6 @@ const activeData = computed(
     transform 0.15s;
 }
 
-.product-card:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(-2px);
-}
 
 .product-card__no-img {
   background: linear-gradient(
@@ -815,9 +809,6 @@ const activeData = computed(
   transition: box-shadow 0.15s;
 }
 
-.popular-card:hover {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
-}
 
 /* ── Promo Banner ── */
 .promo-banner {

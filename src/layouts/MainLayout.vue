@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="white" height="76" flat class="border-b">
+    <v-app-bar app height="76" flat class="border-b">
       <v-container
         fluid
         class="px-4 px-md-8 h-100 d-flex align-center justify-space-between"
@@ -11,9 +11,11 @@
             class="d-flex align-center mr-2 text-decoration-none"
           >
             <img
-              :src="'/assets/g2a_logo.png'"
-              :height="mobile ? 22 : 26"
-              alt="Go2Andaman Logo"
+              :src="
+                isDark ? '/assets/g2a_logo_dark.png' : '/assets/g2a_logo.png'
+              "
+              :height="mobile ? 22 : 40"
+              alt="Go2Andaman"
             />
           </RouterLink>
 
@@ -53,7 +55,6 @@
             density="comfortable"
             hide-details
             rounded="xl"
-            bg-color="grey-lighten-4"
             class="cursor-pointer"
             @click="searchDialog = true"
           />
@@ -114,7 +115,7 @@
       }"
     >
       <v-card
-        color="grey-lighten-5"
+        
         class="d-flex flex-column h-100"
         :rounded="mobile ? false : 'xl'"
       >
@@ -139,7 +140,6 @@
               rounded="xl"
               @click="closeSearchDialog"
             >
-              
             </v-btn>
           </v-container>
         </div>
@@ -166,7 +166,7 @@
       style="z-index: 1010"
     />
 
-    <v-main class="bg-grey-lighten-5">
+    <v-main>
       <v-container style="max-width: 1200px; min-height: calc(100vh - 220px)">
         <router-view />
       </v-container>
@@ -175,8 +175,13 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useDisplay } from "vuetify";
+import { useTheme } from "vuetify";
+
+const theme = useTheme();
+
+const isDark = computed(() => theme.global.current.value.dark);
 
 import ActivitySearch from "./ActivitySearch.vue";
 

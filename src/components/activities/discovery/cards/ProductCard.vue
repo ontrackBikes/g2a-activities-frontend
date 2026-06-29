@@ -1,7 +1,7 @@
 <template>
   <v-card
     variant="flat"
-    class="border rounded-xl d-flex flex-column h-100 position-relative bg-white"
+    class="border rounded-xl d-flex flex-column h-100 position-relative"
     :style="{
       opacity: product.out_of_stock ? '0.75' : '1',
       transition: 'all 0.2s ease',
@@ -15,7 +15,7 @@
       <v-img :src="product.thumbnail_url || fallbackImg" height="185" cover>
         <template #placeholder>
           <div
-            class="d-flex align-center justify-center fill-height bg-grey-lighten-4"
+            class="d-flex align-center justify-center fill-height "
           >
             <v-icon icon="mdi-image-outline" size="40" color="grey-lighten-1" />
           </div>
@@ -60,7 +60,7 @@
       >
         Next Available: {{ formatDate(product.next_available_slot) }}
       </span>
-      <div class="g2a-title-4 font-weight-bold text-grey-darken-4 mb-1">
+      <div class="g2a-title-4 font-weight-bold mb-1">
         {{ product.name }}
       </div>
 

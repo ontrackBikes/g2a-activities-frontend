@@ -67,7 +67,7 @@
 
             <div class="d-flex flex-column justify-center overflow-hidden">
               <div
-                class="g2a-text-14 font-weight-bold text-grey-darken-4 text-truncate"
+                class="g2a-text-14 font-weight-bold text-truncate"
               >
                 {{ item.name }}
               </div>
@@ -89,7 +89,7 @@
 
     <div v-else-if="props.searchTerm" class="text-center py-12">
       <v-icon size="64" color="grey-lighten-1">mdi-magnify-close</v-icon>
-      <div class="g2a-text-16 font-weight-bold text-grey-darken-4 mt-3">
+      <div class="g2a-text-16 font-weight-bold mt-3">
         No results found
       </div>
       <div class="g2a-text-14 text-grey mt-1">
@@ -100,7 +100,7 @@
     <div v-else>
       <div v-if="recent.length" class="mb-5">
         <div class="d-flex align-center justify-space-between mb-3">
-          <span class="g2a-text-14 font-weight-bold text-grey-darken-4"
+          <span class="g2a-text-14 font-weight-bold"
             >Recent Searches</span
           >
           <v-btn
@@ -131,7 +131,7 @@
       </div>
 
       <div>
-        <div class="g2a-text-14 font-weight-bold text-grey-darken-4 mb-3">
+        <div class="g2a-text-14 font-weight-bold mb-3">
           Trending in Andaman
         </div>
 
@@ -158,7 +158,7 @@
                 <v-img :src="trend.img" cover />
               </v-avatar>
               <div>
-                <div class="g2a-text-14 font-weight-bold text-grey-darken-4">
+                <div class="g2a-text-14 font-weight-bold">
                   {{ trend.name }}
                 </div>
                 <div class="g2a-text-11 text-medium-emphasis mt-0.5">

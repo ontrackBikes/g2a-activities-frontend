@@ -224,9 +224,6 @@ const openLightbox = (index) => {
   transition: all 0.2s ease;
 }
 
-.thumb-item:hover {
-  opacity: 1;
-}
 
 .thumb-item.active {
   opacity: 1;

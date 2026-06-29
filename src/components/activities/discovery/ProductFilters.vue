@@ -565,9 +565,7 @@ function onPriceChange([min, max]) {
   transition: background 0.1s;
   user-select: none;
 }
-.quick-menu-item:hover {
-  background: rgba(41, 51, 155, 0.05);
-}
+
 
 .filter-dialog-card {
   overflow: hidden;
@@ -601,9 +599,7 @@ function onPriceChange([min, max]) {
   font-weight: 500;
   line-height: 1.2;
 }
-.filter-tab:hover .filter-tab__label {
-  color: rgba(0, 0, 0, 0.75);
-}
+
 .filter-tab--active {
   border-left-color: #29339b;
   background: rgba(41, 51, 155, 0.04);
@@ -628,7 +624,5 @@ function onPriceChange([min, max]) {
   transition: background 0.1s;
   user-select: none;
 }
-.filter-option:hover {
-  background: rgba(41, 51, 155, 0.05);
-}
+
 </style>
