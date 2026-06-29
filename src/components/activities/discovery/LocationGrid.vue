@@ -7,7 +7,7 @@
     <v-row>
       <v-col v-for="location in locations" :key="location.id" cols="6" md="3">
         <v-card
-          rounded="lg"
+          rounded="xl"
           elevation="0"
           class="location-card"
           @click="openLocation(location)"

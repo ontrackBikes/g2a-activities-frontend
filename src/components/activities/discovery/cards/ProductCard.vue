@@ -60,7 +60,11 @@
       <!-- Divider -->
       <v-divider v-if="product.starting_price" class="my-2" />
 
-      <!-- Price row -->
+      <div v-if="!product.available">
+        <div class="text-error g2a-title-4">Sold Out</div>
+      </div>
+      <div v-else>
+        <!-- Price row -->
       <div
         v-if="product.starting_price"
         class="d-flex align-center justify-space-between"
@@ -104,6 +108,7 @@
         >
           <v-icon icon="mdi-arrow-right" size="16" />
         </v-btn>
+      </div>
       </div>
     </v-container>
   </v-card>
