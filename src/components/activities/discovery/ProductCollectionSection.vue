@@ -5,8 +5,8 @@
       <div class="d-flex align-center justify-space-between mb-4">
         <div>
           <div
-            class="g2a-text-bold-600"
-            :class="mobile ? 'g2a-text-18' : 'g2a-text-24'"
+            class="g2a-title-heading"
+            
           >
             {{ collection.name }}
           </div>

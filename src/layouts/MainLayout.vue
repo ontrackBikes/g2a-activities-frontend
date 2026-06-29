@@ -100,7 +100,7 @@
     />
 
     <v-main class="bg-white">
-      <v-container style="max-width: 1300px; min-height: calc(100vh - 220px)">
+      <v-container style="max-width: 1200px; min-height: calc(100vh - 220px)">
         <router-view />
       </v-container>
     </v-main>

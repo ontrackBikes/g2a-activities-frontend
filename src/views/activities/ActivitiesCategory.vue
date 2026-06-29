@@ -14,11 +14,11 @@
 >
   <div class="d-flex justify-space-between align-center mb-6">
     <div>
-      <div class="g2a-title">
+      <div class="g2a-title-heading">
         Explore by Activity
       </div>
 
-      <div class="text-medium-emphasis">
+      <div class="">
         Browse experiences based on your interests.
       </div>
     </div>
@@ -65,21 +65,7 @@
 </section>
 
     <!-- Collections -->
-   <section
-  v-if="collections.length"
-  class="mb-14"
->
-  <div class="mb-6">
-
-    <div class="g2a-title">
-      Featured Collections
-    </div>
-
-    <div class="text-medium-emphasis">
-      Handpicked experiences curated by our travel experts.
-    </div>
-
-  </div>
+  
 
   <div
     v-for="collection in collections"
@@ -90,7 +76,7 @@
       :collection="collection"
     />
   </div>
-</section>
+
 
 
 
@@ -101,13 +87,13 @@
 
     <div>
 
-      <div class="g2a-title">
+      <div class="g2a-title-heading">
 
         All {{ catetoryInfo.name }}
 
       </div>
 
-      <div class="text-medium-emphasis">
+      <div class="">
 
         Browse every experience available in this category.
 

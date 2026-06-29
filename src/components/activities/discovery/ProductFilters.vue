@@ -3,9 +3,7 @@
     <!-- ═══════════════════════════════════════════════
          FILTER BAR
     ═══════════════════════════════════════════════ -->
-    <div class="filter-bar-wrap">
-      <div class="px-3">
-        <div class="d-flex align-center ga-2 py-3 no-scrollbar overflow-x-auto">
+    <div class="d-flex align-center ga-2 py-3 no-scrollbar overflow-x-auto">
           <!-- Filter button -->
           <v-btn
             variant="outlined"
@@ -151,8 +149,6 @@
             <slot name="results-count" />
           </div>
         </div>
-      </div>
-    </div>
 
     <!-- ═══════════════════════════════════════════════
          FILTER DIALOG

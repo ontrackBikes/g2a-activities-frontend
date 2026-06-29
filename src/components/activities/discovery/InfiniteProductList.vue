@@ -1,11 +1,6 @@
 <template>
   <div class="infinite-product-list">
-    <!-- Header -->
-    <div class="d-flex align-center justify-space-between mb-4 mt-4">
-      <div>
-        <div class="g2a-subtitle-dark">Explore Activities</div>
-      </div>
-    </div>
+    
     <!-- ─── Filter bar ────────────────────────────────────────────── -->
     <ProductFilter
       v-model="filters"

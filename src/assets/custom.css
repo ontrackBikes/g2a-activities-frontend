@@ -159,6 +159,14 @@ input {
   /* Optional: override default opacity */
 }
 
+.g2a-title-heading {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.64px;
+}
+
+
+
 /* Font Styles from  */
 .g2a-title {
   font-size: 28px;
@@ -182,7 +190,7 @@ input {
 .g2a-title-1 {
   font-size: 28px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .g2a-title-2 {
@@ -199,10 +207,10 @@ input {
 }
 
 .g2a-title-4 {
-  font-size: 32px;
+  font-size: 22px;
   font-style: normal;
   font-weight: 600;
-  line-height: 48px;
+
 }
 
 .g2a-subtitle-dark {
@@ -484,6 +492,10 @@ input {
     font-weight: 500;
     line-height: 18px;
     color: rgba(0, 0, 0, 0.6);
+  }
+
+  .g2a-title-heading {
+    font-size: 20px;
   }
 
   .g2a-title {

@@ -1,7 +1,7 @@
 <template>
   <v-card
     variant="outlined"
-    rounded="lg"
+    rounded="xl"
     elevation="0"
     class="product-card h-100"
     @click="$emit('click', product)"
@@ -43,62 +43,22 @@
     </div>
 
     <!-- Content -->
-    <v-card-text class="mt-2 pa-3 pb-3">
+    <v-container>
       <!-- Name -->
-      <div
-        class="d-flex align-center justify-space-between g2a-text-14 g2a-text-bold-600 truncate-two-lines mb-2"
-      >
-        <span> {{ product.name }}</span>
 
-        <span v-if="product.category">
-          <v-chip
-            size="x-small"
-            color="brandColor2"
-            class="g2a-text-10 g2a-text-bold-600 text-whte"
-          >
-            {{ product.category.name }}
-          </v-chip></span
-        >
-      </div>
-
-      <!-- Location + Duration row -->
-      <div
-        class="d-flex align-center justify-space-between g2a-text-12 text-greyDark mb-2"
-      >
-        <div class="d-flex align-center">
-          <v-icon
-            icon="mdi-map-marker-outline"
-            size="13"
-            class="me-1"
-            color="brandColor2"
-          />
-          {{ locationText }}
-        </div>
-        <div v-if="product.duration" class="d-flex align-center">
-          <v-icon icon="mdi-clock-outline" size="13" class="me-1" />
-          {{ product.duration }}
-        </div>
-      </div>
-
-      <!-- Product type tags -->
-      <div
-        v-if="product.productTypes?.length"
-        class="d-flex flex-wrap ga-1 mb-2"
-      >
-        <v-chip
-          v-for="pt in product.productTypes.slice(0, 2)"
-          :key="pt.id"
-          size="x-small"
-          variant="tonal"
+      <div class="g2a-title-4">{{ product.name }}</div>
+      <div class="d-flex align-center g2a-text-12 mb-2" v-if="locationText">
+        <v-icon
+          icon="mdi-map-marker-outline"
+          size="13"
+          class="me-1"
           color="brandColor2"
-          class="g2a-text-9 g2a-text-bold-600"
-        >
-          {{ pt.name }}
-        </v-chip>
+        />
+        {{ locationText }}
       </div>
 
       <!-- Divider -->
-      <v-divider v-if="product.starting_price" class="mb-2" />
+      <v-divider v-if="product.starting_price" class="my-2" />
 
       <!-- Price row -->
       <div
@@ -145,7 +105,7 @@
           <v-icon icon="mdi-arrow-right" size="16" />
         </v-btn>
       </div>
-    </v-card-text>
+    </v-container>
   </v-card>
 </template>
 
@@ -162,7 +122,7 @@ const props = defineProps({
 const locationText = computed(() => {
   const locations = props.product.locations || [];
 
-  if (!locations.length) return "Andaman";
+  if (!locations.length) return null;
 
   if (locations.length === 1) {
     return locations[0].name;
@@ -204,21 +164,4 @@ function formatPrice(val) {
 }
 </script>
 
-<style scoped>
-.product-card {
-  cursor: pointer;
-  transition:
-    box-shadow 0.18s ease,
-    transform 0.18s ease;
-  overflow: hidden;
-}
-
-.product-card:hover {
-  box-shadow: 0 6px 24px rgba(41, 51, 155, 0.12) !important;
-  transform: translateY(-3px);
-}
-
-.product-card__img-wrap {
-  position: relative;
-}
-</style>
+<style scoped></style>
