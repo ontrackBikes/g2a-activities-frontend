@@ -1,105 +1,127 @@
 <template>
   <v-card
-    variant="outlined"
-    rounded="xl"
-    elevation="0"
-    class="product-card h-100"
-    @click="$emit('click', product)"
+    variant="flat"
+    class="border rounded-xl d-flex flex-column h-100 position-relative bg-white"
+    :style="{
+      opacity: product.out_of_stock ? '0.75' : '1',
+      transition: 'all 0.2s ease',
+    }"
+    @click="!product.out_of_stock && $emit('click', product)"
   >
-    <!-- Image -->
-    <div class="product-card__img-wrap">
-      <v-img :src="getImageUrl(product) || fallbackImg" height="185" cover>
+    <div
+      class="position-relative overflow-hidden rounded-t-xl"
+      style="height: 185px"
+    >
+      <v-img :src="product.thumbnail_url || fallbackImg" height="185" cover>
         <template #placeholder>
           <div
-            class="product-card__img-placeholder d-flex align-center justify-center fill-height"
+            class="d-flex align-center justify-center fill-height bg-grey-lighten-4"
           >
-            <v-icon icon="mdi-image-outline" size="40" color="greyLight" />
+            <v-icon icon="mdi-image-outline" size="40" color="grey-lighten-1" />
           </div>
         </template>
 
-        <!-- Top badges -->
-        <div class="d-flex align-start justify-space-between pa-2">
-          <div class="d-flex flex-column ga-1">
-            <v-chip
-              v-if="product.featured"
-              size="x-small"
-              color="brandColor"
-              class="g2a-text-bold-600 g2a-text-10"
-            >
-              ⭐ Featured
-            </v-chip>
-            <v-chip
-              v-if="firstTag"
-              size="x-small"
-              color="white"
-              variant="elevated"
-              class="g2a-text-bold-600 g2a-text-10 text-brandColor2"
-            >
-              {{ firstTag.name }}
-            </v-chip>
-          </div>
+        <div
+          class="d-flex flex-column ga-1 position-absolute text-left"
+          style="top: 12px; left: 12px"
+        >
+          <v-chip
+            v-if="product.featured"
+            size="small"
+            color="dark"
+            variant="flat"
+            class="text-white glass px-2"
+          >
+            Featured
+          </v-chip>
         </div>
       </v-img>
+
+      <div
+        v-if="product.out_of_stock || !product.available"
+        class="position-absolute fill-height w-100 d-flex align-center justify-center"
+        style="
+          top: 0;
+          left: 0;
+          background-color: rgba(0, 0, 0, 0.45);
+          backdrop-filter: blur(2px);
+        "
+      >
+        <v-chip color="error" variant="flat" class="font-weight-bold px-4">
+          Unavailable Currently
+        </v-chip>
+      </div>
     </div>
 
-    <!-- Content -->
-    <v-container>
-      <!-- Name -->
+    <v-card-text class="pa-4 d-flex flex-column flex-grow-1 text-left">
+      <span
+        v-if="product.next_available_slot && !product.out_of_stock"
+        class="g2a-text-15 text-green-darken-3 font-weight-medium"
+      >
+        Next Available: {{ formatDate(product.next_available_slot) }}
+      </span>
+      <div class="g2a-title-4 font-weight-bold text-grey-darken-4 mb-1">
+        {{ product.name }}
+      </div>
 
-      <div class="g2a-title-4">{{ product.name }}</div>
-      <div class="d-flex align-center g2a-text-12 mb-2" v-if="locationText">
+      <div
+        v-if="locationText"
+        class="d-flex align-center g2a-text-14 text-medium-emphasis mb-2"
+      >
         <v-icon
           icon="mdi-map-marker-outline"
-          size="13"
-          class="me-1"
-          color="brandColor2"
+          size="14"
+          class="me-1 text-brandColor2"
         />
-        {{ locationText }}
+        <span>{{ locationText }}</span>
       </div>
 
-      <!-- Divider -->
-      <v-divider v-if="product.starting_price" class="my-2" />
-
-      <div v-if="!product.available">
-        <div class="text-error g2a-title-4">Sold Out</div>
+      <div v-if="product.next_available_slot && !product.out_of_stock">
+        <!-- <v-icon
+          icon="mdi-calendar-check"
+          size="13"
+          color="green-darken-2"
+          class="mr-1"
+        /> -->
       </div>
-      <div v-else>
-        <!-- Price row -->
-      <div
-        v-if="product.starting_price"
-        class="d-flex align-center justify-space-between"
-      >
-        <div>
-          <div class="g2a-text-11 text-greyDark">starts from</div>
+    </v-card-text>
+
+    <div class="px-4 pb-4 mt-auto">
+      <v-divider class="mb-3" />
+
+      <div class="d-flex align-center justify-space-between">
+        <div v-if="product.starting_price">
+          <div
+            class="g2a-text-12 text-medium-emphasis text-capitalize line-height-tight"
+          >
+            {{
+              product.price_type === "starts_from"
+                ? "starts from"
+                : "flat price"
+            }}
+          </div>
           <div class="d-flex align-baseline ga-1">
-            <span class="g2a-text-18 g2a-text-bold-700 text-brandColor2">
+            <span class="g2a-title-4 text-brandColor2">
               ₹{{ formatPrice(product.starting_price) }}
             </span>
             <span
               v-if="
                 product.compare_price &&
-                product.compare_price > product.base_price
+                product.compare_price > product.starting_price
               "
-              class="g2a-text-12 text-decoration-line-through text-greyDark"
+              class="g2a-text-14 text-decoration-line-through text-medium-emphasis"
             >
               ₹{{ formatPrice(product.compare_price) }}
             </span>
           </div>
         </div>
 
-        <!-- Discount badge -->
-        <v-chip
-          v-if="discountPct > 0"
-          size="small"
-          color="success"
-          class="g2a-text-11 g2a-text-bold-700"
-        >
-          {{ discountPct }}% OFF
-        </v-chip>
+        <div v-else class="g2a-text-14 font-weight-bold text-grey-darken-1">
+          Price On Request
+        </div>
 
-        <!-- CTA arrow if no discount -->
         <v-btn
-          v-else
+          v-if="!product.out_of_stock"
           icon
           size="small"
           variant="tonal"
@@ -109,13 +131,12 @@
           <v-icon icon="mdi-arrow-right" size="16" />
         </v-btn>
       </div>
-      </div>
-    </v-container>
+    </div>
   </v-card>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
   product: {
@@ -124,48 +145,29 @@ const props = defineProps({
   },
 });
 
-const locationText = computed(() => {
-  const locations = props.product.locations || [];
-
-  if (!locations.length) return null;
-
-  if (locations.length === 1) {
-    return locations[0].name;
-  }
-
-  if (locations.length === 2) {
-    return locations.map((l) => l.name).join(", ");
-  }
-
-  return `${locations[0].name} +${locations.length - 1}`;
-});
-
 defineEmits(["click"]);
 
-const wishlisted = ref(false);
 const fallbackImg =
   "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600";
 
-// ── Computed ──────────────────────────────────────────────────────
-const getImageUrl = (product) => {
-  // vendor-product images take priority, then product-level images
-
-  return product.thumbnail_url || product.vendorProduct?.images;
-};
-
-const firstTag = computed(() => props.product.tags?.[0] || null);
-
-const discountPct = computed(() => {
-  const base = props.product.base_price;
-  const compare = props.product.compare_price;
-  if (!base || !compare || compare <= base) return 0;
-  return Math.round(((compare - base) / compare) * 100);
+// Standardizing Localized Array Mappings cleanly
+const locationText = computed(() => {
+  const locations = props.product.locations || [];
+  if (!locations.length) return null;
+  if (locations.length === 1) return locations[0].name;
+  if (locations.length === 2) return locations.map((l) => l.name).join(", ");
+  return `${locations[0].name} & ${locations.length - 1} more locations`;
 });
 
-// ── Methods ───────────────────────────────────────────────────────
 function formatPrice(val) {
   if (!val && val !== 0) return "—";
   return Number(val).toLocaleString("en-IN");
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 }
 </script>
 

@@ -13,7 +13,7 @@
           @click="openLocation(location)"
         >
           <v-img
-            :src="location.image_url || fallbackImage"
+            :src="location.image || fallbackImage"
             height="220"
             cover
             gradient="to top, rgba(0,0,0,.8), rgba(0,0,0,.05)"

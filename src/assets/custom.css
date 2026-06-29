@@ -165,8 +165,6 @@ input {
   letter-spacing: -0.64px;
 }
 
-
-
 /* Font Styles from  */
 .g2a-title {
   font-size: 28px;
@@ -203,14 +201,12 @@ input {
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
-
 }
 
 .g2a-title-4 {
   font-size: 22px;
   font-style: normal;
   font-weight: 600;
-
 }
 
 .g2a-subtitle-dark {
@@ -464,7 +460,7 @@ input {
   box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.11) !important;
 }
 
-.v-overlay__content.mySelect-menu>.v-list {
+.v-overlay__content.mySelect-menu > .v-list {
   box-shadow: none !important;
   padding: 0;
 }
@@ -476,6 +472,28 @@ input {
 .v-card.v-card--variant-outlined {
   border-color: rgba(0, 0, 0, 0.12);
   /* Same as Vuetify 2 default */
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+
+  color: #fff !important;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  color: #fff !important;
 }
 
 /* Responsive Adjustments */
