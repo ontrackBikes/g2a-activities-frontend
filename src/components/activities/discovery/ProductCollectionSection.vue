@@ -4,7 +4,10 @@
       <!-- Header -->
       <div class="d-flex align-center justify-space-between mb-4">
         <div>
-          <div class="g2a-subtitle-dark">
+          <div
+            class="g2a-text-bold-600"
+            :class="mobile ? 'g2a-text-18' : 'g2a-text-24'"
+          >
             {{ collection.name }}
           </div>
         </div>
@@ -43,6 +46,9 @@ import apiClient from "@/services/api";
 import ProductCard from "@/components/activities/discovery/cards/ProductCard.vue";
 
 import { ref, watch, onMounted } from "vue";
+
+import { useDisplay } from "vuetify";
+const { mobile } = useDisplay();
 
 import { useRouter } from "vue-router";
 

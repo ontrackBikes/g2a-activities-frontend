@@ -1,37 +1,90 @@
 <template>
   <v-app>
     <v-app-bar app color="white" height="73" class="custom-shadow">
-      <v-container fluid class="px-6 d-flex align-center justify-space-between">
-        <RouterLink to="/" class="text-decoration-none d-flex align-center">
-          <img src="/assets/g2a_logo.png" alt="Go2Andaman" height="22" />
-        </RouterLink>
+      <v-container
+        fluid
+        class="px-4 px-md-8 h-100 d-flex align-center justify-space-between"
+      >
+        <div class="d-flex align-center">
+          <RouterLink to="/" class="logo-link d-flex align-center mr-2">
+            <img
+              src="/assets/g2a_logo.png"
+              :height="mobile ? 20 : 26"
+              alt="Go2Andaman Logo"
+              class="logo-img"
+            />
+          </RouterLink>
+
+          <div
+            v-if="!mobile"
+            class="location-divider mx-4 d-none d-sm-block"
+          ></div>
+
+          <div
+            v-if="!mobile"
+            class="d-flex align-center location-wrapper px-2 py-1 rounded-lg d-none d-sm-flex"
+          >
+            <v-icon color="brandColor2" size="24" class="mr-2">
+              mdi-map-marker-outline
+            </v-icon>
+            <div class="d-flex flex-column justify-center">
+              <span class="g2a-text-14 g2a-text-bold-700 line-height-tight"
+                >Andaman</span
+              >
+              <span class="g2a-text-11 line-height-tight">India</span>
+            </div>
+          </div>
+        </div>
 
         <div
-          class="flex-grow-1 mx-10 d-none d-md-flex"
-          style="max-width: 600px"
+          class="flex-grow-1 mx-4 mx-lg-12 d-none d-md-flex search-container"
         >
           <v-text-field
             v-model="searchTerm"
             prepend-inner-icon="mdi-magnify"
-            placeholder="Search activities..."
-            variant="outlined"
-            rounded="xl"
-            density="compact"
+            variant="solo"
+            flat
+            density="comfortable"
             hide-details
             clearable
+            class="custom-search-field"
+            @focus="handleSearchFocus"
           />
+
+          <v-fade-transition mode="out-in">
+            <div
+              v-if="!searchTerm && !isSearchFocused"
+              :key="currentPlaceholder"
+              class="animated-placeholder"
+            >
+              {{ currentPlaceholder }}
+            </div>
+          </v-fade-transition>
         </div>
 
-        <div class="d-flex align-center ga-2">
-          <v-btn variant="text" prepend-icon="mdi-map-marker">
-            <span class="g2a-text-16 g2a-text-bold-600">Andaman</span>
+        <div class="d-flex align-center ga-3">
+          <v-btn
+            v-if="mobile"
+            icon="mdi-magnify"
+            variant="text"
+            color="brandColor2"
+            @click="handleMobileSearch"
+            aria-label="Search"
+          />
+
+          <v-btn
+            v-else
+            color="brandColor"
+            variant="flat"
+            rounded="xl"
+            class="px-6 text-none font-weight-medium contact-btn"
+            height="42"
+            href="https://go2andaman.com/contact-us/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Contact Us
           </v-btn>
-          <v-btn icon variant="text">
-            <v-icon>mdi-heart-outline</v-icon>
-          </v-btn>
-          <v-avatar color="brandColor">
-            <v-icon color="white" icon="mdi-account-circle"></v-icon>
-          </v-avatar>
         </div>
       </v-container>
     </v-app-bar>
@@ -39,13 +92,15 @@
     <v-progress-linear
       v-if="loading"
       indeterminate
-      color="primary"
+      color="brandColor"
+      height="3"
       absolute
       top
+      style="z-index: 1010"
     />
 
     <v-main class="bg-white">
-      <v-container style="max-width: 1400px; min-height: calc(100vh - 220px)">
+      <v-container style="max-width: 1300px; min-height: calc(100vh - 220px)">
         <router-view />
       </v-container>
     </v-main>
@@ -151,27 +206,53 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useDisplay } from "vuetify";
+const { mobile } = useDisplay();
 
 const router = useRouter();
 const route = useRoute();
 
-// Global App State
 const loading = ref(false);
 const showTop = ref(false);
-const currentYear = computed(() => new Date().getFullYear());
+const isSearchFocused = ref(false);
 
-// Search State
+const placeholders = [
+  "Search experiences...",
+  "Search activities...",
+  "Search ferries...",
+  "Search scuba diving...",
+  "Search snorkeling...",
+  "Search sea walk...",
+];
+
+const currentPlaceholder = ref(placeholders[0]);
+let placeholderInterval = null;
+
+// Search Logic State
 const searchTerm = ref(route.query.q || "");
 let searchDebounce = null;
 
-// ---- 1. Sync Input -> URL (Debounced) ----
+const handleSearchFocus = () => {
+  isSearchFocused.value = true;
+  // Route to search page immediately on user interaction
+  if (route.path !== "/search") {
+    router.push({
+      path: "/search",
+      query: searchTerm.value ? { q: searchTerm.value } : {},
+    });
+  }
+};
+
+const handleMobileSearch = () => {
+  router.push({ path: "/search" });
+};
+
+// Sync inputs to Search queries dynamically
 watch(searchTerm, (newVal) => {
   clearTimeout(searchDebounce);
-
   searchDebounce = setTimeout(() => {
-    // Avoid redundant pushes if the URL already matches the input
     if (newVal === (route.query.q || "")) return;
 
     const query = { ...route.query };
@@ -181,7 +262,6 @@ watch(searchTerm, (newVal) => {
       delete query.q;
     }
 
-    // If we aren't on the search page, push to it. Otherwise replace to save history state.
     if (route.path !== "/search") {
       router.push({ path: "/search", query });
     } else {
@@ -190,7 +270,7 @@ watch(searchTerm, (newVal) => {
   }, 300);
 });
 
-// ---- 2. Sync URL -> Input (Handles Browser Back/Forward) ----
+// Sync Address query changes outwards (Back/Forward actions)
 watch(
   () => route.query.q,
   (newQ) => {
@@ -202,26 +282,40 @@ watch(
   { immediate: true },
 );
 
-// ---- Scroll Handling ----
+// Focus Watcher to restore placeholder if clicked away
+watch(
+  () => route.path,
+  (newPath) => {
+    if (newPath !== "/search") {
+      isSearchFocused.value = false;
+    }
+  },
+);
+
+// Component Lifecycles
+onMounted(() => {
+  let index = 0;
+  placeholderInterval = setInterval(() => {
+    index = (index + 1) % placeholders.length;
+    currentPlaceholder.value = placeholders[index];
+  }, 2500);
+
+  window.addEventListener("scroll", onScroll);
+});
+
+onUnmounted(() => {
+  clearInterval(placeholderInterval);
+  window.removeEventListener("scroll", onScroll);
+  clearTimeout(searchDebounce);
+});
+
 const onScroll = () => {
   showTop.value = window.scrollY > 500;
 };
 
 const scrollTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
-
-onMounted(() => {
-  window.addEventListener("scroll", onScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", onScroll);
-  clearTimeout(searchDebounce);
-});
 </script>
 
 <style scoped>
@@ -233,13 +327,51 @@ onUnmounted(() => {
   -webkit-transition: All 600ms ease;
 }
 
-.border-b {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+/* Modern Soft Divider */
+.location-divider {
+  width: 1px;
+  height: 22px;
+  background-color: rgba(0, 0, 0, 0.1);
 }
-.border-t {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+.line-height-tight {
+  line-height: 1.2;
 }
-.v-main {
-  background: #fafafa;
+.line-height-relaxed {
+  line-height: 1.6;
+}
+
+/* Clean Custom Input Elements */
+.search-container {
+  max-width: 480px;
+  position: relative;
+}
+:deep(.custom-search-field .v-field) {
+  background-color: #f3f4f6 !important;
+  border-radius: 28px !important;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+:deep(.custom-search-field .v-field--focused) {
+  background-color: #ffffff !important;
+  border-color: rgba(var(--v-theme-brandColor2), 0.6) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06) !important;
+}
+:deep(.custom-search-field .v-field__input) {
+  min-height: 44px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 0.95rem;
+}
+
+/* Floating Inline Placeholder Layout */
+.animated-placeholder {
+  position: absolute;
+  left: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+  font-size: 0.92rem;
+  font-weight: 400;
 }
 </style>

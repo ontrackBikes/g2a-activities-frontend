@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-4">
     <div v-if="loading">
       <v-row>
         <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="4" lg="3">
@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div v-else class="pa-5">
+    <div v-else>
       <div class="d-flex align-center justify-space-between mb-3">
         <div class="g2a-subtitle-1 text-DarkGrey">Recent Searches</div>
         <div>
