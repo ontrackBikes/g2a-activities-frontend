@@ -25,7 +25,7 @@
           v-for="product in collection.products"
           :key="product.slug"
         >
-          <div class="mr-4" style="width: 280px">
+          <div class="pa-2" style="width: 280px">
             <ProductCard :product="product" @click="openProduct" />
           </div>
         </v-slide-group-item>

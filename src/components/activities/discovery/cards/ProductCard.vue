@@ -54,7 +54,7 @@
     </div>
 
     <!-- Content -->
-    <v-card-text class="mt-2 pa-3 pb-3">
+    <v-card-text class="mt-3 pa-3 pb-3">
       <!-- Name -->
       <div class="g2a-text-14 g2a-text-bold-600 truncate-two-lines mb-2">
         {{ product.name }}
@@ -224,8 +224,8 @@ function formatPrice(val) {
 /* Category pill overlapping image bottom */
 .product-card__category-pill {
   position: absolute;
-  bottom: -23px;
-  left: 260px;
+  bottom: -22px;
+  left: 10px;
   z-index: 1;
 }
 </style>

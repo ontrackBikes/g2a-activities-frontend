@@ -43,7 +43,7 @@
 
     <!-- Collections -->
     <template v-for="collection in collections" :key="collection.id">
-      <ProductCollectionSection :collection="collection" class="mb-10" />
+      <ProductCollectionSection :collection="collection" />
     </template>
 
     <!-- Filters -->
