@@ -64,7 +64,7 @@
           :key="product.id"
           cols="12"
           sm="6"
-          lg="4"
+          lg="3"
         >
           <ProductCard :product="product" @click="openProduct(product)" />
         </v-col>

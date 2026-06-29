@@ -1,56 +1,135 @@
 <template>
   <div class="my-4">
     <!-- Header -->
-    <div class="mb-8">
-      <div class="g2a-text-24 g2a-text-bold-700">
-        {{ categoryName }}
-      </div>
-
-      <div class="g2a-text-14 text-medium-emphasis">
-        Discover the best experiences, activities and tours.
-      </div>
-    </div>
+    <CategoryHero
+        :category="catetoryInfo"
+        class="mb-10"
+    />
 
     <!-- Product Types -->
-    <div v-if="productTypes.length" class="mb-10">
-      <div class="g2a-subtitle-dark mb-4">Explore by Activity Type</div>
+    <!-- Activity Types -->
+<section
+  v-if="productTypes.length"
+  class="mb-14"
+>
+  <div class="d-flex justify-space-between align-center mb-6">
+    <div>
+      <div class="g2a-title">
+        Explore by Activity
+      </div>
 
-      <v-row>
-        <v-col
-          v-for="type in productTypes"
-          :key="type.id"
-          cols="6"
-          md="3"
-          lg="2"
-        >
-          <v-card
-            variant="outlined"
-            rounded="lg"
-            class="h-100 cursor-pointer"
-            @click="goToProductType(type)"
-          >
-            <v-container class="text-center py-6">
-              <v-icon :icon="type.icon" size="36" color="brandColor2" />
-
-              <div class="mt-3 font-weight-medium">
-                {{ type.name }}
-              </div>
-            </v-container>
-          </v-card>
-        </v-col>
-      </v-row>
+      <div class="text-medium-emphasis">
+        Browse experiences based on your interests.
+      </div>
     </div>
+  </div>
+
+  <v-row>
+    <v-col
+      v-for="type in productTypes"
+      :key="type.id"
+      cols="6"
+      sm="4"
+      md="3"
+      lg="2"
+    >
+      <v-card
+        rounded="xl"
+        elevation="0"
+        variant="outlined"
+        class="activity-card"
+        @click="goToProductType(type)"
+      >
+        <v-card-text class="py-8 text-center">
+
+          <v-avatar
+            size="72"
+            color="blue-lighten-5"
+            class="mb-4"
+          >
+            <v-icon
+              :icon="type.icon"
+              size="34"
+              color="primary"
+            />
+          </v-avatar>
+
+          <div class="font-weight-bold">
+            {{ type.name }}
+          </div>
+
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
+</section>
 
     <!-- Collections -->
-    <template v-for="collection in collections" :key="collection.id">
-      <ProductCollectionSection :collection="collection" />
-    </template>
+   <section
+  v-if="collections.length"
+  class="mb-14"
+>
+  <div class="mb-6">
 
-    <!-- Filters -->
-    <!-- <ProductFilters class="mb-6" @change="updateFilters" /> -->
+    <div class="g2a-title">
+      Featured Collections
+    </div>
+
+    <div class="text-medium-emphasis">
+      Handpicked experiences curated by our travel experts.
+    </div>
+
+  </div>
+
+  <div
+    v-for="collection in collections"
+    :key="collection.id"
+    class="mb-10"
+  >
+    <ProductCollectionSection
+      :collection="collection"
+    />
+  </div>
+</section>
+
+
 
     <!-- Products -->
-    <InfiniteProductList :category-slug="categorySlug" :filters="filters" />
+   <section class="mt-14">
+
+  <div class="d-flex justify-space-between align-center mb-6">
+
+    <div>
+
+      <div class="g2a-title">
+
+        All {{ catetoryInfo.name }}
+
+      </div>
+
+      <div class="text-medium-emphasis">
+
+        Browse every experience available in this category.
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Filters later -->
+
+  <!-- <ProductFilters
+        class="mb-6"
+        @change="updateFilters"
+  /> -->
+
+  <InfiniteProductList
+    :category-slug="categorySlug"
+    :filters="filters"
+  />
+
+</section>
   </div>
 </template>
 
@@ -64,6 +143,7 @@ import { useRoute, useRouter } from "vue-router";
 import InfiniteProductList from "../../components/activities/discovery/InfiniteProductList.vue";
 
 import ProductCollectionSection from "../../components/activities/discovery/ProductCollectionSection.vue";
+import CategoryHero from "@/components/activities/common/CategoryHero.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -71,6 +151,7 @@ const route = useRoute();
 const productTypes = ref([]);
 const collections = ref([]);
 const filters = ref({});
+const catetoryInfo = ref({})
 
 /**
  * Route Params
@@ -113,6 +194,23 @@ const productTypeIcons = {
   "Light & Sound Show": "mdi-speaker-wireless",
   "Airport Transfer": "mdi-airplane",
 };
+
+
+/**
+ * Category Info
+ */
+const loadCategoryInfo = async () => {
+  try {
+    const { data } = await apiClient.get(
+      `/v1/product-categories/slug/${categorySlug.value}`,
+    );
+
+    catetoryInfo.value = data.data
+  } catch (err) {
+    console.error("[ActivitiesCategory] loadProductTypes", err);
+  }
+};
+
 
 /**
  * Product Types
@@ -186,7 +284,7 @@ const loadPage = async () => {
     collections.value = [];
     productTypes.value = [];
 
-    await Promise.all([loadProductTypes(), loadCollections()]);
+    await Promise.all([loadProductTypes(), loadCollections(), loadCategoryInfo()]);
   } catch (error) {
     console.error("[ActivitiesCategory] loadPage", error);
   }
@@ -221,19 +319,5 @@ onMounted(loadPage);
 </script>
 
 <style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
 
-.v-card {
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-.v-card:hover {
-  transform: translateY(-2px);
-
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-}
 </style>
