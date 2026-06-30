@@ -75,7 +75,7 @@
               </template>
 
               <v-list-item-title>
-                {{ booking.travel_date }}
+                {{ booking.date }}
               </v-list-item-title>
 
               <v-list-item-subtitle>
@@ -218,7 +218,7 @@ const booking = ref({
   booking_number: "G2A24000152",
   product_name: "Discover Scuba Diving",
   location: "Havelock Island",
-  travel_date: "18 July 2026",
+  date: "18 July 2026",
   slot_name: "10:00 AM",
   guests: 2,
   amount: 7000,

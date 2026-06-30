@@ -5,7 +5,7 @@ import PickupDateField from "./fields/PickupDateField.vue";
 import ReturnDateField from "./fields/ReturnDateField.vue";
 
 export default {
-  travel_date: DateField,
+  date: DateField,
   slot: SlotField,
   guests: GuestsField,
   pickup_date: PickupDateField,

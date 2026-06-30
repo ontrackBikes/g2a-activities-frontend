@@ -27,8 +27,7 @@
         v-model="medical[question.key]"
         :label="question.label"
         color="primary"
-        hide-details
-        class="mb-2"
+        hide-details="auto"
       />
 
       <v-textarea
@@ -37,7 +36,7 @@
         label="Please provide more details"
         variant="outlined"
         rows="4"
-        class="mt-6"
+        class="mt-2"
         hide-details="auto"
         :rules="[
           v =>

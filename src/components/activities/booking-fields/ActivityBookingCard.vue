@@ -128,8 +128,8 @@ watch(
           form.quantity = 1;
           break;
 
-        case "travel_date":
-          form.travel_date = todayStr;
+        case "date":
+          form.date = todayStr;
           break;
 
         case "pickup_date":

@@ -109,6 +109,7 @@
       </div>
 
       <v-btn
+        flat
         block
         rounded="xl"
         size="large"
@@ -167,7 +168,7 @@ const bookingRows = computed(() => {
   const rows = [];
 
   const labels = {
-    travel_date: "Travel Date",
+    date: "Travel Date",
     pickup_date: "Pickup Date",
     return_date: "Return Date",
     rental_days: "Rental Days",

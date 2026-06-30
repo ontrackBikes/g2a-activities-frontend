@@ -3,7 +3,6 @@ import Participants from "./sections/Participants.vue";
 import MedicalDeclaration from "./sections/MedicalDeclaration.vue";
 import BikeDelivery from "./sections/BikeDelivery.vue";
 import FerrySeatSelection from "./sections/FerrySeatSelection.vue";
-import PaymentSummary from "./sections/PaymentSummary.vue";
 
 export default {
   customer_details: {
@@ -29,10 +28,5 @@ export default {
   ferry_seat_selection: {
     component: FerrySeatSelection,
     title: "Seat Selection",
-  },
-
-  payment: {
-    component: PaymentSummary,
-    title: "Payment",
   },
 };
