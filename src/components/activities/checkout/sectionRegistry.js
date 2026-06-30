@@ -6,7 +6,6 @@ import FerrySeatSelection from "./sections/FerrySeatSelection.vue";
 import PaymentSummary from "./sections/PaymentSummary.vue";
 
 export default {
-
   customer_details: {
     component: CustomerDetails,
     title: "Customer Details",
@@ -36,5 +35,4 @@ export default {
     component: PaymentSummary,
     title: "Payment",
   },
-
 };

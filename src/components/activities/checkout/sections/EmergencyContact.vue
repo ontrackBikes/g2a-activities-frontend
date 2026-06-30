@@ -6,11 +6,14 @@
   >
     <v-card-title class="py-4">
       <div class="g2a-subtitle">
-        Emergency Contact
+        {{ config.title || "Emergency Contact" }}
       </div>
 
       <div class="g2a-text-13 text-medium-emphasis mt-1">
-        We'll contact this person only in case of an emergency.
+        {{
+          config.description ||
+          "We'll contact this person only in case of an emergency."
+        }}
       </div>
     </v-card-title>
 
@@ -29,6 +32,10 @@
             prepend-inner-icon="mdi-account"
             variant="outlined"
             density="comfortable"
+            hide-details="auto"
+            :rules="[
+              v => !!v || 'Full Name is required'
+            ]"
           />
         </v-col>
 
@@ -42,6 +49,11 @@
             prepend-inner-icon="mdi-phone"
             variant="outlined"
             density="comfortable"
+            hide-details="auto"
+            :rules="[
+              v => !!v || 'Mobile Number is required',
+              v => /^[6-9]\\d{9}$/.test(v) || 'Enter a valid mobile number'
+            ]"
           />
         </v-col>
 
@@ -55,6 +67,10 @@
             label="Relationship"
             variant="outlined"
             density="comfortable"
+            hide-details="auto"
+            :rules="[
+              v => !!v || 'Relationship is required'
+            ]"
           />
         </v-col>
 
@@ -68,6 +84,10 @@
             prepend-inner-icon="mdi-email-outline"
             variant="outlined"
             density="comfortable"
+            hide-details="auto"
+            :rules="[
+              v => !v || /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v) || 'Enter a valid email address'
+            ]"
           />
         </v-col>
 
@@ -79,6 +99,13 @@
 <script setup>
 import { computed } from "vue";
 import { bookingStore } from "@/store/booking";
+
+const props = defineProps({
+  config: {
+    type: Object,
+    default: () => ({}),
+  },
+});
 
 const booking = bookingStore;
 

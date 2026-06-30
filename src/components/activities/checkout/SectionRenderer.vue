@@ -10,7 +10,10 @@ import { computed } from "vue";
 import registry from "./sectionRegistry";
 
 const props = defineProps({
-  section: Object,
+  section: {
+    type: Object,
+    required: true,
+  },
 });
 
 const definition = computed(() => {

@@ -22,12 +22,7 @@
     <v-card-text>
       <v-row>
 
-        <!-- Pickup Location -->
-
-        <v-col
-          v-if="visible('pickup_location')"
-          cols="12"
-        >
+        <v-col cols="12">
           <v-text-field
             v-model="bike.pickup_location"
             label="Pickup Location"
@@ -35,16 +30,13 @@
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('pickup_location')"
+            :rules="[
+              v => !!v || 'Pickup Location is required'
+            ]"
           />
         </v-col>
 
-        <!-- Drop Location -->
-
-        <v-col
-          v-if="visible('drop_location')"
-          cols="12"
-        >
+        <v-col cols="12">
           <v-text-field
             v-model="bike.drop_location"
             label="Return / Drop Location"
@@ -52,14 +44,13 @@
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('drop_location')"
+            :rules="[
+              v => !!v || 'Return Location is required'
+            ]"
           />
         </v-col>
 
-        <!-- Pickup Time -->
-
         <v-col
-          v-if="visible('pickup_time')"
           cols="12"
           md="6"
         >
@@ -71,14 +62,13 @@
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('pickup_time')"
+            :rules="[
+              v => !!v || 'Pickup Time is required'
+            ]"
           />
         </v-col>
 
-        <!-- Return Time -->
-
         <v-col
-          v-if="visible('return_time')"
           cols="12"
           md="6"
         >
@@ -90,7 +80,9 @@
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('return_time')"
+            :rules="[
+              v => !!v || 'Return Time is required'
+            ]"
           />
         </v-col>
 
@@ -112,18 +104,14 @@ const props = defineProps({
 
 const booking = bookingStore;
 
-const defaultBike = {
-  pickup_location: "",
-  drop_location: "",
-  pickup_time: "",
-  return_time: "",
-};
-
 const bike = computed({
   get() {
     if (!booking.form.bike_delivery) {
       booking.form.bike_delivery = {
-        ...defaultBike,
+        pickup_location: "",
+        drop_location: "",
+        pickup_time: "",
+        return_time: "",
       };
     }
 
@@ -134,42 +122,4 @@ const bike = computed({
     booking.form.bike_delivery = value;
   },
 });
-
-const fields = computed(() => {
-  return props.config?.fields || [];
-});
-
-const fieldConfig = (name) => {
-  return fields.value.find((x) => x.field === name);
-};
-
-const visible = (name) => {
-  const field = fieldConfig(name);
-
-  if (!field) {
-    return true;
-  }
-
-  return field.visible !== false;
-};
-
-const rules = (name) => {
-  const field = fieldConfig(name);
-
-  const validations = [];
-
-  if (field?.required) {
-    validations.push(
-      (v) => !!v || `${pretty(name)} is required`
-    );
-  }
-
-  return validations;
-};
-
-const pretty = (value) => {
-  return value
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-};
 </script>

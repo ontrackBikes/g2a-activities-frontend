@@ -1,9 +1,5 @@
 <template>
-  <v-card
-    rounded="lg"
-    variant="outlined"
-    elevation="0"
-  >
+  <v-card rounded="lg" variant="outlined" elevation="0">
     <v-card-title class="py-4">
       <div class="g2a-subtitle">
         Booking Summary
@@ -13,7 +9,6 @@
     <v-divider />
 
     <v-card-text>
-
       <!-- Product -->
 
       <div class="d-flex align-center mb-5">
@@ -41,7 +36,7 @@
 
       <v-divider class="mb-5" />
 
-      <!-- Booking -->
+      <!-- Booking Details -->
 
       <div
         v-for="item in bookingRows"
@@ -119,41 +114,54 @@
         size="large"
         color="brandColor"
         class="mt-6"
-        @click="proceed"
+        @click="$emit('proceed')"
       >
         Continue to Payment
       </v-btn>
-
     </v-card-text>
   </v-card>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useRouter } from "vue-router";
 import { bookingStore } from "@/store/booking";
-import validateCheckout from "./validation/validateCheckout";
 
-const router = useRouter();
+defineEmits(["proceed"]);
 
 const booking = bookingStore;
 
-const quote = computed(() => booking.form?.availability || {});
+/**
+ * Availability quote
+ */
 
-const bookingInfo = computed(() => quote.value.booking || {});
+const quote = computed(() => {
+  return booking.form?.availability || {};
+});
 
-const location = computed(() => quote.value.location || {});
+const bookingInfo = computed(() => {
+  return quote.value.booking || {};
+});
+
+const location = computed(() => {
+  return quote.value.location || {};
+});
 
 const pricing = computed(() => {
-  return quote.value.pricing || {
-    quantity: 1,
-    unit_price: 0,
-    subtotal: 0,
-    discount: 0,
-    tax: 0,
-    grand_total: 0,
-  };
+  return (
+    quote.value.pricing || {
+      quantity: 1,
+      unit_price: 0,
+      subtotal: 0,
+      discount: 0,
+      tax: 0,
+      grand_total: 0,
+    }
+  );
 });
+
+/**
+ * Booking rows
+ */
 
 const bookingRows = computed(() => {
   const rows = [];
@@ -167,11 +175,12 @@ const bookingRows = computed(() => {
     slot: "Slot",
     pickup_location: "Pickup Location",
     drop_location: "Return Location",
+    pickup_time: "Pickup Time",
+    return_time: "Return Time",
     vehicle: "Vehicle",
   };
 
   Object.entries(bookingInfo.value).forEach(([key, value]) => {
-
     if (
       value === null ||
       value === undefined ||
@@ -182,24 +191,22 @@ const bookingRows = computed(() => {
 
     let display = value;
 
-    if (
-      key.includes("date")
-    ) {
+    if (key.includes("date")) {
       display = formatDate(value);
     }
 
     rows.push({
-      label:
-        labels[key] ||
-        pretty(key),
-
+      label: labels[key] || pretty(key),
       value: display,
     });
-
   });
 
   return rows;
 });
+
+/**
+ * Helpers
+ */
 
 const currency = (value) => {
   return Number(value || 0).toLocaleString("en-IN");
@@ -208,7 +215,7 @@ const currency = (value) => {
 const pretty = (value) => {
   return value
     .replaceAll("_", " ")
-    .replace(/\b\w/g, c => c.toUpperCase());
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
 const formatDate = (date) => {
@@ -221,45 +228,25 @@ const formatDate = (date) => {
     }
   );
 };
-
-
-const proceed = () => {
-
-    const errors = validateCheckout(booking);
-
-    if (errors.length) {
-
-        alert(errors[0].message);
-
-        return;
-
-    }
-
-    router.push({
-        name: "Payment"
-    });
-
-};
-
 </script>
 
 <style scoped>
 .summary-row {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 .summary-row span:first-child {
-  color:rgba(0,0,0,.65);
+  color: rgba(0, 0, 0, 0.65);
 }
 
 .total-row {
-  font-weight:700;
+  font-weight: 700;
 }
 
 .v-avatar {
-  border:1px solid rgba(0,0,0,.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 </style>

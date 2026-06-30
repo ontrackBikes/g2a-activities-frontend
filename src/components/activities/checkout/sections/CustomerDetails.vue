@@ -14,41 +14,34 @@
 
     <v-card-text>
       <v-row>
-        <v-col
-          v-if="visible('first_name')"
-          cols="12"
-          md="6"
-        >
+
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="customer.first_name"
             label="First Name"
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('first_name')"
+            :rules="[
+              v => !!v || 'First Name is required'
+            ]"
           />
         </v-col>
 
-        <v-col
-          v-if="visible('last_name')"
-          cols="12"
-          md="6"
-        >
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="customer.last_name"
             label="Last Name"
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('last_name')"
+            :rules="[
+              v => !!v || 'Last Name is required'
+            ]"
           />
         </v-col>
 
-        <v-col
-          v-if="visible('mobile')"
-          cols="12"
-          md="6"
-        >
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="customer.mobile"
             label="Mobile Number"
@@ -56,15 +49,11 @@
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('mobile')"
+            :rules="mobileRules"
           />
         </v-col>
 
-        <v-col
-          v-if="visible('email')"
-          cols="12"
-          md="6"
-        >
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="customer.email"
             label="Email Address"
@@ -72,14 +61,11 @@
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('email')"
+            :rules="emailRules"
           />
         </v-col>
 
-        <v-col
-          v-if="visible('country')"
-          cols="12"
-        >
+        <v-col cols="12">
           <v-text-field
             v-model="customer.country"
             label="Country"
@@ -87,9 +73,12 @@
             variant="outlined"
             density="comfortable"
             hide-details="auto"
-            :rules="rules('country')"
+            :rules="[
+              v => !!v || 'Country is required'
+            ]"
           />
         </v-col>
+
       </v-row>
     </v-card-text>
   </v-card>
@@ -108,18 +97,16 @@ const props = defineProps({
 
 const booking = bookingStore;
 
-const defaultCustomer = {
-  first_name: "",
-  last_name: "",
-  mobile: "",
-  email: "",
-  country: "",
-};
-
 const customer = computed({
   get() {
     if (!booking.form.customer) {
-      booking.form.customer = { ...defaultCustomer };
+      booking.form.customer = {
+        first_name: "",
+        last_name: "",
+        mobile: "",
+        email: "",
+        country: "",
+      };
     }
 
     return booking.form.customer;
@@ -130,59 +117,17 @@ const customer = computed({
   },
 });
 
-const fields = computed(() => {
-  return props.config?.fields || [];
-});
+const emailRules = [
+  (v) => !!v || "Email Address is required",
+  (v) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ||
+    "Please enter a valid email address",
+];
 
-const fieldConfig = (name) => {
-  return fields.value.find((x) => x.field === name);
-};
-
-const visible = (name) => {
-  const field = fieldConfig(name);
-
-  if (!field) return true;
-
-  return field.visible !== false;
-};
-
-const rules = (name) => {
-  const field = fieldConfig(name);
-
-  const validations = [];
-
-  if (field?.required) {
-    validations.push((v) => !!v || `${pretty(name)} is required`);
-  }
-
-  if (name === "email") {
-    validations.push((v) => {
-      if (!v) return true;
-
-      return (
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ||
-        "Please enter a valid email"
-      );
-    });
-  }
-
-  if (name === "mobile") {
-    validations.push((v) => {
-      if (!v) return true;
-
-      return (
-        /^[0-9]{10}$/.test(v) ||
-        "Please enter a valid mobile number"
-      );
-    });
-  }
-
-  return validations;
-};
-
-const pretty = (value) => {
-  return value
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-};
+const mobileRules = [
+  (v) => !!v || "Mobile Number is required",
+  (v) =>
+    /^[6-9]\d{9}$/.test(v) ||
+    "Please enter a valid mobile number",
+];
 </script>

@@ -6,11 +6,14 @@
   >
     <v-card-title class="py-4">
       <div class="g2a-subtitle">
-        Passenger Details
+        {{ config.title || "Passenger Details" }}
       </div>
 
       <div class="g2a-text-13 text-medium-emphasis mt-1">
-        Please provide details for every passenger travelling.
+        {{
+          config.description ||
+          "Please provide details for every passenger travelling."
+        }}
       </div>
     </v-card-title>
 
@@ -43,6 +46,10 @@
                   label="First Name"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
+                  :rules="[
+                    v => !!v || 'First Name is required'
+                  ]"
                 />
               </v-col>
 
@@ -55,6 +62,10 @@
                   label="Last Name"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
+                  :rules="[
+                    v => !!v || 'Last Name is required'
+                  ]"
                 />
               </v-col>
 
@@ -68,6 +79,10 @@
                   type="number"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
+                  :rules="[
+                    v => !!v || 'Age is required'
+                  ]"
                 />
               </v-col>
 
@@ -81,6 +96,10 @@
                   label="Gender"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
+                  :rules="[
+                    v => !!v || 'Gender is required'
+                  ]"
                 />
               </v-col>
 
@@ -94,6 +113,10 @@
                   label="Nationality"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
+                  :rules="[
+                    v => !!v || 'Nationality is required'
+                  ]"
                 />
               </v-col>
 
@@ -107,6 +130,7 @@
                   type="number"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
                 />
               </v-col>
 
@@ -120,6 +144,7 @@
                   type="number"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
                 />
               </v-col>
 
@@ -136,6 +161,13 @@
 <script setup>
 import { computed, watch } from "vue";
 import { bookingStore } from "@/store/booking";
+
+const props = defineProps({
+  config: {
+    type: Object,
+    default: () => ({}),
+  },
+});
 
 const booking = bookingStore;
 
@@ -177,7 +209,6 @@ const passengers = computed({
 watch(
   () => Number(booking.form.guests || 1),
   (guestCount) => {
-
     while (passengers.value.length < guestCount) {
       passengers.value.push(createPassenger());
     }
@@ -185,7 +216,6 @@ watch(
     if (passengers.value.length > guestCount) {
       passengers.value.splice(guestCount);
     }
-
   },
   {
     immediate: true,

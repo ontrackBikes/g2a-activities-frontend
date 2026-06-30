@@ -6,17 +6,22 @@
   >
     <v-card-title class="py-4">
       <div class="g2a-subtitle">
-        Seat Selection
+        {{ config.title || "Seat Selection" }}
       </div>
 
       <div class="g2a-text-13 text-medium-emphasis mt-1">
-        Select your travel class and preferred seating for each passenger.
+        {{
+          config.description ||
+          "Select your travel class and preferred seating for each passenger."
+        }}
       </div>
     </v-card-title>
 
     <v-divider />
 
     <v-card-text>
+
+      <!-- Travel Class -->
 
       <v-select
         v-model="ferry.travel_class"
@@ -26,15 +31,20 @@
         label="Travel Class"
         variant="outlined"
         density="comfortable"
+        hide-details="auto"
         class="mb-6"
+        :rules="[
+          v => !!v || 'Travel Class is required'
+        ]"
       />
 
+      <!-- Passenger Seat Preference -->
+
       <v-row
-        v-for="(passenger,index) in participants"
+        v-for="(participant, index) in participants"
         :key="index"
       >
         <v-col cols="12">
-
           <v-card
             variant="tonal"
             rounded="lg"
@@ -51,11 +61,15 @@
                 md="6"
               >
                 <v-select
-                  v-model="passenger.seat_preference"
+                  v-model="participant.seat_preference"
                   :items="seatPreferences"
                   label="Seat Preference"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
+                  :rules="[
+                    v => !!v || 'Seat Preference is required'
+                  ]"
                 />
               </v-col>
 
@@ -64,17 +78,17 @@
                 md="6"
               >
                 <v-text-field
-                  v-model="passenger.seat_number"
+                  v-model="participant.seat_number"
                   label="Preferred Seat (Optional)"
                   variant="outlined"
                   density="comfortable"
+                  hide-details="auto"
                 />
               </v-col>
 
             </v-row>
 
           </v-card>
-
         </v-col>
       </v-row>
 
@@ -86,17 +100,20 @@
 import { computed } from "vue";
 import { bookingStore } from "@/store/booking";
 
-const booking = bookingStore;
+const props = defineProps({
+  config: {
+    type: Object,
+    default: () => ({}),
+  },
+});
 
-const defaultFerry = {
-  travel_class: "economy",
-};
+const booking = bookingStore;
 
 const ferry = computed({
   get() {
     if (!booking.form.ferry) {
       booking.form.ferry = {
-        ...defaultFerry,
+        travel_class: "economy",
       };
     }
 
