@@ -155,18 +155,51 @@ const selectedImage = computed(() => {
 });
 
 const checkAvailability = async (form) => {
-  // Later:
-  // await api.post("/availability", form)
+  try {
+    const payload = {
+      ...form,
 
-  saveBooking({
-    product: product.value,
-    bookingTemplate: product.value.bookingTemplate,
-    form,
-  });
+      // Temporary
+      location_slug: "havelock",
+    };
 
-  router.push({
-    name: "Checkout",
-  });
+    const { data } = await apiClient.post(
+      `/v1/products/${product.value.slug}/check-available`,
+      payload,
+    );
+
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+
+    if (!data.available) {
+      alert(data.message);
+      return;
+    }
+
+    saveBooking({
+      product: product.value,
+
+      bookingTemplate: product.value.bookingTemplate,
+
+      form: {
+        ...form,
+        availability: data.data,
+      },
+    });
+
+    router.push({
+      name: "Checkout",
+    });
+  } catch (err) {
+    console.error(err);
+
+    alert(
+      err.response?.data?.message ||
+        err.message ||
+        "Unable to check availability.",
+    );
+  }
 };
 
 const selectImage = (index) => {

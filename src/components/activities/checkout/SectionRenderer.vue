@@ -1,49 +1,23 @@
 <template>
-
   <component
     :is="component"
     :config="section.config"
   />
-
 </template>
 
 <script setup>
 import { computed } from "vue";
-
-import CustomerDetails from "./sections/CustomerDetails.vue";
-import Participants from "./sections/Participants.vue";
-import MedicalDeclaration from "./sections/MedicalDeclaration.vue";
-import BikeDelivery from "./sections/BikeDelivery.vue";
-import FerrySeatSelection from "./sections/FerrySeatSelection.vue";
-import PaymentSummary from "./sections/PaymentSummary.vue";
+import registry from "./sectionRegistry";
 
 const props = defineProps({
-
-  section:Object
-
+  section: Object,
 });
 
-const registry = {
+const definition = computed(() => {
+  return registry[props.section.section];
+});
 
-  customer_details:CustomerDetails,
-
-  participants:Participants,
-
-  medical_declaration:MedicalDeclaration,
-
-  bike_delivery:BikeDelivery,
-
-  ferry_seat_selection:FerrySeatSelection,
-
-  payment:PaymentSummary
-
-};
-
-const component = computed(()=>{
-
-  return registry[
-      props.section.section
-  ];
-
+const component = computed(() => {
+  return definition.value?.component;
 });
 </script>

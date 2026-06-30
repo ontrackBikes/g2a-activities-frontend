@@ -57,7 +57,7 @@ const guestCount = computed(() => props.modelValue || 1);
 const increase = () => {
   emit(
     "update:modelValue",
-    guestCount.value + 1,
+    Number(guestCount.value + 1),
   );
 };
 

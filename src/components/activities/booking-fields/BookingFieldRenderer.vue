@@ -5,6 +5,8 @@
     :model-value="modelValue"
     :field="field"
     :slots="slots"
+    :form="form"
+   :error="error"
     @update:modelValue="updateValue"
   />
 
@@ -37,6 +39,16 @@ const props = defineProps({
   slots: {
     type: Array,
     default: () => [],
+  },
+
+  form: {
+    type: Object,
+    default: () => ({}),
+  },
+
+  error: {
+    type: String,
+    default: "",
   },
 });
 
