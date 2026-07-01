@@ -27,31 +27,36 @@
         v-model="form[field.field]"
       />
 
+      <v-card  variant="outlined" class="pa-2" color="success">
+        <v-icon>mdi-information</v-icon> Next Available Date: {{ nextAvailableDate }}
+      </v-card>
       <!-- Total -->
 
-      <div class="d-flex justify-space-between align-center my-5">
-        <span class="g2a-title-4 g2a-text-bold-600"> Total </span>
+      <!-- <div class="d-flex justify-space-between align-center my-5">
+        <span class="g2a-title-4 g2a-text-bold-600"> Total (estimate only) </span>
 
         <span class="g2a-text-22 g2a-text-bold-700 text-brandColor2">
           ₹{{ totalPrice }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Error -->
 
       <v-alert
-        v-if="apiError"
+        v-if="error"
         type="error"
         variant="tonal"
         density="compact"
-        class="mb-4"
+        class="my-4"
       >
-        {{ apiError }}
+        {{ error }}
       </v-alert>
 
       <!-- Button -->
 
       <v-btn
+        class="mt-5"
+        flat
         block
         rounded="xl"
         size="large"
@@ -59,7 +64,7 @@
         :loading="loading"
         @click="submit"
       >
-        Check Availability
+        Check Estimate
       </v-btn>
     </v-card>
   </div>
@@ -85,6 +90,16 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+
+  nextAvailableDate: {
+    type: String,
+    default: "",
+  },
+
+  error: {
+    type: String,
+    default: "",
+  },
 });
 
 const emit = defineEmits(["submit"]);
@@ -94,8 +109,6 @@ const form = reactive({});
 const errors = reactive({});
 
 const loading = ref(false);
-
-const apiError = ref("");
 
 const fields = computed(() => {
   return props.bookingTemplate?.product_page_schema?.fields || [];
@@ -130,6 +143,7 @@ watch(
 
         case "date":
           form.date = todayStr;
+          form.min = props.nextAvailableDate
           break;
 
         case "pickup_date":
@@ -173,16 +187,12 @@ watch(
     Object.keys(errors).forEach((key) => {
       const value = form[key];
 
-      if (
-        value !== null &&
-        value !== undefined &&
-        value !== ""
-      ) {
+      if (value !== null && value !== undefined && value !== "") {
         delete errors[key];
       }
     });
   },
-  { deep: true }
+  { deep: true },
 );
 /**
  * Total
@@ -199,8 +209,6 @@ const totalPrice = computed(() => {
  */
 
 const validate = () => {
-  apiError.value = "";
-
   Object.keys(errors).forEach((key) => {
     delete errors[key];
   });
@@ -253,16 +261,11 @@ const submit = async () => {
 
   loading.value = true;
 
-  try {
-    await emit("submit", {
-      ...form,
-    });
-  } catch (err) {
-    apiError.value =
-      err?.response?.data?.message || err?.message || "Something went wrong.";
-  } finally {
-    loading.value = false;
-  }
+  await emit("submit", {
+    ...form,
+  });
+
+  loading.value = false;
 };
 </script>
 

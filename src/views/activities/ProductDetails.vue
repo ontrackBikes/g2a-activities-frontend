@@ -96,12 +96,19 @@
         <ActivityBookingCard
           :booking-template="product.bookingTemplate"
           :slots="slots"
+          :error="availabilityError"
           :price="product.starting_price"
           @submit="checkAvailability"
+          :nextAvailableDate="product.next_available_slot"
         />
       </v-col>
     </v-row>
   </template>
+  <BookingConfirmationDialog
+    v-model="confirmationDialog"
+    :quote="availabilityQuote"
+    @continue="continueBooking"
+  />
 </template>
 
 <script setup>
@@ -126,6 +133,7 @@ import ProductHero from "../../components/activities/product/ProductHero.vue";
 import ProductGallery from "../../components/activities/product/ProductGallery.vue";
 import { saveBooking } from "@/store/booking.js";
 import router from "@/router/index.js";
+import BookingConfirmationDialog from "@/components/activities/checkout/BookingConfirmationDialog.vue";
 
 const route = useRoute();
 
@@ -154,7 +162,17 @@ const selectedImage = computed(() => {
   return product.value?.thumbnail_url || "";
 });
 
+const availabilityError = ref("");
+
+const confirmationDialog = ref(false);
+
+const availabilityQuote = ref(null);
+
+const bookingRequest = ref(null);
+
 const checkAvailability = async (form) => {
+  availabilityError.value = "";
+
   try {
     const payload = {
       ...form,
@@ -164,7 +182,7 @@ const checkAvailability = async (form) => {
     };
 
     const { data } = await apiClient.post(
-      `/v1/products/${product.value.slug}/check-available`,
+      `/v1/products/app/${product.value.slug}/check-available`,
       payload,
     );
 
@@ -173,33 +191,48 @@ const checkAvailability = async (form) => {
     }
 
     if (!data.available) {
-      alert(data.message);
+      availabilityError.value =
+        data.message || "Selected date is not available.";
+
       return;
     }
 
-    saveBooking({
-      product: product.value,
+    // Keep request for checkout
+    bookingRequest.value = payload;
 
-      bookingTemplate: product.value.bookingTemplate,
+    // Store availability response for dialog
+    availabilityQuote.value = data.data;
 
-      form: {
-        ...form,
-        availability: data.data,
-      },
-    });
-
-    router.push({
-      name: "Checkout",
-    });
+    // Open confirmation dialog
+    confirmationDialog.value = true;
   } catch (err) {
     console.error(err);
 
-    alert(
+    availabilityError.value =
       err.response?.data?.message ||
-        err.message ||
-        "Unable to check availability.",
-    );
+      err.message ||
+      "Unable to check availability.";
   }
+};
+
+const continueBooking = () => {
+  confirmationDialog.value = false;
+
+  saveBooking({
+    product: product.value,
+
+    bookingTemplate: product.value.bookingTemplate,
+
+    form: {
+      ...bookingRequest.value,
+
+      availability: availabilityQuote.value,
+    },
+  });
+
+  router.push({
+    name: "Checkout",
+  });
 };
 
 const selectImage = (index) => {

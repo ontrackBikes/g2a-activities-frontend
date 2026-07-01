@@ -6,7 +6,7 @@
     :field="field"
     :slots="slots"
     :form="form"
-   :error="error"
+    :error="error"
     @update:modelValue="updateValue"
   />
 
