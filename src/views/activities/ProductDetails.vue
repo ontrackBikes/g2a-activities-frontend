@@ -21,7 +21,7 @@
 
     <v-row>
       <!-- Main Content -->
-      <v-col cols="12" lg="8">
+      <v-col cols="12" lg="8" sm="6">
         <product-hero
           :title="product.name"
           :image="selectedImage"
@@ -29,8 +29,8 @@
           :thumbnail_url="product.thumbnail_url"
         />
       </v-col>
-      <v-col cols="12" lg="4">
-        <ProductGallery :images="product.images" @select="openLightbox" />
+      <v-col cols="12" lg="4" sm="6">
+        <product-gallery :images="product.images"  />
       </v-col>
 
       <v-col cols="12" lg="8">
@@ -104,7 +104,7 @@
       </v-col>
     </v-row>
   </template>
-  <BookingConfirmationDialog
+  <BookingQuotationDialog
     v-model="confirmationDialog"
     :quote="availabilityQuote"
     @continue="continueBooking"
@@ -130,10 +130,10 @@ import ProductTerms from "../../components/activities/product/ProductTerms.vue";
 import ActivityBookingCard from "../../components/activities/booking-fields/ActivityBookingCard.vue";
 import ProductRelated from "../../components/activities/product/ProductRelated.vue";
 import ProductHero from "../../components/activities/product/ProductHero.vue";
-import ProductGallery from "../../components/activities/product/ProductGallery.vue";
 import { saveBooking } from "@/store/booking.js";
 import router from "@/router/index.js";
-import BookingConfirmationDialog from "@/components/activities/checkout/BookingConfirmationDialog.vue";
+import BookingQuotationDialog from "@/components/activities/checkout/BookingQuotationDialog.vue";
+import ProductGallery from "@/components/activities/product/ProductGallery.vue";
 
 const route = useRoute();
 
@@ -169,6 +169,10 @@ const confirmationDialog = ref(false);
 const availabilityQuote = ref(null);
 
 const bookingRequest = ref(null);
+
+onMounted(() => {
+  console.log("Product page mounted");
+});
 
 const checkAvailability = async (form) => {
   availabilityError.value = "";
@@ -215,8 +219,9 @@ const checkAvailability = async (form) => {
   }
 };
 
-const continueBooking = () => {
-  confirmationDialog.value = false;
+const continueBooking = ({ quote, form }) => {
+  console.log("🚀 ~ continueBooking ~ quote:", quote)
+  //confirmationDialog.value = false;
 
   saveBooking({
     product: product.value,
@@ -225,13 +230,15 @@ const continueBooking = () => {
 
     form: {
       ...bookingRequest.value,
-
-      availability: availabilityQuote.value,
+      ...form,
     },
   });
 
   router.push({
     name: "Checkout",
+    params: {
+      estimate_id: quote.estimate_id,
+    },
   });
 };
 
@@ -241,11 +248,12 @@ const selectImage = (index) => {
 
 const loadProduct = async () => {
   try {
+    console.log("Loading product...");
     loading.value = true;
     error.value = null;
 
     const response = await apiClient.get(
-      `/v1/products/app/products-list/${route.params.productType}`,
+      `/v1/products/app/products-list/${route.params.product}`,
     );
 
     product.value = response.data.data;

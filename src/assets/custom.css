@@ -47,6 +47,14 @@ input {
   padding-right: 55px;
 }
 
+.g2a-link {
+  cursor: pointer;
+  color: #29339b;
+}
+.g2a-link:hover {
+  color: #1a248a;
+}
+
 .g2a-text-11 {
   font-size: 11px;
 }
@@ -212,13 +220,13 @@ input {
 .g2a-subtitle-dark {
   font-size: 20px;
   font-weight: 600;
-  line-height: 30px;
+
 }
 
 .g2a-subtitle {
   font-size: 20px;
   font-weight: 500;
-  line-height: 30px;
+
 }
 
 .g2a-subtitle-0 {

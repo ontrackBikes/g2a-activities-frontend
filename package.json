@@ -27,6 +27,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.1.14",
     "@mdi/font": "^7.4.47",
     "@vueuse/core": "^13.9.0",
     "axios": "^1.13.2",

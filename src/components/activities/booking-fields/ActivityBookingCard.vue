@@ -27,7 +27,7 @@
         v-model="form[field.field]"
       />
 
-      <v-card  variant="outlined" class="pa-2" color="success">
+      <v-card rounded="lg"  variant="outlined" class="pa-2" color="success">
         <v-icon>mdi-information</v-icon> Next Available Date: {{ nextAvailableDate }}
       </v-card>
       <!-- Total -->

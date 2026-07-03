@@ -49,7 +49,7 @@ const router = createRouter({
         },
 
         {
-          path: "checkout",
+          path: "checkout/:estimate_id",
           name: "Checkout",
           component: Checkout,
         },

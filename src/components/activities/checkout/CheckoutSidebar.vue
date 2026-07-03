@@ -1,85 +1,107 @@
 <template>
-  <v-card rounded="lg" variant="outlined" elevation="0">
-    <v-card-title class="py-4">
-      <div class="g2a-subtitle">
-        Booking Summary
-      </div>
-    </v-card-title>
+  <v-card rounded="xl" variant="outlined" elevation="0" v-if="quote">
+    <!-- Product -->
+
+    <v-card-item>
+      <template #prepend>
+        <v-avatar rounded="lg" size="58">
+          <v-img :src="quote.product?.thumbnail_url" cover />
+        </v-avatar>
+      </template>
+
+      <v-card-title class="g2a-text-bold-700">
+        {{ quote.product?.name }}
+      </v-card-title>
+
+      <v-card-subtitle>
+        {{ quote.location?.name }}
+      </v-card-subtitle>
+    </v-card-item>
 
     <v-divider />
 
     <v-card-text>
-      <!-- Product -->
+      <!-- Booking -->
 
-      <div class="d-flex align-center mb-5">
-        <v-avatar
-          rounded="lg"
-          size="58"
-          class="mr-3"
-        >
-          <v-img
-            :src="booking.product?.thumbnail_url"
-            cover
-          />
-        </v-avatar>
-
-        <div>
-          <div class="g2a-text-bold-600">
-            {{ booking.product?.name }}
-          </div>
-
-          <div class="g2a-text-13 text-greyDark">
-            {{ location.name || "-" }}
-          </div>
-        </div>
-      </div>
-
-      <v-divider class="mb-5" />
-
-      <!-- Booking Details -->
+      <div class="g2a-text-bold-600 mb-3">Booking Details</div>
 
       <div
         v-for="item in bookingRows"
         :key="item.label"
-        class="summary-row"
+        class="d-flex justify-space-between"
       >
         <span>{{ item.label }}</span>
-
         <strong>{{ item.value }}</strong>
       </div>
 
+      <!-- Selected Slot -->
+
+      <template v-if="selectedSlot">
+        <v-divider class="my-5" />
+
+        <div class="g2a-text-bold-600 mb-3">Selected Slot</div>
+
+        <div class="d-flex justify-space-between">
+          <span>Time</span>
+
+          <strong>
+            {{ selectedSlot.start_time }}
+            -
+            {{ selectedSlot.end_time }}
+          </strong>
+        </div>
+      </template>
+
+      <!-- Daily Pricing -->
+
+      <template v-if="dailyPricing.length">
+        <v-divider class="my-5" />
+
+        <div class="g2a-text-bold-600">Daily Pricing</div>
+
+        <div
+          v-for="day in previewDailyPricing"
+          :key="day.date"
+          class="d-flex justify-space-between mb-2"
+        >
+          <span>{{ formatDate(day.date) }}</span>
+
+          <strong> ₹{{ currency(day.unit_price) }} </strong>
+        </div>
+
+        <div
+          class="g2a-link"
+          v-if="hasMorePricing"
+          variant="text"
+          size="small"
+          color="primary"
+          @click="pricingDialog = true"
+        >
+          View All ({{ dailyPricing.length }})
+        </div>
+      </template>
+      <!-- Price -->
+
       <v-divider class="my-5" />
 
-      <!-- Pricing -->
+      <div class="g2a-text-bold-600 mb-3">Price Summary</div>
 
-      <div class="summary-row">
+      <div class="d-flex justify-space-between">
         <span>Unit Price</span>
-
-        <strong>
-          ₹{{ currency(pricing.unit_price) }}
-        </strong>
+        <strong>₹{{ currency(pricing.unit_price) }}</strong>
       </div>
 
-      <div class="summary-row">
+      <div class="d-flex justify-space-between">
         <span>Quantity</span>
-
-        <strong>
-          {{ pricing.quantity }}
-        </strong>
+        <strong>{{ pricing.quantity }}</strong>
       </div>
 
-      <div class="summary-row">
+      <div class="d-flex justify-space-between">
         <span>Subtotal</span>
-
-        <strong>
-          ₹{{ currency(pricing.subtotal) }}
-        </strong>
+        <strong>₹{{ currency(pricing.subtotal) }}</strong>
       </div>
 
-      <div
-        v-if="pricing.discount"
-        class="summary-row"
-      >
+      <div v-if="pricing.discount" class="d-flex justify-space-between">
         <span>Discount</span>
 
         <strong class="text-success">
@@ -87,21 +109,22 @@
         </strong>
       </div>
 
-      <div
-        v-if="pricing.tax"
-        class="summary-row"
-      >
-        <span>Taxes</span>
+      <div v-if="pricing.tax" class="d-flex justify-space-between">
+        <span>Tax</span>
 
-        <strong>
-          ₹{{ currency(pricing.tax) }}
-        </strong>
+        <strong> ₹{{ currency(pricing.tax) }} </strong>
       </div>
 
       <v-divider class="my-5" />
 
-      <div class="summary-row total-row">
-        <span>Total Payable</span>
+      <div class="d-flex justify-space-between align-center">
+        <div>
+          <div class="g2a-text-bold-700">Total Payable</div>
+
+          <div class="g2a-text-12 text-medium-emphasis">
+            Inclusive of all taxes
+          </div>
+        </div>
 
         <div class="g2a-title text-brandColor2">
           ₹{{ currency(pricing.grand_total) }}
@@ -109,8 +132,8 @@
       </div>
 
       <v-btn
-        flat
         block
+        flat
         rounded="xl"
         size="large"
         color="brandColor"
@@ -121,133 +144,133 @@
       </v-btn>
     </v-card-text>
   </v-card>
+  <v-dialog v-model="pricingDialog" scrollable max-width="450">
+    <v-card>
+      <div class="pa-4">
+        <div class="g2a-title">
+          Daily Pricing
+        </div>
+      </div>
+
+      <v-list>
+        <v-list-item v-for="day in dailyPricing" :key="day.date">
+          <template #title>
+            {{ formatDate(day.date) }}
+          </template>
+
+          <template #append> ₹{{ currency(day.unit_price) }} </template>
+        </v-list-item>
+      </v-list>
+      <v-spacer />
+      <div class="pa-2">
+        <v-btn block color="primary" variant="text" @click="pricingDialog = false">
+        Close
+      </v-btn>
+      </div>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { bookingStore } from "@/store/booking";
+import { computed, ref } from "vue";
 
 defineEmits(["proceed"]);
 
-const booking = bookingStore;
-
-/**
- * Availability quote
- */
-
-const quote = computed(() => {
-  return booking.form?.availability || {};
+const props = defineProps({
+  quote: {
+    type: Object,
+    default: () => ({}),
+  },
 });
 
-const bookingInfo = computed(() => {
-  return quote.value.booking || {};
+const pricingDialog = ref(false);
+
+const previewDailyPricing = computed(() => {
+  return dailyPricing.value.slice(0, 3);
 });
 
-const location = computed(() => {
-  return quote.value.location || {};
+const hasMorePricing = computed(() => {
+  return dailyPricing.value.length > 3;
 });
 
-const pricing = computed(() => {
-  return (
-    quote.value.pricing || {
-      quantity: 1,
-      unit_price: 0,
-      subtotal: 0,
-      discount: 0,
-      tax: 0,
-      grand_total: 0,
-    }
-  );
+/*
+|--------------------------------------------------------------------------
+| Quote
+|--------------------------------------------------------------------------
+*/
+
+const booking = computed(() => props.quote.booking || {});
+
+const pricing = computed(() => ({
+  currency: "INR",
+  quantity: 1,
+  unit_price: 0,
+  subtotal: 0,
+  discount: 0,
+  tax: 0,
+  grand_total: 0,
+  ...props.quote.pricing,
+}));
+
+const availability = computed(() => ({
+  slots: [],
+  daily_pricing: [],
+  selected_slot: null,
+  ...props.quote.availability,
+}));
+
+const selectedSlot = computed(() => {
+  return availability.value.selected_slot;
 });
 
-/**
- * Booking rows
- */
+const dailyPricing = computed(() => {
+  return availability.value.daily_pricing || [];
+});
+
+/*
+|--------------------------------------------------------------------------
+| Booking Details
+|--------------------------------------------------------------------------
+*/
 
 const bookingRows = computed(() => {
-  const rows = [];
-
   const labels = {
-    date: "Travel Date",
+    travel_date: "Travel Date",
     pickup_date: "Pickup Date",
     return_date: "Return Date",
     rental_days: "Rental Days",
     guests: "Guests",
-    slot: "Slot",
-    pickup_location: "Pickup Location",
-    drop_location: "Return Location",
-    pickup_time: "Pickup Time",
-    return_time: "Return Time",
-    vehicle: "Vehicle",
   };
 
-  Object.entries(bookingInfo.value).forEach(([key, value]) => {
-    if (
-      value === null ||
-      value === undefined ||
-      value === ""
-    ) {
-      return;
-    }
-
-    let display = value;
-
-    if (key.includes("date")) {
-      display = formatDate(value);
-    }
-
-    rows.push({
+  return Object.entries(booking.value)
+    .filter(
+      ([, value]) => value !== null && value !== undefined && value !== "",
+    )
+    .map(([key, value]) => ({
       label: labels[key] || pretty(key),
-      value: display,
-    });
-  });
-
-  return rows;
+      value: key.includes("date") ? formatDate(value) : value,
+    }));
 });
 
-/**
- * Helpers
- */
+/*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
 
 const currency = (value) => {
   return Number(value || 0).toLocaleString("en-IN");
 };
 
 const pretty = (value) => {
-  return value
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return value.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
 const formatDate = (date) => {
-  return new Date(date).toLocaleDateString(
-    "en-IN",
-    {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }
-  );
+  return new Date(date).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 };
 </script>
-
-<style scoped>
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.summary-row span:first-child {
-  color: rgba(0, 0, 0, 0.65);
-}
-
-.total-row {
-  font-weight: 700;
-}
-
-.v-avatar {
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-</style>

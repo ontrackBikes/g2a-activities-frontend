@@ -252,8 +252,9 @@ function resetFilters() {
 
 // ─── Navigation ──────────────────────────────────────────────────
 function openProduct(product) {
+  console.log("🚀 ~ openProduct ~ product:", product)
   router.push(
-    `/${product.product_type.category.slug}/${product.product_type.slug}/${product.slug}`,
+    `/${product.category.slug}/${product.product_type.slug}/${product.slug}`,
   );
 }
 

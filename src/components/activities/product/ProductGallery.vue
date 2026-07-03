@@ -1,125 +1,54 @@
 <template>
-  <div v-if="activeImages.length">
+  <div ref="galleryRoot" v-if="galleryImages.length">
+
     <v-row no-gutters>
-      <!-- Main Image -->
-      <v-col cols="12">
-        <div class="gallery-main mb-2" @click="openLightbox(0)">
+      <v-col
+        v-for="(image, index) in previewImages"
+        :key="image.id || index"
+        cols="12"
+        class="mb-2"
+      >
+        <a
+          :href="image.image_url"
+          data-fancybox="product-gallery"
+          :data-caption="image.alt || ''"
+          class="gallery-item"
+        >
           <v-img
-            :src="activeImages[0].image_url"
-            height="195"
-            cover
-            rounded="lg"
-          />
-        </div>
-      </v-col>
-
-      <!-- Second Image -->
-      <v-col v-if="activeImages[1]" cols="12">
-        <div class="gallery-thumb" @click="openLightbox(1)">
-          <v-img
-            :src="activeImages[1].image_url"
+            :src="image.image_url"
             height="195"
             cover
             rounded="lg"
           />
 
-          <div v-if="activeImages.length > 2" class="gallery-overlay">
-            <span class="g2a-text-18 g2a-text-bold-700 text-white">
-              +{{ activeImages.length - 2 }}
+          <div
+            v-if="index === 1 && remainingImages > 0"
+            class="gallery-overlay"
+          >
+            <span class="text-h5 font-weight-bold text-white">
+              +{{ remainingImages }}
             </span>
           </div>
-        </div>
+        </a>
       </v-col>
+
+      <!-- Hidden images -->
+      <a
+        v-for="(image, index) in hiddenImages"
+        :key="`hidden-${image.id || index}`"
+        :href="image.image_url"
+        data-fancybox="product-gallery"
+        :data-caption="image.alt || ''"
+        class="d-none"
+      />
     </v-row>
-
-    <!-- Lightbox -->
-    <v-dialog
-      v-model="lightboxOpen"
-      width="800"
-      transition="dialog-bottom-transition"
-    >
-      <v-card color="#0f0f0f" elevation="0" class="lightbox-container">
-        <!-- Top Bar -->
-        <div class="lightbox-header">
-          <v-chip
-            size="small"
-            color="white"
-            variant="flat"
-            class="font-weight-bold"
-          >
-            {{ lightboxIndex + 1 }} / {{ activeImages.length }}
-          </v-chip>
-
-          <v-btn
-            icon
-            variant="tonal"
-            color="white"
-            @click="lightboxOpen = false"
-          >
-            <v-icon icon="mdi-close" />
-          </v-btn>
-        </div>
-
-        <!-- Main Image -->
-        <div class="lightbox-body">
-          <v-img
-            :src="activeImages[lightboxIndex]?.image_url"
-            contain
-            class="lightbox-image"
-          />
-
-          <!-- Prev -->
-          <v-btn
-            v-if="lightboxIndex > 0"
-            class="lightbox-arrow lightbox-arrow--left"
-            icon
-            size="large"
-            color="white"
-            variant="flat"
-            @click="lightboxIndex--"
-          >
-            <v-icon icon="mdi-chevron-left" size="28" />
-          </v-btn>
-
-          <!-- Next -->
-          <v-btn
-            v-if="lightboxIndex < activeImages.length - 1"
-            class="lightbox-arrow lightbox-arrow--right"
-            icon
-            size="large"
-            color="white"
-            variant="flat"
-            @click="lightboxIndex++"
-          >
-            <v-icon icon="mdi-chevron-right" size="28" />
-          </v-btn>
-        </div>
-
-        <!-- Thumbnail Strip -->
-        <div v-if="activeImages.length > 1" class="lightbox-thumbs">
-          <div
-            v-for="(img, index) in activeImages"
-            :key="img.id || index"
-            class="thumb-item"
-            :class="{ active: index === lightboxIndex }"
-            @click="lightboxIndex = index"
-          >
-            <v-img
-              :src="img.image_url"
-              width="72"
-              height="72"
-              cover
-              rounded="lg"
-            />
-          </div>
-        </div>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref } from "vue";
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 const props = defineProps({
   images: {
@@ -128,105 +57,47 @@ const props = defineProps({
   },
 });
 
-const activeImages = computed(() => props.images.filter((img) => img.active));
+const galleryImages = computed(() => props.images || []);
 
-const lightboxOpen = ref(false);
-const lightboxIndex = ref(0);
+const previewImages = computed(() => galleryImages.value.slice(0, 2));
 
-const openLightbox = (index) => {
-  lightboxIndex.value = index;
-  lightboxOpen.value = true;
-};
+const hiddenImages = computed(() => galleryImages.value.slice(2));
+
+const remainingImages = computed(() =>
+  Math.max(galleryImages.value.length - 2, 0)
+);
+
+const galleryRoot = ref(null);
+
+onMounted(() => {
+  Fancybox.bind(galleryRoot.value, '[data-fancybox="product-gallery"]', {
+    animated: true,
+    dragToClose: true,
+    Hash: false,          // important
+    placeFocusBack: false // optional
+  });
+});
+
+onBeforeUnmount(() => {
+  Fancybox.unbind(galleryRoot.value);
+  Fancybox.close();
+});
 </script>
 
 <style scoped>
-.gallery-main,
-.gallery-thumb {
+.gallery-item {
   position: relative;
+  display: block;
   overflow: hidden;
-  cursor: pointer;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .gallery-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.lightbox-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.lightbox-header {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.lightbox-body {
-  flex: 1;
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 24px;
-}
-
-.lightbox-image {
-  max-width: 100%;
-  max-height: 50vh;
-  border-radius: 12px;
-}
-
-.lightbox-arrow {
-  position: absolute !important;
-  top: 50%;
-  transform: translateY(-50%);
-
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.15) !important;
-}
-
-.lightbox-arrow--left {
-  left: 24px;
-}
-
-.lightbox-arrow--right {
-  right: 24px;
-}
-
-.lightbox-thumbs {
-  display: flex;
-  gap: 10px;
-
-  overflow-x: auto;
-
-  padding: 16px 24px 24px;
-  justify-content: center;
-}
-
-.thumb-item {
-  cursor: pointer;
-  opacity: 0.55;
-  transition: all 0.2s ease;
-}
-
-
-.thumb-item.active {
-  opacity: 1;
-  transform: scale(1.08);
+  background: rgb(0 0 0 / 55%);
 }
 </style>
