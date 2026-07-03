@@ -1,6 +1,12 @@
 <template>
   <div class="sticky-card">
-    <v-card rounded="lg" variant="outlined" elevation="0" class="pa-4">
+    <v-card rounded="lg" variant="outlined" elevation="0" class="pa-4" v-if="outOfStock">
+      <div class="g2a-title-4 mb-4">Book your ticket</div>
+      <div class="g2a-title-4 text-error">
+        Out of Stock
+      </div>
+    </v-card>
+    <v-card rounded="lg" variant="outlined" elevation="0" class="pa-4" v-else>
       <!-- Price -->
 
       <div class="g2a-title-4 mb-4">Book your ticket</div>
@@ -45,6 +51,7 @@
 
         <v-col cols="5">
           <v-btn
+            block
             flat
             rounded="xl"
             color="brandColor"
@@ -99,7 +106,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-
+  outOfStock: {
+    type: Boolean,
+    default: true
+  },
   nextAvailableDate: {
     type: String,
     default: "",

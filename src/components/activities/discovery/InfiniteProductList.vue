@@ -61,7 +61,7 @@
           sm="6"
           lg="3"
         >
-          <ProductCard :product="product" @click="openProduct(product)" />
+          <ProductCard :product="product" @click="openProduct" />
         </v-col>
       </v-row>
 
@@ -251,12 +251,24 @@ function resetFilters() {
 }
 
 // ─── Navigation ──────────────────────────────────────────────────
-function openProduct(product) {
-  console.log("🚀 ~ openProduct ~ product:", product)
-  router.push(
-    `/${product.category.slug}/${product.product_type.slug}/${product.slug}`,
-  );
-}
+const openProduct = ({ product, location }) => {
+  
+  const productType = product.product_type;
+  const category = product.category;
+
+  const slug = location
+    ? `${product.slug}-in-${location.slug}`
+    : product.slug;
+
+  router.push({
+    name: "ProductDetails",
+    params: {
+      category: category.slug,
+      productType: productType.slug,
+      product: slug,
+    },
+  });
+};
 
 // ─── Watch: filters v-model → refetch ────────────────────────────
 // ProductFilter emits update:modelValue; v-model updates filters.value

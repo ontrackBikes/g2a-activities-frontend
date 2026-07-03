@@ -102,10 +102,22 @@ const loadCollections = async () => {
   }
 };
 
-const openProduct = (product) => {
-  router.push(
-    `/${product.productType.category.slug}/${product.productType.slug}/${product.slug}`,
-  );
+const openProduct = ({ product, location }) => {
+  const productType = product.productType;
+  const category = productType.category;
+
+  const slug = location
+    ? `${product.slug}-in-${location.slug}`
+    : product.slug;
+
+  router.push({
+    name: "ProductDetails",
+    params: {
+      category: category.slug,
+      productType: productType.slug,
+      product: slug,
+    },
+  });
 };
 
 const viewCollection = (collection) => {

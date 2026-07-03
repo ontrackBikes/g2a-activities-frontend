@@ -84,9 +84,9 @@
             :products="relatedProducts"
           />
         </div>
-        <div v-if="locations.length" class="mt-8">
+        <!-- <div v-if="locations.length" class="mt-8">
           <ProductLocations :locations="locations" />
-        </div>
+        </div> -->
       </v-col>
 
       <!-- Booking Sidebar -->
@@ -102,6 +102,7 @@
           :location-selected="locationText"
           @showLocationDialog="showLocationDialog = true"
           :showSelectLocation="productLocationList.length > 1"
+          :out-of-stock="product.out_of_stock"
         />
 
         <v-card v-else rounded="lg" variant="outlined">
@@ -299,7 +300,11 @@ const loadProduct = async () => {
     error.value = null;
 
     const response = await apiClient.get(
-      `/v1/products/app/products-list/${route.params.product}`,
+      `/v1/products/app/products-list/${route.params.product}`, {
+        params: {
+          location: selectedLocation.value
+        }
+      },
     );
 
     product.value = response.data.data;

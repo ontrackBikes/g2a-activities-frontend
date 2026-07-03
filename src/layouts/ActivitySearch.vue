@@ -1,22 +1,6 @@
 <template>
   <div>
-    <v-slide-group show-arrows class="mb-6">
-      <v-slide-group-item v-for="cat in filterCategories" :key="cat">
-        <v-btn
-          :color="activeCategory === cat ? 'brandColor2' : 'white'"
-          :class="
-            activeCategory === cat ? 'text-white' : 'text-grey-darken-3 border'
-          "
-          variant="flat"
-          rounded="xl"
-          class="mr-2 text-none g2a-text-14 font-weight-medium px-5"
-          height="38"
-          @click="activeCategory = cat"
-        >
-          {{ cat }}
-        </v-btn>
-      </v-slide-group-item>
-    </v-slide-group>
+
 
     <div v-if="loading">
       <v-row class="ga-y-2">
@@ -36,15 +20,16 @@
         }}
       </div>
 
-      <v-row class="ga-y-2">
+      <v-row>
         <v-col
-          v-for="item in filteredResults"
-          :key="item.slug"
+          v-for="product in filteredResults"
+          :key="product.slug"
           cols="12"
-          sm="6"
-          class="pa-2"
+          sm="12"
+          class="pa-4"
         >
-          <v-card
+          <product-card :product="product" :mini="true"></product-card>
+          <!-- <v-card
             variant="flat"
             color="white"
             class="border rounded-xl pa-3 d-flex align-center cursor-pointer"
@@ -82,16 +67,14 @@
 
             <v-spacer />
             <v-icon color="grey-lighten-1" size="20">mdi-chevron-right</v-icon>
-          </v-card>
+          </v-card> -->
         </v-col>
       </v-row>
     </template>
 
     <div v-else-if="props.searchTerm" class="text-center py-12">
       <v-icon size="64" color="grey-lighten-1">mdi-magnify-close</v-icon>
-      <div class="g2a-text-16 font-weight-bold mt-3">
-        No results found
-      </div>
+      <div class="g2a-text-16 font-weight-bold mt-3">No results found</div>
       <div class="g2a-text-14 text-grey mt-1">
         Try modifying your query terms or selection tags.
       </div>
@@ -100,9 +83,7 @@
     <div v-else>
       <div v-if="recent.length" class="mb-5">
         <div class="d-flex align-center justify-space-between mb-3">
-          <span class="g2a-text-14 font-weight-bold"
-            >Recent Searches</span
-          >
+          <span class="g2a-text-14 font-weight-bold">Recent Searches</span>
           <v-btn
             variant="text"
             density="compact"
@@ -131,52 +112,44 @@
       </div>
 
       <div>
-        <div class="g2a-text-14 font-weight-bold mb-3">
-          Trending in Andaman
-        </div>
-
-        <v-row class="ga-y-2">
-          <v-col
-            v-for="trend in trendingMock"
-            :key="trend.name"
-            cols="12"
-            sm="6"
-            class="pa-2"
-          >
-            <v-card
-              variant="flat"
-              color="white"
-              class="border rounded-xl pa-3 d-flex align-center cursor-pointer"
-              @click="selectRecent(trend.name)"
-            >
-              <v-avatar
-                size="50"
-                rounded="lg"
-                color="grey-lighten-4"
-                class="mr-3"
-              >
-                <v-img :src="trend.img" cover />
-              </v-avatar>
+        <div v-if="trendingMock.length">
+          <div v-for="collection in trendingMock" :key="collection.id">
+            <!-- Header -->
+            <div class="d-flex align-center justify-space-between my-2">
               <div>
-                <div class="g2a-text-14 font-weight-bold">
-                  {{ trend.name }}
-                </div>
-                <div class="g2a-text-11 text-medium-emphasis mt-0.5">
-                  {{ trend.tag }}
+                <div class="g2a-text-15">
+                  {{ collection.name }}
                 </div>
               </div>
-            </v-card>
-          </v-col>
-        </v-row>
+            </div>
+
+            <!-- Products -->
+            <v-row no-gutters>
+              <v-col
+                v-for="product in collection.products"
+                :key="product.slug"
+                cols="12"
+                class="my-2"
+              >
+                <product-card
+                  :mini="true"
+                  :product="product"
+                  @click="openProduct"
+                />
+              </v-col>
+            </v-row>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed, onUnmounted } from "vue";
+import { ref, watch, computed, onUnmounted, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import apiClient from "@/services/api";
+import ProductCard from "@/components/activities/discovery/cards/ProductCard.vue";
 
 const props = defineProps({
   searchTerm: { type: String, default: "" },
@@ -195,28 +168,7 @@ let debounceTimeout = null;
 
 const filterCategories = ["All", "Activities", "Water Sports", "Ferries"];
 
-const trendingMock = [
-  {
-    name: "Scuba Diving in Havelock",
-    tag: "Water Sports",
-    img: "https://images.unsplash.com/photo-1682687220063-4742bd7fd538?w=100",
-  },
-  {
-    name: "Radhanagar Beach Excursion",
-    tag: "Day Trips",
-    img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=100",
-  },
-  {
-    name: "Nautika Ferry Booking",
-    tag: "Ferries",
-    img: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=100",
-  },
-  {
-    name: "Barren Island Charter",
-    tag: "Exclusive",
-    img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=100",
-  },
-];
+const trendingMock = ref([]);
 
 const filteredResults = computed(() => {
   if (activeCategory.value === "All") return results.value;
@@ -297,13 +249,43 @@ watch(
   },
 );
 
-const goToItem = (item) => {
-  const cat = item.category?.slug;
-  const type = item.productType?.slug || item.product_type?.slug;
-  if (!cat || !type || !item.slug) return;
+const openProduct = ({ product, location }) => {
 
-  emit("close");
-  router.push(`/${cat}/${type}/${item.slug}`);
+
+  const productType = product.productType;
+  const category = productType.category;
+
+  const slug = location ? `${product.slug}-in-${location.slug}` : product.slug;
+
+  router.push({
+    name: "ProductDetails",
+    params: {
+      category: category.slug,
+      productType: productType.slug,
+      product: slug,
+    },
+  });
+    emit("close")
+};
+onMounted(() => {
+  loadTrending();
+});
+
+const loadTrending = async () => {
+  try {
+    const response = await apiClient.get(
+      "/v1/product-collections/with-products",
+      {
+        params: {
+          entity_type: "global",
+        },
+      },
+    );
+
+    trendingMock.value = response.data?.data || [];
+  } catch (err) {
+    console.error("[ActivitiesProductType]", err);
+  }
 };
 
 onUnmounted(() => {

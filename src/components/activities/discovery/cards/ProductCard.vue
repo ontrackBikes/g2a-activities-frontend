@@ -1,12 +1,52 @@
 <template>
   <v-card
+    v-if="mini"
+    variant="flat"
+    class="rounded-lg"
+    :style="{
+      opacity: product.out_of_stock ? '0.75' : '1',
+      transition: 'all 0.2s ease',
+    }"
+    @click="handleClick"
+  >
+    <v-row>
+      <v-col cols="2">
+        <v-img
+          :src="product.thumbnail_url || fallbackImg"
+          height="100%"
+          cover
+        ></v-img>
+      </v-col>
+      <v-col cols="10">
+        
+        <div class="g2a-text-18 font-weight-bold">
+          {{ product.name }}
+        </div>
+        <span
+          v-if="product.next_available_slot && !product.out_of_stock"
+          class="g2a-text-15 text-green-darken-3 font-weight-medium"
+        >
+          Next Available: {{ formatDate(product.next_available_slot) }}
+        </span>
+        <div v-if="product.out_of_stock || !product.available">
+          <div class="text-error">Out of Stock</div>
+        </div>
+        <div v-if="product.locations > 0">
+          view all location >
+        </div>
+        
+      </v-col>
+    </v-row>
+  </v-card>
+  <v-card
+    v-else
     variant="flat"
     class="border rounded-xl d-flex flex-column h-100 position-relative"
     :style="{
       opacity: product.out_of_stock ? '0.75' : '1',
       transition: 'all 0.2s ease',
     }"
-    @click="!product.out_of_stock && $emit('click', product)"
+    @click="handleClick"
   >
     <div
       class="position-relative overflow-hidden rounded-t-xl"
@@ -14,9 +54,7 @@
     >
       <v-img :src="product.thumbnail_url || fallbackImg" height="185" cover>
         <template #placeholder>
-          <div
-            class="d-flex align-center justify-center fill-height "
-          >
+          <div class="d-flex align-center justify-center fill-height">
             <v-icon icon="mdi-image-outline" size="40" color="grey-lighten-1" />
           </div>
         </template>
@@ -133,19 +171,48 @@
       </div>
     </div>
   </v-card>
+
+  <v-dialog v-model="showLocationDialog" max-width="420">
+    <v-card rounded="xl">
+      <v-card-title> Choose Location </v-card-title>
+
+      <v-divider />
+
+      <v-list>
+        <v-list-item
+          v-for="location in product.locations"
+          :key="location.slug"
+          @click="selectLocation(location)"
+        >
+          <template #prepend>
+            <v-icon color="brandColor"> mdi-map-marker </v-icon>
+          </template>
+
+          <v-list-item-title>
+            {{ location.name }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
+const showLocationDialog = ref(false);
 
 const props = defineProps({
   product: {
     type: Object,
     required: true,
   },
+  mini: {
+    type: Boolean,
+    required: false,
+  },
 });
 
-defineEmits(["click"]);
+const emit = defineEmits(["click"]);
 
 const fallbackImg =
   "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600";
@@ -169,6 +236,34 @@ function formatDate(dateStr) {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 }
+
+const handleClick = () => {
+  if (props.product.out_of_stock) {
+    return;
+  }
+
+  const locations = props.product.locations || [];
+
+  if (locations.length <= 1) {
+    emit("click", {
+      product: props.product,
+      location: locations[0] || null,
+    });
+
+    return;
+  }
+
+  showLocationDialog.value = true;
+};
+
+const selectLocation = (location) => {
+  showLocationDialog.value = false;
+
+  emit("click", {
+    product: props.product,
+    location,
+  });
+};
 </script>
 
 <style scoped></style>
