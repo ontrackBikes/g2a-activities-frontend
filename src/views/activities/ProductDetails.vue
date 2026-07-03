@@ -101,7 +101,7 @@
           :nextAvailableDate="product.next_available_slot"
           :location-selected="locationText"
           @showLocationDialog="showLocationDialog = true"
-          :showSelectLocation="productLocationList.length > 1"
+          :showSelectLocation="availableLocations.length > 1"
           :out-of-stock="product.out_of_stock"
         />
 
@@ -226,8 +226,6 @@ const checkAvailability = async (form) => {
   try {
     const payload = {
       ...form,
-
-      // Temporary
       location_slug: selectedLocation.value.slug,
     };
 
@@ -292,7 +290,8 @@ const selectImage = (index) => {
   selectedImageIndex.value = index;
 };
 
-const productLocationList = ref([]);
+const availableLocations = ref([]);
+
 const loadProduct = async () => {
   try {
     console.log("Loading product...");
@@ -300,43 +299,29 @@ const loadProduct = async () => {
     error.value = null;
 
     const response = await apiClient.get(
-      `/v1/products/app/products-list/${route.params.product}`, {
-        params: {
-          location: selectedLocation.value
-        }
-      },
+      `/v1/products/app/products-list/${route.params.product}`,
     );
+    console.log("🚀 ~ loadProduct ~ response:", response)
 
-    product.value = response.data.data;
+    
+    product.value = response.data?.data;
+    selectedLocation.value = product.value.selectedLocation || null;
+    availableLocations.value = product.value.locations || [];
 
-    const productLocations = product.value.locations || [];
-    productLocationList.value = product.value.locations || [];
-    if (productLocations.length === 1) {
-      selectedLocation.value = productLocations[0];
-
-      if (route.params.location !== productLocations[0].slug) {
-        await router.replace({
-          params: {
-            ...route.params,
-            location: productLocations[0].slug,
-          },
-          query: route.query,
-        });
-      }
-    } else {
+    if (availableLocations.length > 1) {
       const routeLocation = route.query.location;
 
-      const matched = productLocations.find((x) => x.slug === routeLocation);
+      const matched = availableLocations.find((x) => x.slug === routeLocation);
 
       if (matched) {
         selectedLocation.value = matched;
-      } else if (productLocations.length === 1) {
-        selectedLocation.value = productLocations[0];
+      } else if (availableLocations.length === 1) {
+        selectedLocation.value = availableLocations[0];
 
         await router.replace({
           query: {
             ...route.query,
-            location: productLocations[0].slug,
+            location: availableLocations[0].slug,
           },
         });
       } else {
@@ -370,12 +355,17 @@ const selectLocation = async (location) => {
   selectedLocation.value = location;
   showLocationDialog.value = false;
 
+  const slug = `${product.value.slug}-in-${location.slug}`;
+
   await router.replace({
-    query: {
-      ...route.query,
-      location: location.slug,
+    name: "ProductDetails",
+    params: {
+      ...route.params,
+      product: slug,
     },
   });
+
+  await loadProduct();
 };
 onMounted(loadProduct);
 </script>

@@ -1,10 +1,14 @@
 <template>
   <div class="sticky-card">
-    <v-card rounded="lg" variant="outlined" elevation="0" class="pa-4" v-if="outOfStock">
+    <v-card
+      rounded="lg"
+      variant="outlined"
+      elevation="0"
+      class="pa-4"
+      v-if="outOfStock"
+    >
       <div class="g2a-title-4 mb-4">Book your ticket</div>
-      <div class="g2a-title-4 text-error">
-        Out of Stock
-      </div>
+      <div class="g2a-title-4 text-error">Out of Stock</div>
     </v-card>
     <v-card rounded="lg" variant="outlined" elevation="0" class="pa-4" v-else>
       <!-- Price -->
@@ -42,7 +46,7 @@
 
       <v-divider class="my-4"></v-divider>
 
-      <v-row >
+      <v-row>
         <v-col cols="7" class="align-content-center">
           <div class="g2a-text-18 g2a-text-bold">
             From ₹ {{ price }} / guest
@@ -65,19 +69,17 @@
     </v-card>
     <v-card rounded="lg" variant="outlined" class="my-2">
       <v-card-text class="text-left">
-        <div class="d-flex justify-space-between align-content-center" @click="$emit('showLocationDialog')">
+        <div class="mb-4">Location</div>
+        <v-card variant="outlined" rounded="lg"
+           class="d-flex justify-space-between align-center pa-2"
+          @click="$emit('showLocationDialog')"
+        >
           <div class="g2a-title-4">
-          {{ locationSelected }}
+            {{ locationSelected }}
           </div>
-        <v-btn
-            v-if="showSelectLocation"
-            variant="text"
-            
-          >
-            <v-icon>mdi-chevron-down</v-icon>
-          </v-btn>
-        </div>
-        
+          <v-icon>mdi-chevron-down</v-icon>
+        </v-card>
+
         <v-btn class="mt-2" color="brandColor2" variant="outlined" rounded="xl">
           Check Details <v-icon>mdi-open-in-new</v-icon>
         </v-btn>
@@ -108,7 +110,7 @@ const props = defineProps({
   },
   outOfStock: {
     type: Boolean,
-    default: true
+    default: true,
   },
   nextAvailableDate: {
     type: String,
