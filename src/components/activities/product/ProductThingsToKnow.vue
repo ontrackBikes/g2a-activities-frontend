@@ -33,9 +33,7 @@ const props = defineProps({
   },
 });
 
-const activeItems = computed(() =>
-  props.items.filter((item) => item?.active && item?.content?.trim()),
-);
+const activeItems = computed(() => props.items || []);
 </script>
 
 <style scoped>

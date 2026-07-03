@@ -40,8 +40,9 @@ const props = defineProps({
 });
 
 const activeHighlights = computed(() =>
-  props.highlights.filter((item) => item.active),
+  props.highlights || []
 );
+
 </script>
 
 <style scoped></style>

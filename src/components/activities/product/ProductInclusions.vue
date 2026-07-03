@@ -39,6 +39,6 @@ const props = defineProps({
 });
 
 const activeInclusions = computed(() =>
-  props.inclusions.filter((item) => item.active),
+  props.inclusions|| []
 );
 </script>

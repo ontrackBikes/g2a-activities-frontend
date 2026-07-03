@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="xl" variant="outlined" elevation="0" v-if="quote">
+  <v-card rounded="lg" variant="outlined" elevation="0" v-if="quote">
     <!-- Product -->
 
     <v-card-item>

@@ -28,6 +28,7 @@
         :label="question.label"
         color="primary"
         hide-details="auto"
+        density="compact"
       />
 
       <v-textarea

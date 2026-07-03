@@ -26,7 +26,8 @@ const props = defineProps({
   },
 });
 
-const activeFaqs = computed(() => props.faqs.filter((faq) => faq.active));
+// const activeFaqs = computed(() => props.faqs.filter((faq) => faq.active));
+const activeFaqs = computed(() => props.faqs|| []);
 </script>
 
 <style scoped>

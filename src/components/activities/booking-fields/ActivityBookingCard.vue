@@ -1,19 +1,9 @@
 <template>
   <div class="sticky-card">
-    <v-card rounded="lg" variant="outlined" elevation="0" class="pa-5">
+    <v-card rounded="lg" variant="outlined" elevation="0" class="pa-4">
       <!-- Price -->
 
-      <div class="mb-5">
-        <div class="g2a-text-12 text-greyDark">Starting from</div>
-
-        <div class="d-flex align-end ga-1">
-          <span class="g2a-text-28 g2a-text-bold-700 text-brandColor2">
-            ₹{{ price }}
-          </span>
-
-          <span class="g2a-text-13 text-greyDark mb-1"> / person </span>
-        </div>
-      </div>
+      <div class="g2a-title-4 mb-4">Book your ticket</div>
 
       <!-- Booking Fields -->
 
@@ -27,25 +17,15 @@
         v-model="form[field.field]"
       />
 
-      <v-card rounded="lg"  variant="outlined" class="pa-2" color="success">
-        <v-icon>mdi-information</v-icon> Next Available Date: {{ nextAvailableDate }}
-      </v-card>
-      <!-- Total -->
-
-      <!-- <div class="d-flex justify-space-between align-center my-5">
-        <span class="g2a-title-4 g2a-text-bold-600"> Total (estimate only) </span>
-
-        <span class="g2a-text-22 g2a-text-bold-700 text-brandColor2">
-          ₹{{ totalPrice }}
-        </span>
-      </div> -->
-
-      <!-- Error -->
+      <div class="text-success">
+        <v-icon>mdi-information</v-icon> Next Available Date:
+        {{ nextAvailableDate }}
+      </div>
 
       <v-alert
         v-if="error"
         type="error"
-        variant="tonal"
+        variant="outlined"
         density="compact"
         class="my-4"
       >
@@ -54,18 +34,47 @@
 
       <!-- Button -->
 
-      <v-btn
-        class="mt-5"
-        flat
-        block
-        rounded="xl"
-        size="large"
-        color="brandColor"
-        :loading="loading"
-        @click="submit"
-      >
-        Check Estimate
-      </v-btn>
+      <v-divider class="my-4"></v-divider>
+
+      <v-row >
+        <v-col cols="7" class="align-content-center">
+          <div class="g2a-text-18 g2a-text-bold">
+            From ₹ {{ price }} / guest
+          </div>
+        </v-col>
+
+        <v-col cols="5">
+          <v-btn
+            flat
+            rounded="xl"
+            color="brandColor"
+            :loading="loading"
+            @click="submit"
+          >
+            Check Estimate
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-card rounded="lg" variant="outlined" class="my-2">
+      <v-card-text class="text-left">
+        <div class="d-flex justify-space-between align-content-center" @click="$emit('showLocationDialog')">
+          <div class="g2a-title-4">
+          {{ locationSelected }}
+          </div>
+        <v-btn
+            v-if="showSelectLocation"
+            variant="text"
+            
+          >
+            <v-icon>mdi-chevron-down</v-icon>
+          </v-btn>
+        </div>
+        
+        <v-btn class="mt-2" color="brandColor2" variant="outlined" rounded="xl">
+          Check Details <v-icon>mdi-open-in-new</v-icon>
+        </v-btn>
+      </v-card-text>
     </v-card>
   </div>
 </template>
@@ -100,10 +109,18 @@ const props = defineProps({
     type: String,
     default: "",
   },
+
+  locationSelected: {
+    type: String,
+    default: "",
+  },
+  showSelectLocation: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const emit = defineEmits(["submit"]);
-
+const emit = defineEmits(["submit", "showLocationDialog"]);
 const form = reactive({});
 
 const errors = reactive({});
@@ -143,7 +160,7 @@ watch(
 
         case "date":
           form.date = todayStr;
-          form.min = props.nextAvailableDate
+          form.min = props.nextAvailableDate;
           break;
 
         case "pickup_date":
@@ -271,7 +288,7 @@ const submit = async () => {
 
 <style scoped>
 .sticky-card {
-  position: sticky;
+  position: sticky !important;
   top: 24px;
 }
 </style>

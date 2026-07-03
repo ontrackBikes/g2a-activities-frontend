@@ -30,7 +30,7 @@
         />
       </v-col>
       <v-col cols="12" lg="4" sm="6">
-        <product-gallery :images="product.images"  />
+        <product-gallery :images="product.images" />
       </v-col>
 
       <v-col cols="12" lg="8">
@@ -48,10 +48,6 @@
 
         <div v-if="product.tags?.length" class="mt-8">
           <ProductTags :tags="product.tags" />
-        </div>
-
-        <div v-if="locations.length" class="mt-8">
-          <ProductLocations :locations="locations" />
         </div>
 
         <div
@@ -88,19 +84,46 @@
             :products="relatedProducts"
           />
         </div>
+        <div v-if="locations.length" class="mt-8">
+          <ProductLocations :locations="locations" />
+        </div>
       </v-col>
 
       <!-- Booking Sidebar -->
       <v-col cols="12" lg="4">
-        <!-- <ActivityBookingCard :slots="slots" :price="product.starting_price" /> -->
         <ActivityBookingCard
+          v-if="selectedLocation"
           :booking-template="product.bookingTemplate"
           :slots="slots"
           :error="availabilityError"
           :price="product.starting_price"
           @submit="checkAvailability"
           :nextAvailableDate="product.next_available_slot"
+          :location-selected="locationText"
+          @showLocationDialog="showLocationDialog = true"
+          :showSelectLocation="productLocationList.length > 1"
         />
+
+        <v-card v-else rounded="lg" variant="outlined">
+          <v-container class="text-center py-10">
+            <v-icon size="48" color="brandColor"> mdi-map-marker </v-icon>
+
+            <div class="g2a-title-4 mt-4">Choose your location</div>
+
+            <div class="g2a-text-18 mb-6">
+              Please select the location where you'd like to book this activity.
+            </div>
+
+            <v-btn
+              rounded
+              color="brandColor"
+              flat
+              @click="showLocationDialog = true"
+            >
+              Select Location
+            </v-btn>
+          </v-container>
+        </v-card>
       </v-col>
     </v-row>
   </template>
@@ -109,6 +132,25 @@
     :quote="availabilityQuote"
     @continue="continueBooking"
   />
+  <v-dialog v-model="showLocationDialog" max-width="420" persistent>
+    <v-card rounded="xl">
+      <v-card-title> Choose Location </v-card-title>
+
+      <v-divider />
+
+      <v-list>
+        <v-list-item
+          v-for="location in locations"
+          :key="location.slug"
+          @click="selectLocation(location)"
+        >
+          <v-list-item-title>
+            {{ location.name }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -119,7 +161,6 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import ProductAbout from "../../components/activities/product/ProductAbout.vue";
-import ProductHighlights from "../../components/activities/product/ProductHighlights.vue";
 import ProductTags from "../../components/activities/product/ProductTags.vue";
 import ProductLocations from "../../components/activities/product/ProductLocations.vue";
 import ProductThingsToKnow from "../../components/activities/product/ProductThingsToKnow.vue";
@@ -134,6 +175,7 @@ import { saveBooking } from "@/store/booking.js";
 import router from "@/router/index.js";
 import BookingQuotationDialog from "@/components/activities/checkout/BookingQuotationDialog.vue";
 import ProductGallery from "@/components/activities/product/ProductGallery.vue";
+import ProductHighlights from "../../components/activities/product/ProductHighlights.vue";
 
 const route = useRoute();
 
@@ -150,9 +192,9 @@ const slots = ref([]);
 
 const locations = computed(() => product.value?.locations || []);
 
-const locationText = computed(() =>
-  locations.value.map((x) => x.name).join(", "),
-);
+const locationText = computed(() => {
+  return selectedLocation.value?.name || "";
+});
 
 const selectedImage = computed(() => {
   if (product.value?.images?.[selectedImageIndex.value]) {
@@ -170,6 +212,9 @@ const availabilityQuote = ref(null);
 
 const bookingRequest = ref(null);
 
+const selectedLocation = ref(null);
+const showLocationDialog = ref(false);
+
 onMounted(() => {
   console.log("Product page mounted");
 });
@@ -182,7 +227,7 @@ const checkAvailability = async (form) => {
       ...form,
 
       // Temporary
-      location_slug: "havelock",
+      location_slug: selectedLocation.value.slug,
     };
 
     const { data } = await apiClient.post(
@@ -220,7 +265,7 @@ const checkAvailability = async (form) => {
 };
 
 const continueBooking = ({ quote, form }) => {
-  console.log("🚀 ~ continueBooking ~ quote:", quote)
+  console.log("🚀 ~ continueBooking ~ quote:", quote);
   //confirmationDialog.value = false;
 
   saveBooking({
@@ -246,6 +291,7 @@ const selectImage = (index) => {
   selectedImageIndex.value = index;
 };
 
+const productLocationList = ref([]);
 const loadProduct = async () => {
   try {
     console.log("Loading product...");
@@ -257,6 +303,42 @@ const loadProduct = async () => {
     );
 
     product.value = response.data.data;
+
+    const productLocations = product.value.locations || [];
+    productLocationList.value = product.value.locations || [];
+    if (productLocations.length === 1) {
+      selectedLocation.value = productLocations[0];
+
+      if (route.params.location !== productLocations[0].slug) {
+        await router.replace({
+          params: {
+            ...route.params,
+            location: productLocations[0].slug,
+          },
+          query: route.query,
+        });
+      }
+    } else {
+      const routeLocation = route.query.location;
+
+      const matched = productLocations.find((x) => x.slug === routeLocation);
+
+      if (matched) {
+        selectedLocation.value = matched;
+      } else if (productLocations.length === 1) {
+        selectedLocation.value = productLocations[0];
+
+        await router.replace({
+          query: {
+            ...route.query,
+            location: productLocations[0].slug,
+          },
+        });
+      } else {
+        showLocationDialog.value = true;
+      }
+    }
+
     slots.value = response.data.data.slots || [];
     relatedProducts.value = response.data.data.related_products || [];
   } catch (err) {
@@ -279,6 +361,16 @@ watch(
     });
   },
 );
+const selectLocation = async (location) => {
+  selectedLocation.value = location;
+  showLocationDialog.value = false;
 
+  await router.replace({
+    query: {
+      ...route.query,
+      location: location.slug,
+    },
+  });
+};
 onMounted(loadProduct);
 </script>

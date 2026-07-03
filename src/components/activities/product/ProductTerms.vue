@@ -32,5 +32,5 @@ const props = defineProps({
   },
 });
 
-const activeTerms = computed(() => props.terms.filter((item) => item.active));
+const activeTerms = computed(() => props.terms|| []);
 </script>
