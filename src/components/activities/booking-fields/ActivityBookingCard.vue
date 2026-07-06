@@ -25,6 +25,7 @@
         :error="errors[field.field]"
         :form="form"
         v-model="form[field.field]"
+        :maxQuantity="maxQuantity"
       />
 
       <div class="text-success">
@@ -49,7 +50,15 @@
       <v-row>
         <v-col cols="7" class="align-content-center">
           <div class="g2a-text-18 g2a-text-bold">
-            From ₹ {{ price }} / guest
+            <div
+            class="g2a-text-12 text-medium-emphasis text-capitalize line-height-tight"
+          >
+            {{
+              priceType === "starts_from"
+                ? "starts from"
+                : "flat price"
+            }}
+          </div> ₹ {{ price }} / guest
           </div>
         </v-col>
 
@@ -126,9 +135,20 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  
+  priceType: {
+    type: String,
+    default: "",
+  },
+
   showSelectLocation: {
     type: Boolean,
     default: true,
+  },
+
+  maxQuantity: {
+    type: Number,
+    default: 10,
   },
 });
 

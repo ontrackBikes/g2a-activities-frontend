@@ -103,6 +103,8 @@
           @showLocationDialog="showLocationDialog = true"
           :showSelectLocation="availableLocations.length > 1"
           :out-of-stock="product.out_of_stock"
+          :price-type="product.price_type"
+          :max-quantity="product.max_bookable_per_booking"
         />
 
         <v-card v-else rounded="lg" variant="outlined">

@@ -7,6 +7,7 @@
     :slots="slots"
     :form="form"
     :error="error"
+    :maxQuantity="maxQuantity"
     @update:modelValue="updateValue"
   />
 
@@ -49,6 +50,10 @@ const props = defineProps({
   error: {
     type: String,
     default: "",
+  },
+  maxQuantity: {
+    type: Number,
+    default: 10,
   },
 });
 

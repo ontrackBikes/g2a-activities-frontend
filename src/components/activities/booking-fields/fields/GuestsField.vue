@@ -4,7 +4,7 @@
     style="border:1px solid rgba(0,0,0,.12)"
   >
     <span class="g2a-text-13 g2a-text-bold-600">
-      {{ field.label || "Guests" }}
+      {{ field.label || "Quantity" }}
     </span>
 
     <div class="d-flex align-center ga-2">
@@ -46,6 +46,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  maxQuantity: {
+    type: Number,
+    default: 10,
+  },
 });
 
 const emit = defineEmits([
@@ -55,6 +59,11 @@ const emit = defineEmits([
 const guestCount = computed(() => props.modelValue || 1);
 
 const increase = () => {
+  if(guestCount.value >= props.maxQuantity) {
+    alert("Max Allowed Reached")
+    return
+  }
+  
   emit(
     "update:modelValue",
     Number(guestCount.value + 1),

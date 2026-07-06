@@ -178,7 +178,14 @@ const productTypeIcons = {
   "History Tour": "mdi-bank",
   Birdwatching: "mdi-bird",
   "Light & Sound Show": "mdi-speaker-wireless",
-  "Airport Transfer": "mdi-airplane",
+  "Airport Transfers": "mdi-airplane",
+  "Bike Rentals": "mdi-motorbike-electric",
+  "Ferry Transfers": "mdi-ferry",
+  "Private Cab": "mdi-taxi",
+  "Trek": "mdi-image-filter-hdr",
+  "Walks": "mdi-ski-cross-country",
+  "Boat Trip": "mdi-sail-boat",
+  
 };
 
 
