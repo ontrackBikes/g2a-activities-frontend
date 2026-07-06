@@ -1,9 +1,5 @@
 <template>
-  <v-card
-    rounded="xl"
-    variant="outlined"
-    elevation="0"
-  >
+  <v-card rounded="xl" variant="outlined" elevation="0">
     <v-card-title class="py-4">
       <div class="g2a-subtitle">
         {{ config.title || "Participant Details" }}
@@ -11,8 +7,7 @@
 
       <div class="g2a-text-13 text-medium-emphasis mt-1">
         {{
-          config.description ||
-          "Please provide details for every participant."
+          config.description || "Please provide details for every participant."
         }}
       </div>
     </v-card-title>
@@ -20,59 +15,41 @@
     <v-divider />
 
     <v-card-text>
-
-      <v-expansion-panels
-        multiple
-        variant="accordion"
-      >
-        <v-expansion-panel
+     
+        <v-card
+          class="my-2"
           v-for="(participant, index) in participants"
           :key="index"
         >
-          <v-expansion-panel-title>
+          <v-card-title>
             Participant {{ index + 1 }}
-          </v-expansion-panel-title>
+          </v-card-title>
 
-          <v-expansion-panel-text>
-
+          <v-card-text>
             <v-row>
-
-              <v-col
-                cols="12"
-                md="6"
-              >
+              <v-col cols="12" md="6">
                 <v-text-field
                   v-model="participant.first_name"
                   label="First Name"
                   variant="outlined"
                   density="comfortable"
                   hide-details="auto"
-                  :rules="[
-                    v => !!v || 'First Name is required'
-                  ]"
+                  :rules="[(v) => !!v || 'First Name is required']"
                 />
               </v-col>
 
-              <v-col
-                cols="12"
-                md="6"
-              >
+              <v-col cols="12" md="6">
                 <v-text-field
                   v-model="participant.last_name"
                   label="Last Name"
                   variant="outlined"
                   density="comfortable"
                   hide-details="auto"
-                  :rules="[
-                    v => !!v || 'Last Name is required'
-                  ]"
+                  :rules="[(v) => !!v || 'Last Name is required']"
                 />
               </v-col>
 
-              <v-col
-                cols="12"
-                md="4"
-              >
+              <v-col cols="12" md="4">
                 <v-text-field
                   v-model.number="participant.age"
                   type="number"
@@ -80,16 +57,11 @@
                   variant="outlined"
                   density="comfortable"
                   hide-details="auto"
-                  :rules="[
-                    v => !!v || 'Age is required'
-                  ]"
+                  :rules="[(v) => !!v || 'Age is required']"
                 />
               </v-col>
 
-              <v-col
-                cols="12"
-                md="4"
-              >
+              <v-col cols="12" md="4">
                 <v-select
                   v-model="participant.gender"
                   :items="genders"
@@ -97,16 +69,11 @@
                   variant="outlined"
                   density="comfortable"
                   hide-details="auto"
-                  :rules="[
-                    v => !!v || 'Gender is required'
-                  ]"
+                  :rules="[(v) => !!v || 'Gender is required']"
                 />
               </v-col>
 
-              <v-col
-                cols="12"
-                md="4"
-              >
+              <v-col cols="12" md="4">
                 <v-select
                   v-model="participant.nationality"
                   :items="nationalities"
@@ -114,87 +81,13 @@
                   variant="outlined"
                   density="comfortable"
                   hide-details="auto"
-                  :rules="[
-                    v => !!v || 'Nationality is required'
-                  ]"
+                  :rules="[(v) => !!v || 'Nationality is required']"
                 />
               </v-col>
-
-              <v-col
-                cols="12"
-                md="4"
-              >
-                <v-text-field
-                  v-model.number="participant.weight"
-                  type="number"
-                  label="Weight (kg)"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                />
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="4"
-              >
-                <v-text-field
-                  v-model.number="participant.height"
-                  type="number"
-                  label="Height (cm)"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                />
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="4"
-              >
-                <v-text-field
-                  v-model="participant.shoe_size"
-                  label="Shoe Size"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                />
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  v-model="participant.passport_number"
-                  label="Passport Number"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                />
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  v-model="participant.id_number"
-                  label="Government ID"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                />
-              </v-col>
-
             </v-row>
-
-          </v-expansion-panel-text>
-
-        </v-expansion-panel>
-
-      </v-expansion-panels>
-
+          </v-card-text>
+        </v-card>
+     
     </v-card-text>
   </v-card>
 </template>
@@ -208,20 +101,18 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+
+  quote: {
+    type: Object,
+    required: true,
+  },
 });
 
 const booking = bookingStore;
 
-const genders = [
-  "Male",
-  "Female",
-  "Other",
-];
+const genders = ["Male", "Female", "Other"];
 
-const nationalities = [
-  "Indian",
-  "Foreigner",
-];
+const nationalities = ["Indian", "Foreigner"];
 
 const participants = computed({
   get() {
@@ -253,7 +144,7 @@ const createParticipant = () => ({
 });
 
 watch(
-  () => Number(booking.form.guests || 1),
+  () => Number(props.quote?.booking?.guests || 1),
   (count) => {
     while (participants.value.length < count) {
       participants.value.push(createParticipant());
@@ -265,6 +156,6 @@ watch(
   },
   {
     immediate: true,
-  }
+  },
 );
 </script>

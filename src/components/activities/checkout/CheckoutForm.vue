@@ -4,7 +4,7 @@
       <!-- LEFT -->
 
       <v-col cols="12" lg="8">
-        <CheckoutRenderer :booking-template="booking.bookingTemplate" />
+        <CheckoutRenderer :quote="quote" :booking-template="booking.bookingTemplate" />
       </v-col>
 
       <!-- RIGHT -->
@@ -64,13 +64,21 @@ const continueToPayment = async () => {
   loading.value = true;
 
   try {
-    // Future:
-    // await api.post("/checkout/validate", booking.form);
-    // await api.post("/checkout/price", booking.form);
+    const { data } = await apiClient.post(
+      `/v1/orders/${route.params.estimate_id}`,
+      booking.form,
+    );
 
     router.push({
-      name: "Payment",
+      name: "OrderDetails",
+      params: {
+        order_id: data.data.order_id,
+      },
     });
+  } catch (err) {
+    console.error(err);
+
+    // Optional: show snackbar / toast
   } finally {
     loading.value = false;
   }

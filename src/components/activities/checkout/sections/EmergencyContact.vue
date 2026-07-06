@@ -95,7 +95,6 @@
     </v-card-text>
   </v-card>
 </template>
-
 <script setup>
 import { computed } from "vue";
 import { bookingStore } from "@/store/booking";
@@ -104,6 +103,11 @@ const props = defineProps({
   config: {
     type: Object,
     default: () => ({}),
+  },
+
+  quote: {
+    type: Object,
+    required: true,
   },
 });
 

@@ -9,6 +9,7 @@ import ActivitiesProductType from "@/views/activities/ActivitiesProductType.vue"
 import ActivitiesCategory from "@/views/activities/ActivitiesCategory.vue";
 import ActivitiesHome from "@/views/activities/ActivitiesHome.vue";
 import ActivitySearch from "@/layouts/ActivitySearch.vue";
+import OrderDetails from "@/views/activities/OrderDetails.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +53,12 @@ const router = createRouter({
           path: "checkout/:estimate_id",
           name: "Checkout",
           component: Checkout,
+        },
+
+        {
+          path: "/checkout/orders/:order_id",
+          name: "OrderDetails",
+          component: OrderDetails
         },
 
         {

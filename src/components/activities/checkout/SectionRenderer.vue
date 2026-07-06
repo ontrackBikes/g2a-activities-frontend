@@ -2,6 +2,7 @@
   <component
     :is="component"
     :config="section.config"
+    :quote="quote"
   />
 </template>
 
@@ -11,6 +12,10 @@ import registry from "./sectionRegistry";
 
 const props = defineProps({
   section: {
+    type: Object,
+    required: true,
+  },
+  quote: {
     type: Object,
     required: true,
   },

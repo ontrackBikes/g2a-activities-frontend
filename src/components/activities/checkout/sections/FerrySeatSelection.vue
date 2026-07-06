@@ -95,9 +95,8 @@
     </v-card-text>
   </v-card>
 </template>
-
 <script setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { bookingStore } from "@/store/booking";
 
 const props = defineProps({
@@ -105,9 +104,20 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+
+  quote: {
+    type: Object,
+    required: true,
+  },
 });
 
 const booking = bookingStore;
+
+/*
+|--------------------------------------------------------------------------
+| Ferry
+|--------------------------------------------------------------------------
+*/
 
 const ferry = computed({
   get() {
@@ -125,13 +135,69 @@ const ferry = computed({
   },
 });
 
-const participants = computed(() => {
-  if (!booking.form.participants) {
-    booking.form.participants = [];
-  }
+/*
+|--------------------------------------------------------------------------
+| Participants
+|--------------------------------------------------------------------------
+*/
 
-  return booking.form.participants;
+const participants = computed({
+  get() {
+    if (!booking.form.participants) {
+      booking.form.participants = [];
+    }
+
+    return booking.form.participants;
+  },
+
+  set(value) {
+    booking.form.participants = value;
+  },
 });
+
+const createParticipant = () => ({
+  first_name: "",
+  last_name: "",
+  age: null,
+  gender: "",
+  nationality: "Indian",
+  weight: null,
+  height: null,
+  shoe_size: "",
+  passport_number: "",
+  id_number: "",
+
+  seat_preference: "No Preference",
+  seat_number: "",
+});
+
+/*
+|--------------------------------------------------------------------------
+| Sync with Quote
+|--------------------------------------------------------------------------
+*/
+
+watch(
+  () => Math.max(Number(props.quote?.booking?.guests || 1), 1),
+  (count) => {
+    while (participants.value.length < count) {
+      participants.value.push(createParticipant());
+    }
+
+    while (participants.value.length > count) {
+      participants.value.pop();
+    }
+  },
+  {
+    immediate: true,
+  },
+);
+
+/*
+|--------------------------------------------------------------------------
+| Options
+|--------------------------------------------------------------------------
+*/
 
 const travelClasses = [
   {

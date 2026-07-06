@@ -4,6 +4,7 @@
       v-for="section in sections"
       :key="section.section"
       :section="section"
+      :quote="quote"
       class="mb-8"
     />
   </div>
@@ -19,6 +20,11 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  quote: {
+    type: Object,
+    required: true,
+  },
+
 });
 
 const sections = computed(() => {
