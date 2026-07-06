@@ -108,7 +108,7 @@
 
       <div
         v-if="locationText"
-        class="d-flex align-center g2a-text-14 text-medium-emphasis mb-2"
+        class="d-flex align-center g2a-text-14 mb-2"
       >
         <v-icon
           icon="mdi-map-marker-outline"
@@ -134,7 +134,7 @@
       <div class="d-flex align-center justify-space-between">
         <div v-if="product.starting_price">
           <div
-            class="g2a-text-12 text-medium-emphasis text-capitalize line-height-tight"
+            class="g2a-text-12 text-capitalize line-height-tight"
           >
             {{
               product.price_type === "starts_from"
@@ -151,7 +151,7 @@
                 product.compare_price &&
                 product.compare_price > product.starting_price
               "
-              class="g2a-text-14 text-decoration-line-through text-medium-emphasis"
+              class="g2a-text-14 text-decoration-line-through g2a-text-14"
             >
               ₹{{ formatPrice(product.compare_price) }}
             </span>

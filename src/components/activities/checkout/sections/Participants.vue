@@ -5,7 +5,7 @@
         {{ config.title || "Participant Details" }}
       </div>
 
-      <div class="g2a-text-13 text-medium-emphasis mt-1">
+      <div class="g2a-text-13 mt-1">
         {{
           config.description || "Please provide details for every participant."
         }}

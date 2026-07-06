@@ -27,14 +27,14 @@
           Booking Confirmed 🎉
         </div>
 
-        <div class="text-body-1 text-medium-emphasis mt-3">
+        <div class=" g2a-text-14 mt-3">
           Thank you for booking with Go2Andaman.
           Your payment has been received successfully.
         </div>
 
         <v-divider class="my-8" />
 
-        <div class="text-body-1">
+        <div class="">
           Order ID
         </div>
 

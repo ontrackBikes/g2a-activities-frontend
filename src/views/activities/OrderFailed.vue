@@ -27,14 +27,14 @@
           Payment Failed
         </div>
 
-        <div class="text-body-1 text-medium-emphasis mt-3">
+        <div class=" g2a-text-14 mt-3">
           We couldn't confirm your payment.
           Don't worry—your booking is still saved.
         </div>
 
         <v-divider class="my-8" />
 
-        <div class="text-body-1">
+        <div class="">
           Order ID
         </div>
 

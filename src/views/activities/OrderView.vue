@@ -52,7 +52,7 @@
                     {{ item.product_name }}
                   </div>
 
-                  <div class="text-medium-emphasis">
+                  <div class="g2a-text-14">
                     {{ item.location_name }}
                   </div>
 

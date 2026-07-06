@@ -38,7 +38,7 @@
               <span class="g2a-text-14 g2a-text-bold-700 text-high-emphasis"
                 >Andaman</span
               >
-              <span class="g2a-text-11 text-medium-emphasis">India</span>
+              <span class="g2a-text-11">India</span>
             </div>
           </div>
         </div>

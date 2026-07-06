@@ -7,7 +7,7 @@
 
       <div
         v-if="config.description"
-        class="g2a-text-13 text-medium-emphasis mt-1"
+        class="g2a-text-13 mt-1"
       >
         {{ config.description }}
       </div>

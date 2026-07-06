@@ -29,7 +29,7 @@
                     {{ item.product_name }}
                   </div>
 
-                  <div class="text-medium-emphasis">
+                  <div class="g2a-text-14">
                     {{ item.location_name }}
                   </div>
 
@@ -173,13 +173,15 @@
                 </div>
               </div>
 
-              <div v-if="order.payment_status">
+              <div v-if="order.payment_status == 'captured'">
                 <div class="text-success">
                   Payment Already Received for this order
                 </div>
                 <v-btn
+                  flat
+                  rounded="lg"
                   block
-                  color="primary"
+                  color="brandColor"
                   size="large"
                   class="mt-6"
                   @click="viewOrder"
@@ -190,10 +192,12 @@
 
               <v-btn
                 v-else
-                block
-                color="primary"
-                size="large"
-                class="mt-6"
+                flat
+                  rounded="lg"
+                  block
+                  color="brandColor"
+                  size="large"
+                  class="mt-6"
                 :loading="paying"
                 @click="payNow"
               >

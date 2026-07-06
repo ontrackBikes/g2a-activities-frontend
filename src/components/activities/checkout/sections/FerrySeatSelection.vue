@@ -9,7 +9,7 @@
         {{ config.title || "Seat Selection" }}
       </div>
 
-      <div class="g2a-text-13 text-medium-emphasis mt-1">
+      <div class="g2a-text-13 mt-1">
         {{
           config.description ||
           "Select your travel class and preferred seating for each passenger."

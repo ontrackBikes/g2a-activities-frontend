@@ -29,7 +29,7 @@
       No booking found
     </div>
 
-    <div class="text-medium-emphasis mt-2">
+    <div class="g2a-text-14 mt-2">
       Please select an activity first.
     </div>
 

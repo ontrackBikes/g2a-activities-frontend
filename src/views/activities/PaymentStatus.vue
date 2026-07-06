@@ -7,11 +7,11 @@
       color="primary"
     />
 
-    <div class="text-h5 mt-6">
+    <div class="g2a-title-4 mt-6">
       Waiting for payment confirmation...
     </div>
 
-    <div class="text-medium-emphasis mt-2">
+    <div class="g2a-text-14 mt-2">
       Please don't close this page.
     </div>
 
@@ -24,7 +24,6 @@
 
   </v-container>
 </template>
-
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
@@ -35,18 +34,32 @@ const route = useRoute();
 
 const paymentStatus = ref("pending");
 
-let timer = null;
+let pollTimer = null;
+let timeoutTimer = null;
+
+const redirectToFailed = () => {
+  clearInterval(pollTimer);
+  clearTimeout(timeoutTimer);
+
+  router.replace({
+    name: "OrderFailed",
+    params: {
+      order_id: route.params.order_id,
+    },
+  });
+};
 
 const checkStatus = async () => {
   try {
     const { data } = await apiClient.get(
-      `/v1/orders/${route.params.order_id}/verify-payment`,
+      `/v1/orders/${route.params.order_id}/verify-payment`
     );
 
     paymentStatus.value = data.data.payment_status;
 
-    if (data.data.payment_status === "paid") {
-      clearInterval(timer);
+    if (paymentStatus.value === "paid") {
+      clearInterval(pollTimer);
+      clearTimeout(timeoutTimer);
 
       router.replace({
         name: "OrderSuccess",
@@ -56,15 +69,8 @@ const checkStatus = async () => {
       });
     }
 
-    if (data.data.payment_status === "failed") {
-      clearInterval(timer);
-
-      router.replace({
-        name: "OrderFailed",
-        params: {
-          order_id: route.params.order_id,
-        },
-      });
+    if (paymentStatus.value === "failed") {
+      redirectToFailed();
     }
   } catch (err) {
     console.error(err);
@@ -74,10 +80,19 @@ const checkStatus = async () => {
 onMounted(() => {
   checkStatus();
 
-  timer = setInterval(checkStatus, 3000);
+  // Poll every 3 seconds
+  pollTimer = setInterval(checkStatus, 3000);
+
+  // Maximum wait time: 60 seconds
+  timeoutTimer = setTimeout(() => {
+    if (paymentStatus.value !== "paid") {
+      redirectToFailed();
+    }
+  }, 60000);
 });
 
 onUnmounted(() => {
-  clearInterval(timer);
+  clearInterval(pollTimer);
+  clearTimeout(timeoutTimer);
 });
 </script>

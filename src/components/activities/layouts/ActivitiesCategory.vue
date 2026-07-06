@@ -83,7 +83,7 @@
             </div>
 
             <div
-              class="g2a-text-13 text-medium-emphasis mt-2"
+              class="g2a-text-13 mt-2"
             >
               {{
                 product.short_description

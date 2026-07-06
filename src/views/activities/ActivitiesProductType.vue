@@ -6,7 +6,7 @@
         {{ title }}
       </div>
 
-      <div class="g2a-text-14 text-medium-emphasis">
+      <div class="g2a-text-14">
         Explore experiences and activities.
       </div>
     </div>

@@ -122,7 +122,7 @@
         <div>
           <div class="g2a-text-bold-700">Total Payable</div>
 
-          <div class="g2a-text-12 text-medium-emphasis">
+          <div class="g2a-text-12">
             Inclusive of all taxes
           </div>
         </div>
