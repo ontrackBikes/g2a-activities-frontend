@@ -25,7 +25,7 @@
                 />
 
                 <div>
-                  <div class="text-h6 font-weight-bold">
+                  <div class="g2a-title-4 font-weight-bold">
                     {{ item.product_name }}
                   </div>
 
