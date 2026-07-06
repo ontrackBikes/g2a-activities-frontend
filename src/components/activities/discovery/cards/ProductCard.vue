@@ -9,7 +9,7 @@
     }"
     @click="handleClick"
   >
-    <v-row>
+    <v-row> 
       <v-col cols="2">
         <v-img
           :src="product.thumbnail_url || fallbackImg"
@@ -17,12 +17,17 @@
           cover
         ></v-img>
       </v-col>
-      <v-col cols="10">
+      <v-col cols="10" class="py-4">
         
         <div class="g2a-text-18 font-weight-bold">
           {{ product.name }}
         </div>
-        <span
+
+        <div v-if="product.locations.length > 1">
+          view all locations >
+        </div>
+        <div v-else>
+            <span
           v-if="product.next_available_slot && !product.out_of_stock"
           class="g2a-text-15 text-green-darken-3 font-weight-medium"
         >
@@ -31,9 +36,8 @@
         <div v-if="product.out_of_stock || !product.available">
           <div class="text-error">Out of Stock</div>
         </div>
-        <div v-if="product.locations > 0">
-          view all location >
         </div>
+        
         
       </v-col>
     </v-row>
@@ -191,6 +195,13 @@
           <v-list-item-title>
             {{ location.name }}
           </v-list-item-title>
+          <v-list-item-subtitle v-if="location.available">
+            Starts @{{ location.starting_price }}
+          </v-list-item-subtitle>
+          <v-list-item-subtitle v-else >
+            <div class="text-error">Out of Stock</div>
+            
+          </v-list-item-subtitle>
         </v-list-item>
       </v-list>
     </v-card>
@@ -239,6 +250,7 @@ function formatDate(dateStr) {
 
 const handleClick = () => {
   if (props.product.out_of_stock) {
+  console.log("Product out of stock")
     return;
   }
 

@@ -20,55 +20,16 @@
         }}
       </div>
 
-      <v-row>
+      <v-row no-gutters>
         <v-col
           v-for="product in filteredResults"
           :key="product.slug"
           cols="12"
           sm="12"
-          class="pa-4"
+          class="pa-1"
         >
-          <product-card :product="product" :mini="true"></product-card>
-          <!-- <v-card
-            variant="flat"
-            color="white"
-            class="border rounded-xl pa-3 d-flex align-center cursor-pointer"
-            @click="goToItem(item)"
-          >
-            <v-avatar
-              size="64"
-              rounded="lg"
-              color="grey-lighten-4"
-              class="mr-4"
-            >
-              <v-img
-                :src="
-                  item.image ||
-                  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=120'
-                "
-                cover
-              />
-            </v-avatar>
-
-            <div class="d-flex flex-column justify-center overflow-hidden">
-              <div
-                class="g2a-text-14 font-weight-bold text-truncate"
-              >
-                {{ item.name }}
-              </div>
-              <div class="g2a-text-11 text-medium-emphasis mt-0.5 capitalize">
-                {{
-                  item.product_type?.slug ||
-                  item.productType?.slug ||
-                  "Experience"
-                }}
-              </div>
-            </div>
-
-            <v-spacer />
-            <v-icon color="grey-lighten-1" size="20">mdi-chevron-right</v-icon>
-          </v-card> -->
-        </v-col>
+          <product-card :product="product" :mini="true"  @click="openProduct"></product-card>
+         </v-col>
       </v-row>
     </template>
 
@@ -207,6 +168,8 @@ const selectRecent = (term) => {
 };
 
 const fetchResults = async (query) => {
+  if(query.length < 2) 
+  return;
   if (!query?.trim()) {
     results.value = [];
     return;
@@ -216,7 +179,7 @@ const fetchResults = async (query) => {
 
   loading.value = true;
   emit("update-loading", true);
-
+  
   try {
     const { data } = await apiClient.get("/v1/products/search", {
       params: { q: query },
@@ -249,11 +212,11 @@ watch(
   },
 );
 
-const openProduct = ({ product, location }) => {
+const openProduct = ({ product, location }) => { // category is not nested to produdt type
 
 
-  const productType = product.productType;
-  const category = productType.category;
+  const productType = product.product_type;
+  const category = product.category;
 
   const slug = location ? `${product.slug}-in-${location.slug}` : product.slug;
 

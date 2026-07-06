@@ -102,7 +102,7 @@ const loadCollections = async () => {
   }
 };
 
-const openProduct = ({ product, location }) => {
+const openProduct = ({ product, location }) => {  // category is nested to produdt type
   const productType = product.productType;
   const category = productType.category;
 
