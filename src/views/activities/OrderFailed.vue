@@ -84,7 +84,7 @@ const router = useRouter();
 
 const retryPayment = () => {
   router.replace({
-    name: "Order",
+    name: "OrderDetails",
     params: {
       order_id: route.params.order_id,
     },
