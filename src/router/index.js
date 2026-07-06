@@ -1,15 +1,16 @@
-import ResultPage from "@/pages/ResultPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import MainLayout from "../layouts/MainLayout.vue";
 import Checkout from "@/views/activities/Checkout.vue";
-import Payment from "@/views/activities/Payment.vue";
-import BookingConfirmation from "@/views/activities/BookingConfirmation.vue";
 import ProductDetails from "@/views/activities/ProductDetails.vue";
 import ActivitiesProductType from "@/views/activities/ActivitiesProductType.vue";
 import ActivitiesCategory from "@/views/activities/ActivitiesCategory.vue";
 import ActivitiesHome from "@/views/activities/ActivitiesHome.vue";
 import ActivitySearch from "@/layouts/ActivitySearch.vue";
 import OrderDetails from "@/views/activities/OrderDetails.vue";
+import PaymentStatus from "@/views/activities/PaymentStatus.vue";
+import OrderSuccess from "@/views/activities/OrderSuccess.vue";
+import OrderFailed from "@/views/activities/OrderFailed.vue";
+import OrderView from "@/views/activities/OrderView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,20 +59,31 @@ const router = createRouter({
         {
           path: "/checkout/orders/:order_id",
           name: "OrderDetails",
-          component: OrderDetails
+          component: OrderDetails,
         },
 
         {
-          path: "payment",
-          name: "Payment",
-          component: Payment,
+          path: "/orders/:order_id",
+          name: "Order",
+          component: OrderView,
         },
 
         {
-          path: "confirmation/:orderId",
-          name: "BookingConfirmation",
-          component: BookingConfirmation,
+          path: "/checkout/orders/:order_id/payment-status",
+          name: "PaymentStatus",
+          component: PaymentStatus,
         },
+
+        {
+  path: "/checkout/orders/:order_id/success",
+  name: "OrderSuccess",
+  component: OrderSuccess,
+},
+{
+  path: "/checkout/orders/:order_id/failed",
+  name: "OrderFailed",
+  component: OrderFailed,
+},
       ],
     },
   ],
