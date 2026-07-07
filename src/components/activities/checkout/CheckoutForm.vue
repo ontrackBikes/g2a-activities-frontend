@@ -1,18 +1,45 @@
 <template>
-  <v-form ref="form" validate-on="submit">
+  <!-- Loading quote -->
+  <v-row v-if="loadingQuote">
+    <v-col cols="12" lg="8">
+      <v-skeleton-loader type="article" />
+    </v-col>
+    <v-col cols="12" lg="4">
+      <v-skeleton-loader type="card" />
+    </v-col>
+  </v-row>
+
+  <!-- Error loading quote -->
+  <v-alert
+    v-else-if="quoteError"
+    type="error"
+    variant="tonal"
+    rounded="lg"
+    class="my-6"
+  >
+    <div
+      class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
+    >
+      <span>{{ quoteError }}</span>
+      <v-btn color="error" variant="outlined" size="small" @click="loadQuote">
+        Try Again
+      </v-btn>
+    </div>
+  </v-alert>
+
+  <v-form v-else ref="form" validate-on="submit">
     <v-row>
       <!-- LEFT -->
-
       <v-col cols="12" lg="8">
-        <CheckoutRenderer :quote="quote" :booking-template="booking.bookingTemplate" />
+        <CheckoutRenderer :booking-template="booking.bookingTemplate" />
       </v-col>
 
       <!-- RIGHT -->
-
       <v-col cols="12" lg="4">
         <CheckoutSidebar
           :quote="quote"
-          :loading="loadingQuote"
+          :submitting="submitting"
+          :error="checkoutError"
           @proceed="continueToPayment"
         />
       </v-col>
@@ -36,51 +63,59 @@ const route = useRoute();
 const booking = bookingStore;
 
 const form = ref(null);
-
-const loading = ref(false);
+const submitting = ref(false);
+const checkoutError = ref("");
 
 const quote = ref(null);
-const loadingQuote = ref(false);
+const loadingQuote = ref(true);
+const quoteError = ref("");
 
-onMounted(async () => {
+const loadQuote = async () => {
+  loadingQuote.value = true;
+  quoteError.value = "";
+
   try {
     const { data } = await apiClient.get(
       `/v1/booking-estimates/${route.params.estimate_id}`,
     );
 
     quote.value = data.data;
+  } catch (err) {
+    quoteError.value =
+      err.response?.data?.message ||
+      err.message ||
+      "Unable to load your booking summary. Please try again.";
   } finally {
     loadingQuote.value = false;
   }
-});
+};
+
+onMounted(loadQuote);
 
 const continueToPayment = async () => {
+  checkoutError.value = "";
+
   const { valid } = await form.value.validate();
 
   if (!valid) {
     return;
   }
 
-  loading.value = true;
+  submitting.value = true;
 
   try {
-    const { data } = await apiClient.post(
-      `/v1/orders/${route.params.estimate_id}`,
-      booking.form,
-    );
+    // Future:
+    // await apiClient.post("/checkout/validate", booking.form);
+    // await apiClient.post("/checkout/price", booking.form);
 
-    router.push({
-      name: "OrderDetails",
-      params: {
-        order_id: data.data.order_id,
-      },
-    });
+    router.push({ name: "Payment" });
   } catch (err) {
-    console.error(err);
-
-    // Optional: show snackbar / toast
+    checkoutError.value =
+      err.response?.data?.message ||
+      err.message ||
+      "Unable to proceed to payment. Please try again.";
   } finally {
-    loading.value = false;
+    submitting.value = false;
   }
 };
 </script>

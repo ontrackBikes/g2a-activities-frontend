@@ -1,5 +1,4 @@
 <template>
-  <div class="sticky-card">
   <v-card rounded="lg" variant="outlined" elevation="0" v-if="quote">
     <!-- Product -->
 
@@ -122,7 +121,7 @@
         <div>
           <div class="g2a-text-bold-700">Total Payable</div>
 
-          <div class="g2a-text-12">
+          <div class="g2a-text-12 text-medium-emphasis">
             Inclusive of all taxes
           </div>
         </div>
@@ -132,6 +131,16 @@
         </div>
       </div>
 
+      <v-alert
+        v-if="error"
+        type="error"
+        variant="tonal"
+        density="compact"
+        class="mt-4"
+      >
+        {{ error }}
+      </v-alert>
+
       <v-btn
         block
         flat
@@ -139,18 +148,27 @@
         size="large"
         color="brandColor"
         class="mt-6"
+        :loading="submitting"
+        :disabled="submitting"
         @click="$emit('proceed')"
       >
         Continue to Payment
       </v-btn>
     </v-card-text>
   </v-card>
+
+  <v-card v-else rounded="lg" variant="outlined" elevation="0">
+    <v-card-text class="text-center py-10">
+      <v-icon size="40" color="grey">mdi-receipt-text-outline</v-icon>
+      <div class="g2a-text-16 text-medium-emphasis mt-2">
+        No booking summary available.
+      </div>
+    </v-card-text>
+  </v-card>
   <v-dialog v-model="pricingDialog" scrollable max-width="450">
     <v-card>
       <div class="pa-4">
-        <div class="g2a-title">
-          Daily Pricing
-        </div>
+        <div class="g2a-title">Daily Pricing</div>
       </div>
 
       <v-list>
@@ -164,13 +182,17 @@
       </v-list>
       <v-spacer />
       <div class="pa-2">
-        <v-btn block color="primary" variant="text" @click="pricingDialog = false">
-        Close
-      </v-btn>
+        <v-btn
+          block
+          color="primary"
+          variant="text"
+          @click="pricingDialog = false"
+        >
+          Close
+        </v-btn>
       </div>
     </v-card>
   </v-dialog>
-  </div>
 </template>
 
 <script setup>
@@ -182,6 +204,14 @@ const props = defineProps({
   quote: {
     type: Object,
     default: () => ({}),
+  },
+  submitting: {
+    type: Boolean,
+    default: false,
+  },
+  error: {
+    type: String,
+    default: "",
   },
 });
 
@@ -276,9 +306,3 @@ const formatDate = (date) => {
   });
 };
 </script>
-<style scoped>
-.sticky-card {
-  position: sticky !important;
-  top: 24px;
-}
-</style>

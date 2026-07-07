@@ -5,17 +5,14 @@
       <div class="g2a-text-24 g2a-text-bold-700">
         {{ title }}
       </div>
-
-      <div class="g2a-text-14">
-        Explore experiences and activities.
-      </div>
+      {{ productTypeSlug }}
+      <div class="g2a-text-14">Explore experiences and activities.</div>
     </div>
 
     <!-- Collections -->
     <template v-for="collection in collections" :key="collection.id">
       <ProductCollectionSection :collection="collection" class="mb-10" />
     </template>
-
 
     <!-- Products -->
     <InfiniteProductList

@@ -15,79 +15,75 @@
     <v-divider />
 
     <v-card-text>
-     
-        <v-card
-          class="my-2"
-          v-for="(participant, index) in participants"
-          :key="index"
-        >
-          <v-card-title>
-            Participant {{ index + 1 }}
-          </v-card-title>
+      <v-card
+        class="my-2"
+        v-for="(participant, index) in participants"
+        :key="index"
+      >
+        <v-card-title> Participant {{ index + 1 }} </v-card-title>
 
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="participant.first_name"
-                  label="First Name"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                  :rules="[(v) => !!v || 'First Name is required']"
-                />
-              </v-col>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="participant.first_name"
+                label="First Name"
+                variant="outlined"
+                density="comfortable"
+                hide-details="auto"
+                :rules="[(v) => !!v || 'First Name is required']"
+              />
+            </v-col>
 
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="participant.last_name"
-                  label="Last Name"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                  :rules="[(v) => !!v || 'Last Name is required']"
-                />
-              </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="participant.last_name"
+                label="Last Name"
+                variant="outlined"
+                density="comfortable"
+                hide-details="auto"
+                :rules="[(v) => !!v || 'Last Name is required']"
+              />
+            </v-col>
 
-              <v-col cols="12" md="4">
-                <v-text-field
-                  v-model.number="participant.age"
-                  type="number"
-                  label="Age"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                  :rules="[(v) => !!v || 'Age is required']"
-                />
-              </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model.number="participant.age"
+                type="number"
+                label="Age"
+                variant="outlined"
+                density="comfortable"
+                hide-details="auto"
+                :rules="[(v) => !!v || 'Age is required']"
+              />
+            </v-col>
 
-              <v-col cols="12" md="4">
-                <v-select
-                  v-model="participant.gender"
-                  :items="genders"
-                  label="Gender"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                  :rules="[(v) => !!v || 'Gender is required']"
-                />
-              </v-col>
+            <v-col cols="12" md="4">
+              <v-select
+                v-model="participant.gender"
+                :items="genders"
+                label="Gender"
+                variant="outlined"
+                density="comfortable"
+                hide-details="auto"
+                :rules="[(v) => !!v || 'Gender is required']"
+              />
+            </v-col>
 
-              <v-col cols="12" md="4">
-                <v-select
-                  v-model="participant.nationality"
-                  :items="nationalities"
-                  label="Nationality"
-                  variant="outlined"
-                  density="comfortable"
-                  hide-details="auto"
-                  :rules="[(v) => !!v || 'Nationality is required']"
-                />
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-     
+            <v-col cols="12" md="4">
+              <v-select
+                v-model="participant.nationality"
+                :items="nationalities"
+                label="Nationality"
+                variant="outlined"
+                density="comfortable"
+                hide-details="auto"
+                :rules="[(v) => !!v || 'Nationality is required']"
+              />
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
     </v-card-text>
   </v-card>
 </template>
@@ -144,15 +140,19 @@ const createParticipant = () => ({
 });
 
 watch(
-  () => Number(props.quote?.booking?.guests || 1),
-  (count) => {
-    while (participants.value.length < count) {
-      participants.value.push(createParticipant());
+  () => props.quote?.booking?.guests,
+  (guests) => {
+    const count = Number(guests || 1);
+
+    if (!Array.isArray(booking.form.participants)) {
+      booking.form.participants = [];
     }
 
-    if (participants.value.length > count) {
-      participants.value.splice(count);
+    while (booking.form.participants.length < count) {
+      booking.form.participants.push(createParticipant());
     }
+
+    booking.form.participants.splice(count);
   },
   {
     immediate: true,

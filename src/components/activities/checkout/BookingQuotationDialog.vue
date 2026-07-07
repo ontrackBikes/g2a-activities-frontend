@@ -13,16 +13,13 @@
       webkitBackdropFilter: 'blur(5px)',
     }"
   >
-    <v-card rounded="xl"  :loading="selectingSlot">
+    <v-card rounded="xl" :loading="selectingSlot">
       <!-- Header -->
 
       <v-card-item class="py-4">
         <template #prepend>
           <v-avatar rounded="lg">
-            <v-img
-              alt="John"
-              :src="quote.product.thumbnail_url"
-            ></v-img>
+            <v-img alt="John" :src="quote.product.thumbnail_url"></v-img>
           </v-avatar>
         </template>
 
@@ -45,10 +42,14 @@
 
       <!-- Scroll Area -->
 
-      <v-container class="pb-0">
+      <v-container class="pb-2 pa-4">
         <!-- Booking Details -->
 
-        <div v-for="item in bookingRows" :key="item.label" class="d-flex justify-space-between">
+        <div
+          v-for="item in bookingRows"
+          :key="item.label"
+          class="d-flex justify-space-between"
+        >
           <span>{{ item.label }}</span>
 
           <strong>{{ item.value }}</strong>
@@ -113,7 +114,11 @@
 
           <div class="g2a-text-bold-600 mb-3">Daily Pricing</div>
 
-          <div v-for="day in dailyPricing" :key="day.date" class="d-flex justify-space-between">
+          <div
+            v-for="day in dailyPricing"
+            :key="day.date"
+            class="d-flex justify-space-between"
+          >
             <span>
               {{ formatDate(day.date) }}
             </span>
@@ -126,10 +131,8 @@
       <!-- Bottom Summary -->
 
       <template v-if="finalPricing">
-       
         <v-container class="pa-4">
           <div class="w-100">
-            
             <div class="d-flex justify-space-between">
               <span>Guests</span>
               <strong>
@@ -142,7 +145,10 @@
               <strong> ₹{{ currency(finalPricing.subtotal) }} </strong>
             </div>
 
-            <div v-if="finalPricing.discount" class="d-flex justify-space-between">
+            <div
+              v-if="finalPricing.discount"
+              class="d-flex justify-space-between"
+            >
               <span>Discount</span>
 
               <strong class="text-success">
@@ -162,9 +168,7 @@
               <div>
                 <div class="g2a-text-bold-700">Total Payable</div>
 
-                <div class="g2a-text-12">
-                  Inclusive of taxes
-                </div>
+                <div class="g2a-text-12">Inclusive of taxes</div>
               </div>
 
               <div class="g2a-title text-brandColor2">
@@ -237,12 +241,9 @@ const selectingSlot = ref(false);
 
 const selectedSlot = computed(() => {
   return (
-    slots.value.find(
-      (slot) => slot.token === selectedSlotId.value,
-    ) || null
+    slots.value.find((slot) => slot.token === selectedSlotId.value) || null
   );
 });
-
 
 const selectSlot = async (slot) => {
   if (selectingSlot.value) {
@@ -367,4 +368,3 @@ const formatDate = (date) =>
     year: "numeric",
   });
 </script>
-

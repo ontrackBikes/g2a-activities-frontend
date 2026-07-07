@@ -1,12 +1,36 @@
 <template>
-  <div v-if="loading" class="text-center py-16">
-    <v-progress-circular indeterminate color="primary" size="60" />
+  <!-- Loading -->
+  <div v-if="loading">
+    <v-skeleton-loader type="image" height="360" class="rounded-lg mb-4" />
+    <v-row>
+      <v-col cols="12" md="8">
+        <v-skeleton-loader type="article" />
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-skeleton-loader type="card" />
+      </v-col>
+    </v-row>
   </div>
 
-  <v-alert v-else-if="error" type="error" variant="tonal">
-    {{ error }}
+  <!-- Error -->
+  <v-alert
+    v-else-if="error"
+    type="error"
+    variant="tonal"
+    rounded="lg"
+    class="my-6"
+  >
+    <div
+      class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
+    >
+      <span>{{ error }}</span>
+      <v-btn color="error" variant="outlined" size="small" @click="loadProduct">
+        Try Again
+      </v-btn>
+    </div>
   </v-alert>
 
+  <!-- Content -->
   <template v-else-if="product">
     <!-- Breadcrumb -->
     <div class="d-flex align-center ga-1 g2a-text-13 text-greyDark my-4">
@@ -14,14 +38,14 @@
         >Activities</span
       >
       <v-icon icon="mdi-chevron-right" size="14" />
-      <span class="text-brandColor2 g2a-text-bold-600 truncate-two-lines">{{
-        product.name
-      }}</span>
+      <span class="text-brandColor2 g2a-text-bold-600 truncate-two-lines">
+        {{ product.name }}
+      </span>
     </div>
 
     <v-row>
-      <!-- Main Content -->
-      <v-col cols="12" lg="8" sm="6">
+      <!-- Hero + Gallery -->
+      <v-col cols="12" md="8">
         <product-hero
           :title="product.name"
           :image="selectedImage"
@@ -29,14 +53,14 @@
           :thumbnail_url="product.thumbnail_url"
         />
       </v-col>
-      <v-col cols="12" lg="4" sm="6">
+
+      <v-col cols="12" md="4">
         <product-gallery :images="product.images" />
       </v-col>
 
+      <!-- Main content -->
       <v-col cols="12" lg="8">
-        <div class="">
-          <ProductAbout :description="product.short_description" />
-        </div>
+        <ProductAbout :description="product.short_description" />
 
         <div v-if="product.highlights?.length" class="mt-8">
           <ProductHighlights :highlights="product.highlights" />
@@ -63,7 +87,6 @@
             <v-col cols="12" md="6">
               <ProductInclusions :inclusions="product.inclusions" />
             </v-col>
-
             <v-col cols="12" md="6">
               <ProductExclusions :exclusions="product.exclusions" />
             </v-col>
@@ -84,9 +107,6 @@
             :products="relatedProducts"
           />
         </div>
-        <!-- <div v-if="locations.length" class="mt-8">
-          <ProductLocations :locations="locations" />
-        </div> -->
       </v-col>
 
       <!-- Booking Sidebar -->
@@ -95,28 +115,25 @@
           v-if="selectedLocation"
           :booking-template="product.bookingTemplate"
           :slots="slots"
+          :locations="availableLocations"
           :error="availabilityError"
           :price="product.starting_price"
+          :loading="checkingAvailability"
           @submit="checkAvailability"
           :nextAvailableDate="product.next_available_slot"
           :location-selected="locationText"
           @showLocationDialog="showLocationDialog = true"
           :showSelectLocation="availableLocations.length > 1"
           :out-of-stock="product.out_of_stock"
-          :price-type="product.price_type"
-          :max-quantity="product.max_bookable_per_booking"
         />
 
         <v-card v-else rounded="lg" variant="outlined">
           <v-container class="text-center py-10">
-            <v-icon size="48" color="brandColor"> mdi-map-marker </v-icon>
-
+            <v-icon size="48" color="brandColor">mdi-map-marker</v-icon>
             <div class="g2a-title-4 mt-4">Choose your location</div>
-
             <div class="g2a-text-18 mb-6">
               Please select the location where you'd like to book this activity.
             </div>
-
             <v-btn
               rounded
               color="brandColor"
@@ -130,26 +147,33 @@
       </v-col>
     </v-row>
   </template>
+
+  <!-- Not found fallback -->
+  <v-container v-else class="py-16 text-center">
+    <v-icon size="72" color="grey">mdi-emoticon-sad-outline</v-icon>
+    <div class="g2a-title-4 mt-4">Activity not found</div>
+    <v-btn class="mt-6" color="brandColor" flat @click="$router.push('/v2')">
+      Browse Activities
+    </v-btn>
+  </v-container>
+
   <BookingQuotationDialog
     v-model="confirmationDialog"
     :quote="availabilityQuote"
     @continue="continueBooking"
   />
-  <v-dialog v-model="showLocationDialog" max-width="420" persistent>
+
+  <v-dialog v-model="showLocationDialog" max-width="420">
     <v-card rounded="xl">
-      <v-card-title> Choose Location </v-card-title>
-
+      <v-card-title>Choose Location</v-card-title>
       <v-divider />
-
       <v-list>
         <v-list-item
           v-for="location in locations"
           :key="location.slug"
           @click="selectLocation(location)"
         >
-          <v-list-item-title>
-            {{ location.name }}
-          </v-list-item-title>
+          <v-list-item-title>{{ location.name }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-card>
@@ -158,14 +182,11 @@
 
 <script setup>
 import apiClient from "@/services/api";
-
 import { ref, computed, onMounted, watch } from "vue";
-
 import { useRoute } from "vue-router";
 
 import ProductAbout from "../../components/activities/product/ProductAbout.vue";
 import ProductTags from "../../components/activities/product/ProductTags.vue";
-import ProductLocations from "../../components/activities/product/ProductLocations.vue";
 import ProductThingsToKnow from "../../components/activities/product/ProductThingsToKnow.vue";
 import ProductInclusions from "../../components/activities/product/ProductInclusions.vue";
 import ProductExclusions from "../../components/activities/product/ProductExclusions.vue";
@@ -174,61 +195,49 @@ import ProductTerms from "../../components/activities/product/ProductTerms.vue";
 import ActivityBookingCard from "../../components/activities/booking-fields/ActivityBookingCard.vue";
 import ProductRelated from "../../components/activities/product/ProductRelated.vue";
 import ProductHero from "../../components/activities/product/ProductHero.vue";
-import { saveBooking } from "@/store/booking.js";
-import router from "@/router/index.js";
-import BookingQuotationDialog from "@/components/activities/checkout/BookingQuotationDialog.vue";
 import ProductGallery from "@/components/activities/product/ProductGallery.vue";
 import ProductHighlights from "../../components/activities/product/ProductHighlights.vue";
+import BookingQuotationDialog from "@/components/activities/checkout/BookingQuotationDialog.vue";
+
+import { saveBooking } from "@/store/booking.js";
+import router from "@/router/index.js";
 
 const route = useRoute();
 
 const loading = ref(true);
 const error = ref(null);
-
 const product = ref(null);
-
 const relatedProducts = ref([]);
-
 const selectedImageIndex = ref(0);
-
 const slots = ref([]);
+const availableLocations = ref([]);
+const selectedLocation = ref(null);
+const showLocationDialog = ref(false);
+
+const availabilityError = ref("");
+const checkingAvailability = ref(false);
+const confirmationDialog = ref(false);
+const availabilityQuote = ref(null);
+const bookingRequest = ref(null);
 
 const locations = computed(() => product.value?.locations || []);
-
-const locationText = computed(() => {
-  return selectedLocation.value?.name || "";
-});
+const locationText = computed(() => selectedLocation.value?.name || "");
 
 const selectedImage = computed(() => {
   if (product.value?.images?.[selectedImageIndex.value]) {
     return product.value.images[selectedImageIndex.value].image_url;
   }
-
   return product.value?.thumbnail_url || "";
-});
-
-const availabilityError = ref("");
-
-const confirmationDialog = ref(false);
-
-const availabilityQuote = ref(null);
-
-const bookingRequest = ref(null);
-
-const selectedLocation = ref(null);
-const showLocationDialog = ref(false);
-
-onMounted(() => {
-  console.log("Product page mounted");
 });
 
 const checkAvailability = async (form) => {
   availabilityError.value = "";
+  checkingAvailability.value = true;
 
   try {
     const payload = {
       ...form,
-      location_slug: selectedLocation.value.slug,
+      location_slug: selectedLocation.value?.slug,
     };
 
     const { data } = await apiClient.post(
@@ -237,43 +246,32 @@ const checkAvailability = async (form) => {
     );
 
     if (!data.success) {
-      throw new Error(data.message);
+      throw new Error(data.message || "Unable to check availability.");
     }
 
     if (!data.available) {
       availabilityError.value =
         data.message || "Selected date is not available.";
-
       return;
     }
 
-    // Keep request for checkout
     bookingRequest.value = payload;
-
-    // Store availability response for dialog
     availabilityQuote.value = data.data;
-
-    // Open confirmation dialog
     confirmationDialog.value = true;
   } catch (err) {
-    console.error(err);
-
     availabilityError.value =
       err.response?.data?.message ||
       err.message ||
       "Unable to check availability.";
+  } finally {
+    checkingAvailability.value = false;
   }
 };
 
 const continueBooking = ({ quote, form }) => {
-  console.log("🚀 ~ continueBooking ~ quote:", quote);
-  //confirmationDialog.value = false;
-
   saveBooking({
     product: product.value,
-
     bookingTemplate: product.value.bookingTemplate,
-
     form: {
       ...bookingRequest.value,
       ...form,
@@ -282,77 +280,61 @@ const continueBooking = ({ quote, form }) => {
 
   router.push({
     name: "Checkout",
-    params: {
-      estimate_id: quote.estimate_id,
-    },
+    params: { estimate_id: quote.estimate_id },
   });
 };
 
-const selectImage = (index) => {
-  selectedImageIndex.value = index;
-};
-
-const availableLocations = ref([]);
-
 const loadProduct = async () => {
-  try {
-    console.log("Loading product...");
-    loading.value = true;
-    error.value = null;
+  loading.value = true;
+  error.value = null;
 
+  try {
     const response = await apiClient.get(
       `/v1/products/app/products-list/${route.params.product}`,
     );
-    console.log("🚀 ~ loadProduct ~ response:", response)
 
-    
-    product.value = response.data?.data;
-    selectedLocation.value = product.value.selectedLocation || null;
-    availableLocations.value = product.value.locations || [];
+    const data = response.data?.data;
 
-    if (availableLocations.length > 1) {
+    if (!data) {
+      product.value = null;
+      return;
+    }
+
+    product.value = data;
+    selectedLocation.value = data.selectedLocation || null;
+    availableLocations.value = data.locations || [];
+
+    if (availableLocations.value.length > 1) {
       const routeLocation = route.query.location;
-
-      const matched = availableLocations.find((x) => x.slug === routeLocation);
+      const matched = availableLocations.value.find(
+        (x) => x.slug === routeLocation,
+      );
 
       if (matched) {
         selectedLocation.value = matched;
-      } else if (availableLocations.length === 1) {
-        selectedLocation.value = availableLocations[0];
-
-        await router.replace({
-          query: {
-            ...route.query,
-            location: availableLocations[0].slug,
-          },
-        });
       } else {
         showLocationDialog.value = true;
       }
+    } else if (availableLocations.value.length === 1) {
+      selectedLocation.value = availableLocations.value[0];
+
+      await router.replace({
+        query: { ...route.query, location: availableLocations.value[0].slug },
+      });
     }
 
-    slots.value = response.data.data.slots || [];
-    relatedProducts.value = response.data.data.related_products || [];
+    slots.value = data.slots || [];
+    relatedProducts.value = data.related_products || [];
   } catch (err) {
-    console.error(err);
-    error.value = "Failed to load product";
+    error.value =
+      err.response?.data?.message ||
+      err.message ||
+      "Failed to load this activity. Please try again.";
   } finally {
     loading.value = false;
   }
 };
 
-watch(
-  () => [route.params.category, route.params.slug],
-  async () => {
-    selectedImageIndex.value = 0;
-    await loadProduct();
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  },
-);
 const selectLocation = async (location) => {
   selectedLocation.value = location;
   showLocationDialog.value = false;
@@ -361,13 +343,20 @@ const selectLocation = async (location) => {
 
   await router.replace({
     name: "ProductDetails",
-    params: {
-      ...route.params,
-      product: slug,
-    },
+    params: { ...route.params, product: slug },
   });
 
   await loadProduct();
 };
+
+watch(
+  () => [route.params.category, route.params.slug, route.params.product],
+  async () => {
+    selectedImageIndex.value = 0;
+    await loadProduct();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+);
+
 onMounted(loadProduct);
 </script>

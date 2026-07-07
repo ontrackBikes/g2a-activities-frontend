@@ -34,7 +34,7 @@
 
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="customer_details.mobile"
+            v-model="customer_details.phone"
             label="Mobile Number"
             prepend-inner-icon="mdi-phone"
             variant="outlined"
@@ -90,7 +90,7 @@ const STORAGE_KEY = "g2a_customer_details_v1";
 const defaultCustomer = () => ({
   first_name: "",
   last_name: "",
-  mobile: "",
+  phone: "",
   email: "",
   country: "India",
 });
@@ -125,7 +125,7 @@ const saveCustomer = (customer) => {
       JSON.stringify({
         first_name: customer.first_name,
         last_name: customer.last_name,
-        mobile: customer.mobile,
+        phone: customer.phone,
         email: customer.email,
         country: customer.country,
       }),

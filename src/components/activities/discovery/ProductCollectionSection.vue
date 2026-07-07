@@ -4,10 +4,7 @@
       <!-- Header -->
       <div class="d-flex align-center justify-space-between mb-4">
         <div>
-          <div
-            class="g2a-title-heading"
-            
-          >
+          <div class="g2a-title-heading">
             {{ collection.name }}
           </div>
         </div>
@@ -102,11 +99,25 @@ const loadCollections = async () => {
   }
 };
 
-const openProduct = ({ product, location }) => {  // category is nested to produdt type
-  const productType = product.productType;
-  const category = productType.category;
+const openProduct = ({ product, location } = {}) => {
+  if (!product?.slug) {
+    console.error("Missing product slug", product);
+    return;
+  }
 
-  const slug = location
+  const productType = product.productType || product.product_type || {};
+  const category = product.category || product.productType?.category || {};
+
+  if (!category.slug || !productType.slug) {
+    console.error("Missing category/productType slug", {
+      product,
+      productType,
+      category,
+    });
+    return;
+  }
+
+  const slug = location?.slug
     ? `${product.slug}-in-${location.slug}`
     : product.slug;
 

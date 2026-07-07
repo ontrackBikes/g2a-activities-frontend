@@ -50,15 +50,10 @@
       <v-row>
         <v-col cols="7" class="align-content-center">
           <div class="g2a-text-18 g2a-text-bold">
-            <div
-            class="g2a-text-12  text-capitalize line-height-tight"
-          >
-            {{
-              priceType === "starts_from"
-                ? "starts from"
-                : "flat price"
-            }}
-          </div> ₹ {{ price }} / guest
+            <div class="g2a-text-12 text-capitalize line-height-tight">
+              {{ priceType === "starts_from" ? "starts from" : "flat price" }}
+            </div>
+            ₹ {{ price }} / guest
           </div>
         </v-col>
 
@@ -76,22 +71,43 @@
         </v-col>
       </v-row>
     </v-card>
-    <v-card rounded="lg" variant="outlined" class="my-2">
-      <v-card-text class="text-left">
-        <div class="mb-4">Location</div>
-        <v-card variant="outlined" rounded="lg"
-           class="d-flex justify-space-between align-center pa-2"
+    <v-card rounded="lg" variant="outlined" class="mt-3">
+      <v-card-text>
+        <div class="g2a-title-4 mb-2">Location</div>
+
+        <v-card
+          variant="outlined"
+          rounded="lg"
+          :disabled="props.locations.length < 2"
+          class="px-4 py-3 d-flex align-center cursor-pointer"
           @click="$emit('showLocationDialog')"
         >
-          <div class="g2a-title-4">
-            {{ locationSelected }}
-          </div>
-          <v-icon>mdi-chevron-down</v-icon>
-        </v-card>
+          <v-icon
+            icon="mdi-map-marker-outline"
+            color="primary"
+            size="20"
+            class="me-3"
+          />
 
-        <v-btn class="mt-2" color="brandColor2" variant="outlined" rounded="xl">
-          Check Details <v-icon>mdi-open-in-new</v-icon>
-        </v-btn>
+          <div class="flex-grow-1" style="min-width: 0">
+            <div class="g2a-text-13 g2a-text-bold-600 text-truncate">
+              {{ locationSelected || "Select location" }}
+            </div>
+
+            <div
+              v-if="props.locations.length > 1"
+              class="text-caption text-medium-emphasis"
+            >
+              Tap to change location
+            </div>
+          </div>
+
+          <v-icon
+            v-if="props.locations.length > 1"
+            icon="mdi-chevron-down"
+            color="medium-emphasis"
+          />
+        </v-card>
       </v-card-text>
     </v-card>
   </div>
@@ -135,7 +151,7 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  
+
   priceType: {
     type: String,
     default: "",
@@ -144,6 +160,10 @@ const props = defineProps({
   showSelectLocation: {
     type: Boolean,
     default: true,
+  },
+  locations: {
+    type: String,
+    default: "",
   },
 
   maxQuantity: {

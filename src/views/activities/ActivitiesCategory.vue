@@ -1,121 +1,76 @@
 <template>
   <div class="my-4">
     <!-- Header -->
-    <CategoryHero
-        :category="catetoryInfo"
-        class="mb-10"
-    />
+    <CategoryHero :category="catetoryInfo" class="mb-10" />
 
     <!-- Product Types -->
     <!-- Activity Types -->
-<section
-  v-if="productTypes.length"
-  class="mb-14"
->
-  <div class="d-flex justify-space-between align-center mb-6">
-    <div>
-      <div class="g2a-title-heading">
-        Explore by Activity
+    <section v-if="productTypes.length" class="mb-14">
+      <div class="d-flex justify-space-between align-center mb-6">
+        <div>
+          <div class="g2a-title-heading">Explore by Activity</div>
+
+          <div class="">Browse experiences based on your interests.</div>
+        </div>
       </div>
 
-      <div class="">
-        Browse experiences based on your interests.
-      </div>
-    </div>
-  </div>
-
-  <v-row>
-    <v-col
-      v-for="type in productTypes"
-      :key="type.id"
-      cols="6"
-      sm="4"
-      md="3"
-      lg="2"
-    >
-      <v-card
-        rounded="xl"
-        elevation="0"
-        variant="outlined"
-        class="activity-card"
-        @click="goToProductType(type)"
-      >
-        <v-card-text class="py-8 text-center">
-
-          <v-avatar
-            size="72"
-            color="blue-lighten-5"
-            class="mb-4"
+      <v-row>
+        <v-col
+          v-for="type in productTypes"
+          :key="type.id"
+          cols="6"
+          sm="4"
+          md="3"
+          lg="2"
+        >
+          <v-card
+            rounded="xl"
+            elevation="0"
+            variant="outlined"
+            class="activity-card"
+            @click="goToProductType(type)"
           >
-            <v-icon
-              :icon="type.icon"
-              size="34"
-              color="primary"
-            />
-          </v-avatar>
+            <v-card-text class="py-8 text-center">
+              <v-avatar size="72" color="blue-lighten-5" class="mb-4">
+                <v-icon :icon="type.icon" size="34" color="primary" />
+              </v-avatar>
 
-          <div class="font-weight-bold">
-            {{ type.name }}
-          </div>
-
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
-</section>
+              <div class="font-weight-bold">
+                {{ type.name }}
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </section>
 
     <!-- Collections -->
-  
 
-  <div
-    v-for="collection in collections"
-    :key="collection.id"
-    class="mb-10"
-  >
-    <ProductCollectionSection
-      :collection="collection"
-    />
-  </div>
-
-
-
-
-    <!-- Products -->
-   <section class="mt-14">
-
-  <div class="d-flex justify-space-between align-center mb-6">
-
-    <div>
-
-      <div class="g2a-title-heading">
-
-        All {{ catetoryInfo.name }}
-
-      </div>
-
-      <div class="">
-
-        Browse every experience available in this category.
-
-      </div>
-
+    <div v-for="collection in collections" :key="collection.id" class="mb-10">
+      <ProductCollectionSection :collection="collection" />
     </div>
 
-  </div>
+    <!-- Products -->
+    <section class="mt-14">
+      <div class="d-flex justify-space-between align-center mb-6">
+        <div>
+          <div class="g2a-title-heading">All {{ catetoryInfo.name }}</div>
 
-  <!-- Filters later -->
+          <div class="">
+            Browse every experience available in this category.
+          </div>
+        </div>
+      </div>
 
-  <!-- <ProductFilters
+      <!-- Filters later -->
+
+      <!-- <ProductFilters
         class="mb-6"
         @change="updateFilters"
   /> -->
 
-  <InfiniteProductList
-    :category-slug="categorySlug"
-    :filters="filters"
-  />
-
-</section>
+      <InfiniteProductList :category-slug="categorySlug" :filters="filters" />
+    </section>
   </div>
 </template>
 
@@ -137,7 +92,7 @@ const route = useRoute();
 const productTypes = ref([]);
 const collections = ref([]);
 const filters = ref({});
-const catetoryInfo = ref({})
+const catetoryInfo = ref({});
 
 /**
  * Route Params
@@ -182,12 +137,10 @@ const productTypeIcons = {
   "Bike Rentals": "mdi-motorbike-electric",
   "Ferry Transfers": "mdi-ferry",
   "Private Cab": "mdi-taxi",
-  "Trek": "mdi-image-filter-hdr",
-  "Walks": "mdi-ski-cross-country",
+  Trek: "mdi-image-filter-hdr",
+  Walks: "mdi-ski-cross-country",
   "Boat Trip": "mdi-sail-boat",
-  
 };
-
 
 /**
  * Category Info
@@ -198,12 +151,11 @@ const loadCategoryInfo = async () => {
       `/v1/product-categories/slug/${categorySlug.value}`,
     );
 
-    catetoryInfo.value = data.data
+    catetoryInfo.value = data.data;
   } catch (err) {
     console.error("[ActivitiesCategory] loadProductTypes", err);
   }
 };
-
 
 /**
  * Product Types
@@ -277,7 +229,11 @@ const loadPage = async () => {
     collections.value = [];
     productTypes.value = [];
 
-    await Promise.all([loadProductTypes(), loadCollections(), loadCategoryInfo()]);
+    await Promise.all([
+      loadProductTypes(),
+      loadCollections(),
+      loadCategoryInfo(),
+    ]);
   } catch (error) {
     console.error("[ActivitiesCategory] loadPage", error);
   }
@@ -311,6 +267,4 @@ watch(
 onMounted(loadPage);
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -9,7 +9,7 @@
     }"
     @click="handleClick"
   >
-    <v-row> 
+    <v-row>
       <v-col cols="2">
         <v-img
           :src="product.thumbnail_url || fallbackImg"
@@ -18,27 +18,22 @@
         ></v-img>
       </v-col>
       <v-col cols="10" class="py-4">
-        
         <div class="g2a-text-18 font-weight-bold">
           {{ product.name }}
         </div>
 
-        <div v-if="product.locations.length > 1">
-          view all locations >
-        </div>
+        <div v-if="product.locations.length > 1">view all locations ></div>
         <div v-else>
-            <span
-          v-if="product.next_available_slot && !product.out_of_stock"
-          class="g2a-text-15 text-green-darken-3 font-weight-medium"
-        >
-          Next Available: {{ formatDate(product.next_available_slot) }}
-        </span>
-        <div v-if="product.out_of_stock || !product.available">
-          <div class="text-error">Out of Stock</div>
+          <span
+            v-if="product.next_available_slot && !product.out_of_stock"
+            class="g2a-text-15 text-green-darken-3 font-weight-medium"
+          >
+            Next Available: {{ formatDate(product.next_available_slot) }}
+          </span>
+          <div v-if="product.out_of_stock || !product.available">
+            <div class="text-error">Out of Stock</div>
+          </div>
         </div>
-        </div>
-        
-        
       </v-col>
     </v-row>
   </v-card>
@@ -106,10 +101,7 @@
         {{ product.name }}
       </div>
 
-      <div
-        v-if="locationText"
-        class="d-flex align-center g2a-text-14 mb-2"
-      >
+      <div v-if="locationText" class="d-flex align-center g2a-text-14 mb-2">
         <v-icon
           icon="mdi-map-marker-outline"
           size="14"
@@ -133,9 +125,7 @@
 
       <div class="d-flex align-center justify-space-between">
         <div v-if="product.starting_price">
-          <div
-            class="g2a-text-12 text-capitalize line-height-tight"
-          >
+          <div class="g2a-text-12 text-capitalize line-height-tight">
             {{
               product.price_type === "starts_from"
                 ? "starts from"
@@ -198,9 +188,8 @@
           <v-list-item-subtitle v-if="location.available">
             Starts @{{ location.starting_price }}
           </v-list-item-subtitle>
-          <v-list-item-subtitle v-else >
+          <v-list-item-subtitle v-else>
             <div class="text-error">Out of Stock</div>
-            
           </v-list-item-subtitle>
         </v-list-item>
       </v-list>
@@ -250,7 +239,7 @@ function formatDate(dateStr) {
 
 const handleClick = () => {
   if (props.product.out_of_stock) {
-  console.log("Product out of stock")
+    console.log("Product out of stock");
     return;
   }
 
