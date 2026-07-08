@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="lg" variant="outlined" elevation="0">
-    <v-card-title class="py-4">
+    <v-container class="py-4">
       <div class="g2a-subtitle">
         {{ config.title || "Bike Delivery Details" }}
       </div>
@@ -11,11 +11,11 @@
       >
         {{ config.description }}
       </div>
-    </v-card-title>
+    </v-container>
 
     <v-divider />
 
-    <v-card-text>
+    <v-container>
       <v-row>
         <v-col cols="12">
           <v-text-field
@@ -67,7 +67,7 @@
           />
         </v-col>
       </v-row>
-    </v-card-text>
+    </v-container>
   </v-card>
 </template>
 <script setup>

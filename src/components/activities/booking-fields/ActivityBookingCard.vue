@@ -15,9 +15,11 @@
 
       <div class="g2a-title-4 mb-4">Book your ticket</div>
 
+      
+
       <!-- Booking Fields -->
 
-      <BookingFieldRenderer
+      <!-- <BookingFieldRenderer
         v-for="field in fields"
         :key="field.field"
         :field="field"
@@ -41,7 +43,7 @@
         class="my-4"
       >
         {{ error }}
-      </v-alert>
+      </v-alert> -->
 
       <!-- Button -->
 
@@ -58,7 +60,7 @@
         </v-col>
 
         <v-col cols="5">
-          <v-btn
+          <!-- <v-btn
             block
             flat
             rounded="xl"
@@ -67,7 +69,14 @@
             @click="submit"
           >
             Check Estimate
-          </v-btn>
+          </v-btn> -->
+
+          <v-btn block
+            flat
+            rounded="xl"
+            color="brandColor"
+            size="large"
+            :loading="loading" @click="goToBooking()">Book Now</v-btn>
         </v-col>
       </v-row>
     </v-card>
@@ -117,6 +126,10 @@
 import { computed, reactive, ref, watch } from "vue";
 
 import BookingFieldRenderer from "./BookingFieldRenderer.vue";
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
+const router = useRouter();
 
 const props = defineProps({
   bookingTemplate: {
@@ -272,6 +285,17 @@ const totalPrice = computed(() => {
 
   return Number(props.price) * Number(qty);
 });
+
+const goToBooking = () => {
+  router.push({
+    name: "ProductBooking",
+    params: {
+      category: route.params.category,
+      productType: route.params.productType,
+      product: route.params.product,
+    },
+  });
+};
 
 /**
  * Validation

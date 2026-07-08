@@ -3,6 +3,7 @@ import GuestsField from "./fields/GuestsField.vue";
 import DateField from "./fields/DateField.vue";
 import PickupDateField from "./fields/PickupDateField.vue";
 import ReturnDateField from "./fields/ReturnDateField.vue";
+import PickupAndDropField from "./fields/PickupAndDropField.vue";
 
 export default {
   date: DateField,
@@ -10,4 +11,5 @@ export default {
   guests: GuestsField,
   pickup_date: PickupDateField,
   return_date: ReturnDateField,
+  pickup_and_drop_date: PickupAndDropField,
 };

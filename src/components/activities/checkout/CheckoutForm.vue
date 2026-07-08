@@ -1,16 +1,16 @@
 <template>
-  <!-- Quote Loading -->
+  <!-- Loading quote -->
+
   <v-row v-if="loadingQuote">
     <v-col cols="12" lg="8">
       <v-skeleton-loader type="article" />
     </v-col>
-
     <v-col cols="12" lg="4">
       <v-skeleton-loader type="card" />
     </v-col>
   </v-row>
 
-  <!-- Quote Error -->
+  <!-- Error loading quote -->
   <v-alert
     v-else-if="quoteError"
     type="error"
@@ -22,35 +22,24 @@
       class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
     >
       <span>{{ quoteError }}</span>
-
-      <v-btn
-        color="error"
-        variant="outlined"
-        size="small"
-        :loading="loadingQuote"
-        @click="loadQuote"
-      >
+      <v-btn color="error" variant="outlined" size="small" @click="loadQuote">
         Try Again
       </v-btn>
     </div>
   </v-alert>
 
-  <!-- Checkout -->
   <v-form v-else ref="form" validate-on="submit">
     <v-row>
+
       <!-- LEFT -->
       <v-col cols="12" lg="8">
-        <CheckoutRenderer
-          :quote="quote"
-          :booking-template="booking.bookingTemplate"
-        />
+        <CheckoutRenderer :booking-template="booking.bookingTemplate" :quote="quote" />
       </v-col>
 
       <!-- RIGHT -->
       <v-col cols="12" lg="4">
         <CheckoutSidebar
           :quote="quote"
-          :loading="loadingQuote"
           :submitting="submitting"
           :error="checkoutError"
           @proceed="continueToPayment"
@@ -61,34 +50,28 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import CheckoutRenderer from "./CheckoutRenderer.vue";
 import CheckoutSidebar from "./CheckoutSidebar.vue";
 
-import { bookingStore } from "@/store/booking";
-import apiClient from "@/services/api";
+
+import apiClient from "@/services/api.js";
 
 const router = useRouter();
 const route = useRoute();
 
-const booking = bookingStore;
+const booking = ref({});
 
 const form = ref(null);
+const submitting = ref(false);
+const checkoutError = ref("");
 
-// Quote
 const quote = ref(null);
 const loadingQuote = ref(true);
 const quoteError = ref("");
 
-// Order submission
-const submitting = ref(false);
-const checkoutError = ref("");
-
-/**
- * Fetch Booking Quote
- */
 const loadQuote = async () => {
   loadingQuote.value = true;
   quoteError.value = "";
@@ -99,30 +82,27 @@ const loadQuote = async () => {
     );
 
     quote.value = data.data;
+    booking.value = quote.value.product
   } catch (err) {
-    console.error(err);
-
-    quote.value = null;
-
     quoteError.value =
       err.response?.data?.message ||
+      err.message ||
       "Unable to load your booking summary. Please try again.";
   } finally {
     loadingQuote.value = false;
   }
 };
 
-/**
- * Continue to Payment
- */
-const continueToPayment = async () => {
-  if (submitting.value || loadingQuote.value) return;
+onMounted(loadQuote);
 
+const continueToPayment = async () => {
   checkoutError.value = "";
 
-  const validation = await form.value?.validate();
+  const { valid } = await form.value.validate();
 
-  if (!validation?.valid) return;
+  if (!valid) {
+    return;
+  }
 
   submitting.value = true;
 
@@ -139,28 +119,12 @@ const continueToPayment = async () => {
       },
     });
   } catch (err) {
-    console.error(err);
-
     checkoutError.value =
       err.response?.data?.message ||
+      err.message ||
       "Unable to proceed to payment. Please try again.";
   } finally {
     submitting.value = false;
   }
 };
-
-/**
- * Initial Load
- */
-onMounted(loadQuote);
-
-/**
- * Reload quote if estimate changes
- */
-watch(
-  () => route.params.estimate_id,
-  () => {
-    loadQuote();
-  },
-);
 </script>

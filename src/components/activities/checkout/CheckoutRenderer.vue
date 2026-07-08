@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <SectionRenderer
       v-for="section in sections"
       :key="section.section"

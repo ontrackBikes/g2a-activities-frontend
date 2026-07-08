@@ -3,7 +3,7 @@
     class="d-flex align-center justify-space-between pa-3 rounded-lg mb-4"
     style="border:1px solid rgba(0,0,0,.12)"
   >
-    <span class="g2a-text-13 g2a-text-bold-600">
+    <span class="g2a-text-bold-600">
       {{ field.label || "Quantity" }}
     </span>
 
@@ -11,20 +11,20 @@
       <v-btn
         icon
         size="x-small"
-        variant="outlined"
+        flat
         @click="decrease"
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn>
 
-      <span class="g2a-text-15 g2a-text-bold-700">
+      <span class="g2a-text-bold-700">
         {{ guestCount }}
       </span>
 
       <v-btn
         icon
         size="x-small"
-        variant="outlined"
+        flat
         @click="increase"
       >
         <v-icon>mdi-plus</v-icon>

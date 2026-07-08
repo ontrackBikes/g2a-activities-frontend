@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="xl" variant="outlined" elevation="0">
-    <v-card-title class="py-4">
+    <v-container class="py-4">
       <div class="g2a-subtitle">
         {{ config.title || "Participant Details" }}
       </div>
@@ -10,19 +10,20 @@
           config.description || "Please provide details for every participant."
         }}
       </div>
-    </v-card-title>
+    </v-container>
 
     <v-divider />
 
-    <v-card-text>
-      <v-card
-        class="my-2"
+    <div>
+      <div
+        
         v-for="(participant, index) in participants"
         :key="index"
       >
-        <v-card-title> Participant {{ index + 1 }} </v-card-title>
+        <v-container>
+          <div class="my-2"> Participant {{ index + 1 }} </div>
 
-        <v-card-text>
+        <div>
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
@@ -82,9 +83,10 @@
               />
             </v-col>
           </v-row>
-        </v-card-text>
-      </v-card>
-    </v-card-text>
+        </div>
+        </v-container>
+      </div>
+    </div>
   </v-card>
 </template>
 

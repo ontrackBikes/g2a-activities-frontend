@@ -14,7 +14,7 @@
           <!-- Product -->
 
           <v-card rounded="xl" variant="outlined">
-            <v-card-text>
+            <v-container>
               <div class="d-flex">
                 <v-img
                   :src="item.thumbnail_url"
@@ -46,58 +46,62 @@
                   </div>
                 </div>
               </div>
-            </v-card-text>
+            </v-container>
           </v-card>
 
           <!-- Booking -->
 
           <v-card class="mt-5" rounded="xl" variant="outlined">
-            <v-card-title> Booking Details </v-card-title>
+            <v-container>
+              <div class="g2a-title-4">Booking Details</div>
 
-            <v-divider />
+              <v-divider class="my-2" />
 
-            <v-card-text>
-              <div
-                v-for="(value, key) in item.booking_data"
-                :key="key"
-                class="d-flex justify-space-between py-2"
-              >
-                <span>{{ pretty(key) }}</span>
-                <strong>{{ formatValue(key, value) }}</strong>
+              <div>
+                <div
+                  v-for="(value, key) in item.booking_data"
+                  :key="key"
+                  class="d-flex justify-space-between "
+                >
+                  <span>{{ pretty(key) }}</span>
+                  <strong>{{ formatValue(key, value) }}</strong>
+                </div>
               </div>
-            </v-card-text>
+            </v-container>
           </v-card>
 
           <!-- Customer -->
 
           <v-card class="mt-5" rounded="xl" variant="outlined">
-            <v-card-title> Customer </v-card-title>
+            <v-container>
+              <div class="g2a-title-4">Customer</div>
 
-            <v-divider />
+              <v-divider class="my-2" />
 
-            <v-card-text>
-              <div class="py-1">
-                <strong>Name:</strong>
+              <div>
+                <div class="py-1">
+                  <strong>Name:</strong>
 
-                {{ order.customer_details.first_name }}
-                {{ order.customer_details.last_name }}
+                  {{ order.customer_details.first_name }}
+                  {{ order.customer_details.last_name }}
+                </div>
+
+                <div class="py-1">
+                  <strong>Mobile:</strong>
+                  {{ order.customer_details.phone }}
+                </div>
+
+                <div class="py-1">
+                  <strong>Email:</strong>
+                  {{ order.customer_details.email }}
+                </div>
+
+                <div class="py-1">
+                  <strong>Country:</strong>
+                  {{ order.customer_details.country }}
+                </div>
               </div>
-
-              <div class="py-1">
-                <strong>Mobile:</strong>
-                {{ order.customer_details.mobile }}
-              </div>
-
-              <div class="py-1">
-                <strong>Email:</strong>
-                {{ order.customer_details.email }}
-              </div>
-
-              <div class="py-1">
-                <strong>Country:</strong>
-                {{ order.customer_details.country }}
-              </div>
-            </v-card-text>
+            </v-container>
           </v-card>
 
           <!-- Participants -->
@@ -108,34 +112,36 @@
             rounded="xl"
             variant="outlined"
           >
-            <v-card-title> Participants </v-card-title>
+            <v-container>
+              <div class="g2a-title-4">Participants</div>
 
-            <v-divider />
+              <v-divider class="my-2" />
 
-            <v-card-text>
-              <v-table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Nationality</th>
-                  </tr>
-                </thead>
+              <div>
+                <v-table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Age</th>
+                      <th>Gender</th>
+                      <th>Nationality</th>
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  <tr v-for="(p, index) in participants" :key="index">
-                    <td>{{ p.first_name }} {{ p.last_name }}</td>
+                  <tbody>
+                    <tr v-for="(p, index) in participants" :key="index">
+                      <td>{{ p.first_name }} {{ p.last_name }}</td>
 
-                    <td>{{ p.age }}</td>
+                      <td>{{ p.age }}</td>
 
-                    <td>{{ p.gender }}</td>
+                      <td>{{ p.gender }}</td>
 
-                    <td>{{ p.nationality }}</td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </v-card-text>
+                      <td>{{ p.nationality }}</td>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </div>
+            </v-container>
           </v-card>
         </v-col>
 
@@ -143,67 +149,69 @@
 
         <v-col cols="12" md="4">
           <v-card rounded="xl" variant="outlined">
-            <v-card-title> Payment Summary </v-card-title>
+            <v-container>
+              <div class="g2a-title-4">Payment Summary</div>
 
-            <v-divider />
+              <v-divider class="my-2" />
 
-            <v-card-text>
-              <div class="d-flex justify-space-between py-2">
-                <span>Subtotal</span>
-                <strong>₹{{ currency(order.subtotal) }}</strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span>Discount</span>
-                <strong>₹{{ currency(order.discount) }}</strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span>Tax</span>
-                <strong>₹{{ currency(order.tax) }}</strong>
-              </div>
-
-              <v-divider class="my-4" />
-
-              <div class="d-flex justify-space-between">
-                <strong>Total</strong>
-
-                <div class="text-h5 text-primary">
-                  ₹{{ currency(order.grand_total) }}
+              <div>
+                <div class="d-flex justify-space-between ">
+                  <span>Subtotal</span>
+                  <strong>₹{{ currency(order.subtotal) }}</strong>
                 </div>
-              </div>
 
-              <div v-if="order.payment_status == 'captured'">
-                <div class="text-success">
-                  Payment Already Received for this order
+                <div class="d-flex justify-space-between ">
+                  <span>Discount</span>
+                  <strong>₹{{ currency(order.discount) }}</strong>
                 </div>
+
+                <div class="d-flex justify-space-between ">
+                  <span>Tax</span>
+                  <strong>₹{{ currency(order.tax) }}</strong>
+                </div>
+
+                <v-divider class="my-4" />
+
+                <div class="d-flex justify-space-between">
+                  <strong>Total</strong>
+
+                  <div class="g2a-title-4 text-brandColor2">
+                    ₹{{ currency(order.grand_total) }}
+                  </div>
+                </div>
+
+                <div v-if="order.payment_status == 'captured'">
+                  <div class="text-success">
+                    Payment Already Received for this order
+                  </div>
+                  <v-btn
+                    flat
+                    rounded="lg"
+                    block
+                    color="brandColor"
+                    size="large"
+                    class="mt-6"
+                    @click="viewOrder"
+                  >
+                    View
+                  </v-btn>
+                </div>
+
                 <v-btn
+                  v-else
                   flat
                   rounded="lg"
                   block
                   color="brandColor"
                   size="large"
                   class="mt-6"
-                  @click="viewOrder"
+                  :loading="paying"
+                  @click="payNow"
                 >
-                  View
+                  Pay Now
                 </v-btn>
               </div>
-
-              <v-btn
-                v-else
-                flat
-                  rounded="lg"
-                  block
-                  color="brandColor"
-                  size="large"
-                  class="mt-6"
-                :loading="paying"
-                @click="payNow"
-              >
-                Pay Now
-              </v-btn>
-            </v-card-text>
+            </v-container>
           </v-card>
         </v-col>
       </v-row>

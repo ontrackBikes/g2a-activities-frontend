@@ -4,7 +4,7 @@
     variant="outlined"
     elevation="0"
   >
-    <v-card-title class="py-4">
+    <v-container class="py-4">
       <div class="g2a-subtitle">
         {{ config.title || "Medical Declaration" }}
       </div>
@@ -15,11 +15,11 @@
           "Please answer honestly. Your safety is our highest priority."
         }}
       </div>
-    </v-card-title>
+    </v-container>
 
     <v-divider />
 
-    <v-card-text>
+    <v-container>
 
       <v-checkbox
         v-for="question in questions"
@@ -57,7 +57,7 @@
         before participation.
       </v-alert>
 
-    </v-card-text>
+    </v-container>
   </v-card>
 </template>
 
