@@ -104,11 +104,17 @@ const continueToPayment = async () => {
   submitting.value = true;
 
   try {
-    // Future:
-    // await apiClient.post("/checkout/validate", booking.form);
-    // await apiClient.post("/checkout/price", booking.form);
+    const { data } = await apiClient.post(
+      `/v1/orders/${route.params.estimate_id}`,
+      booking.form,
+    );
 
-    router.push({ name: "Payment" });
+    router.push({
+      name: "OrderDetails",
+      params: {
+        order_id: data.data.order_id,
+      },
+    });
   } catch (err) {
     checkoutError.value =
       err.response?.data?.message ||

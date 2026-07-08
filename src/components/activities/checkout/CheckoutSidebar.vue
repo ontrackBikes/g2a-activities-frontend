@@ -1,4 +1,5 @@
 <template>
+  <div class="sticky-card">
   <v-card rounded="lg" variant="outlined" elevation="0" v-if="quote">
     <!-- Product -->
 
@@ -165,6 +166,7 @@
       </div>
     </v-card-text>
   </v-card>
+</div>
   <v-dialog v-model="pricingDialog" scrollable max-width="450">
     <v-card>
       <div class="pa-4">
@@ -306,3 +308,10 @@ const formatDate = (date) => {
   });
 };
 </script>
+
+<style scoped>
+.sticky-card {
+  position: sticky !important;
+  top: 24px;
+}
+</style>
