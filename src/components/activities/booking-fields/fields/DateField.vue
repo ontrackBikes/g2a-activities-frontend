@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4">
-    <div class="g2a-text-14 mb-3">
+    <div class="g2a-text-bold mb-3">
       {{ field.label || "Select Date" }}
     </div>
 
@@ -20,7 +20,7 @@
             {{ String(date.date).padStart(2, "0") }}
           </div>
 
-          <div class="date-day">
+          <div class="date-day g2a-text-14">
             {{ date.day }}
           </div>
         </v-card>

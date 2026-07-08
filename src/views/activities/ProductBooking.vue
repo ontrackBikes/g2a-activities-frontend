@@ -7,11 +7,11 @@
         </v-avatar>
 
         <div>
-          <div class="g2a-title-4 font-weight-bold">
+          <div class="g2a-title-4 ">
             {{ product.name }}
           </div>
 
-          <div class="text-caption g2a-text-14">
+          <div class="text-caption g2a-text-bold">
             {{ selectedLocation?.name }}
           </div>
         </div>
@@ -35,7 +35,7 @@
         <template v-if="result.available">
           <!-- Slot Selection -->
           <div v-if="isSlotPricing" class="mt-4">
-            <div class="g2a-title-4 mb-3">Select Slot</div>
+            <div class="g2a-text-bold mb-3">Select Slot</div>
 
             <v-row>
               <v-col
@@ -94,7 +94,7 @@
           <div v-if="dailyPricing.length" class="my-4">
             
 
-            <div class="g2a-text-bold-600">Daily Pricing</div>
+            <div class="g2a-text-bold">Daily Pricing</div>
 
             <div
               v-for="day in previewDailyPricing"
@@ -117,7 +117,25 @@
               View {{ dailyPricing.length }} more ..
             </div>
           </div>
+
+          <div v-if="productTerms.length > 0" class="my-4">
+            <div class="g2a-text-bold mb-3">
+              Terms & Conditions
+            </div>
+            <div
+              v-for="(term, index) in productTerms"
+              :key="index"
+              class="g2a-text-13 d-flex"
+            >
+             <div> -</div> <div class="ml-2">{{ term.content }}</div>
+            </div>
+          </div>
+
+
         </template>
+
+
+        
 
         <div v-else class="mt-4 text-error">
           {{ error || result.message }}
@@ -298,6 +316,8 @@ const bookingTemplate = computed(() => result.value?.bookingTemplate);
 const quotation = computed(() => result.value?.data ?? {});
 
 const product = computed(() => quotation.value.product ?? {});
+
+const productTerms = computed(() => quotation.value.product.terms ?? {});
 
 const pricing = computed(() => quotation.value.pricing ?? {});
 
