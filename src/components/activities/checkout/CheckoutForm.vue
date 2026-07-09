@@ -30,10 +30,12 @@
 
   <v-form v-else ref="form" validate-on="submit">
     <v-row>
-
       <!-- LEFT -->
       <v-col cols="12" lg="8">
-        <CheckoutRenderer :booking-template="booking.bookingTemplate" :quote="quote" />
+        <CheckoutRenderer
+          :booking-template="quote.product.bookingTemplate"
+          :quote="quote"
+        />
       </v-col>
 
       <!-- RIGHT -->
@@ -56,13 +58,19 @@ import { useRoute, useRouter } from "vue-router";
 import CheckoutRenderer from "./CheckoutRenderer.vue";
 import CheckoutSidebar from "./CheckoutSidebar.vue";
 
-
 import apiClient from "@/services/api.js";
+import { bookingStore } from "@/store/booking.js";
 
 const router = useRouter();
 const route = useRoute();
 
-const booking = ref({});
+// bookingStore already holds `product`, `bookingTemplate`, and `form`
+// (populated in ProductDetails.vue via saveBooking(), then reloaded in
+// Checkout.vue via loadBooking()). The section components (CustomerDetails,
+// Participants, MedicalDeclaration, BikeDelivery, FerrySeatSelection,
+// EmergencyContact) all write directly into bookingStore.form, so this is
+// the single source of truth for the checkout payload.
+const booking = bookingStore;
 
 const form = ref(null);
 const submitting = ref(false);
@@ -81,8 +89,10 @@ const loadQuote = async () => {
       `/v1/booking-estimates/${route.params.estimate_id}`,
     );
 
+    // This endpoint only supplies pricing/product display data for the
+    // sidebar — it is NOT the source of the form payload, so we don't
+    // touch `booking` here.
     quote.value = data.data;
-    booking.value = quote.value.product
   } catch (err) {
     quoteError.value =
       err.response?.data?.message ||
@@ -105,6 +115,8 @@ const continueToPayment = async () => {
   }
 
   submitting.value = true;
+
+  console.log("Booking details", booking.form);
 
   try {
     const { data } = await apiClient.post(

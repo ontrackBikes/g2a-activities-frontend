@@ -220,6 +220,12 @@ const confirmationDialog = ref(false);
 const availabilityQuote = ref(null);
 const bookingRequest = ref(null);
 
+// Guards against out-of-order responses: if the user navigates again before
+// an in-flight request resolves, we abort the stale request and ignore its
+// response even if it somehow still resolves.
+let activeController = null;
+let requestId = 0;
+
 const locations = computed(() => product.value?.locations || []);
 const locationText = computed(() => selectedLocation.value?.name || "");
 
@@ -285,13 +291,26 @@ const continueBooking = ({ quote, form }) => {
 };
 
 const loadProduct = async () => {
+  // Cancel any in-flight request for a previous product/location before
+  // starting a new one.
+  activeController?.abort();
+  activeController = new AbortController();
+
+  const currentRequestId = ++requestId;
+
   loading.value = true;
   error.value = null;
 
   try {
     const response = await apiClient.get(
       `/v1/products/app/products-list/${route.params.product}`,
+      { signal: activeController.signal },
     );
+
+    // A newer request has since started; discard this stale response.
+    if (currentRequestId !== requestId) {
+      return;
+    }
 
     const data = response.data?.data;
 
@@ -326,27 +345,40 @@ const loadProduct = async () => {
     slots.value = data.slots || [];
     relatedProducts.value = data.related_products || [];
   } catch (err) {
+    // Aborted requests aren't real errors — a newer request is already
+    // in flight, so just let it take over silently.
+    if (err.name === "CanceledError" || err.code === "ERR_CANCELED") {
+      return;
+    }
+
+    if (currentRequestId !== requestId) {
+      return;
+    }
+
     error.value =
       err.response?.data?.message ||
       err.message ||
       "Failed to load this activity. Please try again.";
   } finally {
-    loading.value = false;
+    if (currentRequestId === requestId) {
+      loading.value = false;
+    }
   }
 };
 
 const selectLocation = async (location) => {
-  selectedLocation.value = location;
   showLocationDialog.value = false;
 
   const slug = `${product.value.slug}-in-${location.slug}`;
 
+  // Changing route.params.product here triggers the watcher below, which
+  // calls loadProduct() itself — so we don't call it again here, and we
+  // don't optimistically set selectedLocation, to avoid a duplicate fetch
+  // and a moment of state that doesn't match the URL.
   await router.replace({
     name: "ProductDetails",
     params: { ...route.params, product: slug },
   });
-
-  await loadProduct();
 };
 
 watch(

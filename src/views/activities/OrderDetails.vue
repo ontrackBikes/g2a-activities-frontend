@@ -61,7 +61,7 @@
                 <div
                   v-for="(value, key) in item.booking_data"
                   :key="key"
-                  class="d-flex justify-space-between "
+                  class="d-flex justify-space-between"
                 >
                   <span>{{ pretty(key) }}</span>
                   <strong>{{ formatValue(key, value) }}</strong>
@@ -72,7 +72,12 @@
 
           <!-- Customer -->
 
-          <v-card class="mt-5" rounded="xl" variant="outlined">
+          <v-card
+            v-if="sectionEnabled('customer_details')"
+            class="mt-5"
+            rounded="xl"
+            variant="outlined"
+          >
             <v-container>
               <div class="g2a-title-4">Customer</div>
 
@@ -104,10 +109,82 @@
             </v-container>
           </v-card>
 
+          <!-- Rental Details -->
+
+          <v-card
+            v-if="sectionEnabled('rental_details')"
+            class="mt-5"
+            rounded="xl"
+            variant="outlined"
+          >
+            <v-container>
+              <div class="g2a-title-4">Rental Details</div>
+
+              <v-divider class="my-2" />
+
+              <div>
+                <div class="d-flex justify-space-between">
+                  <span>Pickup Location</span>
+                  <strong>{{ bikeDelivery.pickup_location }}</strong>
+                </div>
+
+                <div class="d-flex justify-space-between">
+                  <span>Return / Drop Location</span>
+                  <strong>{{ bikeDelivery.drop_location }}</strong>
+                </div>
+
+                <div class="d-flex justify-space-between">
+                  <span>Pickup Time</span>
+                  <strong>{{ bikeDelivery.pickup_time }}</strong>
+                </div>
+
+                <div class="d-flex justify-space-between">
+                  <span>Return Time</span>
+                  <strong>{{ bikeDelivery.return_time }}</strong>
+                </div>
+              </div>
+            </v-container>
+          </v-card>
+
+          <!-- Medical Declaration -->
+
+          <v-card
+            v-if="sectionEnabled('medical_declaration')"
+            class="mt-5"
+            rounded="xl"
+            variant="outlined"
+          >
+            <v-container>
+              <div class="g2a-title-4">Medical Declaration</div>
+
+              <v-divider class="my-2" />
+
+              <div v-if="declaredConditions.length">
+                <div
+                  v-for="condition in declaredConditions"
+                  :key="condition"
+                  class="d-flex justify-space-between"
+                >
+                  <span>{{ pretty(condition) }}</span>
+                  <strong>Yes</strong>
+                </div>
+
+                <div v-if="medical.other_details" class="py-1">
+                  <strong>Additional Details:</strong>
+                  {{ medical.other_details }}
+                </div>
+              </div>
+
+              <div v-else class="text-medium-emphasis">
+                No health conditions declared.
+              </div>
+            </v-container>
+          </v-card>
+
           <!-- Participants -->
 
           <v-card
-            v-if="participants.length"
+            v-if="sectionEnabled('participants')"
             class="mt-5"
             rounded="xl"
             variant="outlined"
@@ -143,6 +220,43 @@
               </div>
             </v-container>
           </v-card>
+
+          <!-- Ferry Seat Selection -->
+
+          <v-card
+            v-if="sectionEnabled('ferry_seat_selection')"
+            class="mt-5"
+            rounded="xl"
+            variant="outlined"
+          >
+            <v-container>
+              <div class="g2a-title-4">Seat Selection</div>
+
+              <v-divider class="my-2" />
+
+              <div>
+                <v-table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Seat Preference</th>
+                      <th>Seat Number</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr v-for="(p, index) in participants" :key="index">
+                      <td>{{ p.first_name }} {{ p.last_name }}</td>
+
+                      <td>{{ p.seat_preference }}</td>
+
+                      <td>{{ p.seat_number }}</td>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </div>
+            </v-container>
+          </v-card>
         </v-col>
 
         <!-- RIGHT -->
@@ -155,17 +269,17 @@
               <v-divider class="my-2" />
 
               <div>
-                <div class="d-flex justify-space-between ">
+                <div class="d-flex justify-space-between">
                   <span>Subtotal</span>
                   <strong>₹{{ currency(order.subtotal) }}</strong>
                 </div>
 
-                <div class="d-flex justify-space-between ">
+                <div class="d-flex justify-space-between">
                   <span>Discount</span>
                   <strong>₹{{ currency(order.discount) }}</strong>
                 </div>
 
-                <div class="d-flex justify-space-between ">
+                <div class="d-flex justify-space-between">
                   <span>Tax</span>
                   <strong>₹{{ currency(order.tax) }}</strong>
                 </div>
@@ -235,6 +349,45 @@ const order = ref(null);
 
 const item = computed(() => {
   return order.value?.items?.[0] || {};
+});
+
+// The order snapshot carries the exact bookingTemplate that was active when
+// this order was placed (item.quotation.product.bookingTemplate). We use its
+// booking_page_schema to decide which cards to render, instead of hardcoding
+// a fixed set of sections that may not apply to every product.
+const enabledSections = computed(() => {
+  const sections =
+    item.value?.quotation?.product?.bookingTemplate?.booking_page_schema
+      ?.sections || [];
+
+  return sections
+    .filter((s) => s.enabled)
+    .sort((a, b) => a.sort_order - b.sort_order);
+});
+
+const sectionEnabled = (name) => {
+  return enabledSections.value.some((s) => s.section === name);
+};
+
+// Raw per-item form payload submitted at checkout: customer_details,
+// bike_delivery, medical, participants, ferry, etc. — whichever keys are
+// relevant depend on which sections were enabled for this product.
+const payload = computed(() => {
+  return item.value.booking_payload || {};
+});
+
+const bikeDelivery = computed(() => {
+  return payload.value.bike_delivery || {};
+});
+
+const medical = computed(() => {
+  return payload.value.medical || {};
+});
+
+const declaredConditions = computed(() => {
+  return Object.entries(medical.value)
+    .filter(([key, value]) => key !== "other_details" && value === true)
+    .map(([key]) => key);
 });
 
 const participants = computed(() => {

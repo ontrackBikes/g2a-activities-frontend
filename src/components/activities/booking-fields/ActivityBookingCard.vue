@@ -15,11 +15,9 @@
 
       <div class="g2a-title-4 mb-4">Book your ticket</div>
 
-      
-
       <!-- Booking Fields -->
 
-      <!-- <BookingFieldRenderer
+      <BookingFieldRenderer
         v-for="field in fields"
         :key="field.field"
         :field="field"
@@ -43,7 +41,7 @@
         class="my-4"
       >
         {{ error }}
-      </v-alert> -->
+      </v-alert>
 
       <!-- Button -->
 
@@ -71,12 +69,16 @@
             Check Estimate
           </v-btn> -->
 
-          <v-btn block
+          <v-btn
+            block
             flat
             rounded="xl"
             color="brandColor"
             size="large"
-            :loading="loading" @click="goToBooking()">Book Now</v-btn>
+            :loading="loading"
+            @click="goToBooking()"
+            >Book Now</v-btn
+          >
         </v-col>
       </v-row>
     </v-card>
