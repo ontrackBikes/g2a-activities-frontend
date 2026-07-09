@@ -20,6 +20,7 @@
       <div v-if="loading && !result">Loading...</div>
 
       <div v-else-if="result">
+
         <!-- Dynamic booking fields -->
         <BookingFieldRenderer
           v-for="field in fields"
@@ -217,7 +218,7 @@ const error = ref("");
 const result = ref(null);
 
 const errors = reactive({});
-const maxQuantity = ref(10);
+
 
 const estimateId = ref(route.query.estimate_id || null);
 
@@ -311,19 +312,26 @@ watch(
  * Normalized response
  */
 
-const bookingTemplate = computed(() => result.value?.bookingTemplate);
+
 
 const quotation = computed(() => result.value?.data ?? {});
 
 const product = computed(() => quotation.value.product ?? {});
 
+const bookingTemplate = computed(() => product.value?.bookingTemplate);
+
 const productTerms = computed(() => quotation.value.product.terms ?? {});
 
 const pricing = computed(() => quotation.value.pricing ?? {});
 
+const maxQuantity = computed(() => pricing.value.max_bookable_per_booking ?? 10)
+
 const availability = computed(() => quotation.value.availability ?? {});
 
 const dailyPricing = computed(() => availability.value.daily_pricing ?? []);
+
+
+
 
 const previewDailyPricing = computed(() => {
   return dailyPricing.value.slice(0, 3);
@@ -343,7 +351,7 @@ const selectedSlot = computed(() => availability.value.selected_slot ?? null);
 
 const isSlotPricing = computed(() => pricing.value.pricing_type === "SLOT");
 
-const selectedLocation = computed(() => result.value?.selectedLocation);
+const selectedLocation = computed(() => result.value?.selected_location);
 
 const formatTime = (time) => {
   if (!time) return "";

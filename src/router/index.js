@@ -12,6 +12,7 @@ import OrderSuccess from "@/views/activities/OrderSuccess.vue";
 import OrderFailed from "@/views/activities/OrderFailed.vue";
 import OrderView from "@/views/activities/OrderView.vue";
 import ProductBooking from "@/views/activities/ProductBooking.vue";
+import CheckoutForm from "@/components/activities/checkout/CheckoutForm.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,7 +55,7 @@ const router = createRouter({
         {
           path: "checkout/:estimate_id",
           name: "Checkout",
-          component: Checkout,
+          component: CheckoutForm,
         },
         {
           path: "/:category/:productType/:product/book",

@@ -3,6 +3,7 @@
     class="d-flex align-center justify-space-between pa-3 rounded-lg mb-4"
     style="border:1px solid rgba(0,0,0,.12)"
   >
+
     <span class="g2a-text-bold-600">
       {{ field.label || "Quantity" }}
     </span>
@@ -12,6 +13,7 @@
         icon
         size="x-small"
         flat
+        :disabled="guestCount <= 1"
         @click="decrease"
       >
         <v-icon>mdi-minus</v-icon>
@@ -25,6 +27,7 @@
         icon
         size="x-small"
         flat
+        :disabled="guestCount >= maxAllowed"
         @click="increase"
       >
         <v-icon>mdi-plus</v-icon>
@@ -41,7 +44,6 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
-
   field: {
     type: Object,
     required: true,
@@ -52,30 +54,20 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits([
-  "update:modelValue",
-]);
+const emit = defineEmits(["update:modelValue"]);
 
 const guestCount = computed(() => props.modelValue || 1);
+const maxAllowed = computed(() => props.maxQuantity || 10);
 
 const increase = () => {
-  if(guestCount.value >= props.maxQuantity) {
-    alert("Max Allowed Reached")
-    return
-  }
-  
-  emit(
-    "update:modelValue",
-    Number(guestCount.value + 1),
-  );
+  if (guestCount.value >= maxAllowed.value) return;
+
+  emit("update:modelValue", guestCount.value + 1);
 };
 
 const decrease = () => {
   if (guestCount.value <= 1) return;
 
-  emit(
-    "update:modelValue",
-    guestCount.value - 1,
-  );
+  emit("update:modelValue", guestCount.value - 1);
 };
 </script>
