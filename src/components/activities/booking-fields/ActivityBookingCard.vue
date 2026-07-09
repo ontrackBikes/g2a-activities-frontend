@@ -17,7 +17,7 @@
 
       <!-- Booking Fields -->
 
-      <BookingFieldRenderer
+      <!-- <BookingFieldRenderer
         v-for="field in fields"
         :key="field.field"
         :field="field"
@@ -41,7 +41,7 @@
         class="my-4"
       >
         {{ error }}
-      </v-alert>
+      </v-alert> -->
 
       <!-- Button -->
 
