@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col>
+  <v-row class="my-2">
+    <v-col cols="12" md="4">
       <v-text-field
         v-model="pickupDate"
         type="date"
@@ -10,10 +10,22 @@
         variant="outlined"
         density="comfortable"
         hide-details="auto"
-        class="mb-3"
       />
     </v-col>
-    <v-col>
+
+    <v-col cols="12" md="4">
+      <v-text-field
+        v-model="pickupTime"
+        type="time"
+        label="Pickup Time"
+        :error-messages="error ? [error] : []"
+        variant="outlined"
+        density="comfortable"
+        hide-details="auto"
+      />
+    </v-col>
+
+    <v-col cols="12" md="4">
       <v-text-field
         v-model="returnDate"
         type="date"
@@ -61,6 +73,15 @@ const pickupDate = computed({
   },
 });
 
+const pickupTime = computed({
+  get() {
+    return props.form.pickup_time || "09:00";
+  },
+  set(value) {
+    props.form.pickup_time = value;
+  },
+});
+
 const returnDate = computed({
   get() {
     return props.form.return_date || tomorrowString;
@@ -82,7 +103,6 @@ watch(
 
     if (drop <= pickup) {
       pickup.setDate(pickup.getDate() + 1);
-
       props.form.return_date = pickup.toISOString().split("T")[0];
     }
   },
@@ -96,6 +116,10 @@ watch(
   () => {
     if (!props.form.pickup_date) {
       props.form.pickup_date = today;
+    }
+
+    if (!props.form.pickup_time) {
+      props.form.pickup_time = "09:00";
     }
 
     if (!props.form.return_date) {

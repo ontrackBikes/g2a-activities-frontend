@@ -271,14 +271,33 @@ const bookingRows = computed(() => {
   const labels = {
     travel_date: "Travel Date",
     pickup_date: "Pickup Date",
+    pickup_time: "Pickup Time",
     return_date: "Return Date",
+    drop_time: "Return Time",
     rental_days: "Rental Days",
     guests: "Guests",
   };
 
+  const order = [
+    "travel_date",
+    "pickup_date",
+    "pickup_time",
+    "return_date",
+    "drop_time",
+    "rental_days",
+    "guests",
+  ];
+
   return Object.entries(booking.value)
     .filter(
-      ([, value]) => value !== null && value !== undefined && value !== "",
+      ([, value]) =>
+        value !== null &&
+        value !== undefined &&
+        value !== "",
+    )
+    .sort(
+      ([a], [b]) =>
+        order.indexOf(a) - order.indexOf(b),
     )
     .map(([key, value]) => ({
       label: labels[key] || pretty(key),
