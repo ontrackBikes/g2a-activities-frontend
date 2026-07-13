@@ -1,43 +1,20 @@
-
 <template>
-  <v-container class="py-8">
-
-    <div
-      v-if="loading"
-      class="text-center py-10"
-    >
-      <v-progress-circular
-        indeterminate
-        color="primary"
-      />
+  <v-container class="g2a-container-width py-8 mx-auto">
+    <div v-if="loading" class="text-center py-10">
+      <v-progress-circular indeterminate color="primary" />
     </div>
 
-    <v-alert
-      v-else-if="error"
-      type="error"
-      variant="tonal"
-    >
+    <v-alert v-else-if="error" type="error" variant="tonal">
       {{ error }}
     </v-alert>
 
     <template v-else-if="order">
-
       <v-row>
-
-        <v-col
-          cols="12"
-          md="8"
-        >
-
-          <v-card
-            rounded="xl"
-            variant="outlined"
-          >
-
-            <v-card-text>
-
+        <v-col cols="12" md="8">
+          <!-- Product -->
+          <v-card rounded="xl" variant="outlined" class="custom-border">
+            <v-container>
               <div class="d-flex">
-
                 <v-img
                   :src="item.thumbnail_url"
                   width="150"
@@ -47,254 +24,243 @@
                 />
 
                 <div>
-
-                  <div class="text-h5 font-weight-bold">
-                    {{ item.product_name }}
-                  </div>
-
-                  <div class="g2a-text-14">
+                  <div class="g2a-title-3">{{ item.product_name }}</div>
+                  <div class="g2a-text-14 text-greyDark mt-1">
                     {{ item.location_name }}
                   </div>
 
-                  <div class="mt-4">
-                    <strong>Booking ID</strong><br>
-                    {{ order.order_id }}
+                  <div class="mt-3 g2a-subtitle-2">
+                    <span class="data-label">Booking ID:</span>
+                    <span class="g2a-text-bold ml-1">{{ order.order_id }}</span>
                   </div>
 
                   <div class="mt-2">
-
                     <v-chip
+                      v-if="order.payment_status === 'paid'"
                       color="success"
-                      v-if="order.payment_status==='paid'"
+                      variant="tonal"
+                      size="small"
                     >
                       Paid
                     </v-chip>
 
-                    <v-chip
-                      color="warning"
-                      v-else
-                    >
+                    <v-chip v-else color="warning" variant="tonal" size="small">
                       {{ order.payment_status }}
                     </v-chip>
-
                   </div>
-
                 </div>
-
               </div>
-
-            </v-card-text>
-
+            </v-container>
           </v-card>
 
-          <!-- Booking -->
-
-          <v-card
-            class="mt-5"
-            rounded="xl"
-            variant="outlined"
-          >
-
-            <v-card-title>
-              Booking Details
-            </v-card-title>
-
-            <v-divider />
-
-            <v-card-text>
+          <!-- Booking Details -->
+          <v-card class="mt-5 custom-border" rounded="xl" variant="outlined">
+            <v-container>
+              <div class="g2a-title-4 mb-1">Booking Details</div>
+              <v-divider class="mb-2" />
 
               <div
-                v-for="(value,key) in item.booking_data"
-                :key="key"
+                v-if="bookingData.guests"
                 class="d-flex justify-space-between py-2"
               >
-
-                <span>{{ pretty(key) }}</span>
-
-                <strong>
-                  {{ formatValue(key,value) }}
-                </strong>
-
+                <span class="data-label">Guests</span>
+                <strong class="g2a-text-bold">{{ bookingData.guests }}</strong>
               </div>
 
-            </v-card-text>
+              <div
+                v-if="bookingData.travel_date"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Travel Date</span>
+                <strong class="g2a-text-bold">{{
+                  formatDate(bookingData.travel_date)
+                }}</strong>
+              </div>
 
+              <div
+                v-if="bookingData.selected_slot"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Time Slot</span>
+                <strong class="g2a-text-bold">
+                  {{ bookingData.selected_slot.name }}
+                  ({{ formatTime(bookingData.selected_slot.start_time) }} -
+                  {{ formatTime(bookingData.selected_slot.end_time) }})
+                </strong>
+              </div>
+
+              <div
+                v-if="bookingData.pickup_date"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Pickup Date</span>
+                <strong class="g2a-text-bold">{{
+                  formatDate(bookingData.pickup_date)
+                }}</strong>
+              </div>
+
+              <div
+                v-if="bookingData.pickup_time"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Pickup Time</span>
+                <strong class="g2a-text-bold">{{
+                  formatTime(bookingData.pickup_time)
+                }}</strong>
+              </div>
+
+              <div
+                v-if="bookingData.drop_time"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Drop Time</span>
+                <strong class="g2a-text-bold">{{
+                  formatTime(bookingData.drop_time)
+                }}</strong>
+              </div>
+
+              <div
+                v-if="bookingData.return_date"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Return Date</span>
+                <strong class="g2a-text-bold">{{
+                  formatDate(bookingData.return_date)
+                }}</strong>
+              </div>
+
+              <div
+                v-if="bookingData.rental_days"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Rental Days</span>
+                <strong class="g2a-text-bold">{{
+                  bookingData.rental_days
+                }}</strong>
+              </div>
+            </v-container>
           </v-card>
 
           <!-- Customer -->
+          <v-card class="mt-5 custom-border" rounded="xl" variant="outlined">
+            <v-container>
+              <div class="g2a-title-4 mb-1">Customer</div>
+              <v-divider class="mb-2" />
 
-          <v-card
-            class="mt-5"
-            rounded="xl"
-            variant="outlined"
-          >
-
-            <v-card-title>
-              Customer
-            </v-card-title>
-
-            <v-divider />
-
-            <v-card-text>
-
-              <div>
-                {{ order.customer_details.first_name }}
-                {{ order.customer_details.last_name }}
+              <div class="d-flex justify-space-between py-2">
+                <span class="data-label">Name</span>
+                <strong class="g2a-text-bold">
+                  {{ order.customer_details.first_name }}
+                  {{ order.customer_details.last_name }}
+                </strong>
               </div>
 
-              <div>{{ order.customer_details.mobile }}</div>
+              <div class="d-flex justify-space-between py-2">
+                <span class="data-label">Mobile</span>
+                <strong class="g2a-text-bold">{{
+                  order.customer_details.mobile
+                }}</strong>
+              </div>
 
-              <div>{{ order.customer_details.email }}</div>
+              <div class="d-flex justify-space-between py-2">
+                <span class="data-label">Email</span>
+                <strong class="g2a-text-bold">{{
+                  order.customer_details.email
+                }}</strong>
+              </div>
 
-              <div>{{ order.customer_details.country }}</div>
-
-            </v-card-text>
-
+              <div class="d-flex justify-space-between py-2">
+                <span class="data-label">Country</span>
+                <strong class="g2a-text-bold">{{
+                  order.customer_details.country
+                }}</strong>
+              </div>
+            </v-container>
           </v-card>
 
           <!-- Participants -->
-
           <v-card
             v-if="participants.length"
-            class="mt-5"
+            class="mt-5 custom-border"
             rounded="xl"
             variant="outlined"
           >
+            <v-container>
+              <div class="g2a-title-4 mb-1">Participants</div>
+              <v-divider class="mb-2" />
 
-            <v-card-title>
-              Participants
-            </v-card-title>
+              <v-table>
+                <thead>
+                  <tr>
+                    <th class="data-label">Name</th>
+                    <th class="data-label">Age</th>
+                    <th class="data-label">Gender</th>
+                    <th class="data-label">Nationality</th>
+                  </tr>
+                </thead>
 
-            <v-divider />
-
-            <v-table>
-
-              <thead>
-
-                <tr>
-
-                  <th>Name</th>
-
-                  <th>Age</th>
-
-                  <th>Gender</th>
-
-                  <th>Nationality</th>
-
-                </tr>
-
-              </thead>
-
-              <tbody>
-
-                <tr
-                  v-for="(participant,index) in participants"
-                  :key="index"
-                >
-
-                  <td>
-                    {{ participant.first_name }}
-                    {{ participant.last_name }}
-                  </td>
-
-                  <td>{{ participant.age }}</td>
-
-                  <td>{{ participant.gender }}</td>
-
-                  <td>{{ participant.nationality }}</td>
-
-                </tr>
-
-              </tbody>
-
-            </v-table>
-
+                <tbody>
+                  <tr v-for="(participant, index) in participants" :key="index">
+                    <td class="g2a-text-bold g2a-subtitle-2">
+                      {{ participant.first_name }} {{ participant.last_name }}
+                    </td>
+                    <td class="g2a-subtitle-2">{{ participant.age }}</td>
+                    <td class="g2a-subtitle-2">{{ participant.gender }}</td>
+                    <td class="g2a-subtitle-2">
+                      {{ participant.nationality }}
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </v-container>
           </v-card>
-
         </v-col>
 
         <!-- Right -->
-
-        <v-col
-          cols="12"
-          md="4"
-        >
-
-          <v-card
-            rounded="xl"
-            variant="outlined"
-          >
-
-            <v-card-title>
-              Payment Summary
-            </v-card-title>
-
-            <v-divider />
-
-            <v-card-text>
+        <v-col cols="12" md="4">
+          <v-card rounded="xl" variant="outlined" class="custom-border">
+            <v-container>
+              <div class="g2a-title-4 mb-1">Payment Summary</div>
+              <v-divider class="mb-2" />
 
               <div class="d-flex justify-space-between py-2">
-
-                <span>Subtotal</span>
-
-                <strong>
-                  ₹{{ currency(order.subtotal) }}
-                </strong>
-
+                <span class="data-label">Subtotal</span>
+                <strong class="g2a-text-bold"
+                  >₹{{ currency(order.subtotal) }}</strong
+                >
               </div>
 
               <div class="d-flex justify-space-between py-2">
-
-                <span>Discount</span>
-
-                <strong>
-                  ₹{{ currency(order.discount) }}
-                </strong>
-
+                <span class="data-label">Discount</span>
+                <strong class="g2a-text-bold"
+                  >₹{{ currency(order.discount) }}</strong
+                >
               </div>
 
               <div class="d-flex justify-space-between py-2">
-
-                <span>Tax</span>
-
-                <strong>
-                  ₹{{ currency(order.tax) }}
-                </strong>
-
+                <span class="data-label">Tax</span>
+                <strong class="g2a-text-bold"
+                  >₹{{ currency(order.tax) }}</strong
+                >
               </div>
 
               <v-divider class="my-4" />
 
-              <div class="d-flex justify-space-between">
-
-                <strong>Total Paid</strong>
-
-                <div class="text-h5 text-primary">
+              <div class="d-flex justify-space-between align-center">
+                <span class="g2a-subtitle-4">Total Paid</span>
+                <div class="g2a-title-4 text-brandColor2">
                   ₹{{ currency(order.grand_total) }}
                 </div>
-
               </div>
 
-     
-              <v-alert
-                
-                class="mt-6"
-                type="success"
-                variant="tonal"
-              >
+              <v-alert class="mt-6" type="success" variant="tonal">
                 Your booking has been confirmed.
               </v-alert>
-
-            </v-card-text>
-
+            </v-container>
           </v-card>
-
         </v-col>
-
       </v-row>
-
     </template>
-
   </v-container>
 </template>
 
@@ -306,57 +272,35 @@ import apiClient from "@/services/api";
 const route = useRoute();
 
 const loading = ref(true);
-
 const error = ref("");
-
 const order = ref(null);
 
 const item = computed(() => order.value?.items?.[0] || {});
-
 const participants = computed(() => item.value.participants || []);
 
 const loadOrder = async () => {
   try {
-
     loading.value = true;
-
-    const { data } = await apiClient.get(
-      `/v1/orders/${route.params.order_id}`,
-    );
-
+    const { data } = await apiClient.get(`/v1/orders/${route.params.order_id}`);
     order.value = data.data;
-
   } catch (e) {
-
     console.error(e);
-
     error.value = "Unable to load booking.";
-
   } finally {
-
     loading.value = false;
-
   }
 };
 
-const currency = (value) =>
-  Number(value || 0).toLocaleString("en-IN");
+const currency = (value) => Number(value || 0).toLocaleString("en-IN");
 
-const pretty = (key) =>
-  key
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+const bookingData = computed(() => item.value.booking_data || {});
 
-const formatValue = (key, value) => {
+const formatDate = (d) => new Date(d).toLocaleDateString("en-IN");
 
-  if (key.includes("date")) {
-
-    return new Date(value).toLocaleDateString("en-IN");
-
-  }
-
-  return value;
-
+const formatTime = (t) => {
+  const [h, m] = t.split(":");
+  const hour = +h % 12 || 12;
+  return `${hour}:${m} ${+h < 12 ? "AM" : "PM"}`;
 };
 
 onMounted(loadOrder);

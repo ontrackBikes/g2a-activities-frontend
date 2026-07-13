@@ -325,13 +325,14 @@ const loadProduct = async () => {
 
     if (availableLocations.value.length > 1) {
       const routeLocation = route.query.location;
+
       const matched = availableLocations.value.find(
         (x) => x.slug === routeLocation,
       );
 
       if (matched) {
         selectedLocation.value = matched;
-      } else {
+      } else if (!selectedLocation.value) {
         showLocationDialog.value = true;
       }
     } else if (availableLocations.value.length === 1) {
