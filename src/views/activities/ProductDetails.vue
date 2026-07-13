@@ -118,6 +118,7 @@
           :locations="availableLocations"
           :error="availabilityError"
           :price="product.starting_price"
+          :priceType="product.price_type"
           :loading="checkingAvailability"
           @submit="checkAvailability"
           :nextAvailableDate="product.next_available_slot"

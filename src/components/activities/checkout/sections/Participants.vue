@@ -15,75 +15,71 @@
     <v-divider />
 
     <div>
-      <div
-        
-        v-for="(participant, index) in participants"
-        :key="index"
-      >
+      <div v-for="(participant, index) in participants" :key="index">
         <v-container>
-          <div class="my-2"> Participant {{ index + 1 }} </div>
+          <div class="my-2">Participant {{ index + 1 }}</div>
 
-        <div>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="participant.first_name"
-                label="First Name"
-                variant="outlined"
-                density="comfortable"
-                hide-details="auto"
-                :rules="[(v) => !!v || 'First Name is required']"
-              />
-            </v-col>
+          <div>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="participant.first_name"
+                  label="First Name"
+                  variant="outlined"
+                  density="comfortable"
+                  hide-details="auto"
+                  :rules="[(v) => !!v || 'First Name is required']"
+                />
+              </v-col>
 
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="participant.last_name"
-                label="Last Name"
-                variant="outlined"
-                density="comfortable"
-                hide-details="auto"
-                :rules="[(v) => !!v || 'Last Name is required']"
-              />
-            </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="participant.last_name"
+                  label="Last Name"
+                  variant="outlined"
+                  density="comfortable"
+                  hide-details="auto"
+                  :rules="[(v) => !!v || 'Last Name is required']"
+                />
+              </v-col>
 
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model.number="participant.age"
-                type="number"
-                label="Age"
-                variant="outlined"
-                density="comfortable"
-                hide-details="auto"
-                :rules="[(v) => !!v || 'Age is required']"
-              />
-            </v-col>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  v-model.number="participant.age"
+                  type="number"
+                  label="Age"
+                  variant="outlined"
+                  density="comfortable"
+                  hide-details="auto"
+                  :rules="[(v) => !!v || 'Age is required']"
+                />
+              </v-col>
 
-            <v-col cols="12" md="4">
-              <v-select
-                v-model="participant.gender"
-                :items="genders"
-                label="Gender"
-                variant="outlined"
-                density="comfortable"
-                hide-details="auto"
-                :rules="[(v) => !!v || 'Gender is required']"
-              />
-            </v-col>
+              <v-col cols="12" md="4">
+                <v-select
+                  v-model="participant.gender"
+                  :items="genders"
+                  label="Gender"
+                  variant="outlined"
+                  density="comfortable"
+                  hide-details="auto"
+                  :rules="[(v) => !!v || 'Gender is required']"
+                />
+              </v-col>
 
-            <v-col cols="12" md="4">
-              <v-select
-                v-model="participant.nationality"
-                :items="nationalities"
-                label="Nationality"
-                variant="outlined"
-                density="comfortable"
-                hide-details="auto"
-                :rules="[(v) => !!v || 'Nationality is required']"
-              />
-            </v-col>
-          </v-row>
-        </div>
+              <v-col cols="12" md="4">
+                <v-select
+                  v-model="participant.nationality"
+                  :items="nationalities"
+                  label="Nationality"
+                  variant="outlined"
+                  density="comfortable"
+                  hide-details="auto"
+                  :rules="[(v) => !!v || 'Nationality is required']"
+                />
+              </v-col>
+            </v-row>
+          </div>
         </v-container>
       </div>
     </div>
@@ -107,15 +103,44 @@ const props = defineProps({
 });
 
 const booking = bookingStore;
+const STORAGE_KEY = "g2a_participants_v1";
 
 const genders = ["Male", "Female", "Other"];
 
 const nationalities = ["Indian", "Foreigner"];
 
+/*
+|--------------------------------------------------------------------------
+| Local Storage
+|--------------------------------------------------------------------------
+*/
+
+const loadParticipants = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+
+    if (!raw) {
+      return [];
+    }
+
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
+};
+
+const saveParticipants = (participants) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(participants));
+  } catch {
+    // Ignore storage failures
+  }
+};
+
 const participants = computed({
   get() {
-    if (!booking.form.participants) {
-      booking.form.participants = [];
+    if (!Array.isArray(booking.form.participants)) {
+      booking.form.participants = loadParticipants();
     }
 
     return booking.form.participants;
@@ -158,6 +183,21 @@ watch(
   },
   {
     immediate: true,
+  },
+);
+/*
+|--------------------------------------------------------------------------
+| Auto Save
+|--------------------------------------------------------------------------
+*/
+
+watch(
+  participants,
+  (value) => {
+    saveParticipants(value);
+  },
+  {
+    deep: true,
   },
 );
 </script>

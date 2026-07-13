@@ -381,6 +381,7 @@
                 color="brandColor"
                 size="large"
                 class="mt-6"
+                :disabled="order.payment_status == 'paid'"
                 :loading="paying"
                 @click="payNow"
               >
@@ -428,8 +429,7 @@ const bookingData = computed(() => item.value.booking_data || {});
 const formatDate = (d) => new Date(d).toLocaleDateString("en-IN");
 
 const formatTime = (t) => {
-    if(!t)  
-    return t
+  if (!t) return t;
   const [h, m] = t.split(":");
   const hour = +h % 12 || 12;
   return `${hour}:${m} ${+h < 12 ? "AM" : "PM"}`;

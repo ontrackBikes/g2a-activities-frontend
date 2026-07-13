@@ -126,11 +126,7 @@
       <div class="d-flex align-center justify-space-between">
         <div v-if="product.starting_price">
           <div class="g2a-text-12 text-capitalize line-height-tight">
-            {{
-              product.price_type === "starts_from"
-                ? "starts from"
-                : "flat price"
-            }}
+            {{ product.price_type === "SLOT" ? "starts from" : "flat price" }}
           </div>
           <div class="d-flex align-baseline ga-1">
             <span class="g2a-title-4 text-brandColor2">

@@ -1,13 +1,18 @@
 <template>
-  <v-card flat :disabled="loading" style="max-width: 600px; margin-bottom: 100px;" class="mx-auto" >
-    <v-container >
+  <v-card
+    flat
+    :disabled="loading"
+    style="max-width: 600px; margin-bottom: 100px"
+    class="mx-auto"
+  >
+    <v-container>
       <div class="d-flex align-center mb-4" v-if="product">
         <v-avatar size="72" rounded="lg" class="mr-4">
           <v-img :src="product.thumbnail_url" :alt="product.name" cover />
         </v-avatar>
 
         <div>
-          <div class="g2a-title-4 ">
+          <div class="g2a-title-4">
             {{ product.name }}
           </div>
 
@@ -20,7 +25,6 @@
       <div v-if="loading && !result">Loading...</div>
 
       <div v-else-if="result">
-
         <!-- Dynamic booking fields -->
         <BookingFieldRenderer
           v-for="field in fields"
@@ -36,12 +40,34 @@
         <template v-if="result.available">
           <!-- Slot Selection -->
           <div v-if="isSlotPricing" class="mt-4">
-            <div class="g2a-text-bold mb-3">Select {{availability.slot_display_type}}</div>
+            <div class="g2a-text-bold mb-3">
+              Select {{ availability.slot_display_type }}
+            </div>
+            <v-text-field
+              v-if="slots.length > 4"
+              v-model="slotSearch"
+              prepend-inner-icon="mdi-magnify"
+              placeholder="Search slot..."
+              density="comfortable"
+              variant="outlined"
+              clearable
+              rounded="lg"
+              hide-details
+              class="mb-4"
+            />
+            <v-alert
+              v-if="filteredSlots.length === 0"
+              type="info"
+              variant="tonal"
+              class="mb-3"
+            >
+              No matching slots found.
+            </v-alert>
 
-            <v-row>
+            <v-row v-else>
               <v-col
                 cols="12"
-                v-for="slot in slots"
+                v-for="slot in filteredSlots"
                 :key="slot.token"
                 @click="form.selected_slot_token = slot.token"
               >
@@ -69,7 +95,10 @@
                         </v-chip>
                       </div>
 
-                      <div class="slot-time mt-1" v-if="slot.slot_type == 'TIME'">
+                      <div
+                        class="slot-time mt-1"
+                        v-if="slot.slot_type == 'TIME'"
+                      >
                         <v-icon size="14">mdi-clock-outline</v-icon>
                         {{ formatTime(slot.start_time) }}
                         —
@@ -93,8 +122,6 @@
           <!-- Price -->
 
           <div v-if="dailyPricing.length" class="my-4">
-            
-
             <div class="g2a-text-bold">Daily Pricing</div>
 
             <div
@@ -120,23 +147,17 @@
           </div>
 
           <div v-if="productTerms.length > 0" class="my-4">
-            <div class="g2a-text-bold mb-3">
-              Terms & Conditions
-            </div>
+            <div class="g2a-text-bold mb-3">Terms & Conditions</div>
             <div
               v-for="(term, index) in productTerms"
               :key="index"
               class="g2a-text-13 d-flex"
             >
-             <div> -</div> <div class="ml-2">{{ term.content }}</div>
+              <div>-</div>
+              <div class="ml-2">{{ term.content }}</div>
             </div>
           </div>
-
-
         </template>
-
-
-        
 
         <div v-else class="mt-4 text-error">
           {{ error || result.message }}
@@ -150,11 +171,12 @@
       <div>
         <div class="text-caption text-grey">Total Price</div>
 
-        <div class="g2a-title-4 font-weight-bold">₹{{ pricing.grand_total }}</div>
+        <div class="g2a-title-4 font-weight-bold">
+          ₹{{ pricing.grand_total }}
+        </div>
       </div>
 
       <v-btn
-
         flat
         rounded="xl"
         color="brandColor"
@@ -219,6 +241,7 @@ const result = ref(null);
 
 const errors = reactive({});
 
+const slotSearch = ref("");
 
 const estimateId = ref(route.query.estimate_id || null);
 
@@ -308,11 +331,23 @@ watch(
   },
 );
 
+const filteredSlots = computed(() => {
+  if (!slotSearch.value) return slots.value;
+
+  const search = slotSearch.value.toLowerCase().trim();
+
+  return slots.value.filter((slot) => {
+    return (
+      slot.name?.toLowerCase().includes(search) ||
+      formatTime(slot.start_time)?.toLowerCase().includes(search) ||
+      formatTime(slot.end_time)?.toLowerCase().includes(search)
+    );
+  });
+});
+
 /**
  * Normalized response
  */
-
-
 
 const quotation = computed(() => result.value?.data ?? {});
 
@@ -324,14 +359,13 @@ const productTerms = computed(() => quotation.value.product.terms ?? {});
 
 const pricing = computed(() => quotation.value.pricing ?? {});
 
-const maxQuantity = computed(() => pricing.value.max_bookable_per_booking ?? 10)
+const maxQuantity = computed(
+  () => pricing.value.max_bookable_per_booking ?? 10,
+);
 
 const availability = computed(() => quotation.value.availability ?? {});
 
 const dailyPricing = computed(() => availability.value.daily_pricing ?? []);
-
-
-
 
 const previewDailyPricing = computed(() => {
   return dailyPricing.value.slice(0, 3);
@@ -507,6 +541,4 @@ const continueBooking = () => {
   align-items: center;
   justify-content: space-between;
 }
-
-
 </style>

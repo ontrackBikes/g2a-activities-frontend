@@ -51,7 +51,7 @@
         <v-col cols="7" class="align-content-center">
           <div class="g2a-text-18 g2a-text-bold">
             <div class="g2a-text-12 text-capitalize line-height-tight">
-              {{ priceType === "starts_from" ? "starts from" : "flat price" }}
+              {{ priceType === "SLOT" ? "starts from" : "flat price" }}
             </div>
             ₹ {{ price }} / guest
           </div>
