@@ -19,6 +19,18 @@
         Your booking has been confirmed.
       </v-alert>
 
+      <v-alert
+        class="mb-4"
+        rounded="lg"
+        v-else
+        type="warning"
+        variant="tonal"
+      >
+        We are processing your booking, if the payment was not complete, you can make a fresh order again.
+      </v-alert>
+
+
+      
       <template v-for="(item, index) in items" :key="index">
         <!-- ================= Product ================= -->
         <v-card rounded="lg" flat class="mb-4">
