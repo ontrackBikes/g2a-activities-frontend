@@ -36,14 +36,12 @@
                 {{ item.location_name }}
               </div>
 
-              <v-chip
+              <div
                 v-if="item.booking_data.selected_slot?.name"
-                class="mt-4"
-                color="primary"
-                variant="tonal"
+                class="text-brandColor2"
               >
                 {{ item.booking_data.selected_slot.name }}
-              </v-chip>
+              </div>
             </v-col>
           </v-row>
         </v-card>
