@@ -1,0 +1,77 @@
+.g2a-book-widget {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 18px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+
+  background: #fff;
+  box-sizing: border-box;
+
+  font-family:
+    Inter,
+    Arial,
+    sans-serif;
+}
+
+.g2a-book-widget__price {
+  flex: 1;
+}
+
+.g2a-book-widget__label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  text-transform: capitalize;
+}
+
+.g2a-book-widget__amount {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+}
+
+.g2a-book-widget__amount span {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+}
+
+.g2a-book-widget__button {
+  background: #ff6b00;
+  color: white;
+
+  border: none;
+  border-radius: 999px;
+
+  padding: 14px 30px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  transition: .2s;
+}
+
+.g2a-book-widget__button:hover {
+  opacity: .92;
+}
+
+@media (max-width:600px) {
+
+  .g2a-book-widget {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .g2a-book-widget__button {
+    width: 100%;
+  }
+
+}

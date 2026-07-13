@@ -12,6 +12,7 @@
     "build": "vite build --mode development",
     "build:staging": "vite build --mode staging",
     "build:production": "vite build --mode production",
+    "build:price-widget": "vite build --config vite.booking-price-widget.config.js",
     "build:activities-bike-rentals-widget:dev": "vite build --config vite.activities-bike-rentals-widget.config.js --mode development",
     "build:activities-bike-rentals-widget:staging": "vite build --config vite.activities-bike-rentals-widget.config.js --mode staging",
     "build:activities-bike-rentals-widget:production": "vite build --config vite.activities-bike-rentals-widget.config.js --mode production",
