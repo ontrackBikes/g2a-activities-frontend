@@ -36,7 +36,7 @@
         <template v-if="result.available">
           <!-- Slot Selection -->
           <div v-if="isSlotPricing" class="mt-4">
-            <div class="g2a-text-bold mb-3">Select Slot</div>
+            <div class="g2a-text-bold mb-3">Select {{availability.slot_display_type}}</div>
 
             <v-row>
               <v-col
@@ -69,7 +69,7 @@
                         </v-chip>
                       </div>
 
-                      <div class="slot-time mt-1">
+                      <div class="slot-time mt-1" v-if="slot.slot_type == 'TIME'">
                         <v-icon size="14">mdi-clock-outline</v-icon>
                         {{ formatTime(slot.start_time) }}
                         —

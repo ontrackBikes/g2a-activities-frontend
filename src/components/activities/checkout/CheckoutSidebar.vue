@@ -40,15 +40,20 @@
       <template v-if="selectedSlot">
         <v-divider class="my-5" />
 
-        <div class="g2a-text-bold-600 mb-3">Selected Slot</div>
-
-        <div class="d-flex justify-space-between">
-          <span>Time</span>
-
+        <div class="g2a-text-bold-600 mb-3">{{ selectedSlot.slot_type }}</div>
+        <div class="d-flex justify-space-between" v-if="selectedSlot.slot_type == 'TIME'">
+          <div><span>{{selectedSlot.name}}</span></div>
           <strong>
             {{ selectedSlot.start_time }}
             -
             {{ selectedSlot.end_time }}
+          </strong>
+        </div>
+        <div class="d-flex justify-space-between" v-if="selectedSlot.slot_type == 'VARIANT'">
+          <span>Variant</span>
+
+          <strong>
+            {{ selectedSlot.name }}
           </strong>
         </div>
       </template>
