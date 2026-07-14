@@ -165,18 +165,65 @@
   />
 
   <v-dialog v-model="showLocationDialog" max-width="420">
-    <v-card rounded="xl">
-      <v-card-title>Choose Location</v-card-title>
+    <v-card rounded="xl" elevation="6">
+      <v-card-title class="g2a-title-4 px-5 pt-5 pb-2">
+        Choose Location
+      </v-card-title>
+
+      <v-card-subtitle class="g2a-subtitle-2-light px-5 pb-4">
+        Select the location you'd like to continue with.
+      </v-card-subtitle>
+
       <v-divider />
-      <v-list>
+
+      <v-list class="py-2">
         <v-list-item
           v-for="location in locations"
           :key="location.slug"
+          :active="selectedLocation?.slug === location.slug"
+          rounded="lg"
+          class="mx-3 my-2"
           @click="selectLocation(location)"
         >
-          <v-list-item-title>{{ location.name }}</v-list-item-title>
+          <template #prepend>
+            <v-avatar size="40" color="brandColor" variant="tonal">
+              <v-icon>mdi-map-marker</v-icon>
+            </v-avatar>
+          </template>
+
+          <v-list-item-title class="g2a-subtitle-1 g2a-text-bold-600">
+            {{ location.name }}
+          </v-list-item-title>
+
+          <v-list-item-subtitle class="g2a-subtitle-2-light text-greyDark">
+            Available at this location
+          </v-list-item-subtitle>
+
+          <template #append>
+            <v-icon
+              v-if="selectedLocation?.slug === location.slug"
+              color="success"
+            >
+              mdi-check-circle
+            </v-icon>
+
+            <v-icon v-else color="grey"> mdi-chevron-right </v-icon>
+          </template>
         </v-list-item>
       </v-list>
+
+      <v-divider />
+
+      <v-card-actions class="px-4 py-3">
+        <v-spacer />
+        <v-btn
+          variant="text"
+          class="g2a-subtitle-2 g2a-text-bold-500"
+          @click="showLocationDialog = false"
+        >
+          Cancel
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

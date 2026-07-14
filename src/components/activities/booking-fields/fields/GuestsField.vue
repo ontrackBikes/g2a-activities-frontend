@@ -1,11 +1,10 @@
 <template>
   <div
     class="d-flex align-center justify-space-between pa-3 rounded-lg mb-4"
-    style="border:1px solid rgba(0,0,0,.12)"
+    style="border: 1px solid rgba(0, 0, 0, 0.12)"
   >
-
     <span class="g2a-text-bold-600">
-      {{ field.label || "Quantity" }}
+      {{ field.field || "Quantity" }}
     </span>
 
     <div class="d-flex align-center ga-2">

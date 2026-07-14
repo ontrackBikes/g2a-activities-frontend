@@ -1,193 +1,308 @@
 <template>
   <div class="sticky-card">
-  <v-card rounded="lg" variant="outlined" elevation="0" v-if="quote">
-    <!-- Product -->
+    <!-- Loading skeleton -->
+    <v-card
+      v-if="loading"
+      rounded="xl"
+      variant="outlined"
+      elevation="0"
+      class="custom-border"
+    >
+      <v-card-item class="pa-5">
+        <template #prepend>
+          <v-skeleton-loader type="avatar" width="60" height="60" />
+        </template>
+        <v-skeleton-loader type="heading" class="mb-2" />
+        <v-skeleton-loader type="text" width="60%" />
+      </v-card-item>
+      <v-divider />
+      <v-card-text>
+        <v-skeleton-loader type="list-item-two-line@3" />
+      </v-card-text>
+      <v-divider />
+      <v-card-text>
+        <v-skeleton-loader type="button" height="48" />
+      </v-card-text>
+    </v-card>
 
-    <v-card-item>
-      <template #prepend>
-        <v-avatar rounded="lg" size="58">
-          <v-img :src="quote.product?.thumbnail_url" cover />
-        </v-avatar>
-      </template>
+    <!-- Quote card -->
+    <v-card
+      v-else-if="quote"
+      rounded="xl"
+      variant="outlined"
+      elevation="0"
+      class="custom-border"
+    >
+      <!-- Product -->
+      <v-card-item class="pa-5">
+        <template #prepend>
+          <v-avatar rounded="lg" size="60" class="g2a-rounded-border">
+            <v-img
+              :src="quote.product?.thumbnail_url"
+              :alt="quote.product?.name || 'Product image'"
+              cover
+            >
+              <template #error>
+                <div
+                  class="d-flex align-center justify-center fill-height bg-grey-lighten-3"
+                >
+                  <v-icon color="grey" size="24">mdi-image-off-outline</v-icon>
+                </div>
+              </template>
+              <template #placeholder>
+                <div class="d-flex align-center justify-center fill-height">
+                  <v-progress-circular indeterminate size="20" width="2" />
+                </div>
+              </template>
+            </v-img>
+          </v-avatar>
+        </template>
 
-      <v-card-title class="g2a-text-bold-700">
-        {{ quote.product?.name }}
-      </v-card-title>
+        <v-card-title class="g2a-subtitle g2a-text-bold-600 truncate-two-lines">
+          {{ quote.product?.name || "Selected activity" }}
+        </v-card-title>
 
-      <v-card-subtitle>
-        {{ quote.location?.name }}
-      </v-card-subtitle>
-    </v-card-item>
+        <v-card-subtitle
+          v-if="quote.location?.name"
+          class="g2a-subtitle-2-light text-greyDark"
+        >
+          <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon>
+          {{ quote.location.name }}
+        </v-card-subtitle>
+      </v-card-item>
 
-    <v-divider />
+      <v-divider />
 
-    <v-card-text>
-      <!-- Booking -->
+      <!-- Important details -->
+      <v-card-text v-if="bookingRows.length || selectedSlot" class="pb-0">
+        <div
+          v-for="item in bookingRows.slice(0, 3)"
+          :key="item.label"
+          class="d-flex justify-space-between mb-3"
+        >
+          <span class="text-greyDark g2a-subtitle-2">{{ item.label }}</span>
+          <span class="g2a-text-bold-600 text-right">{{ item.value }}</span>
+        </div>
 
-      <div class="g2a-text-bold-600 mb-3">Booking Details</div>
+        <div v-if="selectedSlot" class="d-flex justify-space-between mb-3">
+          <span class="text-greyDark g2a-subtitle-2">
+            {{ selectedSlot.slot_type === "TIME" ? "Time" : "Variant" }}
+          </span>
 
-      <div
-        v-for="item in bookingRows"
-        :key="item.label"
-        class="d-flex justify-space-between"
+          <span class="g2a-text-bold-600 text-right">
+            <template v-if="selectedSlot.slot_type === 'TIME'">
+              {{ selectedSlot.start_time }} - {{ selectedSlot.end_time }}
+            </template>
+            <template v-else>
+              {{ selectedSlot.name }}
+            </template>
+          </span>
+        </div>
+      </v-card-text>
+
+      <!-- More details -->
+      <v-expansion-panels
+        v-if="hasMoreDetails"
+        flat
+        variant="accordion"
+        class="no-padding-title"
       >
-        <span>{{ item.label }}</span>
-        <strong>{{ item.value }}</strong>
-      </div>
+        <v-expansion-panel>
+          <v-expansion-panel-title class="g2a-subtitle-2 text-greyDark">
+            More details
+          </v-expansion-panel-title>
 
-      <!-- Selected Slot -->
+          <v-expansion-panel-text>
+            <!-- Remaining booking rows -->
+            <div
+              v-for="item in bookingRows.slice(3)"
+              :key="item.label"
+              class="d-flex justify-space-between mb-2"
+            >
+              <span class="g2a-subtitle-2 text-greyDark">{{ item.label }}</span>
+              <strong class="g2a-subtitle-2 text-right">{{
+                item.value
+              }}</strong>
+            </div>
 
-      <template v-if="selectedSlot">
-        <v-divider class="my-5" />
+            <v-divider v-if="dailyPricing.length" class="my-4" />
 
-        <div class="g2a-text-bold-600 mb-3">{{ selectedSlot.slot_type }}</div>
-        <div class="d-flex justify-space-between" v-if="selectedSlot.slot_type == 'TIME'">
-          <div><span>{{selectedSlot.name}}</span></div>
-          <strong>
-            {{ selectedSlot.start_time }}
-            -
-            {{ selectedSlot.end_time }}
-          </strong>
-        </div>
-        <div class="d-flex justify-space-between" v-if="selectedSlot.slot_type == 'VARIANT'">
-          <span>Variant</span>
+            <!-- Daily pricing -->
+            <template v-if="dailyPricing.length">
+              <div class="g2a-text-bold-600 g2a-subtitle-2 mb-3">
+                Daily pricing
+              </div>
 
-          <strong>
-            {{ selectedSlot.name }}
-          </strong>
-        </div>
-      </template>
+              <div
+                v-for="day in previewDailyPricing"
+                :key="day.date"
+                class="d-flex justify-space-between mb-2"
+              >
+                <span class="g2a-subtitle-2 text-greyDark">{{
+                  formatDate(day.date)
+                }}</span>
+                <strong class="g2a-subtitle-2">{{
+                  formatCurrency(day.unit_price)
+                }}</strong>
+              </div>
 
-      <!-- Daily Pricing -->
+              <button
+                v-if="hasMorePricing"
+                type="button"
+                class="g2a-link g2a-subtitle-2 bg-transparent border-0 pa-0"
+                @click.stop="pricingDialog = true"
+              >
+                View all {{ dailyPricing.length }} days
+              </button>
+            </template>
 
-      <template v-if="dailyPricing.length">
-        <v-divider class="my-5" />
+            <v-divider class="my-4" />
 
-        <div class="g2a-text-bold-600">Daily Pricing</div>
+            <!-- Price breakdown -->
+            <div class="d-flex justify-space-between mb-2">
+              <span class="g2a-subtitle-2 text-greyDark">
+                Subtotal{{
+                  pricing.quantity > 1 ? ` (x${pricing.quantity})` : ""
+                }}
+              </span>
+              <strong class="g2a-subtitle-2">{{
+                formatCurrency(pricing.subtotal)
+              }}</strong>
+            </div>
 
-        <div
-          v-for="day in previewDailyPricing"
-          :key="day.date"
-          class="d-flex justify-space-between mb-2"
+            <div
+              v-if="pricing.discount"
+              class="d-flex justify-space-between mb-2"
+            >
+              <span class="g2a-subtitle-2 text-greyDark">Discount</span>
+              <strong class="g2a-subtitle-2 text-success">
+                -{{ formatCurrency(pricing.discount) }}
+              </strong>
+            </div>
+
+            <div v-if="pricing.tax" class="d-flex justify-space-between">
+              <span class="g2a-subtitle-2 text-greyDark">Taxes &amp; fees</span>
+              <strong class="g2a-subtitle-2">{{
+                formatCurrency(pricing.tax)
+              }}</strong>
+            </div>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+
+      <v-divider />
+
+      <!-- Error -->
+      <v-card-text v-if="error" class="pb-0">
+        <v-alert
+          type="error"
+          variant="tonal"
+          density="compact"
+          rounded="lg"
+          class="g2a-subtitle-2"
+          role="alert"
         >
-          <span>{{ formatDate(day.date) }}</span>
+          {{ error }}
+        </v-alert>
+      </v-card-text>
 
-          <strong> ₹{{ currency(day.unit_price) }} </strong>
-        </div>
+      <!-- Total -->
+      <v-card-text>
+        <div class="d-flex justify-space-between align-center mb-1">
+          <span class="g2a-text-bold-600">Total payable</span>
 
-        <div
-          class="g2a-link"
-          v-if="hasMorePricing"
-          variant="text"
-          size="small"
-          color="primary"
-          @click="pricingDialog = true"
-        >
-          View All ({{ dailyPricing.length }})
-        </div>
-      </template>
-      <!-- Price -->
-
-      <v-divider class="my-5" />
-
-      <div class="g2a-text-bold-600 mb-3">Price Summary</div>
-
-      <div class="d-flex justify-space-between">
-        <span>Unit Price</span>
-        <strong>₹{{ currency(pricing.unit_price) }}</strong>
-      </div>
-
-      <div class="d-flex justify-space-between">
-        <span>Quantity</span>
-        <strong>{{ pricing.quantity }}</strong>
-      </div>
-
-      <div class="d-flex justify-space-between">
-        <span>Subtotal</span>
-        <strong>₹{{ currency(pricing.subtotal) }}</strong>
-      </div>
-
-      <div v-if="pricing.discount" class="d-flex justify-space-between">
-        <span>Discount</span>
-
-        <strong class="text-success">
-          - ₹{{ currency(pricing.discount) }}
-        </strong>
-      </div>
-
-      <div v-if="pricing.tax" class="d-flex justify-space-between">
-        <span>Tax</span>
-
-        <strong> ₹{{ currency(pricing.tax) }} </strong>
-      </div>
-
-      <v-divider class="my-5" />
-
-      <div class="d-flex justify-space-between align-center">
-        <div>
-          <div class="g2a-text-bold-700">Total Payable</div>
-
-          <div class="g2a-text-12 text-medium-emphasis">
-            Inclusive of all taxes
+          <div class="text-right">
+            <div
+              v-if="pricing.discount"
+              class="g2a-subtitle-2 text-greyDark text-decoration-line-through"
+            >
+              {{ formatCurrency(pricing.subtotal + pricing.tax) }}
+            </div>
+            <div class="g2a-title-3 text-brandColor2">
+              {{ formatCurrency(pricing.grand_total) }}
+            </div>
           </div>
         </div>
 
-        <div class="g2a-title text-brandColor2">
-          ₹{{ currency(pricing.grand_total) }}
+        <div
+          v-if="pricing.tax"
+          class="g2a-text-caption text-greyDark text-right mb-3"
+        >
+          Inclusive of taxes &amp; fees
         </div>
-      </div>
 
-      <v-alert
-        v-if="error"
-        type="error"
-        variant="tonal"
-        density="compact"
-        class="mt-4"
-      >
-        {{ error }}
-      </v-alert>
+        <v-btn
+          block
+          rounded="xl"
+          color="brandColor"
+          class="mt-3"
+          size="large"
+          :loading="submitting"
+          :disabled="!canProceed"
+          aria-label="Continue to payment"
+          @click="$emit('proceed')"
+        >
+          Continue to Payment
+        </v-btn>
 
-      <v-btn
-        block
-        flat
-        rounded="xl"
-        size="large"
-        color="brandColor"
-        class="mt-6"
-        :loading="submitting"
-        :disabled="submitting"
-        @click="$emit('proceed')"
-      >
-        Continue to Payment
-      </v-btn>
-    </v-card-text>
-  </v-card>
+        <div
+          class="d-flex align-center justify-center g2a-text-caption text-greyDark mt-3"
+        >
+          <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
+          Secure checkout
+        </div>
+      </v-card-text>
+    </v-card>
 
-  <v-card v-else rounded="lg" variant="outlined" elevation="0">
-    <v-card-text class="text-center py-10">
-      <v-icon size="40" color="grey">mdi-receipt-text-outline</v-icon>
-      <div class="g2a-text-16 text-medium-emphasis mt-2">
-        No booking summary available.
-      </div>
-    </v-card-text>
-  </v-card>
-</div>
+    <!-- Empty / no quote state -->
+    <v-card
+      v-else
+      rounded="xl"
+      variant="outlined"
+      elevation="0"
+      class="custom-border"
+    >
+      <v-card-text class="text-center py-10">
+        <v-icon size="40" color="grey">mdi-receipt-text-outline</v-icon>
+        <div class="g2a-text-16 text-medium-emphasis mt-2">
+          {{ error || "No booking summary available." }}
+        </div>
+      </v-card-text>
+    </v-card>
+  </div>
+
+  <!-- Full daily pricing dialog -->
   <v-dialog v-model="pricingDialog" scrollable max-width="450">
-    <v-card>
-      <div class="pa-4">
+    <v-card rounded="lg">
+      <div class="pa-4 d-flex align-center justify-space-between">
         <div class="g2a-title">Daily Pricing</div>
+        <v-btn
+          icon="mdi-close"
+          variant="text"
+          size="small"
+          aria-label="Close daily pricing"
+          @click="pricingDialog = false"
+        />
       </div>
 
-      <v-list>
+      <v-divider />
+
+      <v-list class="no-scrollbar" style="max-height: 360px; overflow-y: auto">
         <v-list-item v-for="day in dailyPricing" :key="day.date">
           <template #title>
-            {{ formatDate(day.date) }}
+            <span class="g2a-subtitle-2">{{ formatDate(day.date) }}</span>
           </template>
 
-          <template #append> ₹{{ currency(day.unit_price) }} </template>
+          <template #append>
+            <strong class="g2a-subtitle-2">{{
+              formatCurrency(day.unit_price)
+            }}</strong>
+          </template>
         </v-list-item>
       </v-list>
-      <v-spacer />
+
+      <v-divider />
+
       <div class="pa-2">
         <v-btn
           block
@@ -210,9 +325,13 @@ defineEmits(["proceed"]);
 const props = defineProps({
   quote: {
     type: Object,
-    default: () => ({}),
+    default: null,
   },
   submitting: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
     type: Boolean,
     default: false,
   },
@@ -224,21 +343,13 @@ const props = defineProps({
 
 const pricingDialog = ref(false);
 
-const previewDailyPricing = computed(() => {
-  return dailyPricing.value.slice(0, 3);
-});
-
-const hasMorePricing = computed(() => {
-  return dailyPricing.value.length > 3;
-});
-
 /*
 |--------------------------------------------------------------------------
 | Quote
 |--------------------------------------------------------------------------
 */
 
-const booking = computed(() => props.quote.booking || {});
+const booking = computed(() => props.quote?.booking || {});
 
 const pricing = computed(() => ({
   currency: "INR",
@@ -248,22 +359,26 @@ const pricing = computed(() => ({
   discount: 0,
   tax: 0,
   grand_total: 0,
-  ...props.quote.pricing,
+  ...props.quote?.pricing,
 }));
 
 const availability = computed(() => ({
   slots: [],
   daily_pricing: [],
   selected_slot: null,
-  ...props.quote.availability,
+  ...props.quote?.availability,
 }));
 
-const selectedSlot = computed(() => {
-  return availability.value.selected_slot;
-});
+const selectedSlot = computed(() => availability.value.selected_slot);
 
-const dailyPricing = computed(() => {
-  return availability.value.daily_pricing || [];
+const dailyPricing = computed(() => availability.value.daily_pricing || []);
+
+const previewDailyPricing = computed(() => dailyPricing.value.slice(0, 3));
+
+const hasMorePricing = computed(() => dailyPricing.value.length > 3);
+
+const canProceed = computed(() => {
+  return Boolean(props.quote) && pricing.value.grand_total > 0 && !props.error;
 });
 
 /*
@@ -272,42 +387,39 @@ const dailyPricing = computed(() => {
 |--------------------------------------------------------------------------
 */
 
+const ROW_LABELS = {
+  travel_date: "Travel Date",
+  pickup_date: "Pickup Date",
+  pickup_time: "Pickup Time",
+  return_date: "Return Date",
+  drop_time: "Return Time",
+  rental_days: "Rental Days",
+  guests: "Guests",
+};
+
+const ROW_ORDER = Object.keys(ROW_LABELS);
+
 const bookingRows = computed(() => {
-  const labels = {
-    travel_date: "Travel Date",
-    pickup_date: "Pickup Date",
-    pickup_time: "Pickup Time",
-    return_date: "Return Date",
-    drop_time: "Return Time",
-    rental_days: "Rental Days",
-    guests: "Guests",
-  };
-
-  const order = [
-    "travel_date",
-    "pickup_date",
-    "pickup_time",
-    "return_date",
-    "drop_time",
-    "rental_days",
-    "guests",
-  ];
-
   return Object.entries(booking.value)
     .filter(
-      ([, value]) =>
-        value !== null &&
-        value !== undefined &&
-        value !== "",
+      ([, value]) => value !== null && value !== undefined && value !== "",
     )
-    .sort(
-      ([a], [b]) =>
-        order.indexOf(a) - order.indexOf(b),
-    )
+    .sort(([a], [b]) => {
+      const indexA = ROW_ORDER.indexOf(a);
+      const indexB = ROW_ORDER.indexOf(b);
+      if (indexA === -1 && indexB === -1) return 0;
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    })
     .map(([key, value]) => ({
-      label: labels[key] || pretty(key),
+      label: ROW_LABELS[key] || prettyLabel(key),
       value: key.includes("date") ? formatDate(value) : value,
     }));
+});
+
+const hasMoreDetails = computed(() => {
+  return bookingRows.value.length > 3 || dailyPricing.value.length > 0;
 });
 
 /*
@@ -316,26 +428,52 @@ const bookingRows = computed(() => {
 |--------------------------------------------------------------------------
 */
 
-const currency = (value) => {
-  return Number(value || 0).toLocaleString("en-IN");
+const formatCurrency = (value) => {
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) return "-";
+
+  try {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: pricing.value.currency || "INR",
+      maximumFractionDigits: 0,
+    }).format(amount);
+  } catch {
+    return `₹${amount.toLocaleString("en-IN")}`;
+  }
 };
 
-const pretty = (value) => {
-  return value.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
+const prettyLabel = (value) => {
+  return value
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
 const formatDate = (date) => {
-  return new Date(date).toLocaleDateString("en-IN", {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return date;
+
+  return parsed.toLocaleDateString("en-IN", {
     day: "numeric",
     month: "short",
     year: "numeric",
   });
 };
+
+defineExpose({ formatCurrency, formatDate });
 </script>
 
 <style scoped>
 .sticky-card {
-  position: sticky !important;
+  position: sticky;
   top: 24px;
+  z-index: 1;
+}
+
+@media (max-width: 960px) {
+  .sticky-card {
+    position: static;
+    top: auto;
+  }
 }
 </style>

@@ -376,12 +376,12 @@
               <v-btn
                 v-else
                 flat
-                rounded="lg"
+                rounded="xl"
                 block
                 color="brandColor"
                 size="large"
                 class="mt-6"
-                :disabled="order.payment_status == 'paid'"
+                :disabled="order.order_status == 'confirmed'"
                 :loading="paying"
                 @click="payNow"
               >

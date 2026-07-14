@@ -10,114 +10,124 @@
       <div class="g2a-title-4 mb-4">Book your ticket</div>
       <div class="g2a-title-4 text-error">Out of Stock</div>
     </v-card>
-    <v-card rounded="lg" variant="outlined" elevation="0" class="pa-4" v-else>
-      <!-- Price -->
+    <v-card
+      v-else
+      rounded="xl"
+      variant="outlined"
+      elevation="0"
+      class="pa-5 custom-border"
+    >
+      <!-- Header -->
+      <div class="g2a-title-4 mb-1">Book your ticket</div>
 
-      <div class="g2a-title-4 mb-4">Book your ticket</div>
+      <div class="g2a-subtitle-2-light text-greyDark mb-5">
+        Complete your booking in just a few steps.
+      </div>
 
       <!-- Booking Fields -->
 
-      <!-- <BookingFieldRenderer
-        v-for="field in fields"
-        :key="field.field"
-        :field="field"
-        :slots="slots"
-        :error="errors[field.field]"
-        :form="form"
-        v-model="form[field.field]"
-        :maxQuantity="maxQuantity"
-      />
+      <!--
+  <BookingFieldRenderer
+    v-for="field in fields"
+    :key="field.field"
+    :field="field"
+    :slots="slots"
+    :error="errors[field.field]"
+    :form="form"
+    v-model="form[field.field]"
+    :maxQuantity="maxQuantity"
+  />
 
-      <div class="text-success">
-        <v-icon>mdi-information</v-icon> Next Available Date:
-        {{ nextAvailableDate }}
-      </div>
+  <div class="text-success mt-3">
+    <v-icon size="18" class="me-1">mdi-information</v-icon>
+    Next Available Date: {{ nextAvailableDate }}
+  </div>
 
-      <v-alert
-        v-if="error"
-        type="error"
-        variant="outlined"
-        density="compact"
-        class="my-4"
-      >
-        {{ error }}
-      </v-alert> -->
+  <v-alert
+    v-if="error"
+    type="error"
+    variant="outlined"
+    density="compact"
+    class="mt-4"
+  >
+    {{ error }}
+  </v-alert>
+  -->
 
-      <!-- Button -->
+      <v-divider class="my-5" />
 
-      <v-divider class="my-4"></v-divider>
-
-      <v-row>
-        <v-col cols="7" class="align-content-center">
-          <div class="g2a-text-18 g2a-text-bold">
-            <div class="g2a-text-12 text-capitalize line-height-tight">
-              {{ priceType === "SLOT" ? "starts from" : "flat price" }}
-            </div>
-            ₹ {{ price }} / guest
+      <!-- Price & CTA -->
+      <div class="d-flex align-center justify-space-between">
+        <div>
+          <div class="g2a-subtitle-2-light text-greyDark text-uppercase">
+            {{ priceType === "SLOT" ? "Starts from" : "Flat price" }}
           </div>
-        </v-col>
 
-        <v-col cols="5">
-          <!-- <v-btn
-            block
-            flat
-            rounded="xl"
-            color="brandColor"
-            :loading="loading"
-            @click="submit"
-          >
-            Check Estimate
-          </v-btn> -->
+          <div class="g2a-title-3 mt-1">
+            ₹{{ price }}
+            <span class="g2a-subtitle-2-light text-greyDark">
+              /
+              {{
+                props.bookingTemplate.name
+                  ?.toLowerCase()
+                  .includes("bike rentals")
+                  ? "quantity"
+                  : "guest"
+              }}
+            </span>
+          </div>
+        </div>
 
-          <v-btn
-            block
-            flat
-            rounded="xl"
-            color="brandColor"
-            size="large"
-            :loading="loading"
-            @click="goToBooking()"
-            >Book Now</v-btn
-          >
-        </v-col>
-      </v-row>
+        <v-btn
+          color="brandColor"
+          rounded="xl"
+          size="large"
+          flat
+          min-width="150"
+          :loading="loading"
+          @click="goToBooking()"
+        >
+          Book Now
+        </v-btn>
+      </div>
     </v-card>
-    <v-card rounded="lg" variant="outlined" class="mt-3">
-      <v-card-text>
-        <div class="g2a-title-4 mb-2">Location</div>
+    <v-card rounded="xl" variant="outlined" class="mt-3 custom-border">
+      <v-card-text class="pa-5">
+        <div class="g2a-title-4 mb-1">Location</div>
+
+        <div class="g2a-subtitle-2-light text-greyDark mb-4">
+          Choose where you'd like to book from.
+        </div>
 
         <v-card
           variant="outlined"
           rounded="lg"
           :disabled="props.locations.length < 2"
-          class="px-4 py-3 d-flex align-center cursor-pointer"
-          @click="$emit('showLocationDialog')"
+          class="px-4 py-3 d-flex align-center custom-border"
+          :class="{ 'cursor-pointer': props.locations.length > 1 }"
+          @click="props.locations.length > 1 && $emit('showLocationDialog')"
         >
-          <v-icon
-            icon="mdi-map-marker-outline"
-            color="primary"
-            size="20"
-            class="me-3"
-          />
+          <v-avatar size="40" color="brandColor" variant="tonal" class="me-4">
+            <v-icon size="20">mdi-map-marker</v-icon>
+          </v-avatar>
 
           <div class="flex-grow-1" style="min-width: 0">
-            <div class="g2a-text-13 g2a-text-bold-600 text-truncate">
-              {{ locationSelected || "Select location" }}
+            <div class="g2a-subtitle-1 g2a-text-bold-600 text-truncate">
+              {{ locationSelected || "Select Location" }}
             </div>
 
-            <div
-              v-if="props.locations.length > 1"
-              class="text-caption text-medium-emphasis"
-            >
-              Tap to change location
+            <div class="g2a-subtitle-2-light text-greyDark">
+              {{
+                props.locations.length > 1
+                  ? "Tap to change location"
+                  : "Only one location available"
+              }}
             </div>
           </div>
 
-          <v-icon
-            v-if="props.locations.length > 1"
-            icon="mdi-chevron-down"
-            color="medium-emphasis"
-          />
+          <v-icon v-if="props.locations.length > 1" color="grey">
+            mdi-chevron-right
+          </v-icon>
         </v-card>
       </v-card-text>
     </v-card>
