@@ -63,6 +63,23 @@
   opacity: .92;
 }
 
+.g2a-book-widget__out-of-stock {
+  color: #d32f2f;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.g2a-book-widget__next-slot {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #666;
+}
+
+.g2a-book-widget__button--disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
+}
+
 @media (max-width:600px) {
 
   .g2a-book-widget {
