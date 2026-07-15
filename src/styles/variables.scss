@@ -107,3 +107,12 @@ $body-font-family: "Roobert", sans-serif;
 body {
   font-family: $body-font-family;
 }
+/* variables.scss */
+
+.brand-gradient {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--v-theme-brandColorFade)) 0%,
+    rgba(var(--v-theme-brandColorFade), 0) 100%
+  );
+}

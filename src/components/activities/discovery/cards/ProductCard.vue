@@ -38,10 +38,10 @@
     </v-row>
   </v-card>
   <v-card
+  v-else
     :ripple="false"
-    v-else
     flat
-    class="border d-flex flex-column h-100 position-relative"
+    class="border h-100 "
     :style="{
       opacity: product.out_of_stock ? '0.75' : '1',
       transition: 'all 0.2s ease',
@@ -49,7 +49,7 @@
     @click="handleClick"
     rounded="lg"
   >
-    <div class="position-relative overflow-hidden" style="height: 250px">
+    <div class=" overflow-hidden" style="height: 250px">
       <v-img :src="product.thumbnail_url || fallbackImg" height="250" cover>
         <template #placeholder>
           <div class="d-flex align-center justify-center fill-height">
@@ -89,12 +89,12 @@
       </div>
     </div>
 
-    <div class="bg-brandColor2 text-white px-2 py-1">
+    <div class="brand-gradient  px-2 py-1">
       <div
         class="g2a-title-sm"
         v-if="product.next_available_slot && !product.out_of_stock"
       >
-        Next Available: {{ formatDate(product.next_available_slot) }}
+        Next Available: <strong>{{ formatDate(product.next_available_slot) }}</strong>
       </div>
     </div>
 

@@ -124,7 +124,7 @@
       <!-- End of list -->
       <div
         v-if="!loading && !hasMore && products.length > 0"
-        class="d-flex flex-column align-center text-center"
+        class="mt-8 text-center"
       >
        
         <div class="g2a-text-12 text-greyDark">
