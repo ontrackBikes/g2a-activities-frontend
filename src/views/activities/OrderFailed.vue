@@ -4,7 +4,7 @@
     <v-card
       max-width="700"
       class="mx-auto"
-      rounded="xl"
+      rounded="lg"
       elevation="0"
       variant="outlined"
     >

@@ -14,7 +14,7 @@
       >
         <v-card
           variant="flat"
-          rounded="xl"
+          rounded="lg"
           height="130"
           class="category-card"
           :color="getActivitieTheme(category.name).bg"

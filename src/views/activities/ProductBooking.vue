@@ -178,7 +178,7 @@
 
       <v-btn
         flat
-        rounded="xl"
+        rounded="lg"
         color="brandColor"
         size="large"
         min-width="180"

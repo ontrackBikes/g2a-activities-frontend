@@ -3,7 +3,7 @@
     <!-- Hero -->
 
     <v-card
-      rounded="xl"
+      rounded="lg"
       elevation="0"
       class="overflow-hidden mb-6"
     >

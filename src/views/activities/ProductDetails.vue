@@ -165,7 +165,7 @@
   />
 
   <v-dialog v-model="showLocationDialog" max-width="420">
-    <v-card rounded="xl" elevation="6">
+    <v-card rounded="lg" elevation="6">
       <v-card-title class="g2a-title-4 px-5 pt-5 pb-2">
         Choose Location
       </v-card-title>

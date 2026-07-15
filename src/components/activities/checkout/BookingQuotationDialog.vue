@@ -13,7 +13,7 @@
       webkitBackdropFilter: 'blur(5px)',
     }"
   >
-    <v-card rounded="xl" :loading="selectingSlot">
+    <v-card rounded="lg" :loading="selectingSlot">
       <!-- Header -->
 
       <v-card-item class="py-4">
@@ -179,7 +179,7 @@
             <v-btn
               flat
               block
-              rounded="xl"
+              rounded="lg"
               size="large"
               color="brandColor"
               :disabled="hasSlots && !selectedSlot"

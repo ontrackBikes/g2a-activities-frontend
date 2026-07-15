@@ -86,7 +86,7 @@
               block
               color="brandColor"
               class="mt-4"
-              rounded="xl"
+              rounded="lg"
               size="x-large"
               @click="retryPayment"
             >
@@ -114,7 +114,7 @@
               block
               color="brandColor"
               class="mt-4"
-              rounded="xl"
+              rounded="lg"
               size="x-large"
               @click="retryPayment"
             >

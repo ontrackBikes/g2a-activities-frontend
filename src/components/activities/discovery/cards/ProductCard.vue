@@ -163,7 +163,7 @@
   </v-card>
 
   <v-dialog v-model="showLocationDialog" max-width="420">
-    <v-card rounded="xl">
+    <v-card rounded="lg">
       <v-card-title> Choose Location </v-card-title>
 
       <v-divider />

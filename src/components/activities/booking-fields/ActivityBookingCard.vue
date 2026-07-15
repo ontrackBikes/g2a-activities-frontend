@@ -12,7 +12,7 @@
     </v-card>
     <v-card
       v-else
-      rounded="xl"
+      rounded="lg"
       variant="outlined"
       elevation="0"
       class="pa-5 custom-border"
@@ -80,7 +80,7 @@
 
         <v-btn
           color="brandColor"
-          rounded="xl"
+          rounded="lg"
           size="large"
           flat
           min-width="150"
@@ -91,7 +91,7 @@
         </v-btn>
       </div>
     </v-card>
-    <v-card rounded="xl" variant="outlined" class="mt-3 custom-border">
+    <v-card rounded="lg" variant="outlined" class="mt-3 custom-border">
       <v-card-text class="pa-5">
         <div class="g2a-title-4 mb-1">Location</div>
 

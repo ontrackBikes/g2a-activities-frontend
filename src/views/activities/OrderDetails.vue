@@ -12,7 +12,7 @@
       <v-row>
         <v-col cols="12" md="8">
           <!-- Product -->
-          <v-card rounded="xl" variant="outlined" class="custom-border">
+          <v-card rounded="lg" variant="outlined" class="custom-border">
             <v-container>
               <div class="d-flex">
                 <v-img
@@ -45,7 +45,7 @@
           </v-card>
 
           <!-- Booking Details -->
-          <v-card class="mt-5 custom-border" rounded="xl" variant="outlined">
+          <v-card class="mt-5 custom-border" rounded="lg" variant="outlined">
             <v-container>
               <div class="g2a-title-4 mb-1">Booking Details</div>
               <v-divider class="mb-2" />
@@ -136,7 +136,7 @@
           <v-card
             v-if="sectionEnabled('customer_details')"
             class="mt-5 custom-border"
-            rounded="xl"
+            rounded="lg"
             variant="outlined"
           >
             <v-container>
@@ -178,7 +178,7 @@
           <v-card
             v-if="sectionEnabled('rental_details')"
             class="mt-5 custom-border"
-            rounded="xl"
+            rounded="lg"
             variant="outlined"
           >
             <v-container>
@@ -219,7 +219,7 @@
           <v-card
             v-if="sectionEnabled('medical_declaration')"
             class="mt-5 custom-border"
-            rounded="xl"
+            rounded="lg"
             variant="outlined"
           >
             <v-container>
@@ -254,7 +254,7 @@
           <v-card
             v-if="sectionEnabled('participants')"
             class="mt-5 custom-border"
-            rounded="xl"
+            rounded="lg"
             variant="outlined"
           >
             <v-container>
@@ -289,7 +289,7 @@
           <v-card
             v-if="sectionEnabled('ferry_seat_selection')"
             class="mt-5 custom-border"
-            rounded="xl"
+            rounded="lg"
             variant="outlined"
           >
             <v-container>
@@ -321,7 +321,7 @@
 
         <!-- RIGHT -->
         <v-col cols="12" md="4">
-          <v-card rounded="xl" variant="outlined" class="custom-border">
+          <v-card rounded="lg" variant="outlined" class="custom-border">
             <v-container>
               <div class="g2a-title-4 mb-1">Payment Summary</div>
               <v-divider class="mb-2" />
@@ -376,7 +376,7 @@
               <v-btn
                 v-else
                 flat
-                rounded="xl"
+                rounded="lg"
                 block
                 color="brandColor"
                 size="large"

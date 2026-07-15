@@ -19,7 +19,7 @@
 
     <div v-else>
       <!-- ================= Hero ================= -->
-      <v-card rounded="xl" variant="outlined" class="custom-border mb-6">
+      <v-card rounded="lg" variant="outlined" class="custom-border mb-6">
         <v-container>
           <div class="d-flex align-center flex-wrap ga-4">
             <v-avatar :color="statusAlert.type" variant="tonal" size="56">

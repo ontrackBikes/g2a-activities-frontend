@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="xl" variant="outlined" elevation="0">
+  <v-card rounded="lg" variant="outlined" elevation="0">
     <v-container class="py-4">
       <div class="g2a-subtitle">
         {{ config.title || "Participant Details" }}

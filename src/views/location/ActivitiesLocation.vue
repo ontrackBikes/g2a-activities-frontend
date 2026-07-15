@@ -31,7 +31,7 @@
         >
           <v-card
             class="activity-card"
-            rounded="xl"
+            rounded="lg"
             variant="outlined"
             elevation="0"
             @click="goToProductType(type)"

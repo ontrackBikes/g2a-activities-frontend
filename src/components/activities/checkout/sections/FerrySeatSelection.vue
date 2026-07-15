@@ -1,6 +1,6 @@
 <template>
   <v-card
-    rounded="xl"
+    rounded="lg"
     variant="outlined"
     elevation="0"
   >

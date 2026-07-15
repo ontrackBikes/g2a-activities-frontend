@@ -24,7 +24,7 @@
           lg="2"
         >
           <v-card
-            rounded="xl"
+            rounded="lg"
             elevation="0"
             variant="outlined"
             class="activity-card"

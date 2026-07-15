@@ -54,7 +54,7 @@
             flat
             density="compact"
             hide-details
-            rounded="xl"
+            rounded="lg"
             class="cursor-pointer"
             @click="searchDialog = true"
           />
@@ -87,7 +87,7 @@
             v-if="!mobile"
             color="brandColor"
             variant="flat"
-            rounded="xl"
+            rounded="lg"
             class="px-6 text-none font-weight-medium"
             height="42"
             href="https://go2andaman.com/contact-us/"
@@ -131,13 +131,13 @@
               density="compact"
               hide-details
               clearable
-              rounded="xl"
+              rounded="lg"
               class="flex-grow-1"
             />
             <v-btn
               icon="mdi-close"
               variant="icon"
-              rounded="xl"
+              rounded="lg"
               @click="closeSearchDialog"
             >
             </v-btn>
