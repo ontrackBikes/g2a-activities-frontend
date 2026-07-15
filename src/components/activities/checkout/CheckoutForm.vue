@@ -31,7 +31,7 @@
   <v-form v-else ref="form" validate-on="submit">
     <v-row>
       <!-- LEFT -->
-      <v-col cols="12" lg="8">
+      <v-col cols="12" lg="7">
         <CheckoutRenderer
           :booking-template="quote.product.bookingTemplate"
           :quote="quote"
@@ -39,7 +39,7 @@
       </v-col>
 
       <!-- RIGHT -->
-      <v-col cols="12" lg="4">
+      <v-col cols="12" lg="5">
         <CheckoutSidebar
           :quote="quote"
           :submitting="submitting"

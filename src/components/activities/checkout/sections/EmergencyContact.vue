@@ -31,7 +31,7 @@
             label="Full Name"
             prepend-inner-icon="mdi-account"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[
               v => !!v || 'Full Name is required'
@@ -48,7 +48,7 @@
             label="Mobile Number"
             prepend-inner-icon="mdi-phone"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[
               v => !!v || 'Mobile Number is required',
@@ -66,7 +66,7 @@
             :items="relationships"
             label="Relationship"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[
               v => !!v || 'Relationship is required'
@@ -83,7 +83,7 @@
             label="Email (Optional)"
             prepend-inner-icon="mdi-email-outline"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[
               v => !v || /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v) || 'Enter a valid email address'

@@ -205,7 +205,7 @@
           title="Participants"
         >
           <v-container>
-            <v-table density="comfortable" class="no-scrollbar">
+            <v-table density="compact" class="no-scrollbar">
               <thead>
                 <tr>
                   <th class="data-label">Name</th>

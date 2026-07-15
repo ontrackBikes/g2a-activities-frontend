@@ -2,7 +2,7 @@
   <div
     class="hero"
     :style="{
-      backgroundImage: `url(${category.cover_media_url || fallbackImage})`,
+      backgroundImage: `url(${category.cover_media_url || category.image || fallbackImage})`,
     }"
   >
     <div class="overlay">

@@ -5,7 +5,6 @@
       <div class="g2a-text-24 g2a-text-bold-700">
         {{ title }}
       </div>
-      {{ productTypeSlug }}
       <div class="g2a-text-14">Explore experiences and activities.</div>
     </div>
 

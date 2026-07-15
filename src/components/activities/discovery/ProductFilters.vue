@@ -51,17 +51,17 @@
                 v-for="loc in locations"
                 :key="loc.id"
                 class="quick-menu-item"
-                @click="toggleArr('locationIds', loc.id)"
+                @click="toggleArr('locationIds', loc.slug)"
               >
                 <v-icon
                   :icon="
-                    safeVal.locationIds.includes(loc.id)
+                    safeVal.locationIds.includes(loc.slug)
                       ? 'mdi-checkbox-marked'
                       : 'mdi-checkbox-blank-outline'
                   "
                   size="16"
                   :color="
-                    safeVal.locationIds.includes(loc.id)
+                    safeVal.locationIds.includes(loc.slug)
                       ? 'brandColor2'
                       : 'greyDark'
                   "
@@ -258,19 +258,19 @@
               </div>
               <div
                 v-for="loc in locations"
-                :key="loc.id"
+                :key="loc.slug"
                 class="filter-option"
-                @click="toggleArr('locationIds', loc.id)"
+                @click="toggleArr('locationIds', loc.slug)"
               >
                 <v-icon
                   :icon="
-                    safeVal.locationIds.includes(loc.id)
+                    safeVal.locationIds.includes(loc.slug)
                       ? 'mdi-checkbox-marked'
                       : 'mdi-checkbox-blank-outline'
                   "
                   size="15"
                   :color="
-                    safeVal.locationIds.includes(loc.id)
+                    safeVal.locationIds.includes(loc.slug)
                       ? 'brandColor2'
                       : 'greyDark'
                   "
@@ -279,7 +279,7 @@
                 <span
                   class="g2a-text-13"
                   :class="
-                    safeVal.locationIds.includes(loc.id)
+                    safeVal.locationIds.includes(loc.slug)
                       ? 'g2a-text-bold-600 text-brandColor2'
                       : 'text-greyDark'
                   "

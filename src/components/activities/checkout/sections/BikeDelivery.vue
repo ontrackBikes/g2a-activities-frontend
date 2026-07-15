@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="lg" variant="outlined" elevation="0">
-    <v-container class="py-4">
+    <v-container class="py-2">
       <div class="g2a-subtitle">
         {{ config.title || "Bike Delivery Details" }}
       </div>
@@ -23,7 +23,7 @@
             label="Pickup Location"
             prepend-inner-icon="mdi-map-marker"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[(v) => !!v || 'Pickup Location is required']"
           />
@@ -35,7 +35,7 @@
             label="Return / Drop Location"
             prepend-inner-icon="mdi-map-marker-radius"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[(v) => !!v || 'Return Location is required']"
           />
@@ -48,7 +48,7 @@
             label="Pickup Time"
             prepend-inner-icon="mdi-clock-outline"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[(v) => !!v || 'Pickup Time is required']"
           />
@@ -61,7 +61,7 @@
             label="Return Time"
             prepend-inner-icon="mdi-clock-check-outline"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[(v) => !!v || 'Return Time is required']"
           />

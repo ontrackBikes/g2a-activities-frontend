@@ -48,7 +48,7 @@
               v-model="slotSearch"
               prepend-inner-icon="mdi-magnify"
               placeholder="Search slot..."
-              density="comfortable"
+              density="compact"
               variant="outlined"
               clearable
               rounded="lg"

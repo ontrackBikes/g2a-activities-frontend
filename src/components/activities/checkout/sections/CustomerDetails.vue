@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="lg" variant="outlined" elevation="0">
-    <v-container class="py-4">
+    <v-container class="py-2">
       <div class="g2a-subtitle">
         {{ config.title || "Customer Details" }}
       </div>
@@ -15,8 +15,9 @@
             v-model="customer_details.first_name"
             label="First Name"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
+            
             :rules="[(v) => !!v || 'First Name is required']"
           />
         </v-col>
@@ -26,7 +27,7 @@
             v-model="customer_details.last_name"
             label="Last Name"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[(v) => !!v || 'Last Name is required']"
           />
@@ -38,7 +39,7 @@
             label="Mobile Number"
             prepend-inner-icon="mdi-phone"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="mobileRules"
           />
@@ -50,7 +51,7 @@
             label="Email Address"
             prepend-inner-icon="mdi-email-outline"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="emailRules"
           />
@@ -62,7 +63,7 @@
             label="Country"
             prepend-inner-icon="mdi-earth"
             variant="outlined"
-            density="comfortable"
+            density="compact"
             hide-details="auto"
             :rules="[(v) => !!v || 'Country is required']"
           />

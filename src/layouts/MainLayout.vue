@@ -52,7 +52,7 @@
             readonly
             prepend-inner-icon="mdi-magnify"
             flat
-            density="comfortable"
+            density="compact"
             hide-details
             rounded="xl"
             class="cursor-pointer"
@@ -128,7 +128,7 @@
               placeholder="Search experiences, activities..."
               variant="outlined"
               color="brandColor2"
-              density="comfortable"
+              density="compact"
               hide-details
               clearable
               rounded="xl"

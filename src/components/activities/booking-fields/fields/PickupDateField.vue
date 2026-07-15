@@ -6,7 +6,7 @@
     :min="today"
     :error-messages="error ? [error] : []"
     variant="outlined"
-    density="comfortable"
+    density="compact"
     hide-details="auto"
     class="mb-3"
   />

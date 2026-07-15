@@ -64,7 +64,7 @@ const openLocation = (location) => {
     name: "ActivitiesLocation",
 
     params: {
-      slug: location.slug,
+      location_slug: location.slug,
     },
   });
 };

@@ -30,7 +30,7 @@
         item-value="code"
         label="Travel Class"
         variant="outlined"
-        density="comfortable"
+        density="compact"
         hide-details="auto"
         class="mb-6"
         :rules="[
@@ -65,7 +65,7 @@
                   :items="seatPreferences"
                   label="Seat Preference"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   hide-details="auto"
                   :rules="[
                     v => !!v || 'Seat Preference is required'
@@ -81,7 +81,7 @@
                   v-model="participant.seat_number"
                   label="Preferred Seat (Optional)"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   hide-details="auto"
                 />
               </v-col>

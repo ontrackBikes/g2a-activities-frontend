@@ -295,7 +295,7 @@ async function fetchProducts(reset = false) {
 
     if (f.minPrice > 0) params.min_price = f.minPrice;
     if (f.maxPrice < 50000) params.max_price = f.maxPrice;
-    if (f.locationIds?.length) params.location_ids = f.locationIds.join(",");
+    if (f.locationIds?.length) params.location_slugs = f.locationIds.join(",");
     if (f.tagIds?.length) params.tag_ids = f.tagIds.join(",");
 
     const res = await apiClient.get("/v1/products/app/products-list", {

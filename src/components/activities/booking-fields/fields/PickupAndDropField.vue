@@ -8,7 +8,7 @@
         :min="today"
         :error-messages="error ? [error] : []"
         variant="outlined"
-        density="comfortable"
+        density="compact"
         hide-details="auto"
       />
     </v-col>
@@ -20,7 +20,7 @@
         label="Pickup Time"
         :error-messages="error ? [error] : []"
         variant="outlined"
-        density="comfortable"
+        density="compact"
         hide-details="auto"
       />
     </v-col>
@@ -33,7 +33,7 @@
         :min="minimumReturnDate"
         :error-messages="error ? [error] : []"
         variant="outlined"
-        density="comfortable"
+        density="compact"
         hide-details="auto"
       />
     </v-col>

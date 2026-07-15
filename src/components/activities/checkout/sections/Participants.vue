@@ -26,7 +26,7 @@
                   v-model="participant.first_name"
                   label="First Name"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'First Name is required']"
                 />
@@ -37,7 +37,7 @@
                   v-model="participant.last_name"
                   label="Last Name"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'Last Name is required']"
                 />
@@ -49,7 +49,7 @@
                   type="number"
                   label="Age"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'Age is required']"
                 />
@@ -61,7 +61,7 @@
                   :items="genders"
                   label="Gender"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'Gender is required']"
                 />
@@ -73,7 +73,7 @@
                   :items="nationalities"
                   label="Nationality"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'Nationality is required']"
                 />

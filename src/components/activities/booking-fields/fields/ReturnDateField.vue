@@ -5,7 +5,7 @@
     label="Return Date"
     :min="minimumDate"
     variant="outlined"
-    density="comfortable"
+    density="compact"
     hide-details="auto"
     class="mb-3"
     :error-messages="error ? [error] : []"

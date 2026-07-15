@@ -3,7 +3,7 @@
     <!-- Loading skeleton -->
     <v-card
       v-if="loading"
-      rounded="xl"
+      rounded="lg"
       variant="outlined"
       elevation="0"
       class="custom-border"
@@ -28,7 +28,7 @@
     <!-- Quote card -->
     <v-card
       v-else-if="quote"
-      rounded="xl"
+      rounded="lg"
       variant="outlined"
       elevation="0"
       class="custom-border"
@@ -232,8 +232,9 @@
         </div>
 
         <v-btn
+          flat
           block
-          rounded="xl"
+          rounded="lg"
           color="brandColor"
           class="mt-3"
           size="large"
@@ -257,7 +258,7 @@
     <!-- Empty / no quote state -->
     <v-card
       v-else
-      rounded="xl"
+      rounded="lg"
       variant="outlined"
       elevation="0"
       class="custom-border"

@@ -6,7 +6,7 @@
     item-title="slot_name"
     item-value="id"
     :label="field.label || 'Select Slot'"
-    density="comfortable"
+    density="compact"
     variant="outlined"
     rounded="lg"
     hide-details
