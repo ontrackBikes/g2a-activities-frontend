@@ -22,7 +22,7 @@
       class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
     >
       <span>{{ quoteError }}</span>
-      <v-btn color="error" variant="outlined" size="small" @click="loadQuote">
+      <v-btn color="error" variant="outlined" size="large" @click="loadQuote">
         Try Again
       </v-btn>
     </div>

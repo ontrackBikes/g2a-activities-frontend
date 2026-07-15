@@ -7,8 +7,8 @@
           <!-- Filter button -->
           <v-btn
             variant="outlined"
-            rounded="pill"
-            size="small"
+            rounded="lg"
+            size="large"
             color="brandColor2"
             prepend-icon="mdi-tune-variant"
             class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
@@ -30,8 +30,8 @@
               <v-btn
                 v-bind="menuProps"
                 variant="outlined"
-                rounded="pill"
-                size="small"
+                rounded="lg"
+                size="large"
                 color="brandColor2"
                 append-icon="mdi-chevron-down"
                 class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
@@ -78,8 +78,8 @@
               <v-btn
                 v-bind="menuProps"
                 variant="outlined"
-                rounded="pill"
-                size="small"
+                rounded="lg"
+                size="large"
                 color="brandColor2"
                 class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
               >
@@ -115,8 +115,8 @@
             v-for="tag in tags.slice(0, 3)"
             :key="tag.id"
             variant="outlined"
-            rounded="pill"
-            size="small"
+            rounded="lg"
+            size="large"
             color="brandColor2"
             class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
             :style="
@@ -133,7 +133,7 @@
           <v-btn
             v-if="hasActiveFilters"
             variant="text"
-            size="small"
+            size="large"
             color="error"
             class="g2a-text-12 g2a-text-bold-600 flex-shrink-0 ms-1"
             prepend-icon="mdi-close-circle-outline"
@@ -171,13 +171,13 @@
               v-if="hasActiveFilters"
               variant="text"
               color="error"
-              size="small"
+              size="large"
               class="g2a-text-12 g2a-text-bold-600"
               @click="$emit('reset')"
             >
               Reset all
             </v-btn>
-            <v-btn icon variant="text" size="small" @click="dialogOpen = false">
+            <v-btn icon variant="text" size="large" @click="dialogOpen = false">
               <v-icon icon="mdi-close" size="20" />
             </v-btn>
           </div>

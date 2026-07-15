@@ -64,7 +64,7 @@
         >
           <v-chip
             v-if="product.featured"
-            size="small"
+            size="large"
             color="dark"
             variant="flat"
             class="text-white glass px-2"

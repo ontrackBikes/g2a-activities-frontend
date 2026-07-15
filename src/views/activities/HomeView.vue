@@ -6,7 +6,7 @@
       :style="{ backgroundImage: `url(${activeData.heroImg})` }"
     >
       <div class="category-hero__overlay">
-        <v-chip size="small" color="brandColor" class="mb-3">
+        <v-chip size="large" color="brandColor" class="mb-3">
           <v-icon icon="mdi-fire" size="12" class="me-1" />
           <span class="g2a-text-10 g2a-text-bold-600">{{
             activeData.badge
@@ -48,7 +48,7 @@
             </div>
             <v-chip
               v-if="group.tag"
-              size="small"
+              size="large"
               :color="group.tagColor || 'brandColor2'"
               variant="tonal"
             >
@@ -200,7 +200,7 @@
         >
           <div>
             <div class="d-flex align-center mb-2 ga-2">
-              <v-chip size="small" color="brandColor" class="g2a-text-bold-600">
+              <v-chip size="large" color="brandColor" class="g2a-text-bold-600">
                 {{ activeData.promo.tag }}
               </v-chip>
             </div>
@@ -211,7 +211,7 @@
             <v-btn
               variant="outlined"
               rounded="lg"
-              size="small"
+              size="large"
               color="brandColor2"
               class="mt-4 g2a-text-bold-600"
               @click="onPromoClick"

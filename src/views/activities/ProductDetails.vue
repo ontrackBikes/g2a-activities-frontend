@@ -24,7 +24,7 @@
       class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
     >
       <span>{{ error }}</span>
-      <v-btn color="error" variant="outlined" size="small" @click="loadProduct">
+      <v-btn color="error" variant="outlined" size="large" @click="loadProduct">
         Try Again
       </v-btn>
     </div>

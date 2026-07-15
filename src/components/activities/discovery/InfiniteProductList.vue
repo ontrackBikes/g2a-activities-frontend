@@ -110,7 +110,7 @@
         <div class="g2a-text-13 text-error mb-2">{{ error }}</div>
         <v-btn
           variant="text"
-          size="small"
+          size="large"
           color="brandColor2"
           @click="fetchProducts(false)"
         >

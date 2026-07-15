@@ -280,7 +280,7 @@
         <v-btn
           icon="mdi-close"
           variant="text"
-          size="small"
+          size="large"
           aria-label="Close daily pricing"
           @click="pricingDialog = false"
         />

@@ -64,7 +64,7 @@
             color="grey-darken-2"
             class="text-none font-weight-medium px-3 cursor-pointer"
             label
-            size="small"
+            size="large"
             @click="selectRecent(item)"
           >
             {{ item }}

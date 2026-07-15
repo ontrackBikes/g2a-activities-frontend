@@ -138,7 +138,7 @@
               class="g2a-link"
               v-if="hasMorePricing"
               variant="text"
-              size="small"
+              size="large"
               color="primary"
               @click="pricingDialog = true"
             >

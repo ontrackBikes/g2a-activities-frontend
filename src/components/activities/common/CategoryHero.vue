@@ -1,60 +1,101 @@
 <template>
-  <div
-    class="hero"
+  <v-card
+    flat
+    rounded="xl"
+    class="overflow-hidden text-white"
     :style="{
-      backgroundImage: `url(${category.cover_media_url || category.image || fallbackImage})`,
+      backgroundImage: `linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.55)), url(${coverImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
     }"
   >
-    <div class="overlay">
-      <v-container class="fill-height">
-        <v-row
-          class="fill-height"
-          align="center"
+    <v-container
+      class="fill-height d-flex align-center px-6 px-md-10"
+      :style="{ minHeight: mobile ? '240px' : '420px' }"
+    >
+      <v-row align="center">
+        <v-col
+          cols="12"
+          md="7"
         >
-          <v-col
-            cols="12"
-            md="7"
+          <v-chip
+            color="white"
+            variant="tonal"
+            size="small"
+            class="mb-6"
           >
-            <div class="hero-content">
+            GO2ANDAMAN EXPERIENCES
+          </v-chip>
 
-              <div class="hero-chip">
-                GO2ANDAMAN EXPERIENCES
-              </div>
+          <div
+            class="font-weight-bold mb-4"
+            :style="{
+              fontSize: mobile ? '2rem' : '3.5rem',
+              lineHeight: 1.1,
+            }"
+          >
+            {{ category.cover_title || category.name }}
+          </div>
 
-              <h1 class="hero-title">
-                {{ category.cover_title || category.name }}
-              </h1>
+          <div
+            v-if="category.cover_subtitle"
+            class="text-white text-medium-emphasis mb-8"
+            :style="{
+              fontSize: mobile ? '1rem' : '1.15rem',
+              maxWidth: '650px',
+            }"
+          >
+            {{ category.cover_subtitle }}
+          </div>
 
-              <div class="hero-subtitle">
-                {{ category.cover_subtitle }}
-              </div>
+          <div class="d-flex flex-wrap ga-8">
+            <div class="d-flex align-center">
+              <v-icon
+                icon="mdi-shape"
+                class="mr-3"
+              />
 
-              <div class="hero-overview">
-
-                <div class="overview-item">
-                  <v-icon icon="mdi-shape" />
+              <div>
+                <div class="text-h5 font-weight-bold">
                   {{ category.overview?.product_types || 0 }}
+                </div>
+
+                <div class="text-caption">
                   Activity Types
                 </div>
+              </div>
+            </div>
 
-                <div class="overview-item">
-                  <v-icon icon="mdi-map-marker-path" />
+            <div class="d-flex align-center">
+              <v-icon
+                icon="mdi-map-marker-path"
+                class="mr-3"
+              />
+
+              <div>
+                <div class="text-h5 font-weight-bold">
                   {{ category.overview?.products || 0 }}
-                  Experiences
                 </div>
 
+                <div class="text-caption">
+                  Experiences
+                </div>
               </div>
-
             </div>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
-  </div>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-card>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+import { useDisplay } from "vuetify";
+
+const { mobile } = useDisplay();
+
+const props = defineProps({
   category: {
     type: Object,
     required: true,
@@ -63,84 +104,11 @@ defineProps({
 
 const fallbackImage =
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e";
+
+const coverImage = computed(
+  () =>
+    props.category.cover_media_url ||
+    props.category.image ||
+    fallbackImage
+);
 </script>
-
-<style scoped>
-.hero {
-  height: 440px;
-  border-radius: 28px;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center;
-}
-
-.overlay {
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(6, 18, 34, .90),
-    rgba(6,18,34,.65),
-    rgba(6,18,34,.18)
-  );
-}
-
-.hero-content{
-  color:white;
-  max-width:620px;
-}
-
-.hero-chip{
-  display:inline-block;
-  padding:8px 16px;
-  border-radius:30px;
-  background:rgba(255,255,255,.15);
-  backdrop-filter:blur(12px);
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:1px;
-  margin-bottom:22px;
-}
-
-.hero-title{
-  font-size:58px;
-  font-weight:800;
-  line-height:1.05;
-  margin-bottom:18px;
-}
-
-.hero-subtitle{
-  font-size:20px;
-  line-height:1.8;
-  opacity:.95;
-}
-
-.hero-overview{
-  display:flex;
-  gap:30px;
-  margin-top:38px;
-  flex-wrap:wrap;
-}
-
-.overview-item{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-weight:600;
-}
-
-@media(max-width:960px){
-
-.hero{
-  height:320px;
-}
-
-.hero-title{
-  font-size:38px;
-}
-
-.hero-subtitle{
-  font-size:16px;
-}
-
-}
-</style>

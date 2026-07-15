@@ -7,7 +7,7 @@
     <v-alert v-else-if="error" type="error" variant="tonal" rounded="lg">
       {{ error }}
       <div class="mt-2">
-        <v-btn size="small" variant="outlined" color="error" @click="loadOrder">
+        <v-btn size="large" variant="outlined" color="error" @click="loadOrder">
           Try again
         </v-btn>
       </div>
@@ -120,7 +120,7 @@
               <v-chip
                 v-if="bookingOf(item).selected_slot?.name"
                 class="mt-3"
-                size="small"
+                size="large"
                 color="brandColor2"
                 variant="tonal"
               >
@@ -320,7 +320,7 @@
                 <span class="data-label">Payment Status</span>
                 <v-chip
                   :color="paymentStatusColor(p.status)"
-                  size="small"
+                  size="large"
                   variant="flat"
                 >
                   {{ p.status?.toUpperCase() }}

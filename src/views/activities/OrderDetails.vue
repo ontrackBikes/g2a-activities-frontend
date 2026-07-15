@@ -35,7 +35,7 @@
                   </div>
 
                   <div class="mt-1">
-                    <v-chip size="small" color="orange" variant="tonal">
+                    <v-chip size="large" color="orange" variant="tonal">
                       {{ order.order_status }}
                     </v-chip>
                   </div>

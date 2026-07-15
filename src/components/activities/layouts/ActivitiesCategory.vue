@@ -92,7 +92,7 @@
 
             <div class="mt-3">
               <v-chip
-                size="small"
+                size="large"
                 color="brandColor2"
               >
                 {{
