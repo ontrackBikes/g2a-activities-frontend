@@ -2,6 +2,21 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 
+const widget = process.env.WIDGET;
+
+if (!widget) {
+  throw new Error("WIDGET environment variable is required.");
+}
+
+function toPascalCase(str) {
+  return str
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
+}
+
+const libraryName = `G2A${toPascalCase(widget)}`;
+
 export default defineConfig({
   plugins: [vue()],
 
@@ -16,20 +31,18 @@ export default defineConfig({
   },
 
   build: {
-    outDir: "dist-booking-price-widget",
+    outDir: resolve(__dirname, `dist/widgets/${widget}`),
+
     emptyOutDir: true,
 
     lib: {
-      entry: resolve(
-        __dirname,
-        "src/widgets/booking-price/entry.js"
-      ),
+      entry: resolve(__dirname, `src/widgets/${widget}/entry.js`),
 
-      name: "G2ABookingPriceWidget",
+      name: libraryName,
 
       formats: ["iife"],
 
-      fileName: () => "g2a-book-price-widget.iife.js",
+      fileName: () => "widget.js",
     },
 
     cssCodeSplit: false,
@@ -44,7 +57,7 @@ export default defineConfig({
 
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith(".css")) {
-            return "g2a-book-price-widget.css";
+            return "widget.css";
           }
 
           return assetInfo.name;
