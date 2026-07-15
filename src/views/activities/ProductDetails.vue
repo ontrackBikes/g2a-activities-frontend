@@ -132,7 +132,7 @@
           <v-container class="text-center py-10">
             <v-icon size="48" color="brandColor">mdi-map-marker</v-icon>
             <div class="g2a-title-lg mt-4">Choose your location</div>
-            <div class="g2a-text-18 mb-6">
+            <div class="g2a-title-lg mb-6">
               Please select the location where you'd like to book this activity.
             </div>
             <v-btn

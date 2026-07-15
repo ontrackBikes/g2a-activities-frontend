@@ -8,7 +8,7 @@
           {{ faq.question }}
         </v-expansion-panel-title>
 
-        <v-expansion-panel-text class="g2a-text-18 text-grey-darken-2 py-4">
+        <v-expansion-panel-text class="g2a-title-lg text-grey-darken-2 py-4">
           {{ faq.answer }}
         </v-expansion-panel-text>
       </v-expansion-panel>

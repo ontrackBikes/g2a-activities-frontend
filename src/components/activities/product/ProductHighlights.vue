@@ -19,7 +19,7 @@
               class="mt-1"
             />
 
-            <div class="g2a-text-18">
+            <div class="g2a-title-lg">
               {{ item.content }}
             </div>
           </div>

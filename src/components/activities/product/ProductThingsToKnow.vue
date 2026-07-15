@@ -2,7 +2,7 @@
   <div v-if="activeItems.length">
     <div class="g2a-title-2xl mb-3">Things to Know</div>
 
-    <ul class="things-list g2a-text-18">
+    <ul class="things-list g2a-title-lg">
       <li
         v-for="(item, index) in activeItems"
         :key="item.id || index"
@@ -15,7 +15,7 @@
           class="mt-1"
         />
 
-        <span class="g2a-text-18 font-weight-medium line-height-relaxed">
+        <span class="g2a-title-lg font-weight-medium line-height-relaxed">
           {{ item.content }}
         </span>
       </li>

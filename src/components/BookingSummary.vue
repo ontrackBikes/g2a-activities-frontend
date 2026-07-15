@@ -149,10 +149,10 @@
         <v-divider class="my-2"></v-divider>
         <v-row dense no-gutters>
           <v-col cols="5">
-            <p class="g2a-title-lg-600 g2a-text-18 text-darkGreen1">Payable</p>
+            <p class="g2a-title-lg-600 g2a-title-lg text-darkGreen1">Payable</p>
           </v-col>
           <v-col cols="7" class="text-right">
-            <p class="g2a-title-lg-700 g2a-text-18 text-darkGreen1">
+            <p class="g2a-title-lg-700 g2a-title-lg text-darkGreen1">
               ₹{{ payNowAmountTotal }}
             </p>
           </v-col>

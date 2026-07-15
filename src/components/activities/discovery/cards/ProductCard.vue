@@ -18,7 +18,7 @@
         ></v-img>
       </v-col>
       <v-col cols="10" class="py-4">
-        <div class="g2a-text-18 font-weight-bold">
+        <div class="g2a-title-lg font-weight-bold">
           {{ product.name }}
         </div>
 
