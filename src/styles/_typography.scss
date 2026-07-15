@@ -63,7 +63,7 @@ body {
   @include typography($font-size-2xl, $font-weight-bold, 32px);
 }
 
-.g2a-title-3xl {
+.g2a-title-xlxl {
   @include typography($font-size-3xl, $font-weight-bold, 38px);
 }
 
@@ -78,4 +78,14 @@ body {
 .v-card.v-card--variant-outlined {
   border-color: rgba(0, 0, 0, 0.12);
   /* Same as Vuetify 2 default */
+}
+
+.v-btn,
+.v-tab {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.v-btn {
+  font-weight: 600;
 }

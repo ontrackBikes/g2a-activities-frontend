@@ -20,7 +20,7 @@
             {{ priceType === "SLOT" ? "Starts from" : "Flat price" }}
           </div>
 
-          <div class="g2a-title-3 mt-1">
+          <div class="g2a-title-xl mt-1">
             ₹{{ price }}
             <span class="g2a-title-2xl-2-light text-greyDark">
               /

@@ -28,7 +28,7 @@
           </v-chip>
 
           <div
-            class="g2a-title-heading"
+            class="g2a-title-2xl"
             :style="{
               fontSize: mobile ? '2rem' : '3.5rem',
             }"
@@ -47,7 +47,7 @@
             {{ category.cover_subtitle }}
           </div>
 
-          <div class="d-flex flex-wrap ga-8">
+          <!-- <div class="d-flex flex-wrap ga-8 mt-4">
             <div class="d-flex align-center">
               <v-icon
                 icon="mdi-shape"
@@ -81,7 +81,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </v-col>
       </v-row>
     </v-container>

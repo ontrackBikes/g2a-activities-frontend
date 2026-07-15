@@ -29,7 +29,7 @@
             </v-avatar>
 
             <div class="flex-grow-1">
-              <div class="g2a-title-3">{{ statusAlert.heading }}</div>
+              <div class="g2a-title-xl">{{ statusAlert.heading }}</div>
               <div class="g2a-title-2xl-2 text-greyDark mt-1">
                 {{ statusAlert.text }}
               </div>

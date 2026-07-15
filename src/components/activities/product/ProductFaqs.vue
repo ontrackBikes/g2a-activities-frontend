@@ -1,6 +1,6 @@
 <template>
   <div v-if="activeFaqs.length">
-    <div class="g2a-title-heading mb-3">FAQ's</div>
+    <div class="g2a-title-2xl mb-3">FAQ's</div>
 
     <v-expansion-panels variant="accordion" elevation="0" class="faq-panels">
       <v-expansion-panel v-for="faq in activeFaqs" :key="faq.id">

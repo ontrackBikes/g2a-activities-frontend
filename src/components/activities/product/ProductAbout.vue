@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="g2a-title-heading mb-4">About</div>
+    <div class="g2a-title-2xl mb-4">About</div>
 
     <div class="g2a-text-18">
       {{ expanded ? description : shortText }}

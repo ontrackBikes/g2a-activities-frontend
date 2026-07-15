@@ -1,6 +1,6 @@
 <template>
   <div v-if="activeHighlights.length">
-    <div class="g2a-title-heading mb-3">Highlights</div>
+    <div class="g2a-title-2xl mb-3">Highlights</div>
 
     <v-row>
       <v-col

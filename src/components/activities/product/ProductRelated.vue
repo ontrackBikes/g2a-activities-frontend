@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="g2a-title-heading mb-4">{{ title }}</div>
+    <div class="g2a-title-2xl mb-4">{{ title }}</div>
 
     <v-row>
       <v-col v-for="product in products" :key="product.id" cols="12" md="4">

@@ -8,7 +8,7 @@
     <section v-if="productTypes.length" class="mb-14">
       <div class="d-flex justify-space-between align-center mb-6">
         <div>
-          <div class="g2a-title-heading">Explore by Activity</div>
+          <div class="g2a-title-2xl">Explore by Activity</div>
 
           <div class="">Browse experiences based on your interests.</div>
         </div>
@@ -54,7 +54,7 @@
     <section class="mb-10">
       <div class="d-flex justify-space-between align-center mb-4">
         <div>
-          <div class="g2a-title-heading">All {{ catetoryInfo.name }}</div>
+          <div class="g2a-title-2xl">All {{ catetoryInfo.name }}</div>
           <div class="">
             Browse every experience available in this category.
           </div>

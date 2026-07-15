@@ -2,10 +2,10 @@
   <div class="my-4">
     <!-- Header -->
     <div class="mb-8">
-      <div class="g2a-text-24 g2a-text-bold-700">
+      <div class="g2a-title-2xl">
         {{ title }}
       </div>
-      <div class="g2a-text-14">Explore experiences and activities.</div>
+     
     </div>
 
     <!-- Collections -->

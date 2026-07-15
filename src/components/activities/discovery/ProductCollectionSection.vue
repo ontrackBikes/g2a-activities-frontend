@@ -1,10 +1,10 @@
 <template>
-  <div v-if="collections.length">
+  <div v-if="collections?.products?.length > 0">
     <div v-for="collection in collections" :key="collection.id" class="mb-10">
       <!-- Header -->
       <div class="d-flex align-center justify-space-between mb-4">
         <div>
-          <div class="g2a-title-heading">
+          <div class="g2a-title-2xl">
             {{ collection.name }}
           </div>
         </div>

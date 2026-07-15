@@ -88,7 +88,7 @@
             color="brandColor"
             variant="flat"
             rounded="lg"
-            class="px-6 text-none font-weight-medium"
+            class="px-6 text-none"
             height="42"
             href="https://go2andaman.com/contact-us/"
             target="_blank"

@@ -1,6 +1,6 @@
 <template>
   <div v-if="locations.length">
-    <div class="g2a-title-heading mb-3">Available At</div>
+    <div class="g2a-title-2xl mb-3">Available At</div>
 
     <div class="d-flex flex-wrap ga-2">
       <v-chip

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mb-8 mt-4 g2a-title-2xl">What are you looking for today?</div>
+    <div class="my-8 mt-4 g2a-title-2xl">What are you looking for today?</div>
 
     <v-row>
       <v-col

@@ -25,7 +25,7 @@
       </template>
 
       <div class="fill-height d-flex flex-column justify-end pa-4 pa-sm-6">
-        <div class="g2a-title-heading text-white truncate-two-lines">
+        <div class="g2a-title-2xl text-white truncate-two-lines">
           {{ title || "Untitled Activity" }}
         </div>
 

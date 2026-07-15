@@ -1,6 +1,6 @@
 <template>
   <div v-if="activeItems.length">
-    <div class="g2a-title-heading mb-3">Things to Know</div>
+    <div class="g2a-title-2xl mb-3">Things to Know</div>
 
     <ul class="things-list g2a-text-18">
       <li

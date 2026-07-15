@@ -5,7 +5,7 @@
     </section>
 
     <section v-if="productTypes.length" class="mb-4">
-       <div class="g2a-title-heading mb-4">Explore by Types</div>
+       <div class="g2a-title-2xl mb-4">Explore by Types</div>
 
       <v-row>
         <v-col
@@ -39,7 +39,7 @@
     <section class="mb-4">
       
 
-       <div class="g2a-title-heading mb-4">Experiences in {{ locationInfo.name }}</div>
+       <div class="g2a-title-2xl mb-4">Experiences in {{ locationInfo.name }}</div>
 
       <v-row v-if="collections.length > 0">
         <v-col

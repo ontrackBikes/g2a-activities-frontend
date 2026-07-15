@@ -225,7 +225,7 @@
             >
               {{ formatCurrency(pricing.subtotal + pricing.tax) }}
             </div>
-            <div class="g2a-title-3 text-brandColor2">
+            <div class="g2a-title-xl text-brandColor2">
               {{ formatCurrency(pricing.grand_total) }}
             </div>
           </div>
