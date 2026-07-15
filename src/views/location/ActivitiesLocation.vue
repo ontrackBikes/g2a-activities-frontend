@@ -1,24 +1,11 @@
 <template>
   <div class="my-4">
-    <CategoryHero
-      :category="locationInfo"
-      class="mb-10"
-    />
+    <section class="mb-4">
+      <CategoryHero :category="locationInfo" />
+    </section>
 
-    <section
-      v-if="productTypes.length"
-      class="mb-14"
-    >
-      <div class="d-flex justify-space-between align-center mb-6">
-        <div>
-          <div class="g2a-title-heading">
-            Explore by Activity
-          </div>
-          <div>
-            Browse experiences based on your interests.
-          </div>
-        </div>
-      </div>
+    <section v-if="productTypes.length" class="mb-4">
+       <div class="g2a-title-heading mb-4">Explore by Types</div>
 
       <v-row>
         <v-col
@@ -37,16 +24,8 @@
             @click="goToProductType(type)"
           >
             <v-card-text class="py-8 text-center">
-              <v-avatar
-                size="72"
-                color="blue-lighten-5"
-                class="mb-4"
-              >
-                <v-icon
-                  :icon="type.icon"
-                  size="34"
-                  color="primary"
-                />
+              <v-avatar size="72" color="blue-lighten-5" class="mb-4">
+                <v-icon :icon="type.icon" size="34" color="primary" />
               </v-avatar>
 
               <div class="font-weight-bold">
@@ -58,15 +37,10 @@
       </v-row>
     </section>
 
-    <section class="mt-14">
-      <div class="d-flex justify-space-between align-center mb-6">
-        <div>
-          <div class="g2a-title-heading">
-            Experiences in {{ locationInfo.name }}
-          </div>
-          
-        </div>
-      </div>
+    <section class="mb-4">
+      
+
+       <div class="g2a-title-heading mb-4">Experiences in {{ locationInfo.name }}</div>
 
       <v-row v-if="collections.length > 0">
         <v-col
@@ -76,17 +50,12 @@
           sm="6"
           lg="3"
         >
-          <ProductCard
-            :product="product"
-            @click="openProduct"
-          />
+          <ProductCard :product="product" @click="openProduct" />
         </v-col>
       </v-row>
 
       <div v-else>
-          <div class="g2a-title-4">
-            No activities in this location.
-          </div>
+        <div class="g2a-title-4">No activities in this location.</div>
       </div>
     </section>
   </div>
@@ -139,7 +108,7 @@ const productTypeIcons = {
 
 async function loadLocationInfo() {
   const { data } = await apiClient.get(
-    `/v1/locations/app/${locationSlug.value}`
+    `/v1/locations/app/${locationSlug.value}`,
   );
 
   locationInfo.value = data.data;
@@ -147,7 +116,7 @@ async function loadLocationInfo() {
 
 async function loadProductTypes() {
   const { data } = await apiClient.get(
-    `/v1/product-types?location_slug=${locationSlug.value}`
+    `/v1/product-types?location_slug=${locationSlug.value}`,
   );
 
   productTypes.value = (data.data || [])
@@ -159,14 +128,11 @@ async function loadProductTypes() {
 }
 
 async function loadCollections() {
-  const { data } = await apiClient.get(
-    "/v1/products/app/products-list",
-    {
-      params: {
-        location_slug: locationSlug.value,
-      },
-    }
-  );
+  const { data } = await apiClient.get("/v1/products/app/products-list", {
+    params: {
+      location_slug: locationSlug.value,
+    },
+  });
 
   collections.value = data.data || [];
 }

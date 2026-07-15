@@ -3,7 +3,7 @@
     <!-- ═══════════════════════════════════════════════
          FILTER BAR
     ═══════════════════════════════════════════════ -->
-    <div class="d-flex align-center ga-2 py-3 no-scrollbar overflow-x-auto">
+    <div class="d-flex align-center ga-2 no-scrollbar overflow-x-auto">
           <!-- Filter button -->
           <v-btn
             variant="outlined"
@@ -143,11 +143,7 @@
           </v-btn>
 
           <!-- Results count -->
-          <div
-            class="ms-auto g2a-text-12 text-greyDark flex-shrink-0 d-none d-md-block"
-          >
-            <slot name="results-count" />
-          </div>
+          
         </div>
 
     <!-- ═══════════════════════════════════════════════

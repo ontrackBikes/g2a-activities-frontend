@@ -28,10 +28,9 @@
           </v-chip>
 
           <div
-            class="font-weight-bold mb-4"
+            class="g2a-title-heading"
             :style="{
               fontSize: mobile ? '2rem' : '3.5rem',
-              lineHeight: 1.1,
             }"
           >
             {{ category.cover_title || category.name }}

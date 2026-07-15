@@ -51,11 +51,10 @@
     </div>
 
     <!-- Products -->
-    <section class="mt-14">
-      <div class="d-flex justify-space-between align-center mb-6">
+    <section class="mb-10">
+      <div class="d-flex justify-space-between align-center mb-4">
         <div>
           <div class="g2a-title-heading">All {{ catetoryInfo.name }}</div>
-
           <div class="">
             Browse every experience available in this category.
           </div>

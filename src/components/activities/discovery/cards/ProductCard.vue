@@ -2,7 +2,7 @@
   <v-card
     v-if="mini"
     variant="flat"
-    class="rounded-lg"
+    rounded="lg"
     :style="{
       opacity: product.out_of_stock ? '0.75' : '1',
       transition: 'all 0.2s ease',
@@ -40,15 +40,16 @@
   <v-card
     v-else
     variant="flat"
-    class="border rounded-xl d-flex flex-column h-100 position-relative"
+    class="border d-flex flex-column h-100 position-relative"
     :style="{
       opacity: product.out_of_stock ? '0.75' : '1',
       transition: 'all 0.2s ease',
     }"
     @click="handleClick"
+    rounded="lg"
   >
     <div
-      class="position-relative overflow-hidden rounded-t-xl"
+      class="position-relative overflow-hidden"
       style="height: 185px"
     >
       <v-img :src="product.thumbnail_url || fallbackImg" height="185" cover>

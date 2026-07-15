@@ -78,17 +78,20 @@
       </div>
 
       <!-- Product grid -->
-      <v-row v-else>
-        <v-col
-          v-for="product in products"
-          :key="product.id"
-          cols="12"
-          sm="6"
-          lg="3"
-        >
-          <ProductCard :product="product" @click="openProduct" />
-        </v-col>
-      </v-row>
+
+      <div v-else>
+        <v-row>
+          <v-col
+            v-for="product in products"
+            :key="product.id"
+            cols="12"
+            sm="6"
+            lg="3"
+          >
+            <ProductCard :product="product" @click="openProduct" />
+          </v-col>
+        </v-row>
+      </div>
 
       <!-- Infinite scroll sentinel -->
       <div
