@@ -11,17 +11,19 @@
         md="3"
       >
         <v-card
-          variant="flat"
+          flat
           rounded="lg"
           height="130"
           class="category-card"
-          :color="getActivitieTheme(category.name).bg"
+          :color="activityColors[category.name] || 'surface'"
           @click="openCategory(category)"
         >
           <v-container class="fill-height position-relative pa-4">
             <div
               class="g2a-title-2xl"
-              :class="getActivitieTheme(category.name).text"
+              :style="{
+                color: getThemeColor(`${activityColors[category.name]}-text`),
+              }"
             >
               {{ category.name }}
             </div>
@@ -29,7 +31,7 @@
             <v-icon
               :icon="category.icon"
               size="72"
-              :color="getActivitieTheme(category.name).iconColor"
+              :color="`${activityColors[category.name]}-icon`"
               class="category-icon"
             />
           </v-container>
@@ -38,7 +40,6 @@
     </v-row>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -64,26 +65,21 @@ const categoryIcons = {
 };
 
 const activityColors = {
-  "Water Sports": "blue",
-  "Day Trips": "orange",
-  "Exclusive Experiences": "purple",
-  "Getting Around": "pink",
-  "History & Culture": "amber",
-  "Treks and Walks": "green",
-  Stargazing: "deep-purple",
-  "Scuba Diving": "cyan",
-  Kayaking: "teal",
+  "Water Sports": "cat-blue",
+  "Day Trips": "cat-orange",
+  "Exclusive Experiences": "cat-purple",
+  "Getting Around": "cat-pink",
+  "History & Culture": "cat-amber",
+  "Treks and Walks": "cat-green",
+  Stargazing: "cat-deep-purple",
+  "Scuba Diving": "cat-cyan",
+  Kayaking: "cat-teal",
 };
 
-function getActivitieTheme(name) {
-  const color = activityColors[name] || "light-blue";
-  const dark = theme.global.current.value.dark;
-
-  return {
-    bg: dark ? "surface-variant" : `${color}-lighten-5`,
-    text: dark ? "text-white" : `text-${color}-darken-4`,
-    iconColor: dark ? `${color}-lighten-1` : `${color}-lighten-3`,
-  };
+function getThemeColor(colorName) {
+  return (
+    theme.current.value.colors[colorName] || theme.current.value.colors.primary
+  );
 }
 
 async function loadCategories() {
@@ -115,17 +111,11 @@ onMounted(loadCategories);
 </script>
 
 <style scoped>
-.category-card {
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
-}
-
 .category-icon {
   position: absolute;
-  right: -8px;
-  bottom: -8px;
-  opacity: 0.22;
+  right: 0;
+  bottom: 0;
+  opacity: 0.12;
   transform: rotate(-8deg);
   transition:
     transform 0.3s ease,

@@ -1,5 +1,5 @@
 <template>
-  <v-app style="background: #F4F5FA;">
+  <v-app class="bg-background">
     <v-app-bar app height="76" flat class="border-b">
       <v-container
         fluid
@@ -115,9 +115,8 @@
       }"
     >
       <v-card
-        
         class="d-flex flex-column h-100"
-        :rounded="mobile ? false : 'xl'"
+        :rounded="mobile ? false : 'lg'"
       >
         <div class="border-b py-4">
           <v-container class="px-4 d-flex align-center ga-3">

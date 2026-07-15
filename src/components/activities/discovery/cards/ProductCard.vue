@@ -38,6 +38,7 @@
     </v-row>
   </v-card>
   <v-card
+    :ripple="false"
     v-else
     flat
     class="border d-flex flex-column h-100 position-relative"
@@ -89,7 +90,10 @@
     </div>
 
     <div class="bg-brandColor2 text-white px-2 py-1">
-      <div class="g2a-title-sm" v-if="product.next_available_slot && !product.out_of_stock">
+      <div
+        class="g2a-title-sm"
+        v-if="product.next_available_slot && !product.out_of_stock"
+      >
         Next Available: {{ formatDate(product.next_available_slot) }}
       </div>
     </div>
@@ -100,11 +104,7 @@
       </div>
 
       <div v-if="locationText" class="d-flex align-center">
-        <v-icon
-          icon="mdi-map-marker-outline"
-          size="12"
-          class="text-greyDark"
-        />
+        <v-icon icon="mdi-map-marker-outline" size="12" class="text-greyDark" />
         <span class="g2a-text-12 text-greyDark">{{ locationText }}</span>
       </div>
 
@@ -123,7 +123,15 @@
     </div>
   </v-card>
 
-  <v-dialog v-model="showLocationDialog" max-width="420">
+  <v-dialog
+    v-model="showLocationDialog"
+    max-width="420"
+    scrim="rgba(15, 23, 42, 0.3)"
+    :style="{
+      backdropFilter: 'blur(2px)',
+      webkitBackdropFilter: 'blur(2px)',
+    }"
+  >
     <v-card rounded="lg">
       <v-card-title> Choose Location </v-card-title>
 
@@ -131,6 +139,7 @@
 
       <v-list>
         <v-list-item
+          :ripple="false"
           v-for="location in product.locations"
           :key="location.slug"
           @click="selectLocation(location)"
