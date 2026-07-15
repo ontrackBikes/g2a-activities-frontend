@@ -116,3 +116,12 @@ body {
     rgba(var(--v-theme-brandColorFade), 0) 100%
   );
 }
+
+.glass {
+  
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+
+ 
+
+}

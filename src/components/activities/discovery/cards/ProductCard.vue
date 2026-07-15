@@ -38,10 +38,10 @@
     </v-row>
   </v-card>
   <v-card
-  v-else
+    v-else
     :ripple="false"
     flat
-    class="border h-100 "
+    class="border h-100"
     :style="{
       opacity: product.out_of_stock ? '0.75' : '1',
       transition: 'all 0.2s ease',
@@ -49,7 +49,7 @@
     @click="handleClick"
     rounded="lg"
   >
-    <div class=" overflow-hidden" style="height: 250px">
+    <div class="overflow-hidden" style="height: 250px">
       <v-img :src="product.thumbnail_url || fallbackImg" height="250" cover>
         <template #placeholder>
           <div class="d-flex align-center justify-center fill-height">
@@ -58,18 +58,26 @@
         </template>
 
         <div
-          class="d-flex flex-column ga-1 position-absolute text-left"
-          style="top: 12px; left: 12px"
+          v-if="product.tags?.length > 0"
+          class="position-absolute text-left"
+          style="top: 12px; left: 8px"
         >
           <v-chip
-            v-if="product.featured"
-            size="large"
-            color="dark"
-            variant="flat"
-            class="text-white glass px-2"
+            v-for="tag in product.tags"
+            :key="tag.slug"
+            size="small"
+            class="glass text-white px-2 ma-1"
           >
-            Featured
+            <v-icon
+              v-if="tagIcons[tag.name]"
+              :icon="tagIcons[tag.name]"
+              size="14"
+              start
+            />
+
+            <span class="g2a-title-sm font-weight-bold">{{ tag.name }}</span>
           </v-chip>
+          
         </div>
       </v-img>
 
@@ -89,12 +97,13 @@
       </div>
     </div>
 
-    <div class="brand-gradient  px-2 py-1">
+    <div class="brand-gradient px-2 py-1">
       <div
         class="g2a-title-sm"
         v-if="product.next_available_slot && !product.out_of_stock"
       >
-        Next Available: <strong>{{ formatDate(product.next_available_slot) }}</strong>
+        Next Available:
+        <strong>{{ formatDate(product.next_available_slot) }}</strong>
       </div>
     </div>
 
@@ -179,6 +188,18 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["click"]);
+
+const tagIcons = {
+  Premium: "mdi-crown",
+  "Best Seller": "mdi-fire",
+  Trending: "mdi-trending-up",
+  New: "mdi-star-circle",
+  Popular: "mdi-thumb-up",
+  Recommended: "mdi-thumb-up-outline",
+  Featured: "mdi-star",
+  Exclusive: "mdi-diamond-stone",
+  Limited: "mdi-clock-alert-outline",
+};
 
 const fallbackImg =
   "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600";

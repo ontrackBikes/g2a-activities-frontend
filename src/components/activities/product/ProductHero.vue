@@ -41,6 +41,32 @@
           }}</span>
         </div>
       </div>
+
+
+      <div
+          v-if="tags?.length > 0"
+          class="position-absolute text-left"
+          style="top: 12px; left: 8px"
+        >
+          <v-chip
+            v-for="tag in tags"
+            :key="tag.slug"
+            size="large"
+            class="glass text-white px-4 ma-1"
+          >
+            <v-icon
+              v-if="tagIcons[tag.name]"
+              :icon="tagIcons[tag.name]"
+              size="14"
+              start
+            />
+
+            <span class="g2a-title-sm font-weight-bold">{{ tag.name }}</span>
+          </v-chip>
+          
+        </div>
+
+
     </v-img>
   </v-card>
 </template>
@@ -53,7 +79,23 @@ const props = defineProps({
   image: String,
   location: String,
   thumbnail_url: String,
+  tags: {
+    type: Array,
+    default: []
+  }
 });
+
+const tagIcons = {
+  Premium: "mdi-crown",
+  "Best Seller": "mdi-fire",
+  Trending: "mdi-trending-up",
+  New: "mdi-star-circle",
+  Popular: "mdi-thumb-up",
+  Recommended: "mdi-thumb-up-outline",
+  Featured: "mdi-star",
+  Exclusive: "mdi-diamond-stone",
+  Limited: "mdi-clock-alert-outline",
+};
 
 // Slightly taller on larger screens, wider/shorter on mobile so it doesn't
 // dominate the viewport on phones — handled with one aspect-ratio value

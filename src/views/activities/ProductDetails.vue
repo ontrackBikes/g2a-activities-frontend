@@ -51,6 +51,7 @@
           :image="selectedImage"
           :location="locationText"
           :thumbnail_url="product.thumbnail_url"
+          :tags="product.tags"
         />
       </v-col>
 
