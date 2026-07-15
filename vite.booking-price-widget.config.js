@@ -3,9 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 
 export default defineConfig({
-  plugins: [
-    vue(),
-  ],
+  plugins: [vue()],
 
   resolve: {
     alias: {
@@ -14,7 +12,7 @@ export default defineConfig({
   },
 
   define: {
-    "process.env": {}, // Fix "process is not defined"
+    "process.env": {},
   },
 
   build: {
@@ -24,16 +22,24 @@ export default defineConfig({
     lib: {
       entry: resolve(
         __dirname,
-        "src/widgets/booking-price-widget/booking-price-widget-entry.js"
+        "src/widgets/booking-price/entry.js"
       ),
+
       name: "G2ABookingPriceWidget",
-      fileName: "g2a-book-price-widget",
+
       formats: ["iife"],
+
+      fileName: () => "g2a-book-price-widget.iife.js",
     },
+
+    cssCodeSplit: false,
+
+    minify: "terser",
 
     rollupOptions: {
       output: {
         inlineDynamicImports: true,
+
         manualChunks: undefined,
 
         assetFileNames: (assetInfo) => {
@@ -45,9 +51,6 @@ export default defineConfig({
         },
       },
     },
-
-    cssCodeSplit: false,
-    minify: "terser",
 
     terserOptions: {
       compress: {
