@@ -432,6 +432,7 @@
             }}
           </span>
           <v-btn
+            flat
             rounded="lg"
             color="brandColor2"
             class="g2a-text-bold-600 g2a-text-13 px-6"
