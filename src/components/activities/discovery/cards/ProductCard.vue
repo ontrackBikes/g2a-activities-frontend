@@ -89,7 +89,7 @@
     </div>
 
     <div class="bg-brandColor2 text-white px-2 py-1">
-      <div class="g2a-title-lg" v-if="product.next_available_slot && !product.out_of_stock">
+      <div class="g2a-title-sm" v-if="product.next_available_slot && !product.out_of_stock">
         Next Available: {{ formatDate(product.next_available_slot) }}
       </div>
     </div>
@@ -113,8 +113,8 @@
           <span class="g2a-title-lg">
             ₹{{ formatPrice(product.starting_price) }}
           </span>
-          <div class="g2a-title-lg">
-            {{ product.price_type === "SLOT" ? "onwards" : "flat price" }}
+          <div class="g2a-title-sm">
+            {{ product.price_type === "SLOT" ? "onwards" : "" }}
           </div>
         </div>
       </div>
