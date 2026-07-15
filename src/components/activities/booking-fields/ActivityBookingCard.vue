@@ -7,8 +7,8 @@
       class="pa-4"
       v-if="outOfStock"
     >
-      <div class="g2a-title-4 mb-4">Book your ticket</div>
-      <div class="g2a-title-4 text-error">Out of Stock</div>
+      <div class="g2a-title-lg mb-4">Book your ticket</div>
+      <div class="g2a-title-lg text-error">Out of Stock</div>
     </v-card>
     <v-card flat rounded="lg" class="pa-6" v-else>
      
@@ -63,7 +63,7 @@
           </v-avatar>
 
           <div class="flex-grow-1" style="min-width: 0">
-            <div class="g2a-title-2xl-1 g2a-text-bold-600 text-truncate">
+            <div class="g2a-title-2xl-1 g2a-title-lg-600 text-truncate">
               {{ locationSelected || "Select Location" }}
             </div>
 

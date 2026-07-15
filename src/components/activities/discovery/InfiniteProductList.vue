@@ -44,7 +44,7 @@
           variant="outlined"
           rounded="lg"
           color="brandColor2"
-          class="g2a-text-bold-600"
+          class="g2a-title-lg-600"
           @click="fetchProducts(true)"
         >
           Try Again
@@ -70,7 +70,7 @@
           variant="outlined"
           rounded="lg"
           color="brandColor2"
-          class="g2a-text-bold-600"
+          class="g2a-title-lg-600"
           @click="resetFilters"
         >
           Clear Filters

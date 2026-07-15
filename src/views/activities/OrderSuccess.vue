@@ -38,7 +38,7 @@
           Order ID
         </div>
 
-        <div class="g2a-title-4 font-weight-bold">
+        <div class="g2a-title-lg font-weight-bold">
           {{ route.params.order_id }}
         </div>
 

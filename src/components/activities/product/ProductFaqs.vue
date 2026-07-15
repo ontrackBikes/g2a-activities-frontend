@@ -4,7 +4,7 @@
 
     <v-expansion-panels variant="accordion" elevation="0" class="faq-panels">
       <v-expansion-panel v-for="faq in activeFaqs" :key="faq.id">
-        <v-expansion-panel-title class="g2a-title-4 g2a-text-bold-600">
+        <v-expansion-panel-title class="g2a-title-lg g2a-title-lg-600">
           {{ faq.question }}
         </v-expansion-panel-title>
 

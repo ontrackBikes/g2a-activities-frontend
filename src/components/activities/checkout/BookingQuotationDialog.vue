@@ -60,7 +60,7 @@
         <template v-if="hasSlots">
           <v-divider class="my-5" />
 
-          <div class="g2a-text-bold-600 mb-3">Select Slot</div>
+          <div class="g2a-title-lg-600 mb-3">Select Slot</div>
 
           <v-row no-gutters>
             <v-col cols="12" v-for="slot in slots" :key="slot.id" class="mb-2">
@@ -74,7 +74,7 @@
                 <v-card-text class="py-3">
                   <div class="d-flex justify-space-between">
                     <div>
-                      <div class="g2a-text-bold-600">
+                      <div class="g2a-title-lg-600">
                         {{ slot.name }}
                       </div>
 
@@ -86,7 +86,7 @@
                     </div>
 
                     <div class="text-right">
-                      <div class="g2a-text-bold-700">
+                      <div class="g2a-title-lg-700">
                         ₹{{ currency(slot.price) }}
                       </div>
 
@@ -112,7 +112,7 @@
         <template v-if="dailyPricing.length">
           <v-divider class="my-5" />
 
-          <div class="g2a-text-bold-600 mb-3">Daily Pricing</div>
+          <div class="g2a-title-lg-600 mb-3">Daily Pricing</div>
 
           <div
             v-for="day in dailyPricing"
@@ -166,7 +166,7 @@
 
             <div class="d-flex justify-space-between align-center mb-4">
               <div>
-                <div class="g2a-text-bold-700">Total Payable</div>
+                <div class="g2a-title-lg-700">Total Payable</div>
 
                 <div class="g2a-text-12">Inclusive of taxes</div>
               </div>

@@ -38,7 +38,7 @@
             <div class="text-left text-sm-right">
               <div class="g2a-text-caption text-greyDark">Order ID</div>
               <div class="d-flex align-center">
-                <span class="g2a-title-2xl-1 g2a-text-bold-600">{{
+                <span class="g2a-title-2xl-1 g2a-title-lg-600">{{
                   order.order_id
                 }}</span>
                 <v-btn
@@ -110,7 +110,7 @@
             </v-col>
 
             <v-col cols="12" sm="9" class="pa-6">
-              <div class="g2a-title-4">{{ item.product_name }}</div>
+              <div class="g2a-title-lg">{{ item.product_name }}</div>
               <div
                 class="text-greyDark g2a-title-2xl-2 mt-1 d-flex align-center"
               >
@@ -219,7 +219,7 @@
                   v-for="(p, pIndex) in item.participants"
                   :key="p.id ?? pIndex"
                 >
-                  <td class="g2a-text-bold g2a-title-2xl-2">
+                  <td class="g2a-title-lg g2a-title-2xl-2">
                     {{ p.first_name }} {{ p.last_name }}
                   </td>
                   <td class="g2a-title-2xl-2">{{ p.age ?? "—" }}</td>
@@ -294,7 +294,7 @@
           >
             <div class="d-flex justify-space-between align-center">
               <span class="g2a-title-2xl-4">Total Paid</span>
-              <div class="g2a-title-4 text-brandColor2">
+              <div class="g2a-title-lg text-brandColor2">
                 {{ currency(order.grand_total) }}
               </div>
             </div>
@@ -302,7 +302,7 @@
 
           <template v-if="order.payments?.length">
             <div
-              class="g2a-text-bold-600 g2a-title-2xl-2 text-greyDark mt-5 mb-2"
+              class="g2a-title-lg-600 g2a-title-2xl-2 text-greyDark mt-5 mb-2"
             >
               Payment history
             </div>

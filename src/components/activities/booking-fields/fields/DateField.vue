@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4">
-    <div class="g2a-text-bold mb-3">
+    <div class="g2a-title-lg mb-3">
       {{ field.label || "Select Date" }}
     </div>
 

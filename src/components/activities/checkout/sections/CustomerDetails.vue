@@ -1,7 +1,7 @@
 <template>
   <v-card rounded="lg" variant="outlined">
     <v-container class="py-2">
-      <div class="g2a-heading-sm">
+      <div class="g2a-title-xl">
         {{ config.title || "Customer Details" }}
       </div>
     </v-container>

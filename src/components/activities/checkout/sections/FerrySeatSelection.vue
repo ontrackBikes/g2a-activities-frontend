@@ -1,7 +1,7 @@
 <template>
   <v-card rounded="lg" variant="outlined" elevation="0">
     <v-card-title class="py-4">
-      <div class="g2a-heading-sm">
+      <div class="g2a-title-xl">
         {{ config.title || "Seat Selection" }}
       </div>
 
@@ -36,7 +36,7 @@
       <v-row v-for="(participant, index) in participants" :key="index">
         <v-col cols="12">
           <v-card variant="tonal" rounded="lg" class="pa-4 mb-4">
-            <div class="g2a-text-bold-600 mb-4">Passenger {{ index + 1 }}</div>
+            <div class="g2a-title-lg-600 mb-4">Passenger {{ index + 1 }}</div>
 
             <v-row>
               <v-col cols="12" md="6">

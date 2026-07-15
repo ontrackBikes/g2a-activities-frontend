@@ -38,7 +38,7 @@
         >Activities</span
       >
       <v-icon icon="mdi-chevron-right" size="14" />
-      <span class="text-brandColor2 g2a-text-bold-600 truncate-two-lines">
+      <span class="text-brandColor2 g2a-title-lg-600 truncate-two-lines">
         {{ product.name }}
       </span>
     </div>
@@ -131,7 +131,7 @@
         <v-card v-else rounded="lg" variant="outlined">
           <v-container class="text-center py-10">
             <v-icon size="48" color="brandColor">mdi-map-marker</v-icon>
-            <div class="g2a-title-4 mt-4">Choose your location</div>
+            <div class="g2a-title-lg mt-4">Choose your location</div>
             <div class="g2a-text-18 mb-6">
               Please select the location where you'd like to book this activity.
             </div>
@@ -152,7 +152,7 @@
   <!-- Not found fallback -->
   <v-container v-else class="py-16 text-center">
     <v-icon size="72" color="grey">mdi-emoticon-sad-outline</v-icon>
-    <div class="g2a-title-4 mt-4">Activity not found</div>
+    <div class="g2a-title-lg mt-4">Activity not found</div>
     <v-btn class="mt-6" color="brandColor" flat @click="$router.push('/v2')">
       Browse Activities
     </v-btn>
@@ -166,7 +166,7 @@
 
   <v-dialog v-model="showLocationDialog" max-width="420">
     <v-card rounded="lg" elevation="6">
-      <v-card-title class="g2a-title-4 px-5 pt-5 pb-2">
+      <v-card-title class="g2a-title-lg px-5 pt-5 pb-2">
         Choose Location
       </v-card-title>
 
@@ -192,7 +192,7 @@
             </v-avatar>
           </template>
 
-          <v-list-item-title class="g2a-title-2xl-1 g2a-text-bold-600">
+          <v-list-item-title class="g2a-title-2xl-1 g2a-title-lg-600">
             {{ location.name }}
           </v-list-item-title>
 
@@ -212,7 +212,7 @@
         <v-spacer />
         <v-btn
           variant="text"
-          class="g2a-title-2xl-2 g2a-text-bold-500"
+          class="g2a-title-2xl-2 g2a-title-lg-500"
           @click="showLocationDialog = false"
         >
           Cancel

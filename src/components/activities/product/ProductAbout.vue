@@ -8,7 +8,7 @@
 
     <a
       v-if="description?.length > 180"
-      class="text-brandColor2 g2a-text-12 g2a-text-bold-600"
+      class="text-brandColor2 g2a-text-12 g2a-title-lg-600"
       @click="expanded = !expanded"
       style="cursor: pointer"
     >

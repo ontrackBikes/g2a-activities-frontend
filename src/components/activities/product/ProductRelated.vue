@@ -10,7 +10,7 @@
         >
           <v-img :src="product.thumbnail_url" height="180" cover />
 
-          <v-card-text class="g2a-text-14 g2a-text-bold-500">
+          <v-card-text class="g2a-text-14 g2a-title-lg-500">
             {{ product.name }}
           </v-card-text>
         </v-card>

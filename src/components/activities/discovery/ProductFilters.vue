@@ -32,7 +32,7 @@
             size="small"
             
             append-icon="mdi-chevron-down"
-            class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
+            class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
           >
             Location
             <v-badge
@@ -79,7 +79,7 @@
             rounded="lg"
             size="small"
             
-            class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
+            class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
           >
             {{ activeSortLabel }}
           </v-btn>
@@ -114,7 +114,7 @@
         rounded="lg"
         size="small"
         
-        class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
+        class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
         :style="
           safeVal.tagIds.includes(tag.id)
             ? 'background: rgba(41,51,155,0.07)'
@@ -131,7 +131,7 @@
         variant="text"
         size="small"
         color="error"
-        class="g2a-text-12 g2a-text-bold-600 flex-shrink-0 ms-1"
+        class="g2a-text-12 g2a-title-lg-600 flex-shrink-0 ms-1"
         prepend-icon="mdi-close-circle-outline"
         @click="$emit('reset')"
       >
@@ -163,7 +163,7 @@
               variant="text"
               color="error"
               size="small"
-              class="g2a-text-12 g2a-text-bold-600"
+              class="g2a-text-12 g2a-title-lg-600"
               @click="resetDraft"
             >
               Reset all
@@ -224,7 +224,7 @@
                   class="g2a-text-13"
                   :class="
                     draft.sortBy === opt.value
-                      ? 'g2a-text-bold-600 text-brandColor2'
+                      ? 'g2a-title-lg-600 text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -271,7 +271,7 @@
                   class="g2a-text-13"
                   :class="
                     draft.locationIds.includes(loc.slug)
-                      ? 'g2a-text-bold-600 text-brandColor2'
+                      ? 'g2a-title-lg-600 text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -307,7 +307,7 @@
                   class="g2a-text-13"
                   :class="
                     draft.tagIds.includes(tag.id)
-                      ? 'g2a-text-bold-600 text-brandColor2'
+                      ? 'g2a-title-lg-600 text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -348,7 +348,7 @@
                   class="g2a-text-13"
                   :class="
                     !draft.productTypeId
-                      ? 'g2a-text-bold-600 text-brandColor2'
+                      ? 'g2a-title-lg-600 text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -377,7 +377,7 @@
                   class="g2a-text-13"
                   :class="
                     draft.productTypeId === pt.slug
-                      ? 'g2a-text-bold-600 text-brandColor2'
+                      ? 'g2a-title-lg-600 text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -403,7 +403,7 @@
             flat
             rounded="lg"
             
-            class="g2a-text-bold-600 g2a-text-13 px-6"
+            class="g2a-title-lg-600 g2a-text-13 px-6"
             @click="applyFilters"
           >
             Apply Filters

@@ -31,7 +31,7 @@
 
                   <div class="g2a-title-2xl-2">
                     <span class="data-label">Order ID:</span>
-                    <span class="g2a-text-bold ml-1">{{ order.order_id }}</span>
+                    <span class="g2a-title-lg ml-1">{{ order.order_id }}</span>
                   </div>
 
                   <div class="mt-1">
@@ -47,7 +47,7 @@
           <!-- Booking Details -->
           <v-card class="mt-5" rounded="lg" variant="outlined">
             <v-container>
-              <div class="g2a-heading-sm mb-1">Booking Details</div>
+              <div class="g2a-title-xl mb-1">Booking Details</div>
               <v-divider class="mb-2" />
 
               <div
@@ -55,7 +55,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="data-label">Guests</span>
-                <strong class="g2a-text-bold">{{ bookingData.guests }}</strong>
+                <strong class="g2a-title-lg">{{ bookingData.guests }}</strong>
               </div>
 
               <div
@@ -63,7 +63,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="data-label">Travel Date</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   formatDate(bookingData.travel_date)
                 }}</strong>
               </div>
@@ -73,7 +73,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="data-label">Time Slot</span>
-                <strong class="g2a-text-bold">
+                <strong class="g2a-title-lg">
                   {{ bookingData.selected_slot.name }}
                   ({{ formatTime(bookingData.selected_slot.start_time) }} -
                   {{ formatTime(bookingData.selected_slot.end_time) }})
@@ -85,7 +85,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="data-label">Pickup Date</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   formatDate(bookingData.pickup_date)
                 }}</strong>
               </div>
@@ -95,7 +95,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="data-label">Pickup Time</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   formatTime(bookingData.pickup_time)
                 }}</strong>
               </div>
@@ -105,7 +105,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="data-label">Drop Time</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   formatTime(bookingData.drop_time)
                 }}</strong>
               </div>
@@ -115,7 +115,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="data-label">Return Date</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   formatDate(bookingData.return_date)
                 }}</strong>
               </div>
@@ -125,7 +125,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="data-label">Rental Days</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   bookingData.rental_days
                 }}</strong>
               </div>
@@ -140,12 +140,12 @@
             variant="outlined"
           >
             <v-container>
-              <div class="g2a-title-4 mb-1">Customer</div>
+              <div class="g2a-title-lg mb-1">Customer</div>
               <v-divider class="mb-2" />
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Name</span>
-                <strong class="g2a-text-bold">
+                <strong class="g2a-title-lg">
                   {{ order.customer_details.first_name }}
                   {{ order.customer_details.last_name }}
                 </strong>
@@ -153,21 +153,21 @@
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Mobile</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   order.customer_details.phone
                 }}</strong>
               </div>
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Email</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   order.customer_details.email
                 }}</strong>
               </div>
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Country</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   order.customer_details.country
                 }}</strong>
               </div>
@@ -182,33 +182,33 @@
             variant="outlined"
           >
             <v-container>
-              <div class="g2a-title-4 mb-1">Rental Details</div>
+              <div class="g2a-title-lg mb-1">Rental Details</div>
               <v-divider class="mb-2" />
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Pickup Location</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   bikeDelivery.pickup_location
                 }}</strong>
               </div>
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Return / Drop Location</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   bikeDelivery.drop_location
                 }}</strong>
               </div>
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Pickup Time</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   bikeDelivery.pickup_time
                 }}</strong>
               </div>
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Return Time</span>
-                <strong class="g2a-text-bold">{{
+                <strong class="g2a-title-lg">{{
                   bikeDelivery.return_time
                 }}</strong>
               </div>
@@ -223,7 +223,7 @@
             variant="outlined"
           >
             <v-container>
-              <div class="g2a-title-4 mb-1">Medical Declaration</div>
+              <div class="g2a-title-lg mb-1">Medical Declaration</div>
               <v-divider class="mb-2" />
 
               <div v-if="declaredConditions.length">
@@ -233,12 +233,12 @@
                   class="d-flex justify-space-between py-2"
                 >
                   <span class="data-label">{{ pretty(condition) }}</span>
-                  <strong class="g2a-text-bold">Yes</strong>
+                  <strong class="g2a-title-lg">Yes</strong>
                 </div>
 
                 <div v-if="medical.other_details" class="py-2">
                   <span class="data-label">Additional Details</span>
-                  <div class="g2a-text-bold mt-1">
+                  <div class="g2a-title-lg mt-1">
                     {{ medical.other_details }}
                   </div>
                 </div>
@@ -258,7 +258,7 @@
             variant="outlined"
           >
             <v-container>
-              <div class="g2a-title-4 mb-1">Participants</div>
+              <div class="g2a-title-lg mb-1">Participants</div>
               <v-divider class="mb-2" />
 
               <v-table>
@@ -273,7 +273,7 @@
 
                 <tbody>
                   <tr v-for="(p, index) in participants" :key="index">
-                    <td class="g2a-text-bold g2a-title-2xl-2">
+                    <td class="g2a-title-lg g2a-title-2xl-2">
                       {{ p.first_name }} {{ p.last_name }}
                     </td>
                     <td class="g2a-title-2xl-2">{{ p.age }}</td>
@@ -293,7 +293,7 @@
             variant="outlined"
           >
             <v-container>
-              <div class="g2a-title-4 mb-1">Seat Selection</div>
+              <div class="g2a-title-lg mb-1">Seat Selection</div>
               <v-divider class="mb-2" />
 
               <v-table>
@@ -307,7 +307,7 @@
 
                 <tbody>
                   <tr v-for="(p, index) in participants" :key="index">
-                    <td class="g2a-text-bold g2a-title-2xl-2">
+                    <td class="g2a-title-lg g2a-title-2xl-2">
                       {{ p.first_name }} {{ p.last_name }}
                     </td>
                     <td class="g2a-title-2xl-2">{{ p.seat_preference }}</td>
@@ -323,26 +323,26 @@
         <v-col cols="12" lg="5">
           <v-card rounded="lg" variant="outlined" class="">
             <v-container>
-              <div class="g2a-heading-sm mb-1">Payment Summary</div>
+              <div class="g2a-title-xl mb-1">Payment Summary</div>
               <v-divider class="mb-2" />
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Subtotal</span>
-                <strong class="g2a-text-bold"
+                <strong class="g2a-title-lg"
                   >₹{{ currency(order.subtotal) }}</strong
                 >
               </div>
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Discount</span>
-                <strong class="g2a-text-bold"
+                <strong class="g2a-title-lg"
                   >₹{{ currency(order.discount) }}</strong
                 >
               </div>
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Tax</span>
-                <strong class="g2a-text-bold"
+                <strong class="g2a-title-lg"
                   >₹{{ currency(order.tax) }}</strong
                 >
               </div>
@@ -351,7 +351,7 @@
 
               <div class="d-flex justify-space-between align-center">
                 <span class="g2a-title-2xl-4">Total</span>
-                <div class="g2a-title-4 text-brandColor2">
+                <div class="g2a-title-lg text-brandColor2">
                   ₹{{ currency(order.grand_total) }}
                 </div>
               </div>

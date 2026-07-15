@@ -7,7 +7,7 @@
       color="primary"
     />
 
-    <div class="g2a-title-4 mt-6">
+    <div class="g2a-title-lg mt-6">
       Waiting for payment confirmation...
     </div>
 

@@ -12,11 +12,11 @@
         </v-avatar>
 
         <div>
-          <div class="g2a-title-4">
+          <div class="g2a-title-lg">
             {{ product.name }}
           </div>
 
-          <div class="text-caption g2a-text-bold">
+          <div class="text-caption g2a-title-lg">
             {{ selectedLocation?.name }}
           </div>
         </div>
@@ -40,7 +40,7 @@
         <template v-if="result.available">
           <!-- Slot Selection -->
           <div v-if="isSlotPricing" class="mt-4">
-            <div class="g2a-text-bold mb-3">
+            <div class="g2a-title-lg mb-3">
               Select {{ availability.slot_display_type }}
             </div>
             <v-text-field
@@ -122,7 +122,7 @@
           <!-- Price -->
 
           <div v-if="dailyPricing.length" class="my-4">
-            <div class="g2a-text-bold">Daily Pricing</div>
+            <div class="g2a-title-lg">Daily Pricing</div>
 
             <div
               v-for="day in previewDailyPricing"
@@ -147,7 +147,7 @@
           </div>
 
           <div v-if="productTerms.length > 0" class="my-4">
-            <div class="g2a-text-bold mb-3">Terms & Conditions</div>
+            <div class="g2a-title-lg mb-3">Terms & Conditions</div>
             <div
               v-for="(term, index) in productTerms"
               :key="index"
@@ -171,7 +171,7 @@
       <div>
         <div class="text-caption text-grey">Total Price</div>
 
-        <div class="g2a-title-4 font-weight-bold">
+        <div class="g2a-title-lg font-weight-bold">
           ₹{{ pricing.grand_total }}
         </div>
       </div>

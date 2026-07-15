@@ -54,7 +54,7 @@
       </v-row>
 
       <div v-else>
-        <div class="g2a-title-4">No activities in this location.</div>
+        <div class="g2a-title-lg">No activities in this location.</div>
       </div>
     </section>
   </div>
