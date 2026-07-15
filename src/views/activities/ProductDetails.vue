@@ -175,58 +175,56 @@
     }"
   >
     <v-card rounded="lg" elevation="6">
-      <v-card-title class="g2a-title-lg px-5 pt-5 pb-2">
-        Choose Location
-      </v-card-title>
+      <v-container>
+        <div class="d-flex justify-space-between align-center">
+          <div>
+            <div class="g2a-title-2xl">Choose Location</div>
+          <div>Select the location you'd like to continue with.</div>
+          </div>
+          <v-btn
+            size="small"
+            flat
+            icon
+            variant="icon"
+            @click="showLocationDialog = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
 
-      <v-card-subtitle class="g2a-title-2xl-2-light px-5 pb-4">
-        Select the location you'd like to continue with.
-      </v-card-subtitle>
+        
+      </v-container>
 
       <v-divider />
 
-      <v-list class="py-2" nav>
-        <v-list-item
+      <v-container>
+        <v-card
           v-for="location in locations"
           :key="location.slug"
-          :active="selectedLocation?.slug === location.slug"
           rounded="lg"
-          class="mx-3 my-2"
-          color="brandColor"
+          flat
+          class="pa-2 mb-4"
+          :class="selectedLocation?.slug === location.slug ? 'border' : ''"
           @click="selectLocation(location)"
         >
-          <template #prepend>
-            <v-avatar size="38" color="brandColor" variant="tonal">
-              <v-icon size="20">mdi-map-marker</v-icon>
-            </v-avatar>
-          </template>
+          <div class="d-flex justify-space-between align-center">
+            <div class="d-flex align-center">
+              <div>
+                <v-avatar size="38" color="brandColor2" variant="tonal">
+                  <v-icon size="20">mdi-map-marker</v-icon>
+                </v-avatar>
+              </div>
 
-          <v-list-item-title class="g2a-title-2xl-1 g2a-title-lg-600">
-            {{ location.name }}
-          </v-list-item-title>
-
-          <v-list-item-subtitle class="g2a-title-2xl-2-light text-greyDark">
-            Available at this location
-          </v-list-item-subtitle>
-
-          <template #append>
+              <div class="g2a-title-lg ml-2">
+                {{ location.name }}
+              </div>
+            </div>
             <v-icon size="18" color="grey"> mdi-chevron-right </v-icon>
-          </template>
-        </v-list-item>
-      </v-list>
+          </div>
+        </v-card>
+      </v-container>
 
       <v-divider />
-
-      <v-card-actions class="px-4 py-3">
-        <v-spacer />
-        <v-btn
-          variant="text"
-          class="g2a-title-2xl-2 g2a-title-lg-500"
-          @click="showLocationDialog = false"
-        >
-          Cancel
-        </v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

@@ -77,7 +77,6 @@
 
             <span class="g2a-title-sm font-weight-bold">{{ tag.name }}</span>
           </v-chip>
-          
         </div>
       </v-img>
 
@@ -141,33 +140,63 @@
       webkitBackdropFilter: 'blur(2px)',
     }"
   >
-    <v-card rounded="lg">
-      <v-card-title> Choose Location </v-card-title>
+    <v-card rounded="lg" elevation="6">
+      <v-container>
+        <div class="d-flex justify-space-between align-center">
+          <div>
+            <div class="g2a-title-2xl">Choose Location</div>
+            <div>Select the location you'd like to continue with.</div>
+          </div>
+          <v-btn
+            size="small"
+            flat
+            icon
+            variant="icon"
+            @click="showLocationDialog = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
+      </v-container>
 
       <v-divider />
 
-      <v-list>
-        <v-list-item
-          :ripple="false"
+      <v-container>
+        <v-card
           v-for="location in product.locations"
           :key="location.slug"
+          rounded="lg"
+          flat
+          class="pa-2 mb-4"
+          :class="selectedLocation?.slug === location.slug ? 'border' : ''"
           @click="selectLocation(location)"
         >
-          <template #prepend>
-            <v-icon color="brandColor"> mdi-map-marker </v-icon>
-          </template>
+          <div class="d-flex justify-space-between align-center">
+            <div class="d-flex align-center">
+              <div>
+                <v-avatar size="38" color="brandColor2" variant="tonal">
+                  <v-icon size="20">mdi-map-marker</v-icon>
+                </v-avatar>
+              </div>
 
-          <v-list-item-title>
-            {{ location.name }}
-          </v-list-item-title>
-          <v-list-item-subtitle v-if="location.available">
-            Starts @{{ location.starting_price }}
-          </v-list-item-subtitle>
-          <v-list-item-subtitle v-else>
-            <div class="text-error">Out of Stock</div>
-          </v-list-item-subtitle>
-        </v-list-item>
-      </v-list>
+              <div class="ml-2">
+                <div class="g2a-title-lg">
+                  {{ location.name }}
+                </div>
+                <div class="g2a-title-sm" v-if="location.available">
+                  Starts @{{ location.starting_price }}
+                </div>
+                <div v-else>
+                  <div class="g2a-title-lg text-error">Out of Stock</div>
+                </div>
+              </div>
+            </div>
+            <v-icon size="18" color="grey"> mdi-chevron-right </v-icon>
+          </div>
+        </v-card>
+      </v-container>
+
+      <v-divider />
     </v-card>
   </v-dialog>
 </template>

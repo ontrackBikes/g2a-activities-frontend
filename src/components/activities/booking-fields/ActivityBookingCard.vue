@@ -10,7 +10,7 @@
       <div class="g2a-title-lg mb-4">Book your ticket</div>
       <div class="g2a-title-lg text-error">Out of Stock</div>
     </v-card>
-    <v-card flat rounded="lg" class="pa-6" v-else>
+    <v-card flat rounded="lg" class="pa-4 border" v-else>
      
 
       <!-- Price & CTA -->
@@ -38,7 +38,7 @@
         <v-btn
           color="brandColor"
           rounded="lg"
-          size="large"
+          size="x-large"
           flat
           min-width="150"
           :loading="loading"
@@ -49,7 +49,7 @@
       </div>
     </v-card>
     <v-card
-      class="my-4"
+      class="my-4 border"
       flat 
       rounded="lg"
       :disabled="props.locations.length < 2"
@@ -63,7 +63,7 @@
           </v-avatar>
 
           <div class="flex-grow-1" style="min-width: 0">
-            <div class="g2a-title-2xl-1 g2a-title-lg-600 text-truncate">
+            <div class="g2a-title-lg g2a-title-lg-600 text-truncate">
               {{ locationSelected || "Select Location" }}
             </div>
 

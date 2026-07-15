@@ -2,6 +2,10 @@
 
 $body-font-family: "Roobert", sans-serif;
 
+.rounded-lg {
+  border-radius: 16px !important;
+}
+
 // Regular
 @font-face {
   font-family: "Roobert";
@@ -122,6 +126,5 @@ body {
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 
- 
-
 }
+

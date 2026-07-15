@@ -47,6 +47,10 @@ body {
   @include typography($font-size-sm, $font-weight-medium, 20px);
 }
 
+.g2a-title-md {
+  @include typography($font-size-base, $font-weight-medium, 22px);
+}
+
 .g2a-title-base {
   @include typography($font-size-base, $font-weight-medium, 24px);
 }

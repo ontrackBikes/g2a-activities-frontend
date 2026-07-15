@@ -7,7 +7,7 @@
     <v-chip
       v-for="tag in tags"
       :key="tag.id"
-      class="me-2 mb-2"
+      class="me-2"
       color="brandColor2"
       variant="outlined"
     >

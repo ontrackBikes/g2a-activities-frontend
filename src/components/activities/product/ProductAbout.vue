@@ -2,7 +2,7 @@
   <div>
     <div class="g2a-title-2xl mb-4">About</div>
 
-    <div class="g2a-title-lg">
+    <div class="g2a-title-md">
       {{ expanded ? description : shortText }}
     </div>
 

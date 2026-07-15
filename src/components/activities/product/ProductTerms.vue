@@ -14,7 +14,7 @@
           class="flex-shrink-0 mt-1"
         />
 
-        <span class="g2a-title-lg">
+        <span class="g2a-title-md">
           {{ item.content }}
         </span>
       </div>
