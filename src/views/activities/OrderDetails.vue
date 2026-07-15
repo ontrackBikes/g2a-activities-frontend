@@ -12,7 +12,7 @@
       <v-row>
         <v-col cols="12" lg="7">
           <!-- Product -->
-          <v-card rounded="lg" variant="outlined" class="">
+          <v-card rounded="lg" variant="outlined">
             <v-container>
               <div class="d-flex">
                 <v-img
@@ -20,7 +20,7 @@
                   width="140"
                   height="110"
                   cover
-                  class="rounded-lg mr-4"
+                  class="rounded-lg mr-2"
                 />
 
                 <div>
@@ -29,12 +29,12 @@
                     {{ item.location_name }}
                   </div>
 
-                  <div class="g2a-title-2xl-2">
-                    <span class="data-label">Order ID:</span>
-                    <span class="g2a-title-lg ml-1">{{ order.order_id }}</span>
+                  <div>
+                    <span class="g2a-title-xs">Order ID:</span>
+                    <span class="g2a-title-xs">{{ order.order_id }}</span>
                   </div>
 
-                  <div class="mt-1">
+                  <div>
                     <v-chip size="large" color="orange" variant="tonal">
                       {{ order.order_status }}
                     </v-chip>
@@ -342,9 +342,7 @@
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Tax</span>
-                <strong class="g2a-title-lg"
-                  >₹{{ currency(order.tax) }}</strong
-                >
+                <strong class="g2a-title-lg">₹{{ currency(order.tax) }}</strong>
               </div>
 
               <v-divider class="my-4" />

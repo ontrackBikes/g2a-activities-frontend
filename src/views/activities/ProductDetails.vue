@@ -164,7 +164,15 @@
     @continue="continueBooking"
   />
 
-  <v-dialog v-model="showLocationDialog" max-width="420">
+  <v-dialog
+    v-model="showLocationDialog"
+    max-width="420"
+    scrim="rgba(15, 23, 42, 0.3)"
+    :style="{
+      backdropFilter: 'blur(2px)',
+      webkitBackdropFilter: 'blur(2px)',
+    }"
+  >
     <v-card rounded="lg" elevation="6">
       <v-card-title class="g2a-title-lg px-5 pt-5 pb-2">
         Choose Location
