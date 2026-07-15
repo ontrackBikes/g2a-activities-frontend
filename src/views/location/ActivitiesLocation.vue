@@ -19,8 +19,7 @@
           <v-card
             class="activity-card"
             rounded="lg"
-            variant="outlined"
-            elevation="0"
+            flat
             @click="goToProductType(type)"
           >
             <v-card-text class="py-8 text-center">

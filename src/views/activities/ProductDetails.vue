@@ -170,7 +170,7 @@
         Choose Location
       </v-card-title>
 
-      <v-card-subtitle class="g2a-subtitle-2-light px-5 pb-4">
+      <v-card-subtitle class="g2a-title-2xl-2-light px-5 pb-4">
         Select the location you'd like to continue with.
       </v-card-subtitle>
 
@@ -191,11 +191,11 @@
             </v-avatar>
           </template>
 
-          <v-list-item-title class="g2a-subtitle-1 g2a-text-bold-600">
+          <v-list-item-title class="g2a-title-2xl-1 g2a-text-bold-600">
             {{ location.name }}
           </v-list-item-title>
 
-          <v-list-item-subtitle class="g2a-subtitle-2-light text-greyDark">
+          <v-list-item-subtitle class="g2a-title-2xl-2-light text-greyDark">
             Available at this location
           </v-list-item-subtitle>
 
@@ -218,7 +218,7 @@
         <v-spacer />
         <v-btn
           variant="text"
-          class="g2a-subtitle-2 g2a-text-bold-500"
+          class="g2a-title-2xl-2 g2a-text-bold-500"
           @click="showLocationDialog = false"
         >
           Cancel

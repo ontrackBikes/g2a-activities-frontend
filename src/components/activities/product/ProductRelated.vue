@@ -5,9 +5,7 @@
     <v-row>
       <v-col v-for="product in products" :key="product.id" cols="12" md="4">
         <v-card
-          class="cursor-pointer"
-          variant="outlined"
-          rounded="lg"
+          flat rounded="lg"
           @click="openProduct(product)"
         >
           <v-img :src="product.thumbnail_url" height="180" cover />

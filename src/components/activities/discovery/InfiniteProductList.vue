@@ -36,7 +36,7 @@
           color="error"
           class="mb-4"
         />
-        <div class="g2a-subtitle-dark mb-1">Something went wrong</div>
+        <div class="g2a-title-2xl-dark mb-1">Something went wrong</div>
         <div class="g2a-text-13 text-greyDark mb-4">
           {{ error }}
         </div>
@@ -62,7 +62,7 @@
           color="greyLight"
           class="mb-4"
         />
-        <div class="g2a-subtitle-dark mb-1">No activities found</div>
+        <div class="g2a-title-2xl-dark mb-1">No activities found</div>
         <div class="g2a-text-13 text-greyDark mb-4">
           Try adjusting your filters or browse all activities.
         </div>

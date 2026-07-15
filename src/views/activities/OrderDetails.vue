@@ -12,7 +12,7 @@
       <v-row>
         <v-col cols="12" md="8">
           <!-- Product -->
-          <v-card rounded="lg" variant="outlined" class="custom-border">
+          <v-card rounded="lg" variant="outlined" class="">
             <v-container>
               <div class="d-flex">
                 <v-img
@@ -29,7 +29,7 @@
                     {{ item.location_name }}
                   </div>
 
-                  <div class="mt-3 g2a-subtitle-2">
+                  <div class="mt-3 g2a-title-2xl-2">
                     <span class="data-label">Order ID:</span>
                     <span class="g2a-text-bold ml-1">{{ order.order_id }}</span>
                   </div>
@@ -45,7 +45,7 @@
           </v-card>
 
           <!-- Booking Details -->
-          <v-card class="mt-5 custom-border" rounded="lg" variant="outlined">
+          <v-card class="mt-5 " rounded="lg" variant="outlined">
             <v-container>
               <div class="g2a-title-4 mb-1">Booking Details</div>
               <v-divider class="mb-2" />
@@ -135,7 +135,7 @@
           <!-- Customer -->
           <v-card
             v-if="sectionEnabled('customer_details')"
-            class="mt-5 custom-border"
+            class="mt-5 "
             rounded="lg"
             variant="outlined"
           >
@@ -177,7 +177,7 @@
           <!-- Rental Details -->
           <v-card
             v-if="sectionEnabled('rental_details')"
-            class="mt-5 custom-border"
+            class="mt-5 "
             rounded="lg"
             variant="outlined"
           >
@@ -218,7 +218,7 @@
           <!-- Medical Declaration -->
           <v-card
             v-if="sectionEnabled('medical_declaration')"
-            class="mt-5 custom-border"
+            class="mt-5 "
             rounded="lg"
             variant="outlined"
           >
@@ -244,7 +244,7 @@
                 </div>
               </div>
 
-              <div v-else class="g2a-subtitle-2-light text-greyDark">
+              <div v-else class="g2a-title-2xl-2-light text-greyDark">
                 No health conditions declared.
               </div>
             </v-container>
@@ -253,7 +253,7 @@
           <!-- Participants -->
           <v-card
             v-if="sectionEnabled('participants')"
-            class="mt-5 custom-border"
+            class="mt-5 "
             rounded="lg"
             variant="outlined"
           >
@@ -273,12 +273,12 @@
 
                 <tbody>
                   <tr v-for="(p, index) in participants" :key="index">
-                    <td class="g2a-text-bold g2a-subtitle-2">
+                    <td class="g2a-text-bold g2a-title-2xl-2">
                       {{ p.first_name }} {{ p.last_name }}
                     </td>
-                    <td class="g2a-subtitle-2">{{ p.age }}</td>
-                    <td class="g2a-subtitle-2">{{ p.gender }}</td>
-                    <td class="g2a-subtitle-2">{{ p.nationality }}</td>
+                    <td class="g2a-title-2xl-2">{{ p.age }}</td>
+                    <td class="g2a-title-2xl-2">{{ p.gender }}</td>
+                    <td class="g2a-title-2xl-2">{{ p.nationality }}</td>
                   </tr>
                 </tbody>
               </v-table>
@@ -288,7 +288,7 @@
           <!-- Ferry Seat Selection -->
           <v-card
             v-if="sectionEnabled('ferry_seat_selection')"
-            class="mt-5 custom-border"
+            class="mt-5 "
             rounded="lg"
             variant="outlined"
           >
@@ -307,11 +307,11 @@
 
                 <tbody>
                   <tr v-for="(p, index) in participants" :key="index">
-                    <td class="g2a-text-bold g2a-subtitle-2">
+                    <td class="g2a-text-bold g2a-title-2xl-2">
                       {{ p.first_name }} {{ p.last_name }}
                     </td>
-                    <td class="g2a-subtitle-2">{{ p.seat_preference }}</td>
-                    <td class="g2a-subtitle-2">{{ p.seat_number }}</td>
+                    <td class="g2a-title-2xl-2">{{ p.seat_preference }}</td>
+                    <td class="g2a-title-2xl-2">{{ p.seat_number }}</td>
                   </tr>
                 </tbody>
               </v-table>
@@ -321,7 +321,7 @@
 
         <!-- RIGHT -->
         <v-col cols="12" md="4">
-          <v-card rounded="lg" variant="outlined" class="custom-border">
+          <v-card rounded="lg" variant="outlined" class="">
             <v-container>
               <div class="g2a-title-4 mb-1">Payment Summary</div>
               <v-divider class="mb-2" />
@@ -350,14 +350,14 @@
               <v-divider class="my-4" />
 
               <div class="d-flex justify-space-between align-center">
-                <span class="g2a-subtitle-4">Total</span>
+                <span class="g2a-title-2xl-4">Total</span>
                 <div class="g2a-title-4 text-brandColor2">
                   ₹{{ currency(order.grand_total) }}
                 </div>
               </div>
 
               <div v-if="order.payment_status == 'captured'">
-                <div class="g2a-subtitle-2 text-success mt-4">
+                <div class="g2a-title-2xl-2 text-success mt-4">
                   Payment already received for this order
                 </div>
                 <v-btn

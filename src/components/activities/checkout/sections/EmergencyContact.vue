@@ -5,7 +5,7 @@
     elevation="0"
   >
     <v-card-title class="py-4">
-      <div class="g2a-subtitle">
+      <div class="g2a-title-2xl">
         {{ config.title || "Emergency Contact" }}
       </div>
 

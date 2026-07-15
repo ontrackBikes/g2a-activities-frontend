@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="g2a-subtitle mb-4">
+    <div class="g2a-title-2xl mb-4">
       Perfect For
     </div>
 

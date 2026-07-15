@@ -23,7 +23,7 @@
           </v-avatar>
         </template>
 
-        <v-card-title class="g2a-subtitle">
+        <v-card-title class="g2a-title-2xl">
           {{ quote.product?.name }}
         </v-card-title>
 

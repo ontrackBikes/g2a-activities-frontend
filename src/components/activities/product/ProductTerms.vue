@@ -1,7 +1,7 @@
 <template>
   <div v-if="activeTerms.length">
     <div class="g2a-title-heading mb-4">Terms & Conditions</div>
-    <v-card variant="flat" class="border rounded-lg pa-6">
+    <v-card flat class="rounded-lg pa-6">
       <div
         v-for="item in activeTerms"
         :key="item.id"

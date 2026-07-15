@@ -37,7 +37,7 @@
       class="mb-6"
     >
       <div
-        class="g2a-subtitle g2a-text-bold-600 mb-3"
+        class="g2a-title-2xl g2a-text-bold-600 mb-3"
       >
         Browse By Type
       </div>

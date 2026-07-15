@@ -6,7 +6,7 @@
       rounded="lg"
       variant="outlined"
       elevation="0"
-      class="custom-border"
+      class=""
     >
       <v-card-item class="pa-5">
         <template #prepend>
@@ -31,7 +31,7 @@
       rounded="lg"
       variant="outlined"
       elevation="0"
-      class="custom-border"
+      class=""
     >
       <!-- Product -->
       <v-card-item class="pa-5">
@@ -58,13 +58,13 @@
           </v-avatar>
         </template>
 
-        <v-card-title class="g2a-subtitle g2a-text-bold-600 truncate-two-lines">
+        <v-card-title class="g2a-title-2xl g2a-text-bold-600 truncate-two-lines">
           {{ quote.product?.name || "Selected activity" }}
         </v-card-title>
 
         <v-card-subtitle
           v-if="quote.location?.name"
-          class="g2a-subtitle-2-light text-greyDark"
+          class="g2a-title-2xl-2-light text-greyDark"
         >
           <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon>
           {{ quote.location.name }}
@@ -80,12 +80,12 @@
           :key="item.label"
           class="d-flex justify-space-between mb-3"
         >
-          <span class="text-greyDark g2a-subtitle-2">{{ item.label }}</span>
+          <span class="text-greyDark g2a-title-2xl-2">{{ item.label }}</span>
           <span class="g2a-text-bold-600 text-right">{{ item.value }}</span>
         </div>
 
         <div v-if="selectedSlot" class="d-flex justify-space-between mb-3">
-          <span class="text-greyDark g2a-subtitle-2">
+          <span class="text-greyDark g2a-title-2xl-2">
             {{ selectedSlot.slot_type === "TIME" ? "Time" : "Variant" }}
           </span>
 
@@ -108,7 +108,7 @@
         class="no-padding-title"
       >
         <v-expansion-panel>
-          <v-expansion-panel-title class="g2a-subtitle-2 text-greyDark">
+          <v-expansion-panel-title class="g2a-title-2xl-2 text-greyDark">
             More details
           </v-expansion-panel-title>
 
@@ -119,8 +119,8 @@
               :key="item.label"
               class="d-flex justify-space-between mb-2"
             >
-              <span class="g2a-subtitle-2 text-greyDark">{{ item.label }}</span>
-              <strong class="g2a-subtitle-2 text-right">{{
+              <span class="g2a-title-2xl-2 text-greyDark">{{ item.label }}</span>
+              <strong class="g2a-title-2xl-2 text-right">{{
                 item.value
               }}</strong>
             </div>
@@ -129,7 +129,7 @@
 
             <!-- Daily pricing -->
             <template v-if="dailyPricing.length">
-              <div class="g2a-text-bold-600 g2a-subtitle-2 mb-3">
+              <div class="g2a-text-bold-600 g2a-title-2xl-2 mb-3">
                 Daily pricing
               </div>
 
@@ -138,10 +138,10 @@
                 :key="day.date"
                 class="d-flex justify-space-between mb-2"
               >
-                <span class="g2a-subtitle-2 text-greyDark">{{
+                <span class="g2a-title-2xl-2 text-greyDark">{{
                   formatDate(day.date)
                 }}</span>
-                <strong class="g2a-subtitle-2">{{
+                <strong class="g2a-title-2xl-2">{{
                   formatCurrency(day.unit_price)
                 }}</strong>
               </div>
@@ -149,7 +149,7 @@
               <button
                 v-if="hasMorePricing"
                 type="button"
-                class="g2a-link g2a-subtitle-2 bg-transparent border-0 pa-0"
+                class="g2a-link g2a-title-2xl-2 bg-transparent border-0 pa-0"
                 @click.stop="pricingDialog = true"
               >
                 View all {{ dailyPricing.length }} days
@@ -160,12 +160,12 @@
 
             <!-- Price breakdown -->
             <div class="d-flex justify-space-between mb-2">
-              <span class="g2a-subtitle-2 text-greyDark">
+              <span class="g2a-title-2xl-2 text-greyDark">
                 Subtotal{{
                   pricing.quantity > 1 ? ` (x${pricing.quantity})` : ""
                 }}
               </span>
-              <strong class="g2a-subtitle-2">{{
+              <strong class="g2a-title-2xl-2">{{
                 formatCurrency(pricing.subtotal)
               }}</strong>
             </div>
@@ -174,15 +174,15 @@
               v-if="pricing.discount"
               class="d-flex justify-space-between mb-2"
             >
-              <span class="g2a-subtitle-2 text-greyDark">Discount</span>
-              <strong class="g2a-subtitle-2 text-success">
+              <span class="g2a-title-2xl-2 text-greyDark">Discount</span>
+              <strong class="g2a-title-2xl-2 text-success">
                 -{{ formatCurrency(pricing.discount) }}
               </strong>
             </div>
 
             <div v-if="pricing.tax" class="d-flex justify-space-between">
-              <span class="g2a-subtitle-2 text-greyDark">Taxes &amp; fees</span>
-              <strong class="g2a-subtitle-2">{{
+              <span class="g2a-title-2xl-2 text-greyDark">Taxes &amp; fees</span>
+              <strong class="g2a-title-2xl-2">{{
                 formatCurrency(pricing.tax)
               }}</strong>
             </div>
@@ -199,7 +199,7 @@
           variant="tonal"
           density="compact"
           rounded="lg"
-          class="g2a-subtitle-2"
+          class="g2a-title-2xl-2"
           role="alert"
         >
           {{ error }}
@@ -214,7 +214,7 @@
           <div class="text-right">
             <div
               v-if="pricing.discount"
-              class="g2a-subtitle-2 text-greyDark text-decoration-line-through"
+              class="g2a-title-2xl-2 text-greyDark text-decoration-line-through"
             >
               {{ formatCurrency(pricing.subtotal + pricing.tax) }}
             </div>
@@ -261,7 +261,7 @@
       rounded="lg"
       variant="outlined"
       elevation="0"
-      class="custom-border"
+      class=""
     >
       <v-card-text class="text-center py-10">
         <v-icon size="40" color="grey">mdi-receipt-text-outline</v-icon>
@@ -291,11 +291,11 @@
       <v-list class="no-scrollbar" style="max-height: 360px; overflow-y: auto">
         <v-list-item v-for="day in dailyPricing" :key="day.date">
           <template #title>
-            <span class="g2a-subtitle-2">{{ formatDate(day.date) }}</span>
+            <span class="g2a-title-2xl-2">{{ formatDate(day.date) }}</span>
           </template>
 
           <template #append>
-            <strong class="g2a-subtitle-2">{{
+            <strong class="g2a-title-2xl-2">{{
               formatCurrency(day.unit_price)
             }}</strong>
           </template>

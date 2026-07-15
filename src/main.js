@@ -4,7 +4,7 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 
 import "@mdi/font/css/materialdesignicons.css";
-import "./assets/custom.css";
+import "./styles/_typography.scss";
 import "../src/styles/variables.scss";
 
 const app = createApp(App);

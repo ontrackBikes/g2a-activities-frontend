@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mb-8 mt-4 g2a-title-heading">
+    <div class="mb-8 mt-4 g2a-title-2xl">
       What are you looking for today?
     </div>
 
@@ -22,7 +22,7 @@
         >
           <v-container class="fill-height position-relative pa-4">
             <div
-              class="g2a-title-4"
+              class="g2a-title-2xl"
               :class="getActivitieTheme(category.name).text"
             >
               {{ category.name }}

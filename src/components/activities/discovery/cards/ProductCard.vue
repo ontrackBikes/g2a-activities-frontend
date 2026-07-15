@@ -1,7 +1,7 @@
 <template>
   <v-card
     v-if="mini"
-    variant="flat"
+    flat
     rounded="lg"
     :style="{
       opacity: product.out_of_stock ? '0.75' : '1',
@@ -39,7 +39,7 @@
   </v-card>
   <v-card
     v-else
-    variant="flat"
+    flat
     class="border d-flex flex-column h-100 position-relative"
     :style="{
       opacity: product.out_of_stock ? '0.75' : '1',
@@ -48,10 +48,7 @@
     @click="handleClick"
     rounded="lg"
   >
-    <div
-      class="position-relative overflow-hidden"
-      style="height: 185px"
-    >
+    <div class="position-relative overflow-hidden" style="height: 185px">
       <v-img :src="product.thumbnail_url || fallbackImg" height="185" cover>
         <template #placeholder>
           <div class="d-flex align-center justify-center fill-height">
@@ -91,75 +88,38 @@
       </div>
     </div>
 
-    <v-card-text class="pa-4 d-flex flex-column flex-grow-1 text-left">
-      <span
-        v-if="product.next_available_slot && !product.out_of_stock"
-        class="g2a-text-15 text-green-darken-3 font-weight-medium"
-      >
+    <div class="bg-brandColor2 text-white px-2 py-1">
+      <div class="g2a-title-md" v-if="product.next_available_slot && !product.out_of_stock">
         Next Available: {{ formatDate(product.next_available_slot) }}
-      </span>
-      <div class="g2a-title-4 font-weight-bold mb-1">
+      </div>
+    </div>
+
+    <div class="pa-2">
+      <div class="g2a-title-lg">
         {{ product.name }}
       </div>
 
-      <div v-if="locationText" class="d-flex align-center g2a-text-14 mb-2">
+      <div v-if="locationText" class="d-flex align-center">
         <v-icon
           icon="mdi-map-marker-outline"
           size="14"
-          class="me-1 text-brandColor2"
+          class="text-brandColor2"
         />
         <span>{{ locationText }}</span>
       </div>
 
-      <div v-if="product.next_available_slot && !product.out_of_stock">
-        <!-- <v-icon
-          icon="mdi-calendar-check"
-          size="13"
-          color="green-darken-2"
-          class="mr-1"
-        /> -->
-      </div>
-    </v-card-text>
-
-    <div class="px-4 pb-4 mt-auto">
-      <v-divider class="mb-3" />
-
-      <div class="d-flex align-center justify-space-between">
-        <div v-if="product.starting_price">
-          <div class="g2a-text-12 text-capitalize line-height-tight">
-            {{ product.price_type === "SLOT" ? "starts from" : "flat price" }}
-          </div>
-          <div class="d-flex align-baseline ga-1">
-            <span class="g2a-title-4 text-brandColor2">
-              ₹{{ formatPrice(product.starting_price) }}
-            </span>
-            <span
-              v-if="
-                product.compare_price &&
-                product.compare_price > product.starting_price
-              "
-              class="g2a-text-14 text-decoration-line-through g2a-text-14"
-            >
-              ₹{{ formatPrice(product.compare_price) }}
-            </span>
+      <div v-if="product.starting_price" class="text-brandColor2">
+        <div class="d-flex align-baseline ga-1">
+          <span class="g2a-title-lg">
+            ₹{{ formatPrice(product.starting_price) }}
+          </span>
+          <div class="g2a-title-md">
+            {{ product.price_type === "SLOT" ? "onwards" : "flat price" }}
           </div>
         </div>
-
-        <div v-else class="g2a-text-14 font-weight-bold text-grey-darken-1">
-          Price On Request
-        </div>
-
-        <v-btn
-          v-if="!product.out_of_stock"
-          icon
-          size="small"
-          variant="tonal"
-          color="brandColor2"
-          class="product-card__arrow"
-        >
-          <v-icon icon="mdi-arrow-right" size="16" />
-        </v-btn>
       </div>
+
+      <div v-else class="g2a-title-md">Product not listed</div>
     </div>
   </v-card>
 

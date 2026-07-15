@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex align-center mb-4">
-      <div class="g2a-subtitle g2a-text-bold-700">Explore by Location</div>
+      <div class="g2a-title-2xl">Explore by Location</div>
     </div>
 
     <v-row>

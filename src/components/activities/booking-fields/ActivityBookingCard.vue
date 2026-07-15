@@ -10,68 +10,25 @@
       <div class="g2a-title-4 mb-4">Book your ticket</div>
       <div class="g2a-title-4 text-error">Out of Stock</div>
     </v-card>
-    <v-card
-      v-else
-      rounded="lg"
-      variant="outlined"
-      elevation="0"
-      class="pa-5 custom-border"
-    >
-      <!-- Header -->
-      <div class="g2a-title-4 mb-1">Book your ticket</div>
-
-      <div class="g2a-subtitle-2-light text-greyDark mb-5">
-        Complete your booking in just a few steps.
-      </div>
-
-      <!-- Booking Fields -->
-
-      <!--
-  <BookingFieldRenderer
-    v-for="field in fields"
-    :key="field.field"
-    :field="field"
-    :slots="slots"
-    :error="errors[field.field]"
-    :form="form"
-    v-model="form[field.field]"
-    :maxQuantity="maxQuantity"
-  />
-
-  <div class="text-success mt-3">
-    <v-icon size="18" class="me-1">mdi-information</v-icon>
-    Next Available Date: {{ nextAvailableDate }}
-  </div>
-
-  <v-alert
-    v-if="error"
-    type="error"
-    variant="outlined"
-    density="compact"
-    class="mt-4"
-  >
-    {{ error }}
-  </v-alert>
-  -->
-
-      <v-divider class="my-5" />
+    <v-card flat rounded="lg" class="pa-6" v-else>
+     
 
       <!-- Price & CTA -->
       <div class="d-flex align-center justify-space-between">
         <div>
-          <div class="g2a-subtitle-2-light text-greyDark text-uppercase">
+          <div class="g2a-title-2xl-2-light text-greyDark text-uppercase">
             {{ priceType === "SLOT" ? "Starts from" : "Flat price" }}
           </div>
 
           <div class="g2a-title-3 mt-1">
             ₹{{ price }}
-            <span class="g2a-subtitle-2-light text-greyDark">
+            <span class="g2a-title-2xl-2-light text-greyDark">
               /
               {{
                 props.bookingTemplate.name
                   ?.toLowerCase()
                   .includes("bike rentals")
-                  ? "quantity"
+                  ? "bike"
                   : "guest"
               }}
             </span>
@@ -91,32 +48,26 @@
         </v-btn>
       </div>
     </v-card>
-    <v-card rounded="lg" variant="outlined" class="mt-3 custom-border">
-      <v-card-text class="pa-5">
-        <div class="g2a-title-4 mb-1">Location</div>
-
-        <div class="g2a-subtitle-2-light text-greyDark mb-4">
-          Choose where you'd like to book from.
-        </div>
-
-        <v-card
-          variant="outlined"
-          rounded="lg"
-          :disabled="props.locations.length < 2"
-          class="px-4 py-3 d-flex align-center custom-border"
-          :class="{ 'cursor-pointer': props.locations.length > 1 }"
-          @click="props.locations.length > 1 && $emit('showLocationDialog')"
-        >
+    <v-card
+      class="my-4"
+      flat 
+      rounded="lg"
+      :disabled="props.locations.length < 2"
+      :class="{ 'cursor-pointer': props.locations.length > 1 }"
+      @click="props.locations.length > 1 && $emit('showLocationDialog')"
+    >
+      <v-container>
+        <div class="d-flex align-center">
           <v-avatar size="40" color="brandColor" variant="tonal" class="me-4">
             <v-icon size="20">mdi-map-marker</v-icon>
           </v-avatar>
 
           <div class="flex-grow-1" style="min-width: 0">
-            <div class="g2a-subtitle-1 g2a-text-bold-600 text-truncate">
+            <div class="g2a-title-2xl-1 g2a-text-bold-600 text-truncate">
               {{ locationSelected || "Select Location" }}
             </div>
 
-            <div class="g2a-subtitle-2-light text-greyDark">
+            <div class="g2a-title-2xl-2-light text-greyDark">
               {{
                 props.locations.length > 1
                   ? "Tap to change location"
@@ -128,8 +79,8 @@
           <v-icon v-if="props.locations.length > 1" color="grey">
             mdi-chevron-right
           </v-icon>
-        </v-card>
-      </v-card-text>
+        </div>
+      </v-container>
     </v-card>
   </div>
 </template>

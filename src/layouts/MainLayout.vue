@@ -1,5 +1,5 @@
 <template>
-  <v-app >
+  <v-app style="background: #F4F5FA;">
     <v-app-bar app height="76" flat class="border-b">
       <v-container
         fluid
@@ -167,7 +167,7 @@
     />
 
     <v-main>
-      <v-container style="max-width: 1200px; min-height: calc(100vh - 220px)">
+      <v-container style="max-width: 1200px; min-height: calc(100vh - 220px)" >
         <router-view />
       </v-container>
     </v-main>

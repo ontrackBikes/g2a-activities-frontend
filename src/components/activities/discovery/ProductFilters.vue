@@ -11,7 +11,6 @@
             size="large"
             color="brandColor2"
             prepend-icon="mdi-tune-variant"
-            class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
             @click="dialogOpen = true"
           >
             Filter
@@ -160,7 +159,7 @@
         <div class="d-flex align-center justify-space-between pa-4 pb-3">
           <div class="d-flex align-center ga-2">
             <v-icon icon="mdi-tune-variant" size="18" color="brandColor2" />
-            <span class="g2a-subtitle-dark">Filters & Sort</span>
+            <span class="g2a-title-2xl-dark">Filters & Sort</span>
           </div>
           <div class="d-flex align-center ga-1">
             <v-btn

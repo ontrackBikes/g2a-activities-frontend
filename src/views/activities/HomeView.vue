@@ -13,7 +13,7 @@
           }}</span>
         </v-chip>
         <div class="g2a-title-1 text-white">{{ activeData.title }}</div>
-        <div class="g2a-subtitle-0 text-white mt-1" style="opacity: 0.85">
+        <div class="g2a-title-2xl-0 text-white mt-1" style="opacity: 0.85">
           {{ activeData.subtitle }}
         </div>
         <div class="d-flex align-center ga-4 mt-4">
@@ -41,7 +41,7 @@
         <div v-for="group in activeData.groups" :key="group.title" class="mb-8">
           <div class="d-flex align-center justify-space-between mb-4">
             <div>
-              <div class="g2a-subtitle-dark">{{ group.title }}</div>
+              <div class="g2a-title-2xl-dark">{{ group.title }}</div>
               <div class="g2a-text-12 text-greyDark mt-1">
                 {{ group.description }}
               </div>
@@ -204,7 +204,7 @@
                 {{ activeData.promo.tag }}
               </v-chip>
             </div>
-            <div class="g2a-subtitle-dark">{{ activeData.promo.title }}</div>
+            <div class="g2a-title-2xl-dark">{{ activeData.promo.title }}</div>
             <div class="g2a-text-12 text-greyDark mt-1">
               {{ activeData.promo.subtitle }}
             </div>
@@ -241,7 +241,7 @@
               color="brandColor2"
               class="me-2"
             />
-            <div class="g2a-subtitle-1 g2a-text-bold-600">Most Popular</div>
+            <div class="g2a-title-2xl-1 g2a-text-bold-600">Most Popular</div>
           </div>
 
           <v-card
