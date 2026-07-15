@@ -176,18 +176,19 @@
 
       <v-divider />
 
-      <v-list class="py-2">
+      <v-list class="py-2" nav>
         <v-list-item
           v-for="location in locations"
           :key="location.slug"
           :active="selectedLocation?.slug === location.slug"
           rounded="lg"
           class="mx-3 my-2"
+          color="brandColor"
           @click="selectLocation(location)"
         >
           <template #prepend>
-            <v-avatar size="40" color="brandColor" variant="tonal">
-              <v-icon>mdi-map-marker</v-icon>
+            <v-avatar size="38" color="brandColor" variant="tonal">
+              <v-icon size="20">mdi-map-marker</v-icon>
             </v-avatar>
           </template>
 
@@ -200,14 +201,7 @@
           </v-list-item-subtitle>
 
           <template #append>
-            <v-icon
-              v-if="selectedLocation?.slug === location.slug"
-              color="success"
-            >
-              mdi-check-circle
-            </v-icon>
-
-            <v-icon v-else color="grey"> mdi-chevron-right </v-icon>
+            <v-icon size="18" color="grey"> mdi-chevron-right </v-icon>
           </template>
         </v-list-item>
       </v-list>
@@ -385,10 +379,6 @@ const loadProduct = async () => {
       }
     } else if (availableLocations.value.length === 1) {
       selectedLocation.value = availableLocations.value[0];
-
-      await router.replace({
-        query: { ...route.query, location: availableLocations.value[0].slug },
-      });
     }
 
     slots.value = data.slots || [];

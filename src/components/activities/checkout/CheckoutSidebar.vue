@@ -114,6 +114,7 @@
 
           <v-expansion-panel-text>
             <!-- Remaining booking rows -->
+
             <div
               v-for="item in bookingRows.slice(3)"
               :key="item.label"
@@ -398,6 +399,16 @@ const ROW_LABELS = {
   guests: "Guests",
 };
 
+const fieldLabels = computed(() => {
+  const fields =
+    props.quote?.product?.bookingTemplate?.product_page_schema?.fields || [];
+
+  return fields.reduce((acc, field) => {
+    acc[field.field] = field.label || prettyLabel(field.field);
+    return acc;
+  }, {});
+});
+
 const ROW_ORDER = Object.keys(ROW_LABELS);
 
 const bookingRows = computed(() => {
@@ -408,13 +419,15 @@ const bookingRows = computed(() => {
     .sort(([a], [b]) => {
       const indexA = ROW_ORDER.indexOf(a);
       const indexB = ROW_ORDER.indexOf(b);
+
       if (indexA === -1 && indexB === -1) return 0;
       if (indexA === -1) return 1;
       if (indexB === -1) return -1;
+
       return indexA - indexB;
     })
     .map(([key, value]) => ({
-      label: ROW_LABELS[key] || prettyLabel(key),
+      label: fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key),
       value: key.includes("date") ? formatDate(value) : value,
     }));
 });

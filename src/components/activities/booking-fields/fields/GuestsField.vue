@@ -4,7 +4,7 @@
     style="border: 1px solid rgba(0, 0, 0, 0.12)"
   >
     <span class="g2a-text-bold-600">
-      {{ field.field || "Quantity" }}
+      {{ field.label || "Quantity" }}
     </span>
 
     <div class="d-flex align-center ga-2">
