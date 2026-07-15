@@ -60,7 +60,7 @@ const props = defineProps({
 
   baseUrl: {
     type: String,
-    default: "http://localhost:5137",
+    default: "http://localhost:5173",
   },
 });
 
