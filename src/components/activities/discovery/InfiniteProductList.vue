@@ -126,7 +126,7 @@
         v-if="!loading && !hasMore && products.length > 0"
         class="d-flex flex-column align-center text-center"
       >
-        <v-divider class="w-100 mb-4" />
+       
         <div class="g2a-text-12 text-greyDark">
           You've seen all {{ totalCount }} activities
         </div>

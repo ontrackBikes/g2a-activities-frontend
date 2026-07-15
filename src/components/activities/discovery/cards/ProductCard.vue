@@ -102,10 +102,10 @@
       <div v-if="locationText" class="d-flex align-center">
         <v-icon
           icon="mdi-map-marker-outline"
-          size="14"
-          class="text-brandColor2"
+          size="12"
+          class="text-greyDark"
         />
-        <span>{{ locationText }}</span>
+        <span class="g2a-text-12 text-greyDark">{{ locationText }}</span>
       </div>
 
       <div v-if="product.starting_price" class="text-brandColor2">
