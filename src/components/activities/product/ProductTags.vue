@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="g2a-title-2xl mb-4">
-      Perfect For
+      Tags
     </div>
 
     <v-chip
       v-for="tag in tags"
       :key="tag.id"
       class="me-2 mb-2"
-      color="primary"
+      color="brandColor2"
       variant="outlined"
     >
       {{ tag.name }}
