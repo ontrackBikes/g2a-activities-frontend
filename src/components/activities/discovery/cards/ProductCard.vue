@@ -48,8 +48,8 @@
     @click="handleClick"
     rounded="lg"
   >
-    <div class="position-relative overflow-hidden" style="height: 185px">
-      <v-img :src="product.thumbnail_url || fallbackImg" height="185" cover>
+    <div class="position-relative overflow-hidden" style="height: 250px">
+      <v-img :src="product.thumbnail_url || fallbackImg" height="250" cover>
         <template #placeholder>
           <div class="d-flex align-center justify-center fill-height">
             <v-icon icon="mdi-image-outline" size="40" color="grey-lighten-1" />

@@ -8,8 +8,7 @@
       <v-btn
         variant="outlined"
         rounded="lg"
-        size="large"
-        color="brandColor2"
+        size="small"
         prepend-icon="mdi-tune-variant"
         @click="openDialog"
       >
@@ -17,7 +16,7 @@
         <v-badge
           v-if="totalActiveCount > 0"
           :content="totalActiveCount"
-          color="brandColor2"
+          
           inline
           class="ms-1"
         />
@@ -30,8 +29,8 @@
             v-bind="menuProps"
             variant="outlined"
             rounded="lg"
-            size="large"
-            color="brandColor2"
+            size="small"
+            
             append-icon="mdi-chevron-down"
             class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
           >
@@ -39,7 +38,7 @@
             <v-badge
               v-if="safeVal.locationIds.length"
               :content="safeVal.locationIds.length"
-              color="brandColor2"
+              
               inline
               class="ms-1"
             />
@@ -78,8 +77,8 @@
             v-bind="menuProps"
             variant="outlined"
             rounded="lg"
-            size="large"
-            color="brandColor2"
+            size="small"
+            
             class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
           >
             {{ activeSortLabel }}
@@ -113,8 +112,8 @@
         :key="tag.id"
         variant="outlined"
         rounded="lg"
-        size="large"
-        color="brandColor2"
+        size="small"
+        
         class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
         :style="
           safeVal.tagIds.includes(tag.id)
@@ -130,7 +129,7 @@
       <v-btn
         v-if="hasActiveFilters"
         variant="text"
-        size="large"
+        size="small"
         color="error"
         class="g2a-text-12 g2a-text-bold-600 flex-shrink-0 ms-1"
         prepend-icon="mdi-close-circle-outline"
@@ -155,7 +154,7 @@
         <!-- Header -->
         <div class="d-flex align-center justify-space-between pa-4 pb-3">
           <div class="d-flex align-center ga-2">
-            <v-icon icon="mdi-tune-variant" size="18" color="brandColor2" />
+            <v-icon icon="mdi-tune-variant" size="18"  />
             <span class="g2a-title-2xl-dark">Filters & Sort</span>
           </div>
           <div class="d-flex align-center ga-1">
@@ -163,13 +162,13 @@
               v-if="hasActiveDraftFilters"
               variant="text"
               color="error"
-              size="large"
+              size="small"
               class="g2a-text-12 g2a-text-bold-600"
               @click="resetDraft"
             >
               Reset all
             </v-btn>
-            <v-btn icon variant="text" size="large" @click="closeDialog">
+            <v-btn icon variant="text" size="small" @click="closeDialog">
               <v-icon icon="mdi-close" size="20" />
             </v-btn>
           </div>
@@ -192,7 +191,7 @@
               <v-badge
                 v-if="tabCount(tab.key) > 0"
                 :content="tabCount(tab.key)"
-                color="brandColor2"
+                
                 inline
                 class="ms-1"
               />
@@ -243,7 +242,7 @@
                 <v-progress-circular
                   indeterminate
                   size="14"
-                  color="brandColor2"
+                  
                   class="me-1"
                 />
                 Loading…
@@ -326,7 +325,7 @@
                 <v-progress-circular
                   indeterminate
                   size="14"
-                  color="brandColor2"
+                  
                   class="me-1"
                 />
                 Loading…
@@ -403,7 +402,7 @@
           <v-btn
             flat
             rounded="lg"
-            color="brandColor2"
+            
             class="g2a-text-bold-600 g2a-text-13 px-6"
             @click="applyFilters"
           >
