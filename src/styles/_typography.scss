@@ -35,6 +35,9 @@ body {
 .g2a-heading {
   @include typography(28px, $font-weight-bold, 36px);
 }
+.g2a-heading-sm {
+  @include typography(26px, $font-weight-medium, 36px);
+}
 
 .g2a-title-xs {
   @include typography($font-size-xs, $font-weight-medium, 18px);
@@ -70,4 +73,9 @@ body {
 
 .g2a-title-5xl {
   @include typography($font-size-5xl, $font-weight-bold, 56px);
+}
+
+.v-card.v-card--variant-outlined {
+  border-color: rgba(0, 0, 0, 0.12);
+  /* Same as Vuetify 2 default */
 }

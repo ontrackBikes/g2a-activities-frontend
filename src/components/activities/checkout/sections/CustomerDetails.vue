@@ -1,7 +1,7 @@
 <template>
-  <v-card rounded="lg" variant="outlined" elevation="0">
+  <v-card rounded="lg" variant="outlined">
     <v-container class="py-2">
-      <div class="g2a-title-2xl">
+      <div class="g2a-heading-sm">
         {{ config.title || "Customer Details" }}
       </div>
     </v-container>
@@ -17,7 +17,6 @@
             variant="outlined"
             density="compact"
             hide-details="auto"
-            
             :rules="[(v) => !!v || 'First Name is required']"
           />
         </v-col>

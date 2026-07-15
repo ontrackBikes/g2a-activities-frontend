@@ -1,11 +1,7 @@
 <template>
-  <v-card
-    rounded="lg"
-    variant="outlined"
-    elevation="0"
-  >
+  <v-card rounded="lg" variant="outlined" elevation="0">
     <v-container class="py-4">
-      <div class="g2a-title-2xl">
+      <div class="g2a-heading-sm">
         {{ config.title || "Medical Declaration" }}
       </div>
 
@@ -20,7 +16,6 @@
     <v-divider />
 
     <v-container>
-
       <v-checkbox
         v-for="question in questions"
         :key="question.key"
@@ -40,10 +35,7 @@
         class="mt-2"
         hide-details="auto"
         :rules="[
-          v =>
-            !medical.other ||
-            !!v ||
-            'Please provide additional details'
+          (v) => !medical.other || !!v || 'Please provide additional details',
         ]"
       />
 
@@ -56,7 +48,6 @@
         Certain medical conditions may require approval from the dive instructor
         before participation.
       </v-alert>
-
     </v-container>
   </v-card>
 </template>
@@ -134,8 +125,6 @@ const questions = [
 ];
 
 const hasMedicalIssue = computed(() => {
-  return questions.some(
-    (question) => medical.value[question.key]
-  );
+  return questions.some((question) => medical.value[question.key]);
 });
 </script>

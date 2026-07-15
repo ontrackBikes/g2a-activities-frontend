@@ -1,11 +1,7 @@
 <template>
-  <v-card
-    rounded="lg"
-    variant="outlined"
-    elevation="0"
-  >
+  <v-card rounded="lg" variant="outlined" elevation="0">
     <v-card-title class="py-4">
-      <div class="g2a-title-2xl">
+      <div class="g2a-heading-sm">
         {{ config.title || "Seat Selection" }}
       </div>
 
@@ -20,7 +16,6 @@
     <v-divider />
 
     <v-card-text>
-
       <!-- Travel Class -->
 
       <v-select
@@ -33,33 +28,18 @@
         density="compact"
         hide-details="auto"
         class="mb-6"
-        :rules="[
-          v => !!v || 'Travel Class is required'
-        ]"
+        :rules="[(v) => !!v || 'Travel Class is required']"
       />
 
       <!-- Passenger Seat Preference -->
 
-      <v-row
-        v-for="(participant, index) in participants"
-        :key="index"
-      >
+      <v-row v-for="(participant, index) in participants" :key="index">
         <v-col cols="12">
-          <v-card
-            variant="tonal"
-            rounded="lg"
-            class="pa-4 mb-4"
-          >
-            <div class="g2a-text-bold-600 mb-4">
-              Passenger {{ index + 1 }}
-            </div>
+          <v-card variant="tonal" rounded="lg" class="pa-4 mb-4">
+            <div class="g2a-text-bold-600 mb-4">Passenger {{ index + 1 }}</div>
 
             <v-row>
-
-              <v-col
-                cols="12"
-                md="6"
-              >
+              <v-col cols="12" md="6">
                 <v-select
                   v-model="participant.seat_preference"
                   :items="seatPreferences"
@@ -67,16 +47,11 @@
                   variant="outlined"
                   density="compact"
                   hide-details="auto"
-                  :rules="[
-                    v => !!v || 'Seat Preference is required'
-                  ]"
+                  :rules="[(v) => !!v || 'Seat Preference is required']"
                 />
               </v-col>
 
-              <v-col
-                cols="12"
-                md="6"
-              >
+              <v-col cols="12" md="6">
                 <v-text-field
                   v-model="participant.seat_number"
                   label="Preferred Seat (Optional)"
@@ -85,13 +60,10 @@
                   hide-details="auto"
                 />
               </v-col>
-
             </v-row>
-
           </v-card>
         </v-col>
       </v-row>
-
     </v-card-text>
   </v-card>
 </template>
@@ -214,11 +186,5 @@ const travelClasses = [
   },
 ];
 
-const seatPreferences = [
-  "Window",
-  "Aisle",
-  "Front",
-  "Back",
-  "No Preference",
-];
+const seatPreferences = ["Window", "Aisle", "Front", "Back", "No Preference"];
 </script>

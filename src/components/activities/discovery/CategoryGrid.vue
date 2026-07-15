@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="mb-8 mt-4 g2a-title-2xl">
-      What are you looking for today?
-    </div>
+    <div class="mb-8 mt-4 g2a-title-2xl">What are you looking for today?</div>
 
     <v-row>
       <v-col
@@ -97,9 +95,7 @@ async function loadCategories() {
       .map((category) => ({
         ...category,
         icon:
-          category.icon ||
-          categoryIcons[category.name] ||
-          "mdi-shape-outline",
+          category.icon || categoryIcons[category.name] || "mdi-shape-outline",
       }));
   } catch (err) {
     console.error("[CategoryGrid]", err);

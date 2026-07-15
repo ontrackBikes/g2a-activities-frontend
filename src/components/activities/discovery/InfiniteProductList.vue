@@ -214,8 +214,11 @@ function extractErrorMessage(err) {
     "Unable to load activities right now. Please try again."
   );
 }
+// ─── Filter metadata ─────────────────────────────────────────────
+const metaError = ref(null); // optional: expose in template if you want a visible error state
 
 // ─── Filter metadata ─────────────────────────────────────────────
+
 async function loadFilterMeta() {
   metaAbortController?.abort();
   metaAbortController = new AbortController();
@@ -228,8 +231,8 @@ async function loadFilterMeta() {
     };
 
     const [locRes, tagRes, ptRes] = await Promise.all([
-      apiClient.get("/v1/locations/options", { params, signal }),
-      apiClient.get("/v1/product-tags/api", { params, signal }),
+      apiClient.get("/v1/locations", { params, signal }),
+      apiClient.get("/v1/product-tags", { params, signal }),
       apiClient.get("/v1/product-types", { params, signal }),
     ]);
 
@@ -238,29 +241,20 @@ async function loadFilterMeta() {
     locations.value = locRes.data?.data || locRes.data || [];
     tags.value = tagRes.data?.data || tagRes.data || [];
     productTypes.value = ptRes.data?.data || ptRes.data || [];
+    metaError.value = null;
   } catch (err) {
     if (err?.name === "CanceledError" || err?.name === "AbortError") return;
     console.error("[InfiniteProductList] loadFilterMeta error:", err);
 
-    // Fallback dummy data so the filter bar still renders something usable
-    locations.value = [
-      { id: 1, label: "Port Blair", slug: "port-blair" },
-      { id: 2, label: "Havelock", slug: "havelock" },
-      { id: 3, label: "Neil Island", slug: "neil-island" },
-      { id: 4, label: "Baratang", slug: "baratang" },
-    ];
-    tags.value = [
-      { id: 1, name: "Beginner Friendly", slug: "beginner" },
-      { id: 2, name: "Certified Divers", slug: "certified" },
-      { id: 3, name: "Family", slug: "family" },
-    ];
-    productTypes.value = [
-      { id: 1, name: "Water Activity", slug: "water-activity" },
-      { id: 2, name: "Land Tour", slug: "land-tour" },
-    ];
+    if (!isMounted) return;
+
+    // No dummy fallback — surface the real state instead of faking data.
+    locations.value = [];
+    tags.value = [];
+    productTypes.value = [];
+    metaError.value = extractErrorMessage(err);
   }
 }
-
 // ─── Fetch products ───────────────────────────────────────────────
 async function fetchProducts(reset = false) {
   if (reset) {

@@ -10,7 +10,7 @@
 
     <template v-else-if="order">
       <v-row>
-        <v-col cols="12" md="8">
+        <v-col cols="12" lg="7">
           <!-- Product -->
           <v-card rounded="lg" variant="outlined" class="">
             <v-container>
@@ -24,12 +24,12 @@
                 />
 
                 <div>
-                  <div class="g2a-title-3">{{ item.product_name }}</div>
+                  <div class="g2a-title-xl">{{ item.product_name }}</div>
                   <div class="g2a-text-14 text-greyDark mt-1">
                     {{ item.location_name }}
                   </div>
 
-                  <div class="mt-3 g2a-title-2xl-2">
+                  <div class="g2a-title-2xl-2">
                     <span class="data-label">Order ID:</span>
                     <span class="g2a-text-bold ml-1">{{ order.order_id }}</span>
                   </div>
@@ -45,9 +45,9 @@
           </v-card>
 
           <!-- Booking Details -->
-          <v-card class="mt-5 " rounded="lg" variant="outlined">
+          <v-card class="mt-5" rounded="lg" variant="outlined">
             <v-container>
-              <div class="g2a-title-4 mb-1">Booking Details</div>
+              <div class="g2a-heading-sm mb-1">Booking Details</div>
               <v-divider class="mb-2" />
 
               <div
@@ -135,7 +135,7 @@
           <!-- Customer -->
           <v-card
             v-if="sectionEnabled('customer_details')"
-            class="mt-5 "
+            class="mt-5"
             rounded="lg"
             variant="outlined"
           >
@@ -177,7 +177,7 @@
           <!-- Rental Details -->
           <v-card
             v-if="sectionEnabled('rental_details')"
-            class="mt-5 "
+            class="mt-5"
             rounded="lg"
             variant="outlined"
           >
@@ -218,7 +218,7 @@
           <!-- Medical Declaration -->
           <v-card
             v-if="sectionEnabled('medical_declaration')"
-            class="mt-5 "
+            class="mt-5"
             rounded="lg"
             variant="outlined"
           >
@@ -253,7 +253,7 @@
           <!-- Participants -->
           <v-card
             v-if="sectionEnabled('participants')"
-            class="mt-5 "
+            class="mt-5"
             rounded="lg"
             variant="outlined"
           >
@@ -288,7 +288,7 @@
           <!-- Ferry Seat Selection -->
           <v-card
             v-if="sectionEnabled('ferry_seat_selection')"
-            class="mt-5 "
+            class="mt-5"
             rounded="lg"
             variant="outlined"
           >
@@ -320,10 +320,10 @@
         </v-col>
 
         <!-- RIGHT -->
-        <v-col cols="12" md="4">
+        <v-col cols="12" lg="5">
           <v-card rounded="lg" variant="outlined" class="">
             <v-container>
-              <div class="g2a-title-4 mb-1">Payment Summary</div>
+              <div class="g2a-heading-sm mb-1">Payment Summary</div>
               <v-divider class="mb-2" />
 
               <div class="d-flex justify-space-between py-2">

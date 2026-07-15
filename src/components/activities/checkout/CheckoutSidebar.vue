@@ -58,7 +58,9 @@
           </v-avatar>
         </template>
 
-        <v-card-title class="g2a-title-2xl g2a-text-bold-600 truncate-two-lines">
+        <v-card-title
+          class="g2a-heading-sm g2a-text-bold-600 truncate-two-lines"
+        >
           {{ quote.product?.name || "Selected activity" }}
         </v-card-title>
 
@@ -120,7 +122,9 @@
               :key="item.label"
               class="d-flex justify-space-between mb-2"
             >
-              <span class="g2a-title-2xl-2 text-greyDark">{{ item.label }}</span>
+              <span class="g2a-title-2xl-2 text-greyDark">{{
+                item.label
+              }}</span>
               <strong class="g2a-title-2xl-2 text-right">{{
                 item.value
               }}</strong>
@@ -182,7 +186,9 @@
             </div>
 
             <div v-if="pricing.tax" class="d-flex justify-space-between">
-              <span class="g2a-title-2xl-2 text-greyDark">Taxes &amp; fees</span>
+              <span class="g2a-title-2xl-2 text-greyDark"
+                >Taxes &amp; fees</span
+              >
               <strong class="g2a-title-2xl-2">{{
                 formatCurrency(pricing.tax)
               }}</strong>
@@ -257,13 +263,7 @@
     </v-card>
 
     <!-- Empty / no quote state -->
-    <v-card
-      v-else
-      rounded="lg"
-      variant="outlined"
-      elevation="0"
-      class=""
-    >
+    <v-card v-else rounded="lg" variant="outlined" elevation="0" class="">
       <v-card-text class="text-center py-10">
         <v-icon size="40" color="grey">mdi-receipt-text-outline</v-icon>
         <div class="g2a-text-16 text-medium-emphasis mt-2">

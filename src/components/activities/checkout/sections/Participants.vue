@@ -1,7 +1,7 @@
 <template>
   <v-card rounded="lg" variant="outlined" elevation="0">
     <v-container class="py-4">
-      <div class="g2a-title-2xl">
+      <div class="g2a-heading-sm">
         {{ config.title || "Participant Details" }}
       </div>
 

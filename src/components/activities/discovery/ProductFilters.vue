@@ -1,152 +1,149 @@
 <template>
   <div>
     <!-- ═══════════════════════════════════════════════
-         FILTER BAR
+         FILTER BAR (quick controls — apply immediately)
     ═══════════════════════════════════════════════ -->
     <div class="d-flex align-center ga-2 no-scrollbar overflow-x-auto">
-          <!-- Filter button -->
+      <!-- Filter button -->
+      <v-btn
+        variant="outlined"
+        rounded="lg"
+        size="large"
+        color="brandColor2"
+        prepend-icon="mdi-tune-variant"
+        @click="openDialog"
+      >
+        Filter
+        <v-badge
+          v-if="totalActiveCount > 0"
+          :content="totalActiveCount"
+          color="brandColor2"
+          inline
+          class="ms-1"
+        />
+      </v-btn>
+
+      <!-- Location -->
+      <v-menu v-model="locationMenuOpen" :close-on-content-click="false">
+        <template #activator="{ props: menuProps }">
           <v-btn
+            v-bind="menuProps"
             variant="outlined"
             rounded="lg"
             size="large"
             color="brandColor2"
-            prepend-icon="mdi-tune-variant"
-            @click="dialogOpen = true"
+            append-icon="mdi-chevron-down"
+            class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
           >
-            Filter
+            Location
             <v-badge
-              v-if="totalActiveCount > 0"
-              :content="totalActiveCount"
+              v-if="safeVal.locationIds.length"
+              :content="safeVal.locationIds.length"
               color="brandColor2"
               inline
               class="ms-1"
             />
           </v-btn>
+        </template>
+        <v-card min-width="180" rounded="lg" elevation="3" class="pa-2">
+          <div
+            v-for="loc in locations"
+            :key="loc.id"
+            class="quick-menu-item"
+            @click="toggleArrLive('locationIds', loc.slug)"
+          >
+            <v-icon
+              :icon="
+                safeVal.locationIds.includes(loc.slug)
+                  ? 'mdi-checkbox-marked'
+                  : 'mdi-checkbox-blank-outline'
+              "
+              size="16"
+              :color="
+                safeVal.locationIds.includes(loc.slug)
+                  ? 'brandColor2'
+                  : 'greyDark'
+              "
+              class="me-2"
+            />
+            <span class="g2a-text-13">{{ loc.name }}</span>
+          </div>
+        </v-card>
+      </v-menu>
 
-          <!-- Location -->
-          <v-menu v-model="locationMenuOpen" :close-on-content-click="false">
-            <template #activator="{ props: menuProps }">
-              <v-btn
-                v-bind="menuProps"
-                variant="outlined"
-                rounded="lg"
-                size="large"
-                color="brandColor2"
-                append-icon="mdi-chevron-down"
-                class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
-              >
-                Location
-                <v-badge
-                  v-if="safeVal.locationIds.length"
-                  :content="safeVal.locationIds.length"
-                  color="brandColor2"
-                  inline
-                  class="ms-1"
-                />
-              </v-btn>
-            </template>
-            <v-card min-width="180" rounded="lg" elevation="3" class="pa-2">
-              <div
-                v-for="loc in locations"
-                :key="loc.id"
-                class="quick-menu-item"
-                @click="toggleArr('locationIds', loc.slug)"
-              >
-                <v-icon
-                  :icon="
-                    safeVal.locationIds.includes(loc.slug)
-                      ? 'mdi-checkbox-marked'
-                      : 'mdi-checkbox-blank-outline'
-                  "
-                  size="16"
-                  :color="
-                    safeVal.locationIds.includes(loc.slug)
-                      ? 'brandColor2'
-                      : 'greyDark'
-                  "
-                  class="me-2"
-                />
-                <span class="g2a-text-13">{{ loc.label }}</span>
-              </div>
-            </v-card>
-          </v-menu>
-
-          <!-- Sort By -->
-          <v-menu v-model="sortMenuOpen" :close-on-content-click="true">
-            <template #activator="{ props: menuProps }">
-              <v-btn
-                v-bind="menuProps"
-                variant="outlined"
-                rounded="lg"
-                size="large"
-                color="brandColor2"
-                class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
-              >
-                {{ activeSortLabel }}
-              </v-btn>
-            </template>
-            <v-card min-width="200" rounded="lg" elevation="3" class="pa-2">
-              <div
-                v-for="opt in SORT_OPTIONS"
-                :key="opt.value"
-                class="quick-menu-item"
-                @click="emitField('sortBy', opt.value)"
-              >
-                <v-icon
-                  :icon="
-                    safeVal.sortBy === opt.value
-                      ? 'mdi-radiobox-marked'
-                      : 'mdi-radiobox-blank'
-                  "
-                  size="16"
-                  :color="
-                    safeVal.sortBy === opt.value ? 'brandColor2' : 'greyDark'
-                  "
-                  class="me-2"
-                />
-                <span class="g2a-text-13">{{ opt.label }}</span>
-              </div>
-            </v-card>
-          </v-menu>
-
-          <!-- Tag quick buttons (up to 3) -->
+      <!-- Sort By -->
+      <v-menu v-model="sortMenuOpen" :close-on-content-click="true">
+        <template #activator="{ props: menuProps }">
           <v-btn
-            v-for="tag in tags.slice(0, 3)"
-            :key="tag.id"
+            v-bind="menuProps"
             variant="outlined"
             rounded="lg"
             size="large"
             color="brandColor2"
             class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
-            :style="
-              safeVal.tagIds.includes(tag.id)
-                ? 'background: rgba(41,51,155,0.07)'
-                : ''
-            "
-            @click="toggleArr('tagIds', tag.id)"
           >
-            {{ tag.name }}
+            {{ activeSortLabel }}
           </v-btn>
-
-          <!-- Clear all -->
-          <v-btn
-            v-if="hasActiveFilters"
-            variant="text"
-            size="large"
-            color="error"
-            class="g2a-text-12 g2a-text-bold-600 flex-shrink-0 ms-1"
-            prepend-icon="mdi-close-circle-outline"
-            @click="$emit('reset')"
+        </template>
+        <v-card min-width="200" rounded="lg" elevation="3" class="pa-2">
+          <div
+            v-for="opt in SORT_OPTIONS"
+            :key="opt.value"
+            class="quick-menu-item"
+            @click="emitFieldLive('sortBy', opt.value)"
           >
-            Clear
-          </v-btn>
+            <v-icon
+              :icon="
+                safeVal.sortBy === opt.value
+                  ? 'mdi-radiobox-marked'
+                  : 'mdi-radiobox-blank'
+              "
+              size="16"
+              :color="safeVal.sortBy === opt.value ? 'brandColor2' : 'greyDark'"
+              class="me-2"
+            />
+            <span class="g2a-text-13">{{ opt.label }}</span>
+          </div>
+        </v-card>
+      </v-menu>
 
-          <!-- Results count -->
-          
-        </div>
+      <!-- Tag quick buttons (up to 3) -->
+      <v-btn
+        v-for="tag in tags.slice(0, 3)"
+        :key="tag.id"
+        variant="outlined"
+        rounded="lg"
+        size="large"
+        color="brandColor2"
+        class="g2a-text-12 g2a-text-bold-600 flex-shrink-0"
+        :style="
+          safeVal.tagIds.includes(tag.id)
+            ? 'background: rgba(41,51,155,0.07)'
+            : ''
+        "
+        @click="toggleArrLive('tagIds', tag.id)"
+      >
+        {{ tag.name }}
+      </v-btn>
+
+      <!-- Clear all -->
+      <v-btn
+        v-if="hasActiveFilters"
+        variant="text"
+        size="large"
+        color="error"
+        class="g2a-text-12 g2a-text-bold-600 flex-shrink-0 ms-1"
+        prepend-icon="mdi-close-circle-outline"
+        @click="$emit('reset')"
+      >
+        Clear
+      </v-btn>
+
+      <!-- Results count -->
+    </div>
 
     <!-- ═══════════════════════════════════════════════
-         FILTER DIALOG
+         FILTER DIALOG (staged — only applies on "Apply Filters")
     ═══════════════════════════════════════════════ -->
     <v-dialog
       v-model="dialogOpen"
@@ -163,16 +160,16 @@
           </div>
           <div class="d-flex align-center ga-1">
             <v-btn
-              v-if="hasActiveFilters"
+              v-if="hasActiveDraftFilters"
               variant="text"
               color="error"
               size="large"
               class="g2a-text-12 g2a-text-bold-600"
-              @click="$emit('reset')"
+              @click="resetDraft"
             >
               Reset all
             </v-btn>
-            <v-btn icon variant="text" size="large" @click="dialogOpen = false">
+            <v-btn icon variant="text" size="large" @click="closeDialog">
               <v-icon icon="mdi-close" size="20" />
             </v-btn>
           </div>
@@ -214,20 +211,20 @@
               >
                 <v-icon
                   :icon="
-                    safeVal.sortBy === opt.value
+                    draft.sortBy === opt.value
                       ? 'mdi-radiobox-marked'
                       : 'mdi-radiobox-blank'
                   "
                   size="15"
                   :color="
-                    safeVal.sortBy === opt.value ? 'brandColor2' : 'greyDark'
+                    draft.sortBy === opt.value ? 'brandColor2' : 'greyDark'
                   "
                   class="me-2 flex-shrink-0"
                 />
                 <span
                   class="g2a-text-13"
                   :class="
-                    safeVal.sortBy === opt.value
+                    draft.sortBy === opt.value
                       ? 'g2a-text-bold-600 text-brandColor2'
                       : 'text-greyDark'
                   "
@@ -259,13 +256,13 @@
               >
                 <v-icon
                   :icon="
-                    safeVal.locationIds.includes(loc.slug)
+                    draft.locationIds.includes(loc.slug)
                       ? 'mdi-checkbox-marked'
                       : 'mdi-checkbox-blank-outline'
                   "
                   size="15"
                   :color="
-                    safeVal.locationIds.includes(loc.slug)
+                    draft.locationIds.includes(loc.slug)
                       ? 'brandColor2'
                       : 'greyDark'
                   "
@@ -274,12 +271,12 @@
                 <span
                   class="g2a-text-13"
                   :class="
-                    safeVal.locationIds.includes(loc.slug)
+                    draft.locationIds.includes(loc.slug)
                       ? 'g2a-text-bold-600 text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
-                  {{ loc.label }}
+                  {{ loc.name }}
                 </span>
               </div>
             </template>
@@ -287,7 +284,6 @@
             <!-- Tag -->
             <template v-if="activeTab === 'tag'">
               <div v-if="!tags.length" class="g2a-text-12 text-greyDark pa-1">
-                
                 No tags available
               </div>
               <div
@@ -298,20 +294,20 @@
               >
                 <v-icon
                   :icon="
-                    safeVal.tagIds.includes(tag.id)
+                    draft.tagIds.includes(tag.id)
                       ? 'mdi-checkbox-marked'
                       : 'mdi-checkbox-blank-outline'
                   "
                   size="15"
                   :color="
-                    safeVal.tagIds.includes(tag.id) ? 'brandColor2' : 'greyDark'
+                    draft.tagIds.includes(tag.id) ? 'brandColor2' : 'greyDark'
                   "
                   class="me-2 flex-shrink-0"
                 />
                 <span
                   class="g2a-text-13"
                   :class="
-                    safeVal.tagIds.includes(tag.id)
+                    draft.tagIds.includes(tag.id)
                       ? 'g2a-text-bold-600 text-brandColor2'
                       : 'text-greyDark'
                   "
@@ -341,18 +337,18 @@
               >
                 <v-icon
                   :icon="
-                    !safeVal.productTypeId
+                    !draft.productTypeId
                       ? 'mdi-radiobox-marked'
                       : 'mdi-radiobox-blank'
                   "
                   size="15"
-                  :color="!safeVal.productTypeId ? 'brandColor2' : 'greyDark'"
+                  :color="!draft.productTypeId ? 'brandColor2' : 'greyDark'"
                   class="me-2 flex-shrink-0"
                 />
                 <span
                   class="g2a-text-13"
                   :class="
-                    !safeVal.productTypeId
+                    !draft.productTypeId
                       ? 'g2a-text-bold-600 text-brandColor2'
                       : 'text-greyDark'
                   "
@@ -368,22 +364,20 @@
               >
                 <v-icon
                   :icon="
-                    safeVal.productTypeId === pt.slug
+                    draft.productTypeId === pt.slug
                       ? 'mdi-radiobox-marked'
                       : 'mdi-radiobox-blank'
                   "
                   size="15"
                   :color="
-                    safeVal.productTypeId === pt.slug
-                      ? 'brandColor2'
-                      : 'greyDark'
+                    draft.productTypeId === pt.slug ? 'brandColor2' : 'greyDark'
                   "
                   class="me-2 flex-shrink-0"
                 />
                 <span
                   class="g2a-text-13"
                   :class="
-                    safeVal.productTypeId === pt.slug
+                    draft.productTypeId === pt.slug
                       ? 'g2a-text-bold-600 text-brandColor2'
                       : 'text-greyDark'
                   "
@@ -397,37 +391,13 @@
 
         <v-divider />
 
-        <!-- Price Range -->
-        <div class="pa-4 pb-2">
-          <div class="g2a-text-13 g2a-text-bold-600 mb-3">Price Range</div>
-          <v-range-slider
-            :model-value="[safeVal.minPrice, safeVal.maxPrice]"
-            :min="0"
-            :max="50000"
-            :step="500"
-            color="brandColor2"
-            thumb-label
-            density="compact"
-            hide-details
-            @update:model-value="onPriceChange"
-          />
-          <div
-            class="d-flex justify-space-between g2a-text-11 text-greyDark mt-1"
-          >
-            <span>₹{{ safeVal.minPrice.toLocaleString("en-IN") }}</span>
-            <span>₹{{ safeVal.maxPrice.toLocaleString("en-IN") }}</span>
-          </div>
-        </div>
-
-        <v-divider />
-
         <!-- Footer -->
         <div class="d-flex align-center justify-space-between pa-4">
           <span class="g2a-text-12 text-greyDark">
             {{
-              totalActiveCount > 0
-                ? `${totalActiveCount} filter${totalActiveCount > 1 ? "s" : ""} applied`
-                : "No filters applied"
+              draftActiveCount > 0
+                ? `${draftActiveCount} filter${draftActiveCount > 1 ? "s" : ""} selected`
+                : "No filters selected"
             }}
           </span>
           <v-btn
@@ -435,9 +405,9 @@
             rounded="lg"
             color="brandColor2"
             class="g2a-text-bold-600 g2a-text-13 px-6"
-            @click="dialogOpen = false"
+            @click="applyFilters"
           >
-            Show Results
+            Apply Filters
           </v-btn>
         </div>
       </v-card>
@@ -473,7 +443,6 @@ const TABS = [
   { key: "productType", label: "Product Type" },
 ];
 
-
 const SORT_OPTIONS = [
   { value: "recommended", label: "Recommended" },
   { value: "price_asc", label: "Price: Low → High" },
@@ -486,6 +455,7 @@ const dialogOpen = ref(false);
 const sortMenuOpen = ref(false);
 const locationMenuOpen = ref(false);
 
+// Normalized view of whatever the parent currently has (source of truth).
 const safeVal = computed(() => ({
   ...DEFAULT_FILTER,
   ...props.modelValue,
@@ -497,8 +467,52 @@ const safeVal = computed(() => ({
     : [],
 }));
 
-const totalActiveCount = computed(() => {
-  const f = safeVal.value;
+// Local staged copy that the dialog reads/writes. Only pushed to the
+// parent when "Apply Filters" is clicked, so the button actually does
+// something instead of just closing the dialog.
+const draft = ref({ ...safeVal.value });
+
+function syncDraftFromModel() {
+  draft.value = {
+    ...safeVal.value,
+    locationIds: [...safeVal.value.locationIds],
+    tagIds: [...safeVal.value.tagIds],
+  };
+}
+
+function openDialog() {
+  syncDraftFromModel();
+  dialogOpen.value = true;
+}
+
+function closeDialog() {
+  // discard any unapplied changes made while the dialog was open
+  dialogOpen.value = false;
+}
+
+function applyFilters() {
+  emit("update:modelValue", { ...draft.value });
+  dialogOpen.value = false;
+}
+
+function resetDraft() {
+  draft.value = { ...DEFAULT_FILTER, locationIds: [], tagIds: [] };
+}
+
+// ---- badge / label counts driven off whatever is currently applied ----
+const totalActiveCount = computed(() => countActive(safeVal.value));
+const hasActiveFilters = computed(() => totalActiveCount.value > 0);
+const activeSortLabel = computed(
+  () =>
+    SORT_OPTIONS.find((o) => o.value === safeVal.value.sortBy)?.label ??
+    "Sort by",
+);
+
+// ---- counts driven off the in-progress dialog selection ----
+const draftActiveCount = computed(() => countActive(draft.value));
+const hasActiveDraftFilters = computed(() => draftActiveCount.value > 0);
+
+function countActive(f) {
   return (
     (f.sortBy !== "recommended" ? 1 : 0) +
     f.locationIds.length +
@@ -506,18 +520,10 @@ const totalActiveCount = computed(() => {
     (f.productTypeId ? 1 : 0) +
     (f.minPrice > 0 || f.maxPrice < 50000 ? 1 : 0)
   );
-});
-
-const hasActiveFilters = computed(() => totalActiveCount.value > 0);
-
-const activeSortLabel = computed(
-  () =>
-    SORT_OPTIONS.find((o) => o.value === safeVal.value.sortBy)?.label ??
-    "Sort by",
-);
+}
 
 function tabCount(key) {
-  const f = safeVal.value;
+  const f = draft.value;
   if (key === "sortBy") return f.sortBy !== "recommended" ? 1 : 0;
   if (key === "location") return f.locationIds.length;
   if (key === "tag") return f.tagIds.length;
@@ -525,20 +531,34 @@ function tabCount(key) {
   return 0;
 }
 
+// ---- dialog-scoped mutators: write to draft only ----
 function emitField(key, value) {
-  emit("update:modelValue", { ...safeVal.value, [key]: value });
+  draft.value = { ...draft.value, [key]: value };
 }
 
 function toggleArr(key, id) {
+  const arr = [...draft.value[key]];
+  const idx = arr.indexOf(id);
+  if (idx === -1) arr.push(id);
+  else arr.splice(idx, 1);
+  draft.value = { ...draft.value, [key]: arr };
+}
+
+function onPriceChange([min, max]) {
+  draft.value = { ...draft.value, minPrice: min, maxPrice: max };
+}
+
+// ---- quick-bar mutators (outside the dialog, no Apply button): apply live ----
+function emitFieldLive(key, value) {
+  emit("update:modelValue", { ...safeVal.value, [key]: value });
+}
+
+function toggleArrLive(key, id) {
   const arr = [...safeVal.value[key]];
   const idx = arr.indexOf(id);
   if (idx === -1) arr.push(id);
   else arr.splice(idx, 1);
   emit("update:modelValue", { ...safeVal.value, [key]: arr });
-}
-
-function onPriceChange([min, max]) {
-  emit("update:modelValue", { ...safeVal.value, minPrice: min, maxPrice: max });
 }
 </script>
 
@@ -561,7 +581,6 @@ function onPriceChange([min, max]) {
   transition: background 0.1s;
   user-select: none;
 }
-
 
 .filter-dialog-card {
   overflow: hidden;
@@ -620,5 +639,4 @@ function onPriceChange([min, max]) {
   transition: background 0.1s;
   user-select: none;
 }
-
 </style>
