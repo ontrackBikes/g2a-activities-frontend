@@ -1,114 +1,151 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
 
-    <title>Booking Price Widget</title>
+  <title>Booking Price Widget</title>
 
-    <link
-      rel="stylesheet"
-      href="../dist-booking-price-widget/g2a-book-price-widget.css"
-    />
+  <link
+    rel="stylesheet"
+    href="../dist/widgets/booking-price/widget.css"
+  />
 
-    <style>
-      body {
-        margin: 40px;
-        background: #f5f5f5;
-        font-family: Arial, Helvetica, sans-serif;
-      }
+  <style>
+    body {
+      margin: 40px;
+      background: #f5f5f5;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-      h2 {
-        margin-bottom: 24px;
-      }
+    h1,
+    h2 {
+      margin-top: 40px;
+      margin-bottom: 20px;
+    }
 
-      .demo {
-        max-width: 420px;
-      }
-    </style>
-  </head>
+    .demo {
+      max-width: 420px;
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
 
-  <body>
+<body>
 
+  <h1>Default Widget</h1>
+
+  <div class="demo">
     <div
-    class="g2a-book-price-widget"
-
-    data-slug="scuba-diving-in-havelock-island"
-
-    data-base-url="http://localhost:5173"
-
-    data-show-product-name="false"
-
-    data-show-image="false"
-
-    data-show-description="false"
-
-    data-show-location="false"
-
-    data-show-price="true"
-
-    data-show-guests="true"
-
-    data-show-locations="false"
-
-    data-show-meta="false"
-
-    data-show-button="true"
-
-    data-button-text="Reserve Now"
-
-    data-out-of-stock-text="Sold Out"
-
-    data-out-of-stock-button-text="Notify Me">
-</div>
-
-
-    <h2>Booking Price Widget</h2>
-
-    <div class="demo">
-      <div
-        class="g2a-book-price-widget"
-        data-slug="scuba-diving-in-neil-island"
-        data-base-url="http://localhost:5173"
-      ></div>
+      class="g2a-book-price-widget"
+      data-slug="scuba-diving-in-neil-island"
+      data-base-url="http://localhost:5173">
     </div>
+  </div>
 
-    <h1>compact</h1>
+  <h1>Minimal</h1>
 
+  <div class="demo">
     <div
+      class="g2a-book-price-widget"
+
+      data-slug="scuba-diving-in-havelock-island"
+
       data-base-url="http://localhost:5173"
-      class="g2a-book-price-widget"
-      data-slug="scuba-diving-in-havelock-island"
-      data-options='{
-            "showImage": false,
-            "showDescription": false,
-            "showGuests": false
-        }'
-    ></div>
 
-    <h1>CTA ONLY</h1>
+      data-show-product-name="false"
+      data-show-image="false"
+      data-show-description="false"
+      data-show-location="false"
 
+      data-show-price="true"
+
+      data-show-guests="false"
+
+      data-show-locations="false"
+
+      data-show-meta="false"
+
+      data-show-button="true"
+
+      data-button-text="Reserve Now">
+    </div>
+  </div>
+
+  <h1>CTA Only</h1>
+
+  <div class="demo">
     <div
       class="g2a-book-price-widget"
+
       data-slug="scuba-diving-in-havelock-island"
-      data-options='{
-    "showDescription": false,
-    "showMeta": false,
-    "buttonText": "Reserve Now"
-  }'
-    ></div>
 
-    <h1>blog version</h1>
+      data-base-url="http://localhost:5173"
 
+      data-show-image="false"
+
+      data-show-description="false"
+
+      data-show-location="false"
+
+      data-show-meta="false"
+
+      data-show-button="true"
+
+      data-button-text="Reserve Now">
+    </div>
+  </div>
+
+  <h1>Blog Version</h1>
+
+  <div class="demo">
     <div
       class="g2a-book-price-widget"
-      data-slug="scuba-diving-in-havelock-island"
-      data-options='{
-    "showLocations": true,
-    "buttonText": "View Activity"
-  }'
-    ></div>
 
-    <script src="../dist-booking-price-widget/g2a-book-price-widget.iife.js"></script>
-  </body>
+      data-slug="scuba-diving-in-havelock-island"
+
+      data-base-url="http://localhost:5173"
+
+      data-show-image="true"
+
+      data-show-description="true"
+
+      data-show-location="true"
+
+      data-show-price="true"
+
+      data-show-guests="true"
+
+      data-show-locations="true"
+
+      data-show-meta="true"
+
+      data-show-button="true"
+
+      data-button-text="View Activity">
+    </div>
+  </div>
+
+  <h1>Out of Stock</h1>
+
+  <div class="demo">
+    <div
+      class="g2a-book-price-widget"
+
+      data-slug="scuba-diving-in-havelock-island"
+
+      data-base-url="http://localhost:5173"
+
+      data-out-of-stock-text="Sold Out"
+
+      data-out-of-stock-button-text="Notify Me">
+    </div>
+  </div>
+
+  <script src="../dist/widgets/booking-price/widget.js"></script>
+
+</body>
 </html>
