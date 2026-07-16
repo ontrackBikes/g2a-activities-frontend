@@ -16,7 +16,6 @@
         <v-badge
           v-if="totalActiveCount > 0"
           :content="totalActiveCount"
-          
           inline
           class="ms-1"
         />
@@ -30,7 +29,6 @@
             variant="outlined"
             rounded="lg"
             size="small"
-            
             append-icon="mdi-chevron-down"
             class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
           >
@@ -38,7 +36,6 @@
             <v-badge
               v-if="safeVal.locationIds.length"
               :content="safeVal.locationIds.length"
-              
               inline
               class="ms-1"
             />
@@ -78,7 +75,6 @@
             variant="outlined"
             rounded="lg"
             size="small"
-            
             class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
           >
             {{ activeSortLabel }}
@@ -109,18 +105,17 @@
       <!-- Tag quick buttons (up to 3) -->
       <v-btn
         v-for="tag in tags.slice(0, 3)"
-        :key="tag.id"
+        :key="tag.slug"
         variant="outlined"
         rounded="lg"
         size="small"
-        
         class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
         :style="
-          safeVal.tagIds.includes(tag.id)
+          safeVal.tagSlugs.includes(tag.slug)
             ? 'background: rgba(41,51,155,0.07)'
             : ''
         "
-        @click="toggleArrLive('tagIds', tag.id)"
+        @click="toggleArrLive('tagSlugs', tag.slug)"
       >
         {{ tag.name }}
       </v-btn>
@@ -154,7 +149,7 @@
         <!-- Header -->
         <div class="d-flex align-center justify-space-between pa-4 pb-3">
           <div class="d-flex align-center ga-2">
-            <v-icon icon="mdi-tune-variant" size="18"  />
+            <v-icon icon="mdi-tune-variant" size="18" />
             <span class="g2a-title-2xl-dark">Filters & Sort</span>
           </div>
           <div class="d-flex align-center ga-1">
@@ -191,7 +186,6 @@
               <v-badge
                 v-if="tabCount(tab.key) > 0"
                 :content="tabCount(tab.key)"
-                
                 inline
                 class="ms-1"
               />
@@ -239,12 +233,7 @@
                 v-if="!locations.length"
                 class="g2a-text-12 text-greyDark pa-1"
               >
-                <v-progress-circular
-                  indeterminate
-                  size="14"
-                  
-                  class="me-1"
-                />
+                <v-progress-circular indeterminate size="14" class="me-1" />
                 Loading…
               </div>
               <div
@@ -289,24 +278,26 @@
                 v-for="tag in tags"
                 :key="tag.id"
                 class="filter-option"
-                @click="toggleArr('tagIds', tag.id)"
+                @click="toggleArr('tagSlugs', tag.slug)"
               >
                 <v-icon
                   :icon="
-                    draft.tagIds.includes(tag.id)
+                    draft.tagSlugs.includes(tag.slug)
                       ? 'mdi-checkbox-marked'
                       : 'mdi-checkbox-blank-outline'
                   "
                   size="15"
                   :color="
-                    draft.tagIds.includes(tag.id) ? 'brandColor2' : 'greyDark'
+                    draft.tagSlugs.includes(tag.slug)
+                      ? 'brandColor2'
+                      : 'greyDark'
                   "
                   class="me-2 flex-shrink-0"
                 />
                 <span
                   class="g2a-text-13"
                   :class="
-                    draft.tagIds.includes(tag.id)
+                    draft.tagSlugs.includes(tag.slug)
                       ? 'g2a-title-lg-600 text-brandColor2'
                       : 'text-greyDark'
                   "
@@ -322,32 +313,27 @@
                 v-if="!productTypes.length"
                 class="g2a-text-12 text-greyDark pa-1"
               >
-                <v-progress-circular
-                  indeterminate
-                  size="14"
-                  
-                  class="me-1"
-                />
+                <v-progress-circular indeterminate size="14" class="me-1" />
                 Loading…
               </div>
               <div
                 class="filter-option"
-                @click="emitField('productTypeId', null)"
+                @click="emitField('productTypeSlug', null)"
               >
                 <v-icon
                   :icon="
-                    !draft.productTypeId
+                    !draft.productTypeSlug
                       ? 'mdi-radiobox-marked'
                       : 'mdi-radiobox-blank'
                   "
                   size="15"
-                  :color="!draft.productTypeId ? 'brandColor2' : 'greyDark'"
+                  :color="!draft.productTypeSlug ? 'brandColor2' : 'greyDark'"
                   class="me-2 flex-shrink-0"
                 />
                 <span
                   class="g2a-text-13"
                   :class="
-                    !draft.productTypeId
+                    !draft.productTypeSlug
                       ? 'g2a-title-lg-600 text-brandColor2'
                       : 'text-greyDark'
                   "
@@ -359,24 +345,26 @@
                 v-for="pt in productTypes"
                 :key="pt.id"
                 class="filter-option"
-                @click="emitField('productTypeId', pt.slug)"
+                @click="emitField('productTypeSlug', pt.slug)"
               >
                 <v-icon
                   :icon="
-                    draft.productTypeId === pt.slug
+                    draft.productTypeSlug === pt.slug
                       ? 'mdi-radiobox-marked'
                       : 'mdi-radiobox-blank'
                   "
                   size="15"
                   :color="
-                    draft.productTypeId === pt.slug ? 'brandColor2' : 'greyDark'
+                    draft.productTypeSlug === pt.slug
+                      ? 'brandColor2'
+                      : 'greyDark'
                   "
                   class="me-2 flex-shrink-0"
                 />
                 <span
                   class="g2a-text-13"
                   :class="
-                    draft.productTypeId === pt.slug
+                    draft.productTypeSlug === pt.slug
                       ? 'g2a-title-lg-600 text-brandColor2'
                       : 'text-greyDark'
                   "
@@ -402,7 +390,6 @@
           <v-btn
             flat
             rounded="lg"
-            
             class="g2a-title-lg-600 g2a-text-13 px-6"
             @click="applyFilters"
           >
@@ -430,7 +417,7 @@ const DEFAULT_FILTER = {
   sortBy: "recommended",
   locationIds: [],
   tagIds: [],
-  productTypeId: null,
+  productTypeSlug: null,
   minPrice: 0,
   maxPrice: 50000,
 };
@@ -516,7 +503,7 @@ function countActive(f) {
     (f.sortBy !== "recommended" ? 1 : 0) +
     f.locationIds.length +
     f.tagIds.length +
-    (f.productTypeId ? 1 : 0) +
+    (f.productTypeSlug ? 1 : 0) +
     (f.minPrice > 0 || f.maxPrice < 50000 ? 1 : 0)
   );
 }
@@ -526,7 +513,7 @@ function tabCount(key) {
   if (key === "sortBy") return f.sortBy !== "recommended" ? 1 : 0;
   if (key === "location") return f.locationIds.length;
   if (key === "tag") return f.tagIds.length;
-  if (key === "productType") return f.productTypeId ? 1 : 0;
+  if (key === "productType") return f.productTypeSlug ? 1 : 0;
   return 0;
 }
 
@@ -541,10 +528,6 @@ function toggleArr(key, id) {
   if (idx === -1) arr.push(id);
   else arr.splice(idx, 1);
   draft.value = { ...draft.value, [key]: arr };
-}
-
-function onPriceChange([min, max]) {
-  draft.value = { ...draft.value, minPrice: min, maxPrice: max };
 }
 
 // ---- quick-bar mutators (outside the dialog, no Apply button): apply live ----

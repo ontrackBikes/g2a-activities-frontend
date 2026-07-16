@@ -126,7 +126,6 @@
         v-if="!loading && !hasMore && products.length > 0"
         class="mt-8 text-center"
       >
-       
         <div class="g2a-text-12 text-greyDark">
           You've seen all {{ totalCount }} activities
         </div>
@@ -166,7 +165,7 @@ const FILTER_DEBOUNCE_MS = 350;
 const DEFAULT_FILTERS = {
   sortBy: "recommended",
   locationIds: [],
-  tagIds: [],
+  tagSlugs: [],
   productTypeSlug: null,
   minPrice: 0,
   maxPrice: 50000,
@@ -293,8 +292,9 @@ async function fetchProducts(reset = false) {
     if (f.minPrice > 0) params.min_price = f.minPrice;
     if (f.maxPrice < 50000) params.max_price = f.maxPrice;
     if (f.locationIds?.length) params.location_slugs = f.locationIds.join(",");
-    if (f.tagIds?.length) params.tag_ids = f.tagIds.join(",");
-
+    if (f.tagSlugs?.length) {
+      params.tag_slugs = f.tagSlugs.join(",");
+    }
     const res = await apiClient.get("/v1/products/app/products-list", {
       params,
       signal,
