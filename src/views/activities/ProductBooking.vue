@@ -89,10 +89,11 @@
                         <v-chip
                           size="x-small"
                           class="ml-2"
-                          color="success"
+                          color="warning"
                           variant="tonal"
+                          v-if="slot.available < 5"
                         >
-                          {{ slot.available }} left
+                          Few left
                         </v-chip>
                       </div>
 
