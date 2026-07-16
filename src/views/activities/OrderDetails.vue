@@ -185,31 +185,38 @@
               <div class="g2a-title-lg mb-1">Rental Details</div>
               <v-divider class="mb-2" />
 
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Pickup Location</span>
+              <div
+                v-if="rentalDetails.quantity"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Quantity</span>
                 <strong class="g2a-title-lg">{{
-                  bikeDelivery.pickup_location
-                }}</strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Return / Drop Location</span>
-                <strong class="g2a-title-lg">{{
-                  bikeDelivery.drop_location
+                  rentalDetails.quantity
                 }}</strong>
               </div>
 
               <div class="d-flex justify-space-between py-2">
                 <span class="data-label">Pickup Time</span>
                 <strong class="g2a-title-lg">{{
-                  bikeDelivery.pickup_time
+                  formatTime(rentalDetails.pickup_time)
                 }}</strong>
               </div>
 
               <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Return Time</span>
+                <span class="data-label">Pickup</span>
                 <strong class="g2a-title-lg">{{
-                  bikeDelivery.return_time
+                  rentalDetails.pickup_type === "hotel"
+                    ? `Hotel Pickup - ${rentalDetails.pickup_hotel_name}`
+                    : `Self Pickup - ${rentalDetails.pickup_point}`
+                }}</strong>
+              </div>
+
+              <div class="d-flex justify-space-between py-2">
+                <span class="data-label">Drop</span>
+                <strong class="g2a-title-lg">{{
+                  rentalDetails.drop_type === "hotel"
+                    ? `Hotel Drop - ${rentalDetails.drop_hotel_name}`
+                    : `Self Drop - ${rentalDetails.drop_point}`
                 }}</strong>
               </div>
             </v-container>
@@ -435,7 +442,7 @@ const formatTime = (t) => {
 
 const payload = computed(() => item.value.booking_payload || {});
 
-const bikeDelivery = computed(() => payload.value.bike_delivery || {});
+const rentalDetails = computed(() => payload.value.rental_details || {});
 
 const medical = computed(() => payload.value.medical || {});
 
