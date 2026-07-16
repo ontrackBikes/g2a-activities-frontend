@@ -59,7 +59,7 @@
         </template>
 
         <v-card-title
-          class="g2a-title-xl g2a-title-lg-600 truncate-two-lines"
+          class="g2a-title-xl  truncate-two-lines"
         >
           {{ quote.product?.name || "Selected activity" }}
         </v-card-title>
@@ -83,7 +83,7 @@
           class="d-flex justify-space-between mb-3"
         >
           <span class="text-greyDark g2a-title-2xl-2">{{ item.label }}</span>
-          <span class="g2a-title-lg-600 text-right">{{ item.value }}</span>
+          <span class=" text-right">{{ item.value }}</span>
         </div>
 
         <div v-if="selectedSlot" class="d-flex justify-space-between mb-3">
@@ -91,7 +91,7 @@
             {{ selectedSlot.slot_type === "TIME" ? "Time" : "Variant" }}
           </span>
 
-          <span class="g2a-title-lg-600 text-right">
+          <span class=" text-right">
             <template v-if="selectedSlot.slot_type === 'TIME'">
               {{ selectedSlot.start_time }} - {{ selectedSlot.end_time }}
             </template>
@@ -134,7 +134,7 @@
 
             <!-- Daily pricing -->
             <template v-if="dailyPricing.length">
-              <div class="g2a-title-lg-600 g2a-title-2xl-2 mb-3">
+              <div class=" g2a-title-2xl-2 mb-3">
                 Daily pricing
               </div>
 
@@ -216,7 +216,7 @@
       <!-- Total -->
       <v-card-text>
         <div class="d-flex justify-space-between align-center mb-1">
-          <span class="g2a-title-lg-600">Total payable</span>
+          <span class="">Total payable</span>
 
           <div class="text-right">
             <div

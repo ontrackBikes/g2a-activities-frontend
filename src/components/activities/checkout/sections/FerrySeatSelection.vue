@@ -5,7 +5,7 @@
         {{ config.title || "Seat Selection" }}
       </div>
 
-      <div class="g2a-text-13 mt-1">
+      <div class=" mt-1">
         {{
           config.description ||
           "Select your travel class and preferred seating for each passenger."
@@ -36,7 +36,7 @@
       <v-row v-for="(participant, index) in participants" :key="index">
         <v-col cols="12">
           <v-card variant="tonal" rounded="lg" class="pa-4 mb-4">
-            <div class="g2a-title-lg-600 mb-4">Passenger {{ index + 1 }}</div>
+            <div class=" mb-4">Passenger {{ index + 1 }}</div>
 
             <v-row>
               <v-col cols="12" md="6">

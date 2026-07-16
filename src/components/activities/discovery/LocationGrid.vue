@@ -23,7 +23,7 @@
                 {{ location.name }}
               </div>
 
-              <div class="g2a-text-12 text-white mt-1">
+              <div class=" text-white mt-1">
                 {{ location.product_count || 0 }}
                 Activities
               </div>

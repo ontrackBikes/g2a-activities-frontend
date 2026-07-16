@@ -33,12 +33,12 @@
   <!-- Content -->
   <template v-else-if="product">
     <!-- Breadcrumb -->
-    <div class="d-flex align-center ga-1 g2a-text-13 text-greyDark my-4">
+    <div class="d-flex align-center ga-1  text-greyDark my-4">
       <span class="cursor-pointer" @click="$router.push('/v2')"
         >Activities</span
       >
       <v-icon icon="mdi-chevron-right" size="14" />
-      <span class="text-brandColor2 g2a-title-lg-600 truncate-two-lines">
+      <span class="text-brandColor2  truncate-two-lines">
         {{ product.name }}
       </span>
     </div>

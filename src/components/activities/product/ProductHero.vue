@@ -20,7 +20,7 @@
           class="d-flex flex-column align-center justify-center fill-height bg-grey-lighten-3"
         >
           <v-icon icon="mdi-image-off-outline" size="32" color="grey" />
-          <span class="g2a-text-12 text-greyDark mt-1">Image unavailable</span>
+          <span class=" text-greyDark mt-1">Image unavailable</span>
         </div>
       </template>
 

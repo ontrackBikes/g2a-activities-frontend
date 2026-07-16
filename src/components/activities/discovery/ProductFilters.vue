@@ -8,7 +8,6 @@
       <v-btn
         variant="outlined"
         rounded="lg"
-        size="small"
         prepend-icon="mdi-tune-variant"
         @click="openDialog"
       >
@@ -29,10 +28,7 @@
             v-bind="menuProps"
             variant="outlined"
             rounded="lg"
-            size="small"
-            
             append-icon="mdi-chevron-down"
-            class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
           >
             Location
             <v-badge
@@ -65,7 +61,7 @@
               "
               class="me-2"
             />
-            <span class="g2a-text-13">{{ loc.name }}</span>
+            <span class="">{{ loc.name }}</span>
           </div>
         </v-card>
       </v-menu>
@@ -77,9 +73,6 @@
             v-bind="menuProps"
             variant="outlined"
             rounded="lg"
-            size="small"
-            
-            class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
           >
             {{ activeSortLabel }}
           </v-btn>
@@ -101,7 +94,7 @@
               :color="safeVal.sortBy === opt.value ? 'brandColor2' : 'greyDark'"
               class="me-2"
             />
-            <span class="g2a-text-13">{{ opt.label }}</span>
+            <span class="">{{ opt.label }}</span>
           </div>
         </v-card>
       </v-menu>
@@ -112,9 +105,6 @@
         :key="tag.id"
         variant="outlined"
         rounded="lg"
-        size="small"
-        
-        class="g2a-text-12 g2a-title-lg-600 flex-shrink-0"
         :style="
           safeVal.tagIds.includes(tag.id)
             ? 'background: rgba(41,51,155,0.07)'
@@ -129,9 +119,8 @@
       <v-btn
         v-if="hasActiveFilters"
         variant="text"
-        size="small"
         color="error"
-        class="g2a-text-12 g2a-title-lg-600 flex-shrink-0 ms-1"
+        rounded="xl"
         prepend-icon="mdi-close-circle-outline"
         @click="$emit('reset')"
       >
@@ -155,15 +144,14 @@
         <div class="d-flex align-center justify-space-between pa-4 pb-3">
           <div class="d-flex align-center ga-2">
             <v-icon icon="mdi-tune-variant" size="18"  />
-            <span class="g2a-title-2xl-dark">Filters & Sort</span>
+            <span class="g2a-title-2xl">Filters & Sort</span>
           </div>
           <div class="d-flex align-center ga-1">
             <v-btn
               v-if="hasActiveDraftFilters"
               variant="text"
               color="error"
-              size="small"
-              class="g2a-text-12 g2a-title-lg-600"
+              class=" "
               @click="resetDraft"
             >
               Reset all
@@ -187,7 +175,7 @@
               :class="{ 'filter-tab--active': activeTab === tab.key }"
               @click="activeTab = tab.key"
             >
-              <span class="filter-tab__label g2a-text-13">{{ tab.label }}</span>
+              <span class="filter-tab__label ">{{ tab.label }}</span>
               <v-badge
                 v-if="tabCount(tab.key) > 0"
                 :content="tabCount(tab.key)"
@@ -221,10 +209,10 @@
                   class="me-2 flex-shrink-0"
                 />
                 <span
-                  class="g2a-text-13"
+                  class=""
                   :class="
                     draft.sortBy === opt.value
-                      ? 'g2a-title-lg-600 text-brandColor2'
+                      ? ' text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -237,7 +225,7 @@
             <template v-if="activeTab === 'location'">
               <div
                 v-if="!locations.length"
-                class="g2a-text-12 text-greyDark pa-1"
+                class=" text-greyDark pa-1"
               >
                 <v-progress-circular
                   indeterminate
@@ -268,10 +256,10 @@
                   class="me-2 flex-shrink-0"
                 />
                 <span
-                  class="g2a-text-13"
+                  class=""
                   :class="
                     draft.locationIds.includes(loc.slug)
-                      ? 'g2a-title-lg-600 text-brandColor2'
+                      ? ' text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -282,7 +270,7 @@
 
             <!-- Tag -->
             <template v-if="activeTab === 'tag'">
-              <div v-if="!tags.length" class="g2a-text-12 text-greyDark pa-1">
+              <div v-if="!tags.length" class=" text-greyDark pa-1">
                 No tags available
               </div>
               <div
@@ -304,10 +292,10 @@
                   class="me-2 flex-shrink-0"
                 />
                 <span
-                  class="g2a-text-13"
+                  class=""
                   :class="
                     draft.tagIds.includes(tag.id)
-                      ? 'g2a-title-lg-600 text-brandColor2'
+                      ? ' text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -320,7 +308,7 @@
             <template v-if="activeTab === 'productType'">
               <div
                 v-if="!productTypes.length"
-                class="g2a-text-12 text-greyDark pa-1"
+                class=" text-greyDark pa-1"
               >
                 <v-progress-circular
                   indeterminate
@@ -345,10 +333,10 @@
                   class="me-2 flex-shrink-0"
                 />
                 <span
-                  class="g2a-text-13"
+                  class=""
                   :class="
                     !draft.productTypeId
-                      ? 'g2a-title-lg-600 text-brandColor2'
+                      ? ' text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -374,10 +362,10 @@
                   class="me-2 flex-shrink-0"
                 />
                 <span
-                  class="g2a-text-13"
+                  class=""
                   :class="
                     draft.productTypeId === pt.slug
-                      ? 'g2a-title-lg-600 text-brandColor2'
+                      ? ' text-brandColor2'
                       : 'text-greyDark'
                   "
                 >
@@ -392,7 +380,7 @@
 
         <!-- Footer -->
         <div class="d-flex align-center justify-space-between pa-4">
-          <span class="g2a-text-12 text-greyDark">
+          <span class=" text-greyDark">
             {{
               draftActiveCount > 0
                 ? `${draftActiveCount} filter${draftActiveCount > 1 ? "s" : ""} selected`
@@ -402,8 +390,7 @@
           <v-btn
             flat
             rounded="lg"
-            
-            class="g2a-title-lg-600 g2a-text-13 px-6"
+            color="brandColor2"
             @click="applyFilters"
           >
             Apply Filters

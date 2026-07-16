@@ -8,7 +8,7 @@
       <div class="category-hero__overlay">
         <v-chip size="large" color="brandColor" class="mb-3">
           <v-icon icon="mdi-fire" size="12" class="me-1" />
-          <span class="g2a-text-10 g2a-title-lg-600">{{
+          <span class="g2a-text-10 ">{{
             activeData.badge
           }}</span>
         </v-chip>
@@ -41,8 +41,8 @@
         <div v-for="group in activeData.groups" :key="group.title" class="mb-8">
           <div class="d-flex align-center justify-space-between mb-4">
             <div>
-              <div class="g2a-title-2xl-dark">{{ group.title }}</div>
-              <div class="g2a-text-12 text-greyDark mt-1">
+              <div class="g2a-title-2xl">{{ group.title }}</div>
+              <div class=" text-greyDark mt-1">
                 {{ group.description }}
               </div>
             </div>
@@ -52,7 +52,7 @@
               :color="group.tagColor || 'brandColor2'"
               variant="tonal"
             >
-              <span class="g2a-text-10 g2a-title-lg-600">{{ group.tag }}</span>
+              <span class="g2a-text-10 ">{{ group.tag }}</span>
             </v-chip>
           </div>
 
@@ -83,7 +83,7 @@
                       v-if="product.badge"
                       size="x-small"
                       :color="product.badgeColor || 'brandColor'"
-                      class="g2a-title-lg-600"
+                      class=""
                     >
                       {{ product.badge }}
                     </v-chip>
@@ -97,11 +97,11 @@
                     size="x-small"
                     :color="product.badgeColor || 'brandColor2'"
                     variant="tonal"
-                    class="mb-3 g2a-title-lg-600"
+                    class="mb-3 "
                   >
                     {{ product.badge }}
                   </v-chip>
-                  <div class="price-label g2a-text-12 text-greyDark">
+                  <div class="price-label  text-greyDark">
                     starts
                   </div>
                   <div class="d-flex align-baseline ga-1 mt-1">
@@ -112,7 +112,7 @@
                     </span>
                     <span
                       v-if="product.originalPrice"
-                      class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
+                      class=" text-decoration-line-through text-greyDark ms-1"
                     >
                       ₹{{ product.originalPrice.toLocaleString("en-IN") }}
                     </span>
@@ -120,7 +120,7 @@
                       v-if="product.discount"
                       size="x-small"
                       color="success"
-                      class="ms-1 g2a-title-lg-600"
+                      class="ms-1 "
                     >
                       {{ product.discount }}% OFF
                     </v-chip>
@@ -128,11 +128,11 @@
                 </div>
 
                 <v-card-text class="pt-2 pb-3">
-                  <div class="g2a-text-14 g2a-title-lg-600 mb-1">
+                  <div class="g2a-text-14  mb-1">
                     {{ product.name }}
                   </div>
                   <div
-                    class="d-flex align-center justify-space-between g2a-text-12 text-greyDark"
+                    class="d-flex align-center justify-space-between  text-greyDark"
                   >
                     <div class="d-flex align-center">
                       <v-icon icon="mdi-map-marker" size="12" class="me-1" />
@@ -149,7 +149,7 @@
                     v-if="product.img"
                     class="d-flex align-baseline ga-1 mt-2"
                   >
-                    <span class="g2a-text-12 text-greyDark">starts</span>
+                    <span class=" text-greyDark">starts</span>
                     <span
                       class="g2a-text-16 g2a-title-lg-700 text-brandColor2 ms-1"
                     >
@@ -157,7 +157,7 @@
                     </span>
                     <span
                       v-if="product.originalPrice"
-                      class="g2a-text-12 text-decoration-line-through text-greyDark ms-1"
+                      class=" text-decoration-line-through text-greyDark ms-1"
                     >
                       ₹{{ product.originalPrice.toLocaleString("en-IN") }}
                     </span>
@@ -173,10 +173,10 @@
 
                   <div class="d-flex align-center mt-2 ga-1">
                     <v-icon icon="mdi-star" size="12" color="amber" />
-                    <span class="g2a-text-12 g2a-title-lg-600">{{
+                    <span class=" ">{{
                       product.rating
                     }}</span>
-                    <span class="g2a-text-12 text-greyDark"
+                    <span class=" text-greyDark"
                       >({{ product.reviews }})</span
                     >
                     <v-spacer />
@@ -200,12 +200,12 @@
         >
           <div>
             <div class="d-flex align-center mb-2 ga-2">
-              <v-chip size="large" color="brandColor" class="g2a-title-lg-600">
+              <v-chip size="large" color="brandColor" class="">
                 {{ activeData.promo.tag }}
               </v-chip>
             </div>
-            <div class="g2a-title-2xl-dark">{{ activeData.promo.title }}</div>
-            <div class="g2a-text-12 text-greyDark mt-1">
+            <div class="g2a-title-2xl">{{ activeData.promo.title }}</div>
+            <div class=" text-greyDark mt-1">
               {{ activeData.promo.subtitle }}
             </div>
             <v-btn
@@ -213,7 +213,7 @@
               rounded="lg"
               size="large"
               color="brandColor2"
-              class="mt-4 g2a-title-lg-600"
+              class="mt-4 "
               @click="onPromoClick"
             >
               {{ activeData.promo.cta }}
@@ -241,7 +241,7 @@
               color="brandColor2"
               class="me-2"
             />
-            <div class="g2a-title-2xl-1 g2a-title-lg-600">Most Popular</div>
+            <div class="g2a-title-2xl-1 ">Most Popular</div>
           </div>
 
           <v-card
@@ -268,18 +268,18 @@
                   v-if="item.badge"
                   size="x-small"
                   :color="item.badgeColor || 'brandColor'"
-                  class="mb-1 g2a-title-lg-600"
+                  class="mb-1 "
                 >
                   {{ item.badge }}
                 </v-chip>
-                <div class="g2a-text-13 g2a-title-lg-600 truncate-two-lines">
+                <div class="  truncate-two-lines">
                   {{ item.name }}
                 </div>
-                <div class="g2a-text-12 text-greyDark mt-1">
+                <div class=" text-greyDark mt-1">
                   {{ item.duration }}
                 </div>
                 <div
-                  class="g2a-text-13 g2a-title-lg-700 text-brandColor2 mt-1"
+                  class=" g2a-title-lg-700 text-brandColor2 mt-1"
                 >
                   ₹{{ item.price.toLocaleString("en-IN") }}
                 </div>
@@ -298,7 +298,7 @@
             rounded="lg"
             block
             color="brandColor2"
-            class="mt-2 g2a-title-lg-600"
+            class="mt-2 "
             @click="exploreAll"
           >
             Explore All

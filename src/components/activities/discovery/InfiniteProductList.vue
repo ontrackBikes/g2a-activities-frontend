@@ -36,15 +36,15 @@
           color="error"
           class="mb-4"
         />
-        <div class="g2a-title-2xl-dark mb-1">Something went wrong</div>
-        <div class="g2a-text-13 text-greyDark mb-4">
+        <div class="g2a-title-2xl mb-1">Something went wrong</div>
+        <div class=" text-greyDark mb-4">
           {{ error }}
         </div>
         <v-btn
           variant="outlined"
           rounded="lg"
           color="brandColor2"
-          class="g2a-title-lg-600"
+          class=""
           @click="fetchProducts(true)"
         >
           Try Again
@@ -62,15 +62,15 @@
           color="greyLight"
           class="mb-4"
         />
-        <div class="g2a-title-2xl-dark mb-1">No activities found</div>
-        <div class="g2a-text-13 text-greyDark mb-4">
+        <div class="g2a-title-2xl mb-1">No activities found</div>
+        <div class=" text-greyDark mb-4">
           Try adjusting your filters or browse all activities.
         </div>
         <v-btn
           variant="outlined"
           rounded="lg"
           color="brandColor2"
-          class="g2a-title-lg-600"
+          class=""
           @click="resetFilters"
         >
           Clear Filters
@@ -110,7 +110,7 @@
         v-if="error && products.length > 0"
         class="d-flex flex-column align-center text-center py-6"
       >
-        <div class="g2a-text-13 text-error mb-2">{{ error }}</div>
+        <div class=" text-error mb-2">{{ error }}</div>
         <v-btn
           variant="text"
           size="large"
@@ -127,7 +127,7 @@
         class="mt-8 text-center"
       >
        
-        <div class="g2a-text-12 text-greyDark">
+        <div class=" text-greyDark">
           You've seen all {{ totalCount }} activities
         </div>
       </div>

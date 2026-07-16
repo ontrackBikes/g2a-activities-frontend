@@ -63,7 +63,7 @@
           </v-avatar>
 
           <div class="flex-grow-1" style="min-width: 0">
-            <div class="g2a-title-lg g2a-title-lg-600 text-truncate">
+            <div class="g2a-title-lg  text-truncate">
               {{ locationSelected || "Select Location" }}
             </div>
 
