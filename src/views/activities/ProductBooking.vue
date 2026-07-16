@@ -47,7 +47,7 @@
               v-if="slots.length > 4"
               v-model="slotSearch"
               prepend-inner-icon="mdi-magnify"
-              placeholder="Search slot..."
+              :placeholder="`Search ${availability.slot_display_type}...`"
               density="compact"
               variant="outlined"
               clearable
@@ -64,11 +64,12 @@
               No matching slots found.
             </v-alert>
 
-            <v-row v-else>
-              <v-col
+            <div v-else style="max-height: 300px;overflow: scroll;">
+              <div
                 cols="12"
                 v-for="slot in filteredSlots"
                 :key="slot.token"
+                class="my-2"
                 @click="form.selected_slot_token = slot.token"
               >
                 <v-card
@@ -115,8 +116,8 @@
                     </div>
                   </div>
                 </v-card>
-              </v-col>
-            </v-row>
+              </div>
+            </div>
           </div>
 
           <!-- Price -->
