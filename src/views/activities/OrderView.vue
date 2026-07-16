@@ -38,7 +38,7 @@
             <div class="text-left text-sm-right">
               <div class="g2a-text-caption text-greyDark">Order ID</div>
               <div class="d-flex align-center">
-                <span class="g2a-title-2xl-1 g2a-title-lg-600">{{
+                <span class="g2a-title-2xl-1 ">{{
                   order.order_id
                 }}</span>
                 <v-btn
@@ -302,7 +302,7 @@
 
           <template v-if="order.payments?.length">
             <div
-              class="g2a-title-lg-600 g2a-title-2xl-2 text-greyDark mt-5 mb-2"
+              class=" g2a-title-2xl-2 text-greyDark mt-5 mb-2"
             >
               Payment history
             </div>

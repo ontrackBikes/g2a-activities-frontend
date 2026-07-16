@@ -5,7 +5,7 @@
         Explore Activities
       </h2>
 
-      <div class="g2a-text-12 text-greyDark">
+      <div class=" text-greyDark">
         Choose a category of experience
       </div>
     </div>

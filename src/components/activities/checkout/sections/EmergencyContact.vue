@@ -9,7 +9,7 @@
         {{ config.title || "Emergency Contact" }}
       </div>
 
-      <div class="g2a-text-13 mt-1">
+      <div class=" mt-1">
         {{
           config.description ||
           "We'll contact this person only in case of an emergency."

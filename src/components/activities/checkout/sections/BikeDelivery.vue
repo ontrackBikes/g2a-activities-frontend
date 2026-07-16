@@ -5,7 +5,7 @@
         {{ config.title || "Bike Delivery Details" }}
       </div>
 
-      <div v-if="config.description" class="g2a-text-13 mt-1">
+      <div v-if="config.description" class=" mt-1">
         {{ config.description }}
       </div>
     </v-container>

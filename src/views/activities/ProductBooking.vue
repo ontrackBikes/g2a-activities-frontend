@@ -151,7 +151,7 @@
             <div
               v-for="(term, index) in productTerms"
               :key="index"
-              class="g2a-text-13 d-flex"
+              class=" d-flex"
             >
               <div>-</div>
               <div class="ml-2">{{ term.content }}</div>

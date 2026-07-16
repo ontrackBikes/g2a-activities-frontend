@@ -37,7 +37,7 @@
       class="mb-6"
     >
       <div
-        class="g2a-title-2xl g2a-title-lg-600 mb-3"
+        class="g2a-title-2xl  mb-3"
       >
         Browse By Type
       </div>
@@ -77,13 +77,13 @@
 
           <v-card-text>
             <div
-              class="g2a-text-16 g2a-title-lg-600"
+              class="g2a-text-16 "
             >
               {{ product.name }}
             </div>
 
             <div
-              class="g2a-text-13 mt-2"
+              class=" mt-2"
             >
               {{
                 product.short_description

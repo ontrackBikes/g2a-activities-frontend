@@ -3,7 +3,7 @@
     class="d-flex align-center justify-space-between pa-3 rounded-lg mb-4"
     style="border: 1px solid rgba(0, 0, 0, 0.12)"
   >
-    <span class="g2a-title-lg-600">
+    <span class="">
       {{ field.label || "Quantity" }}
     </span>
 

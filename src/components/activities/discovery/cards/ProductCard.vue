@@ -113,7 +113,7 @@
 
       <div v-if="locationText" class="d-flex align-center">
         <v-icon icon="mdi-map-marker-outline" size="12" class="text-greyDark" />
-        <span class="g2a-text-12 text-greyDark">{{ locationText }}</span>
+        <span class=" text-greyDark">{{ locationText }}</span>
       </div>
 
       <div v-if="product.starting_price" class="text-brandColor2">
@@ -144,7 +144,7 @@
       <v-container>
         <div class="d-flex justify-space-between align-center">
           <div>
-            <div class="g2a-title-2xl">Choose Location</div>
+            <div class="g2a-title-xl">Choose Location</div>
             <div>Select the location you'd like to continue with.</div>
           </div>
           <v-btn
@@ -180,14 +180,14 @@
               </div>
 
               <div class="ml-2">
-                <div class="g2a-title-lg">
+                <div class="g2a-title-md">
                   {{ location.name }}
                 </div>
-                <div class="g2a-title-sm" v-if="location.available">
+                <div class="g2a-title-xs" v-if="location.available">
                   Starts @{{ location.starting_price }}
                 </div>
                 <div v-else>
-                  <div class="g2a-title-lg text-error">Out of Stock</div>
+                  <div class="g2a-title-md text-error">Out of Stock</div>
                 </div>
               </div>
             </div>

@@ -5,7 +5,7 @@
         {{ config.title || "Medical Declaration" }}
       </div>
 
-      <div class="g2a-text-13 mt-1">
+      <div class=" mt-1">
         {{
           config.description ||
           "Please answer honestly. Your safety is our highest priority."

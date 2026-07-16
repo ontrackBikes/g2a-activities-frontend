@@ -49,7 +49,7 @@
             variant="text"
             density="compact"
             color="brandColor2"
-            class="text-none g2a-text-12"
+            class="text-none "
             @click="clearRecent"
           >
             Clear all

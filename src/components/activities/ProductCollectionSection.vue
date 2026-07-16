@@ -4,7 +4,7 @@
       class="d-flex align-center justify-space-between mb-4"
     >
       <div
-        class="g2a-title-2xl g2a-title-lg-600"
+        class="g2a-title-2xl "
       >
         {{ collection.name }}
       </div>
