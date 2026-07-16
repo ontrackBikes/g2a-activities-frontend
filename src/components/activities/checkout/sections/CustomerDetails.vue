@@ -13,9 +13,10 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="customer_details.first_name"
-            label="First Name"
-            variant="outlined"
+            placeholder="First Name"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="[(v) => !!v || 'First Name is required']"
           />
@@ -24,9 +25,10 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="customer_details.last_name"
-            label="Last Name"
-            variant="outlined"
+            placeholder="Last Name"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="[(v) => !!v || 'Last Name is required']"
           />
@@ -35,10 +37,11 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="customer_details.phone"
-            label="Mobile Number"
+            placeholder="Mobile Number"
             prepend-inner-icon="mdi-phone"
-            variant="outlined"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="mobileRules"
           />
@@ -47,10 +50,11 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="customer_details.email"
-            label="Email Address"
+            placeholder="Email Address"
             prepend-inner-icon="mdi-email-outline"
-            variant="outlined"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="emailRules"
           />
@@ -59,10 +63,11 @@
         <v-col cols="12">
           <v-text-field
             v-model="customer_details.country"
-            label="Country"
+            placeholder="Country"
             prepend-inner-icon="mdi-earth"
-            variant="outlined"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="[(v) => !!v || 'Country is required']"
           />

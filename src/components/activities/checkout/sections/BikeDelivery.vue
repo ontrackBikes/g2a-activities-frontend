@@ -5,7 +5,7 @@
         {{ config.title || "Bike Delivery Details" }}
       </div>
 
-      <div v-if="config.description" class=" mt-1">
+      <div v-if="config.description" class="mt-1">
         {{ config.description }}
       </div>
     </v-container>
@@ -17,10 +17,11 @@
         <v-col cols="12">
           <v-text-field
             v-model="bike.pickup_location"
-            label="Pickup Location"
+            placeholder="Pickup Location"
             prepend-inner-icon="mdi-map-marker"
-            variant="outlined"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="[(v) => !!v || 'Pickup Location is required']"
           />
@@ -29,10 +30,11 @@
         <v-col cols="12">
           <v-text-field
             v-model="bike.drop_location"
-            label="Return / Drop Location"
+            placeholder="Return / Drop Location"
             prepend-inner-icon="mdi-map-marker-radius"
-            variant="outlined"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="[(v) => !!v || 'Return Location is required']"
           />
@@ -42,10 +44,11 @@
           <v-text-field
             v-model="bike.pickup_time"
             type="time"
-            label="Pickup Time"
+            placeholder="Pickup Time"
             prepend-inner-icon="mdi-clock-outline"
-            variant="outlined"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="[(v) => !!v || 'Pickup Time is required']"
           />
@@ -55,10 +58,11 @@
           <v-text-field
             v-model="bike.return_time"
             type="time"
-            label="Return Time"
+            placeholder="Return Time"
             prepend-inner-icon="mdi-clock-check-outline"
-            variant="outlined"
             density="compact"
+            variant="outlined"
+            rounded="lg"
             hide-details="auto"
             :rules="[(v) => !!v || 'Return Time is required']"
           />
