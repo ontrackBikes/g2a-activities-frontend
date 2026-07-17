@@ -198,7 +198,11 @@
     </v-card>
   </div>
 
-  <v-dialog v-model="pricingDialog" scrollable max-width="450">
+  <v-dialog v-model="pricingDialog" scrollable max-width="450" scrim="rgba(15,23,42,.30)"
+    :style="{
+      backdropFilter: 'blur(5px)',
+      webkitBackdropFilter: 'blur(5px)',
+    }">
     <v-card>
       <div class="pa-4">
         <div class="g2a-title-xl">Daily Pricing</div>

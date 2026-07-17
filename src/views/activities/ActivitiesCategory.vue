@@ -31,8 +31,8 @@
             @click="goToProductType(type)"
           >
             <v-card-text class="py-8 text-center">
-              <v-avatar size="72" color="blue-lighten-5" class="mb-4">
-                <v-icon :icon="type.icon" size="34" color="primary" />
+              <v-avatar size="72" class="mb-4">
+                <v-icon :icon="type.icon" size="34" color="brandColor2" />
               </v-avatar>
 
               <div class="font-weight-bold">

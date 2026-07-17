@@ -1,35 +1,37 @@
 <template>
-  <div v-if="collections?.products?.length > 0">
-    <div v-for="collection in collections" :key="collection.id" class="mb-10">
-      <!-- Header -->
-      <div class="d-flex align-center justify-space-between mb-4">
-        <div>
-          <div class="g2a-title-2xl">
-            {{ collection.name }}
+  <div v-if="collections">
+    <div v-for="collection in collections" :key="collection.id">
+      <template v-if="collection?.products?.length > 0">
+ 
+        <!-- Header -->
+        <div class="d-flex align-center justify-space-between mb-4">
+          <div>
+            <div class="g2a-title-2xl">
+              {{ collection.name }}
+            </div>
           </div>
+
+          <v-btn
+            v-if="showViewAll"
+            variant="text"
+            color="primary"
+            @click="viewCollection(collection)"
+          >
+            View All
+          </v-btn>
         </div>
-
-        <v-btn
-          v-if="showViewAll"
-          variant="text"
-          color="primary"
-          @click="viewCollection(collection)"
-        >
-          View All
-        </v-btn>
-      </div>
-
-      <!-- Products -->
-      <v-slide-group show-arrows>
-        <v-slide-group-item
-          v-for="product in collection.products"
-          :key="product.slug"
-        >
-          <div class="pa-2" style="width: 280px">
-            <ProductCard :product="product" @click="openProduct" />
-          </div>
-        </v-slide-group-item>
-      </v-slide-group>
+        <!-- Products -->
+        <v-slide-group :show-arrows="!mobile">
+          <v-slide-group-item
+            v-for="product in collection.products"
+            :key="product.slug"
+          >
+            <div class="pr-2" style="width: 280px">
+              <ProductCard :product="product" @click="openProduct" />
+            </div>
+          </v-slide-group-item>
+        </v-slide-group>
+      </template>
     </div>
   </div>
 

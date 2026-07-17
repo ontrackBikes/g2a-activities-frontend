@@ -132,6 +132,11 @@
       max-width="560"
       scrollable
       :fullscreen="$vuetify.display.xs"
+      scrim="rgba(15,23,42,.30)"
+      :style="{
+        backdropFilter: 'blur(5px)',
+        webkitBackdropFilter: 'blur(5px)',
+      }"
     >
       <v-card rounded="lg" elevation="0" class="filter-dialog-card">
         <!-- Header -->

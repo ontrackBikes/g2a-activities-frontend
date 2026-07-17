@@ -20,17 +20,15 @@
         >
           <v-chip
             color="white"
-            variant="tonal"
-            size="small"
-            class="mb-6"
+            class="glass text-white px-2 mb-10"
           >
-            GO2ANDAMAN EXPERIENCES
+            Go2Andaman Experiences
           </v-chip>
 
           <div
-            class="g2a-title-2xl"
+            class="g2a-heading"
             :style="{
-              fontSize: mobile ? '2rem' : '3.5rem',
+              fontSize: mobile ? '4rem' : '5rem',
             }"
           >
             {{ category.cover_title || category.name }}
