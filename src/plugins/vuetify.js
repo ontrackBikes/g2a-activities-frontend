@@ -34,6 +34,7 @@ export default createVuetify({
 
           brandColor: "#FFBB00",
           brandColor2: "#29339B",
+          brandColor2Dark: "#1a2490",
 
           brandColorFade: "#f4d582",
           

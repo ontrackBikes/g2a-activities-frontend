@@ -1,38 +1,39 @@
 <template>
-  <div
-    class="d-flex align-center justify-space-between pa-3 rounded-lg mb-4"
-    style="border: 1px solid rgba(0, 0, 0, 0.12)"
-  >
-    <span class="">
-      {{ field.label || "Quantity" }}
-    </span>
+  <v-card class="border" flat rounded="lg">
+    <div class="pa-2 px-4">
+      <div class="d-flex align-center justify-space-between">
+        <span class="g2a-title-md">
+          {{ field.label || "Quantity" }}
+        </span>
 
-    <div class="d-flex align-center ga-2">
-      <v-btn
-        icon
-        size="x-small"
-        flat
-        :disabled="guestCount <= 1"
-        @click="decrease"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
+        <div class="d-flex align-center ga-2">
+          <v-btn
+            icon
+            size="x-small"
+            flat
+            :disabled="guestCount <= 1"
+            @click="decrease"
+          >
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
 
-      <span class="g2a-title-lg-700">
-        {{ guestCount }}
-      </span>
+          <span class="g2a-title-lg">
+            {{ guestCount }}
+          </span>
 
-      <v-btn
-        icon
-        size="x-small"
-        flat
-        :disabled="guestCount >= maxAllowed"
-        @click="increase"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+          <v-btn
+            icon
+            size="x-small"
+            flat
+            :disabled="guestCount >= maxAllowed"
+            @click="increase"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+      </div>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script setup>

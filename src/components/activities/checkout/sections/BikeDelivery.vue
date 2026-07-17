@@ -32,25 +32,26 @@
         </v-col>
 
         <v-col v-if="rental.pickup_type === 'self'" cols="12">
-          <v-select
-            v-model="rental.pickup_point"
-            :items="pickupPoints"
+          <v-text-field
+            :model-value="rental.pickup_point?.name"
             label="Select Pickup Point"
             prepend-inner-icon="mdi-map-marker"
+            append-inner-icon="mdi-chevron-down"
             variant="outlined"
             density="compact"
             rounded="lg"
+            readonly
             hide-details="auto"
-            :rules="[(v) => !!v || 'Pickup point is required']"
+            :rules="[(v) => !!rental.pickup_point || 'Pickup point is required']"
+            @click="pickUpDialog = true"
           />
         </v-col>
 
         <template v-else-if="rental.pickup_type === 'hotel'">
           <v-col cols="12">
-            <v-text-field
+            <v-textarea
               v-model="rental.pickup_hotel_name"
               placeholder="Enter your hotel name"
-              prepend-inner-icon="mdi-domain"
               density="compact"
               variant="outlined"
               rounded="lg"
@@ -97,16 +98,18 @@
         </v-col>
 
         <v-col v-if="rental.drop_type === 'self'" cols="12">
-          <v-select
-            v-model="rental.drop_point"
-            :items="pickupPoints"
+          <v-text-field
+            :model-value="rental.drop_point?.name"
             label="Select Drop Point"
             prepend-inner-icon="mdi-map-marker"
-            density="compact"
+            append-inner-icon="mdi-chevron-down"
             variant="outlined"
+            density="compact"
             rounded="lg"
+            readonly
             hide-details="auto"
-            :rules="[(v) => !!v || 'Drop point is required']"
+            :rules="[(v) => !!rental.drop_point || 'Drop point is required']"
+            @click="dropDialog = true"
           />
         </v-col>
 
@@ -141,12 +144,51 @@
       </v-row>
     </v-container>
   </v-card>
+
+  <!-- Pickup Dialog -->
+  <v-dialog
+    v-model="pickUpDialog"
+    max-width="700"
+    scrollable
+    scrim="rgba(15,23,42,.30)"
+    :style="{
+      backdropFilter: 'blur(5px)',
+      webkitBackdropFilter: 'blur(5px)',
+    }"
+  >
+    <rental-location-selector
+      mode="pickup"
+      :selected="rental.pickup_point"
+      @selected="onPickupSelected"
+      @close="pickUpDialog = false"
+    />
+  </v-dialog>
+
+  <!-- Drop Dialog -->
+  <v-dialog
+    v-model="dropDialog"
+    max-width="700"
+    scrollable
+    scrim="rgba(15,23,42,.30)"
+    :style="{
+      backdropFilter: 'blur(5px)',
+      webkitBackdropFilter: 'blur(5px)',
+    }"
+  >
+    <rental-location-selector
+      mode="drop"
+      :selected="rental.drop_point"
+      @selected="onDropSelected"
+      @close="dropDialog = false"
+    />
+  </v-dialog>
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
-import { bookingStore } from "@/store/booking";
+import { computed, ref, watch } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
+import { bookingStore } from "@/store/booking";
+import RentalLocationSelector from "./RentalLocationSelector.vue";
 
 const props = defineProps({
   config: {
@@ -164,90 +206,33 @@ const booking = bookingStore;
 
 const STORAGE_KEY = "g2a_rental_details_v1";
 
+const pickUpDialog = ref(false);
+const dropDialog = ref(false);
+
 /*
 |--------------------------------------------------------------------------
-| Hardcoded reference data (TODO: move to vendor/location config once
-| the backend exposes a pickup-points endpoint)
+| Pickup / Drop Selection
 |--------------------------------------------------------------------------
 */
 
-const LOCATION_PICKUP_POINTS = {
-  "port blair": [
-    {
-      name: "Veer Savarkar International Airport",
-      address:
-        "Veer Savarkar International Airport, Port Blair, Andaman and Nicobar Islands",
-      pickup: true,
-      drop: true,
-    },
-    {
-      name: "Phoenix Bay Jetty",
-      address:
-        "Phoenix Bay Jetty, Aberdeen Bazaar, Port Blair, Andaman and Nicobar Islands",
-      pickup: true,
-      drop: true,
-    },
-    {
-      name: "Haddo Jetty",
-      address: "Haddo Jetty, Port Blair, Andaman and Nicobar Islands",
-      pickup: true,
-      drop: true,
-    },
-  ],
-
-  havelock: [
-    {
-      name: "Havelock Jetty",
-      address: "Havelock Jetty, Havelock Island, Andaman and Nicobar Islands",
-      pickup: true,
-      drop: true,
-    },
-    {
-      name: "Go2Andaman Outlet (Srisha Travels) - Opposite Full Moon Cafe",
-      address:
-        "3, Havelock Island, Swaraj Dweep, Govind Nagar, Andaman and Nicobar Islands 744211",
-      pickup: true,
-      drop: true,
-    },
-  ],
-
-  neil: [
-    {
-      name: "Neil Market",
-      address: "Neil Kendra, Shaheed, Neil Kendra, 744104",
-      pickup: true,
-      drop: true,
-    },
-    {
-      name: "Go2Andaman Outlet (Saha Travels) - 200m from Neil Jetty",
-      address:
-        "Neil Jetty, Bharatpur, Neil Island, Andaman and Nicobar Islands 744104",
-      pickup: true,
-      drop: true,
-    },
-  ],
+const onPickupSelected = (location) => {
+  rental.value.pickup_point = location;
+  pickUpDialog.value = false;
 };
+
+const onDropSelected = (location) => {
+  rental.value.drop_point = location;
+  dropDialog.value = false;
+};
+
+/*
+|--------------------------------------------------------------------------
+| Pickup Time
+|--------------------------------------------------------------------------
+*/
+
 const pickupTime = computed(() => {
   return props.quote?.booking?.pickup_time || "";
-});
-const pickupPoints = computed(() => {
-  if (props.config.pickup_points?.length) {
-    return props.config.pickup_points;
-  }
-
-  const location = props.quote?.location?.name?.toLowerCase() || "";
-
-  let points = LOCATION_PICKUP_POINTS["port blair"];
-
-  if (location.includes("havelock")) {
-    points = LOCATION_PICKUP_POINTS.havelock;
-  } else if (location.includes("neil")) {
-    points = LOCATION_PICKUP_POINTS.neil;
-  } else if (location.includes("port blair")) {
-    points = LOCATION_PICKUP_POINTS["port blair"];
-  }
-
-  return points.map((point) => point.name);
 });
 
 /*
@@ -258,14 +243,13 @@ const pickupPoints = computed(() => {
 
 const defaultRentalDetails = () => ({
   pickup_time: "",
-  pickup_type: "self",
 
-  pickup_point: "",
+  pickup_type: "self",
+  pickup_point: null,
   pickup_hotel_name: "",
 
   drop_type: "self",
-
-  drop_point: "",
+  drop_point: null,
   drop_hotel_name: "",
 });
 
@@ -305,15 +289,20 @@ const saveRentalDetails = (value) => {
   }
 };
 
+/*
+|--------------------------------------------------------------------------
+| Normalize
+|--------------------------------------------------------------------------
+*/
+
 const normalizeRentalDetails = (rental) => {
-  // Pickup
   if (rental.pickup_type === "self") {
     delete rental.pickup_hotel_name;
 
     if (!("pickup_point" in rental)) {
-      rental.pickup_point = "";
+      rental.pickup_point = null;
     }
-  } else if (rental.pickup_type === "hotel") {
+  } else {
     delete rental.pickup_point;
 
     if (!("pickup_hotel_name" in rental)) {
@@ -321,14 +310,13 @@ const normalizeRentalDetails = (rental) => {
     }
   }
 
-  // Drop
   if (rental.drop_type === "self") {
     delete rental.drop_hotel_name;
 
     if (!("drop_point" in rental)) {
-      rental.drop_point = "";
+      rental.drop_point = null;
     }
-  } else if (rental.drop_type === "hotel") {
+  } else {
     delete rental.drop_point;
 
     if (!("drop_hotel_name" in rental)) {
@@ -341,8 +329,7 @@ const normalizeRentalDetails = (rental) => {
 
 /*
 |--------------------------------------------------------------------------
-| Rental Details (bound to booking.form.rental_details so this section's
-| key matches BOOKING_SECTIONS.RENTAL_DETAILS on the backend)
+| Rental Details
 |--------------------------------------------------------------------------
 */
 
@@ -360,6 +347,12 @@ const rental = computed({
   },
 });
 
+/*
+|--------------------------------------------------------------------------
+| Watchers
+|--------------------------------------------------------------------------
+*/
+
 watch(
   [() => rental.value.pickup_type, () => rental.value.drop_type],
   () => {
@@ -367,8 +360,9 @@ watch(
   },
   {
     immediate: true,
-  },
+  }
 );
+
 watch(
   () => pickupTime.value,
   (value) => {
@@ -376,18 +370,8 @@ watch(
   },
   {
     immediate: true,
-  },
+  }
 );
-
-onBeforeRouteLeave(() => {
-  localStorage.removeItem(STORAGE_KEY);
-  booking.form.rental_details = defaultRentalDetails();
-});
-/*
-|--------------------------------------------------------------------------
-| Auto Save
-|--------------------------------------------------------------------------
-*/
 
 watch(
   rental,
@@ -397,6 +381,17 @@ watch(
   },
   {
     deep: true,
-  },
+  }
 );
+
+/*
+|--------------------------------------------------------------------------
+| Cleanup
+|--------------------------------------------------------------------------
+*/
+
+onBeforeRouteLeave(() => {
+  localStorage.removeItem(STORAGE_KEY);
+  booking.form.rental_details = defaultRentalDetails();
+});
 </script>

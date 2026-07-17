@@ -16,7 +16,7 @@
             {{ product.name }}
           </div>
 
-          <div class="text-caption g2a-title-lg">
+          <div class="text-grey">
             {{ selectedLocation?.name }}
           </div>
         </div>
@@ -64,7 +64,7 @@
               No matching slots found.
             </v-alert>
 
-            <div v-else style="max-height: 300px;overflow: scroll;">
+            <div v-else style="max-height: 300px; overflow: scroll">
               <div
                 cols="12"
                 v-for="slot in filteredSlots"
@@ -123,7 +123,7 @@
 
           <!-- Price -->
 
-          <div v-if="dailyPricing.length" class="my-4">
+          <div v-if="dailyPricing.length > 2" class="my-4">
             <div class="g2a-title-lg">Daily Pricing</div>
 
             <div
@@ -144,7 +144,7 @@
               color="primary"
               @click="pricingDialog = true"
             >
-              View {{ dailyPricing.length }} more ..
+              View {{ dailyPricing.length }} more
             </div>
           </div>
 
@@ -153,7 +153,7 @@
             <div
               v-for="(term, index) in productTerms"
               :key="index"
-              class=" d-flex"
+              class="d-flex"
             >
               <div>-</div>
               <div class="ml-2">{{ term.content }}</div>
@@ -169,33 +169,37 @@
   </v-card>
 
   <div v-if="result?.available" class="booking-footer">
-    <div class="booking-footer-content">
-      <div>
-        <div class="text-caption text-grey">Total Price</div>
+    <v-card flat>
+      <v-container>
+        <div class="booking-footer-content">
+        <div>
+          <div class="text-grey">Total Price</div>
 
-        <div class="g2a-title-lg font-weight-bold">
-          ₹{{ pricing.grand_total }}
+          <div class="g2a-title-lg">
+            ₹{{ pricing.grand_total }}
+          </div>
         </div>
-      </div>
 
-      <v-btn
-        flat
-        rounded="lg"
-        color="brandColor"
-        size="large"
-        min-width="180"
-        :disabled="loading || (isSlotPricing && !selectedSlot)"
-        @click="continueBooking"
-      >
-        Continue Booking
-      </v-btn>
-    </div>
+        <v-btn
+          flat
+          rounded="lg"
+          color="brandColor"
+          size="large"
+          min-width="180"
+          :disabled="loading || (isSlotPricing && !selectedSlot)"
+          @click="continueBooking"
+        >
+          Continue Booking
+        </v-btn>
+      </div>
+      </v-container>
+    </v-card>
   </div>
 
   <v-dialog v-model="pricingDialog" scrollable max-width="450">
     <v-card>
       <div class="pa-4">
-        <div class="g2a-title">Daily Pricing</div>
+        <div class="g2a-title-xl">Daily Pricing</div>
       </div>
 
       <v-list>
@@ -526,19 +530,12 @@ const continueBooking = () => {
   left: 0;
   right: 0;
   bottom: 0;
-
-  background: #fff;
-  border-top: 1px solid #ececec;
-
-  padding: 12px 16px;
-
   z-index: 100;
 }
 
 .booking-footer-content {
   max-width: 600px;
   margin: 0 auto;
-
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -56,7 +56,7 @@ body {
 }
 
 .g2a-title-lg {
-  @include typography($font-size-lg, $font-weight-semibold, 28px);
+  @include typography($font-size-lg, $font-weight-semibold, 24px);
 }
 
 .g2a-title-xl {
@@ -92,4 +92,13 @@ body {
 
 .v-btn {
   font-weight: 600;
+}
+
+.g2a-link {
+  color: rgb(var(--v-theme-brandColor2));
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+.g2a-link:hover {
+   color: rgb(var(--v-theme-brandColor2Dark));
 }
