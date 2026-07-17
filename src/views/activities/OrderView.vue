@@ -334,7 +334,7 @@
               </div>
               <div class="d-flex justify-space-between py-1">
                 <span class="data-label">Payment ID</span>
-                <strong class="text-medium-emphasis">{{ p.payment_id }}</strong>
+                <strong class="">{{ p.payment_id }}</strong>
               </div>
             </v-card>
           </template>

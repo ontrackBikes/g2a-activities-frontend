@@ -17,20 +17,18 @@
           lg="2"
         >
           <v-card
-            class="activity-card"
+            class="border"
             rounded="lg"
             flat
             @click="goToProductType(type)"
           >
-            <v-card-text class="py-8 text-center">
-              <v-avatar size="72" color="blue-lighten-5" class="mb-4">
-                <v-icon :icon="type.icon" size="34" color="primary" />
-              </v-avatar>
+            <v-container class="text-center py-4">
+              <v-icon :icon="type.icon" size="34" color="brandColor2" />
 
-              <div class="font-weight-bold">
+              <div class="g2a-title-md text-brandColor2 my-2">
                 {{ type.name }}
               </div>
-            </v-card-text>
+            </v-container>
           </v-card>
         </v-col>
       </v-row>
@@ -85,7 +83,7 @@ const productTypeIcons = {
   Seakarting: "mdi-speedometer",
   "Game Fishing": "mdi-fish",
   Ferry: "mdi-ferry",
-  Transfer: "mdi-car",
+  "Airport Transfer": "mdi-plane-car",
   Rental: "mdi-motorbike",
   "Bike Rental": "mdi-motorbike",
   "Day Trip": "mdi-island",
@@ -96,13 +94,14 @@ const productTypeIcons = {
   "History Tour": "mdi-bank",
   Birdwatching: "mdi-bird",
   "Light & Sound Show": "mdi-speaker-wireless",
-  "Airport Transfers": "mdi-airplane",
+  "Airport Transfers": "mdi-plane-car",
   "Bike Rentals": "mdi-motorbike-electric",
   "Ferry Transfers": "mdi-ferry",
   "Private Cab": "mdi-taxi",
   Trek: "mdi-image-filter-hdr",
   Walks: "mdi-ski-cross-country",
   "Boat Trip": "mdi-sail-boat",
+  "Fishing": "mdi-fish",
 };
 
 async function loadLocationInfo() {

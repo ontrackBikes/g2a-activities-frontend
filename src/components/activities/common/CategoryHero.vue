@@ -27,20 +27,14 @@
 
           <div
             class="g2a-heading"
-            :style="{
-              fontSize: mobile ? '4rem' : '5rem',
-            }"
+           
           >
             {{ category.cover_title || category.name }}
           </div>
 
           <div
             v-if="category.cover_subtitle"
-            class="text-white text-medium-emphasis mb-8"
-            :style="{
-              fontSize: mobile ? '1rem' : '1.15rem',
-              maxWidth: '650px',
-            }"
+            class="text-white mt-2"
           >
             {{ category.cover_subtitle }}
           </div>

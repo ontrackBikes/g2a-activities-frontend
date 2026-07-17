@@ -24,6 +24,8 @@
               </div>
 
               <div class=" text-white mt-1">
+                <v-icon>mdi-star-shooting</v-icon>
+                
                 {{ location.product_count || 0 }}
                 Activities
               </div>

@@ -263,7 +263,7 @@
     <v-card v-else rounded="lg" variant="outlined" elevation="0" class="">
       <v-card-text class="text-center py-10">
         <v-icon size="40" color="grey">mdi-receipt-text-outline</v-icon>
-        <div class="g2a-text-16 text-medium-emphasis mt-2">
+        <div class="g2a-text-16  mt-2">
           {{ error || "No booking summary available." }}
         </div>
       </v-card-text>

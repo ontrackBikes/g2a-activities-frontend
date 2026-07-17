@@ -77,7 +77,7 @@
                         {{ item.name }}
                       </div>
 
-                      <div class="text-medium-emphasis mt-2">
+                      <div class=" mt-2">
                         {{ item.address }}
                       </div>
                     </div>

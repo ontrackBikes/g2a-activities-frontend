@@ -33,7 +33,7 @@ body {
 
 // Headings
 .g2a-heading {
-  @include typography(48px, $font-weight-bold, 36px);
+  @include typography(50px, $font-weight-bold, 36px);
   font-family: "TrashHand"
 }
 .g2a-heading-md {
@@ -54,7 +54,7 @@ body {
 }
 
 .g2a-title-md {
-  @include typography($font-size-base, $font-weight-medium, 22px);
+  @include typography($font-size-base, $font-weight-semibold, 22px);
 }
 
 .g2a-title-base {

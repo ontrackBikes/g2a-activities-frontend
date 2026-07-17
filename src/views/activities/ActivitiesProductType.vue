@@ -2,7 +2,7 @@
   <div class="my-4">
     <!-- Header -->
     <div class="mb-8">
-      <div class="g2a-title-2xl">
+      <div class="g2a-heading">
         {{ title }}
       </div>
      

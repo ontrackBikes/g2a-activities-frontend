@@ -70,7 +70,7 @@ const productTypeIcons = {
   "History Tour": "mdi-bank",
   Birdwatching: "mdi-bird",
   "Light & Sound Show": "mdi-speaker-wireless",
-  "Airport Transfer": "mdi-airplane",
+  "Airport Transfer": "mdi-plane-car",
   "Jetty Transfer": "mdi-ferry",
 };
 
