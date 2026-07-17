@@ -30,13 +30,13 @@
 
             <div class="flex-grow-1">
               <div class="g2a-title-xl">{{ statusAlert.heading }}</div>
-              <div class="g2a-title-2xl-2 text-greyDark mt-1">
+              <div class="g2a-title-lg text-greyDark mt-1">
                 {{ statusAlert.text }}
               </div>
             </div>
 
-            <div class="text-left text-sm-right">
-              <div class="g2a-text-caption text-greyDark">Order ID</div>
+            <div class="d-flex align-center text-left text-sm-right">
+              <div class="g2a-text-caption text-greyDark">Order ID: </div>
               <div class="d-flex align-center">
                 <span class="g2a-title-2xl-1 ">{{
                   order.order_id
@@ -57,28 +57,28 @@
           <v-divider class="my-4" />
 
           <div class="d-flex flex-wrap ga-6">
-            <div class="d-flex align-center">
-              <v-icon size="16" color="brandColor2" class="mr-1"
+            <div class="d-flex align-center" v-if="order.created_at">
+              <v-icon size="24" color="brandColor2" class="mr-1"
                 >mdi-calendar-outline</v-icon
               >
-              <span class="g2a-title-2xl-2 text-greyDark"
+              <span  class="g2a-title-lg text-greyDark"
                 >Placed {{ formatDate(order.created_at) }}</span
               >
             </div>
             <div class="d-flex align-center">
-              <v-icon size="16" color="brandColor2" class="mr-1"
+              <v-icon size="24" color="greyDark" class="mr-1"
                 >mdi-package-variant-closed</v-icon
               >
-              <span class="g2a-title-2xl-2 text-greyDark">
+              <span class="g2a-title-lg">
                 {{ items.length }} {{ items.length === 1 ? "item" : "items" }}
               </span>
             </div>
             <div class="d-flex align-center">
-              <v-icon size="16" color="brandColor2" class="mr-1"
+              <v-icon size="24" color="greyDark" class="mr-1"
                 >mdi-cash-check</v-icon
               >
-              <span class="g2a-title-2xl-2 text-greyDark"
-                >{{ currency(order.grand_total) }} paid</span
+              <span class="g2a-title-lg"
+                >{{ currency(order.grand_total) }}</span
               >
             </div>
           </div>
@@ -87,15 +87,14 @@
 
       <template v-for="(item, index) in items" :key="index">
         <!-- ================= Product ================= -->
-        <v-card rounded="lg" variant="outlined" class=" mb-4">
+        <v-card rounded="lg" variant="outlined" class="mb-4">
           <v-row no-gutters>
             <v-col cols="12" sm="3">
               <v-img
                 :src="item.thumbnail_url"
                 :alt="item.product_name"
-                height="180"
                 cover
-                class="rounded-t-lg rounded-sm-s-lg rounded-sm-t-0"
+                height="100%"
               >
                 <template #error>
                   <div
@@ -109,23 +108,23 @@
               </v-img>
             </v-col>
 
-            <v-col cols="12" sm="9" class="pa-6">
+            <v-col cols="12" sm="9" class="pa-2">
               <div class="g2a-title-lg">{{ item.product_name }}</div>
               <div
-                class="text-greyDark g2a-title-2xl-2 mt-1 d-flex align-center"
+                class="text-greyDark g2a-title-lg mt-1 d-flex align-center"
               >
                 <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon>
                 {{ item.location_name }}
               </div>
-              <v-chip
+              <div
                 v-if="bookingOf(item).selected_slot?.name"
-                class="mt-3"
+                
                 size="large"
-                color="brandColor2"
+                class="text-brandColor2"
                 variant="tonal"
               >
                 {{ bookingOf(item).selected_slot.name }}
-              </v-chip>
+              </div>
             </v-col>
           </v-row>
         </v-card>
@@ -219,12 +218,12 @@
                   v-for="(p, pIndex) in item.participants"
                   :key="p.id ?? pIndex"
                 >
-                  <td class="g2a-title-lg g2a-title-2xl-2">
+                  <td class="g2a-title-lg g2a-title-lg">
                     {{ p.first_name }} {{ p.last_name }}
                   </td>
-                  <td class="g2a-title-2xl-2">{{ p.age ?? "—" }}</td>
-                  <td class="g2a-title-2xl-2">{{ p.gender || "—" }}</td>
-                  <td class="g2a-title-2xl-2">{{ p.nationality || "—" }}</td>
+                  <td class="g2a-title-lg">{{ p.age ?? "—" }}</td>
+                  <td class="g2a-title-lg">{{ p.gender || "—" }}</td>
+                  <td class="g2a-title-lg">{{ p.nationality || "—" }}</td>
                 </tr>
               </tbody>
             </v-table>
@@ -302,7 +301,7 @@
 
           <template v-if="order.payments?.length">
             <div
-              class=" g2a-title-2xl-2 text-greyDark mt-5 mb-2"
+              class=" g2a-title-lg text-greyDark mt-5 mb-2"
             >
               Payment history
             </div>
@@ -320,7 +319,6 @@
                 <span class="data-label">Payment Status</span>
                 <v-chip
                   :color="paymentStatusColor(p.status)"
-                  size="large"
                   variant="flat"
                 >
                   {{ p.status?.toUpperCase() }}

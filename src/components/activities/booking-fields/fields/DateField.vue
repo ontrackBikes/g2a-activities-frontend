@@ -20,7 +20,7 @@
             {{ String(date.date).padStart(2, "0") }}
           </div>
 
-          <div class="date-day g2a-text-14">
+          <div class="date-day">
             {{ date.day }}
           </div>
         </v-card>

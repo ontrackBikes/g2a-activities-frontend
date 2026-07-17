@@ -61,7 +61,7 @@
           <v-fade-transition mode="out-in">
             <div
               :key="currentPlaceholder"
-              class="position-absolute text-grey-darken-1 g2a-text-14"
+              class="position-absolute text-grey-darken-1"
               style="
                 left: 44px;
                 top: 50%;

@@ -28,7 +28,7 @@
                 props.bookingTemplate.name
                   ?.toLowerCase()
                   .includes("bike rentals")
-                  ? "bike"
+                  ? "quantity"
                   : "guest"
               }}
             </span>

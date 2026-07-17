@@ -2,7 +2,7 @@
   <v-container class="py-12">
 
     <v-card
-      max-width="700"
+      max-width="600"
       class="mx-auto"
       rounded="lg"
       elevation="0"
@@ -23,11 +23,11 @@
           </v-icon>
         </v-avatar>
 
-        <div class="text-h4 font-weight-bold mt-6">
-          Booking Confirmed 🎉
+        <div class="g2a-title-2xl  mt-6">
+          Booking Confirmed 
         </div>
 
-        <div class=" g2a-text-14 mt-3">
+        <div class=" mt-3">
           Thank you for booking with Go2Andaman.
           Your payment has been received successfully.
         </div>
@@ -53,13 +53,20 @@
         <div class="d-flex justify-center ga-4 mt-8">
 
           <v-btn
-            color="primary"
+            size="large"
+            flat
+            rounded="lg"
+            color="brandColor"
             @click="viewOrder"
           >
             View Booking
           </v-btn>
 
           <v-btn
+            size="large"
+            flat
+            rounded="lg"
+            color="brandColor"
             variant="outlined"
             @click="$router.push('/')"
           >

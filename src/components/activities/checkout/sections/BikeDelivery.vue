@@ -115,10 +115,9 @@
 
         <template v-else-if="rental.drop_type === 'hotel'">
           <v-col cols="12">
-            <v-text-field
+            <v-textarea
               v-model="rental.drop_hotel_name"
               placeholder="Enter your hotel name"
-              prepend-inner-icon="mdi-domain"
               variant="outlined"
               density="compact"
               rounded="lg"

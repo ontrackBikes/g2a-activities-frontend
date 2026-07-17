@@ -27,7 +27,7 @@
           Payment Failed
         </div>
 
-        <div class=" g2a-text-14 mt-3">
+        <div class=" mt-3">
           We couldn't confirm your payment.
           Don't worry—your booking is still saved.
         </div>

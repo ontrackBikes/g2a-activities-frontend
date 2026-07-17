@@ -39,7 +39,7 @@
               <p class=" text-grey">Duration</p>
             </v-col>
             <v-col cols="7" class="text-right">
-              <p class="g2a-title-lg-500 g2a-text-14">
+              <p class="g2a-title-lg-500">
                 {{ calculateDuration * 24 }} hrs ({{ calculateDuration }} Day<span
                   v-if="calculateDuration > 1">s</span>)
               </p>
@@ -52,7 +52,7 @@
               <p class=" text-grey">Dates</p>
             </v-col>
             <v-col cols="7" class="text-right">
-              <p class="g2a-title-lg-500 g2a-text-14">{{ formatDateRange }}</p>
+              <p class="g2a-title-lg-500">{{ formatDateRange }}</p>
             </v-col>
           </v-row>
 
@@ -62,7 +62,7 @@
               <p class=" text-grey">Pickup</p>
             </v-col>
             <v-col cols="7" class="text-right">
-              <p class="g2a-title-lg-500 g2a-text-14">{{ pickupDisplay }}</p>
+              <p class="g2a-title-lg-500">{{ pickupDisplay }}</p>
             </v-col>
           </v-row>
 
@@ -72,7 +72,7 @@
               <p class=" text-grey">Dropoff</p>
             </v-col>
             <v-col cols="7" class="text-right">
-              <p class="g2a-title-lg-500 g2a-text-14">{{ dropoffDisplay }}</p>
+              <p class="g2a-title-lg-500">{{ dropoffDisplay }}</p>
             </v-col>
           </v-row>
         </div>
