@@ -58,9 +58,7 @@
           </v-avatar>
         </template>
 
-        <v-card-title
-          class="g2a-title-xl  truncate-two-lines"
-        >
+        <v-card-title class="g2a-title-xl truncate-two-lines">
           {{ quote.product?.name || "Selected activity" }}
         </v-card-title>
 
@@ -76,14 +74,14 @@
       <v-divider />
 
       <!-- Important details -->
-      <v-card-text v-if="bookingRows.length || selectedSlot" class="pb-0">
+      <v-container v-if="bookingRows.length || selectedSlot" class="pb-0">
         <div
           v-for="item in bookingRows.slice(0, 3)"
           :key="item.label"
           class="d-flex justify-space-between mb-3"
         >
           <span class="text-greyDark g2a-title-2xl-2">{{ item.label }}</span>
-          <span class=" text-right">{{ item.value }}</span>
+          <span class="text-right">{{ item.value }}</span>
         </div>
 
         <div v-if="selectedSlot" class="d-flex justify-space-between mb-3">
@@ -91,7 +89,7 @@
             {{ selectedSlot.slot_type === "TIME" ? "Time" : "Variant" }}
           </span>
 
-          <span class=" text-right">
+          <span class="text-right">
             <template v-if="selectedSlot.slot_type === 'TIME'">
               {{ selectedSlot.start_time }} - {{ selectedSlot.end_time }}
             </template>
@@ -100,7 +98,7 @@
             </template>
           </span>
         </div>
-      </v-card-text>
+      </v-container>
 
       <!-- More details -->
       <v-expansion-panels
@@ -108,6 +106,7 @@
         flat
         variant="accordion"
         class="no-padding-title"
+        bg-color="transparent"
       >
         <v-expansion-panel>
           <v-expansion-panel-title class="g2a-title-2xl-2 text-greyDark">
@@ -134,9 +133,7 @@
 
             <!-- Daily pricing -->
             <template v-if="dailyPricing.length">
-              <div class=" g2a-title-2xl-2 mb-3">
-                Daily pricing
-              </div>
+              <div class="g2a-title-2xl-2 mb-3">Daily pricing</div>
 
               <div
                 v-for="day in previewDailyPricing"

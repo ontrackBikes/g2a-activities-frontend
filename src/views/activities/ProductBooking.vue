@@ -1,6 +1,7 @@
 <template>
   <v-card
-    flat
+    rounded="lg"
+    variant="outlined"
     :disabled="loading"
     style="max-width: 600px; margin-bottom: 100px"
     class="mx-auto"
@@ -64,7 +65,10 @@
               No matching slots found.
             </v-alert>
 
-            <div v-else style="max-height: 300px; overflow: scroll">
+            <div
+              v-else
+              style="max-height: 300px; overflow-y: auto; overflow-x: hidden"
+            >
               <div
                 cols="12"
                 v-for="slot in filteredSlots"
@@ -75,7 +79,7 @@
                 <v-card
                   class="slot-card"
                   :class="{ active: form.selected_slot_token === slot.token }"
-                  flat
+                  variant="outlined"
                   @click="form.selected_slot_token = slot.token"
                 >
                   <div class="d-flex align-center">
@@ -169,29 +173,27 @@
   </v-card>
 
   <div v-if="result?.available" class="booking-footer">
-    <v-card flat>
+    <v-card flat color="surface">
       <v-container>
         <div class="booking-footer-content">
-        <div>
-          <div class="text-grey">Total Price</div>
+          <div>
+            <div class="text-grey">Total Price</div>
 
-          <div class="g2a-title-lg">
-            ₹{{ pricing.grand_total }}
+            <div class="g2a-title-lg">₹{{ pricing.grand_total }}</div>
           </div>
-        </div>
 
-        <v-btn
-          flat
-          rounded="lg"
-          color="brandColor"
-          size="large"
-          min-width="180"
-          :disabled="loading || (isSlotPricing && !selectedSlot)"
-          @click="continueBooking"
-        >
-          Continue Booking
-        </v-btn>
-      </div>
+          <v-btn
+            flat
+            rounded="lg"
+            color="brandColor"
+            size="large"
+            min-width="180"
+            :disabled="loading || (isSlotPricing && !selectedSlot)"
+            @click="continueBooking"
+          >
+            Continue Booking
+          </v-btn>
+        </div>
       </v-container>
     </v-card>
   </div>
@@ -531,6 +533,7 @@ const continueBooking = () => {
   right: 0;
   bottom: 0;
   z-index: 100;
+  background: rgb(var(--v-theme-surface));
 }
 
 .booking-footer-content {

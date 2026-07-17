@@ -1,5 +1,5 @@
 <template>
-  <v-card class="border" flat rounded="lg">
+  <v-card class="border" variant="outlined" rounded="lg">
     <div class="pa-2 px-4">
       <div class="d-flex align-center justify-space-between">
         <span class="g2a-title-md">
