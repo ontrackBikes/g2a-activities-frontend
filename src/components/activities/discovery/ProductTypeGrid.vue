@@ -1,7 +1,7 @@
 <template>
   <div v-if="productTypes.length">
     <div class="mb-4">
-      <h2 class="g2a-text-20 g2a-title-lg-700">
+      <h2 class="g2a-text-20 ">
         Explore Activities
       </h2>
 

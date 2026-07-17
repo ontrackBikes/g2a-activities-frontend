@@ -19,7 +19,7 @@
               </v-icon>
 
               <div>
-                <div class="g2a-text-14 g2a-title-lg-700">Andaman</div>
+                <div class="g2a-text-14 ">Andaman</div>
 
                 <div class="g2a-text-11">India</div>
               </div>

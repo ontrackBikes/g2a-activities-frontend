@@ -19,7 +19,7 @@
             gradient="to top, rgba(0,0,0,.8), rgba(0,0,0,.05)"
           >
             <div class="fill-height d-flex flex-column justify-end pa-4">
-              <div class="g2a-title-lg g2a-title-lg-700 text-white">
+              <div class="g2a-heading-md  text-white">
                 {{ location.name }}
               </div>
 

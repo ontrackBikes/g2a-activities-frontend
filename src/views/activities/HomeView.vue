@@ -106,7 +106,7 @@
                   </div>
                   <div class="d-flex align-baseline ga-1 mt-1">
                     <span
-                      class="g2a-title-lg g2a-title-lg-700 text-brandColor2"
+                      class="g2a-title-lg  text-brandColor2"
                     >
                       ₹{{ product.price.toLocaleString("en-IN") }}
                     </span>
@@ -151,7 +151,7 @@
                   >
                     <span class=" text-greyDark">starts</span>
                     <span
-                      class="g2a-text-16 g2a-title-lg-700 text-brandColor2 ms-1"
+                      class="g2a-text-16  text-brandColor2 ms-1"
                     >
                       ₹{{ product.price.toLocaleString("en-IN") }}
                     </span>
@@ -279,7 +279,7 @@
                   {{ item.duration }}
                 </div>
                 <div
-                  class=" g2a-title-lg-700 text-brandColor2 mt-1"
+                  class="  text-brandColor2 mt-1"
                 >
                   ₹{{ item.price.toLocaleString("en-IN") }}
                 </div>

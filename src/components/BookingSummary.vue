@@ -130,7 +130,7 @@
             <p class=" g2a-text-16">Total</p>
           </v-col>
           <v-col cols="7" class="text-right">
-            <p class="g2a-title-lg-700 g2a-text-16">₹{{ totalPrice }}</p>
+            <p class=" g2a-text-16">₹{{ totalPrice }}</p>
           </v-col>
         </v-row>
 
@@ -141,7 +141,7 @@
             </p>
           </v-col>
           <v-col cols="5" class="text-right">
-            <p class="g2a-title-lg-700 g2a-text-16 text-brandColor">
+            <p class=" g2a-text-16 text-brandColor">
               ₹{{ totalPrice - payNowAmountTotal }}
             </p>
           </v-col>
@@ -152,7 +152,7 @@
             <p class=" g2a-title-lg text-darkGreen1">Payable</p>
           </v-col>
           <v-col cols="7" class="text-right">
-            <p class="g2a-title-lg-700 g2a-title-lg text-darkGreen1">
+            <p class=" g2a-title-lg text-darkGreen1">
               ₹{{ payNowAmountTotal }}
             </p>
           </v-col>

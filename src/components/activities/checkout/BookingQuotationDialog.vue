@@ -86,7 +86,7 @@
                     </div>
 
                     <div class="text-right">
-                      <div class="g2a-title-lg-700">
+                      <div class="">
                         ₹{{ currency(slot.price) }}
                       </div>
 
@@ -166,7 +166,7 @@
 
             <div class="d-flex justify-space-between align-center mb-4">
               <div>
-                <div class="g2a-title-lg-700">Total Payable</div>
+                <div class="">Total Payable</div>
 
                 <div class="">Inclusive of taxes</div>
               </div>

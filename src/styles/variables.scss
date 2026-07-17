@@ -6,6 +6,14 @@ $body-font-family: "Roobert", sans-serif;
   border-radius: 16px !important;
 }
 
+@font-face {
+  font-family: "TrashHand";
+  src: url("@/assets/fonts/TrashHand.TTF") format("truetype"),
+    url("@/assets/fonts/TrashHand.TTF") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
 // Regular
 @font-face {
   font-family: "Roobert";

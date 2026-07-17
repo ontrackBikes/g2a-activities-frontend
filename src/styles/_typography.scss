@@ -33,10 +33,16 @@ body {
 
 // Headings
 .g2a-heading {
-  @include typography(28px, $font-weight-bold, 36px);
+  @include typography(48px, $font-weight-bold, 36px);
+  font-family: "TrashHand"
+}
+.g2a-heading-md {
+  @include typography(36px, $font-weight-medium, 36px);
+  font-family: "TrashHand"
 }
 .g2a-heading-sm {
   @include typography(26px, $font-weight-medium, 36px);
+  font-family: "TrashHand"
 }
 
 .g2a-title-xs {

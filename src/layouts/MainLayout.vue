@@ -35,7 +35,7 @@
               >mdi-map-marker-outline</v-icon
             >
             <div class="d-flex flex-column justify-center">
-              <span class="g2a-text-14 g2a-title-lg-700 text-high-emphasis"
+              <span class="g2a-text-14  text-high-emphasis"
                 >Andaman</span
               >
               <span class="g2a-text-11">India</span>
