@@ -1,202 +1,432 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  />
+  <head>
+    <meta charset="UTF-8" />
 
-  <title>Booking Price Widget</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link
-    rel="stylesheet"
-    href="../dist/widgets/booking-price/widget.css"
-  />
+    <title>Booking Price Widget Playground</title>
 
-  <style>
-    body {
-      margin: 40px;
-      background: #f5f5f5;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+    <link rel="stylesheet" href="../dist/widgets/booking-price/widget.css" />
 
-    h1,
-    h2 {
-      margin-top: 40px;
-      margin-bottom: 20px;
-    }
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-    .demo {
-      max-width: 420px;
-      margin-bottom: 40px;
-    }
-  </style>
-</head>
+      :root {
+        --primary: #ffc107;
+        --border: #e5e7eb;
+        --background: #f6f8fb;
+        --card: #ffffff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --radius: 14px;
+      }
 
-<body>
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--background);
+        color: var(--text);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
 
+      h1 {
+        margin: 0 0 8px;
+        font-size: 34px;
+      }
 
-  <div class="demo">
-    <h1>Bike Rentals</h1>
-    <div
-      class="g2a-book-price-widget"
+      h2 {
+        margin: 0 0 16px;
+        font-size: 22px;
+      }
 
-      data-slug="bike-rentals-in-neil-island"
+      p {
+        color: var(--muted);
+      }
 
-      data-base-url="http://localhost:5173"
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
 
-      data-show-product-name="false"
-      data-show-image="false"
-      data-show-description="false"
-      data-show-location="false"
+        background: var(--card);
 
-      data-show-price="true"
+        padding: 28px;
 
-      data-show-guests="false"
+        border-radius: var(--radius);
 
-      data-show-locations="false"
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 
-      data-show-meta="false"
+        margin-bottom: 40px;
+      }
 
-      data-show-button="true"
+      .field {
+        display: flex;
+        flex-direction: column;
+      }
 
-      data-button-text="Reserve Now">
+      .field label {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .field input,
+      .field select,
+      textarea {
+        width: 100%;
+        padding: 11px 12px;
+
+        border: 1px solid var(--border);
+
+        border-radius: 10px;
+
+        font-size: 14px;
+
+        outline: none;
+
+        transition: 0.2s;
+      }
+
+      .field input:focus,
+      .field select:focus,
+      textarea:focus {
+        border-color: var(--primary);
+
+        box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.18);
+      }
+
+      .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        user-select: none;
+      }
+
+      .checkbox input {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      .actions {
+        grid-column: 1 / -1;
+
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        border: none;
+
+        background: var(--primary);
+
+        color: #111827;
+
+        padding: 12px 24px;
+
+        border-radius: 10px;
+
+        cursor: pointer;
+
+        font-size: 15px;
+
+        font-weight: 700;
+
+        transition: 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+
+        box-shadow: 0 8px 18px rgba(255, 193, 7, 0.35);
+      }
+
+      textarea {
+        margin-top: 12px;
+
+        min-height: 320px;
+
+        resize: vertical;
+
+        background: #fff;
+
+        font-family: Consolas, Monaco, monospace;
+
+        font-size: 13px;
+
+        line-height: 1.6;
+      }
+
+      .preview-card {
+        background: white;
+
+        border-radius: var(--radius);
+
+        padding: 28px;
+
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      #preview {
+        max-width: 420px;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 20px;
+        }
+
+        .controls {
+          grid-template-columns: 1fr;
+        }
+
+        .actions {
+          flex-direction: column;
+        }
+
+        button {
+          width: 100%;
+        }
+
+        #preview {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Booking Price Widget Playground</h1>
+
+    <p>
+      Configure the widget using the controls below. Click
+      <strong>Reload Widget</strong> to refresh the preview, then copy the
+      generated embed code.
+    </p>
+
+    <div class="controls">
+      <div class="field">
+        <label>Product Slug</label>
+        <input id="slug" value="scuba-diving-in-neil-island" />
+      </div>
+
+      <div class="field">
+        <label>Base URL</label>
+        <input id="baseUrl" value="http://localhost:5173" />
+      </div>
+
+      <div class="field">
+        <label>Button Text</label>
+        <input id="buttonText" value="Book Now" />
+      </div>
+
+      <div class="field">
+        <label>Out Of Stock Text</label>
+        <input id="outOfStockText" value="Currently Unavailable" />
+      </div>
+
+      <div class="field">
+        <label>Out Of Stock Button Text</label>
+        <input id="outOfStockButtonText" value="Unavailable" />
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showProductName" checked />
+        <label for="showProductName">Show Product Name</label>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showImage" checked />
+        <label for="showImage">Show Image</label>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showDescription" checked />
+        <label for="showDescription">Show Description</label>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showLocation" checked />
+        <label for="showLocation">Show Location</label>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showPrice" checked />
+        <label for="showPrice">Show Price</label>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showGuests" checked />
+        <label for="showGuests">Show Guests</label>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showLocations" />
+        <label for="showLocations">Show Locations</label>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showMeta" checked />
+        <label for="showMeta">Show Meta</label>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="showButton" checked />
+        <label for="showButton">Show Button</label>
+      </div>
+
+      <div class="actions">
+        <button onclick="reloadWidget()">🔄 Reload Widget</button>
+
+        <button id="copyBtn" onclick="copyCode()">📋 Copy Embed Code</button>
+      </div>
     </div>
-  </div>
-
-
-
-  <h1>Default Widget</h1>
-
-  <div class="demo">
-    <div
-      class="g2a-book-price-widget"
-      data-slug="scuba-diving-in-neil-island"
-      data-base-url="http://localhost:5173">
-    </div>
-  </div>
-
-  <h1>Minimal</h1>
-
-  <div class="demo">
-    <div
-      class="g2a-book-price-widget"
-
-      data-slug="bike-rentals-in-havelock-island"
-
-      data-base-url="http://localhost:5173"
-
-      data-show-product-name="false"
-      data-show-image="false"
-      data-show-description="false"
-      data-show-location="false"
-
-      data-show-price="true"
-
-      data-show-guests="false"
-
-      data-show-locations="false"
-
-      data-show-meta="false"
-
-      data-show-button="true"
-
-      data-button-text="Reserve Now">
-    </div>
-  </div>
-
-  <h1>CTA Only</h1>
-
-  <div class="demo">
 
     <div
-      class="g2a-book-price-widget"
+      style="
+        display: grid;
+        grid-template-columns: 420px 1fr;
+        gap: 32px;
+        align-items: start;
+      "
+    >
+      <div class="preview-card">
+        <h2>Live Preview</h2>
 
-      data-slug="scuba-diving-in-havelock-island"
+        <div id="preview">
+          <div id="widget" class="g2a-book-price-widget"></div>
+        </div>
+      </div>
 
-      data-base-url="http://localhost:5173"
+      <div class="preview-card">
+        <h2>Generated Embed Code</h2>
 
-      data-show-image="false"
+        <p>Copy and paste this code into any website.</p>
 
-      data-show-description="false"
-
-      data-show-location="false"
-
-      data-show-meta="false"
-
-      data-show-button="true"
-
-      data-button-text="Book Now">
+        <textarea id="embedCode" readonly> </textarea>
+      </div>
     </div>
-    <div
-      class="g2a-book-price-widget"
 
-      data-slug="scuba-diving-in-havelock-island"
+    <script>
+      function bool(id) {
+        return document.getElementById(id).checked;
+      }
 
-      data-base-url="http://localhost:5173"
+      function value(id) {
+        return document.getElementById(id).value;
+      }
 
-      data-show-image="false"
+      function updateEmbedCode() {
+        const attrs = [
+          ["slug", value("slug")],
+          ["base-url", value("baseUrl")],
+          ["show-product-name", bool("showProductName")],
+          ["show-image", bool("showImage")],
+          ["show-description", bool("showDescription")],
+          ["show-location", bool("showLocation")],
+          ["show-price", bool("showPrice")],
+          ["show-guests", bool("showGuests")],
+          ["show-locations", bool("showLocations")],
+          ["show-meta", bool("showMeta")],
+          ["show-button", bool("showButton")],
+          ["button-text", value("buttonText")],
+          ["out-of-stock-text", value("outOfStockText")],
+          ["out-of-stock-button-text", value("outOfStockButtonText")],
+        ];
 
-      data-show-description="false"
+        const attributes = attrs
+          .map(([k, v]) => `  data-${k}="${v}"`)
+          .join("\n");
+        const scriptClose = "</scr" + "ipt>";
+        document.getElementById("embedCode").value = `<link
+  rel="stylesheet"
+  href="../dist/widgets/booking-price/widget.css"
+/>
 
-      data-show-location="false"
+<div
+  class="g2a-book-price-widget"
+${attributes}
+></div>
 
-      data-show-meta="false"
 
-      data-show-button="true"
 
-      data-button-text="Book Now">
-    </div>
-  </div>
+<script src="../dist/widgets/booking-price/widget.js">${scriptClose}`;
+      }
 
-  <h1>Blog Version</h1>
+      async function copyCode() {
+        await navigator.clipboard.writeText(
+          document.getElementById("embedCode").value,
+        );
 
-  <div class="demo">
-    <div
-      class="g2a-book-price-widget"
+        const btn = document.getElementById("copyBtn");
 
-      data-slug="scuba-diving-in-havelock-island"
+        btn.innerHTML = "✅ Copied";
 
-      data-base-url="http://localhost:5173"
+        setTimeout(() => {
+          btn.innerHTML = "📋 Copy Embed Code";
+        }, 1500);
+      }
 
-      data-show-image="true"
+      function reloadWidget() {
+        const widget = document.getElementById("widget");
 
-      data-show-description="true"
+        widget.innerHTML = "";
 
-      data-show-location="true"
+        widget.dataset.slug = value("slug");
+        widget.dataset.baseUrl = value("baseUrl");
 
-      data-show-price="true"
+        widget.dataset.buttonText = value("buttonText");
 
-      data-show-guests="true"
+        widget.dataset.outOfStockText = value("outOfStockText");
 
-      data-show-locations="true"
+        widget.dataset.outOfStockButtonText = value("outOfStockButtonText");
 
-      data-show-meta="true"
+        widget.dataset.showProductName = bool("showProductName");
 
-      data-show-button="true"
+        widget.dataset.showImage = bool("showImage");
 
-      data-button-text="View Activity">
-    </div>
-  </div>
+        widget.dataset.showDescription = bool("showDescription");
 
-  <h1>Out of Stock</h1>
+        widget.dataset.showLocation = bool("showLocation");
 
-  <div class="demo">
-    <div
-      class="g2a-book-price-widget"
+        widget.dataset.showPrice = bool("showPrice");
 
-      data-slug="bike-rentals-in-havelock-island"
+        widget.dataset.showGuests = bool("showGuests");
 
-      data-base-url="http://localhost:5173"
+        widget.dataset.showLocations = bool("showLocations");
 
-      data-out-of-stock-text="Sold Out"
+        widget.dataset.showMeta = bool("showMeta");
 
-      data-out-of-stock-button-text="Notify Me">
-    </div>
-  </div>
+        widget.dataset.showButton = bool("showButton");
 
-  <script src="../dist/widgets/booking-price/widget.js"></script>
+        updateEmbedCode();
 
-</body>
+        const old = document.getElementById("widget-script");
+
+        if (old) {
+          old.remove();
+        }
+
+        const script = document.createElement("script");
+
+        script.id = "widget-script";
+
+        script.src = "../dist/widgets/booking-price/widget.js?ts=" + Date.now();
+
+        document.body.appendChild(script);
+      }
+
+      reloadWidget();
+    </script>
+  </body>
 </html>
