@@ -15,9 +15,37 @@ async function request(url, options = {}) {
     throw new Error(json.message || "Request failed");
   }
 
-  return json.data;
+  return json;
 }
 
-export function getProduct(slug) {
-  return request(`/products/app/products-list/${slug}`);
+export async function getProduct(slug) {
+  const response = await request(
+    `/products/app/products-list/${slug}`
+  );
+
+  return response.data;
+}
+
+export async function getProducts(params = {}) {
+  const search = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (
+      value !== undefined &&
+      value !== null &&
+      value !== ""
+    ) {
+      if (Array.isArray(value)) {
+        value.forEach((v) => search.append(key, v));
+      } else {
+        search.append(key, value);
+      }
+    }
+  });
+
+  const response = await request(
+    `/products/app/products-list?${search.toString()}`
+  );
+
+  return response.data;
 }

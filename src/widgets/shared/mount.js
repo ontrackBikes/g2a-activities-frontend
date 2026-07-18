@@ -3,11 +3,7 @@ import { createApp } from "vue";
 import { showLoading } from "./loading";
 import { showError } from "./errors";
 
-export async function mountWidget({
-  element,
-  component,
-  loader,
-}) {
+export async function mountWidget({ element, component, loader }) {
   try {
     showLoading(element);
 
@@ -17,8 +13,14 @@ export async function mountWidget({
 
     createApp(component, props).mount(element);
   } catch (err) {
+    console.error("========== WIDGET ERROR ==========");
     console.error(err);
+    console.error(err.stack);
 
-    showError(element, "Unable to load widget.");
+    element.innerHTML = `
+    <pre style="color:red;white-space:pre-wrap">
+${err.stack || err.message}
+    </pre>
+  `;
   }
 }
