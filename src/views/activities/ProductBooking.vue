@@ -39,6 +39,10 @@
         />
 
         <template v-if="result.available">
+          <div class="my-4 text-success">
+            This product is available for booking. Click "Continue Booking" to proceed.
+          </div>
+
           <!-- Slot Selection -->
           <div v-if="isSlotPricing" class="mt-4">
             <div class="g2a-title-lg mb-3">
@@ -198,11 +202,16 @@
     </v-card>
   </div>
 
-  <v-dialog v-model="pricingDialog" scrollable max-width="450" scrim="rgba(15,23,42,.30)"
+  <v-dialog
+    v-model="pricingDialog"
+    scrollable
+    max-width="450"
+    scrim="rgba(15,23,42,.30)"
     :style="{
       backdropFilter: 'blur(5px)',
       webkitBackdropFilter: 'blur(5px)',
-    }">
+    }"
+  >
     <v-card>
       <div class="pa-4">
         <div class="g2a-title-xl">Daily Pricing</div>

@@ -86,8 +86,8 @@
         style="
           top: 0;
           left: 0;
-          background-color: rgba(0, 0, 0, 0.45);
-          backdrop-filter: blur(2px);
+          backdrop-filter: blur(0.5px);
+          -webkit-backdrop-filter: blur(5px)'
         "
       >
         <v-chip color="error" variant="flat" class="font-weight-bold px-4">
@@ -127,7 +127,7 @@
         </div>
       </div>
 
-      <div v-else class="g2a-title-lg">Product not listed</div>
+      <!-- <div v-else class="g2a-title-lg">Product not listed</div> -->
     </div>
   </v-card>
 

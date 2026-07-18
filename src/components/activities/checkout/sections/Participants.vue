@@ -5,7 +5,7 @@
         {{ config.title || "Participant Details" }}
       </div>
 
-      <div class=" mt-1">
+      <div class="mt-1">
         {{
           config.description || "Please provide details for every participant."
         }}
@@ -25,8 +25,9 @@
                 <v-text-field
                   v-model="participant.first_name"
                   label="First Name"
-                  variant="outlined"
                   density="compact"
+                  variant="outlined"
+                  rounded="lg"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'First Name is required']"
                 />
@@ -36,8 +37,9 @@
                 <v-text-field
                   v-model="participant.last_name"
                   label="Last Name"
-                  variant="outlined"
                   density="compact"
+                  variant="outlined"
+                  rounded="lg"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'Last Name is required']"
                 />
@@ -48,8 +50,9 @@
                   v-model.number="participant.age"
                   type="number"
                   label="Age"
-                  variant="outlined"
                   density="compact"
+                  variant="outlined"
+                  rounded="lg"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'Age is required']"
                 />
@@ -60,8 +63,9 @@
                   v-model="participant.gender"
                   :items="genders"
                   label="Gender"
-                  variant="outlined"
                   density="compact"
+                  variant="outlined"
+                  rounded="lg"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'Gender is required']"
                 />
@@ -72,8 +76,9 @@
                   v-model="participant.nationality"
                   :items="nationalities"
                   label="Nationality"
-                  variant="outlined"
                   density="compact"
+                  variant="outlined"
+                  rounded="lg"
                   hide-details="auto"
                   :rules="[(v) => !!v || 'Nationality is required']"
                 />
@@ -81,6 +86,7 @@
             </v-row>
           </div>
         </v-container>
+        <v-divider v-if="index + 1 < participants.length" class="mt-2"></v-divider>
       </div>
     </div>
   </v-card>
