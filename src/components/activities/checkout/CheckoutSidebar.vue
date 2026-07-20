@@ -263,7 +263,7 @@
     <v-card v-else rounded="lg" variant="outlined" elevation="0" class="">
       <v-card-text class="text-center py-10">
         <v-icon size="40" color="grey">mdi-receipt-text-outline</v-icon>
-        <div class="g2a-text-16  mt-2">
+        <div class="g2a-text-16 mt-2">
           {{ error || "No booking summary available." }}
         </div>
       </v-card-text>
@@ -271,11 +271,16 @@
   </div>
 
   <!-- Full daily pricing dialog -->
-  <v-dialog v-model="pricingDialog" scrollable max-width="450" scrim="rgba(15,23,42,.30)"
+  <v-dialog
+    v-model="pricingDialog"
+    scrollable
+    max-width="450"
+    scrim="rgba(15,23,42,.30)"
     :style="{
       backdropFilter: 'blur(5px)',
       webkitBackdropFilter: 'blur(5px)',
-    }">
+    }"
+  >
     <v-card rounded="lg">
       <div class="pa-4 d-flex align-center justify-space-between">
         <div class="g2a-title">Daily Pricing</div>
@@ -381,7 +386,9 @@ const previewDailyPricing = computed(() => dailyPricing.value.slice(0, 3));
 const hasMorePricing = computed(() => dailyPricing.value.length > 3);
 
 const canProceed = computed(() => {
-  return Boolean(props.quote) && pricing.value.grand_total > 0 && !props.error;
+  return (
+    Boolean(props.quote) && pricing.value.grand_total > 0 && !props.submitting
+  );
 });
 
 /*

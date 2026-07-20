@@ -42,7 +42,9 @@
             rounded="lg"
             readonly
             hide-details="auto"
-            :rules="[(v) => !!rental.pickup_point || 'Pickup point is required']"
+            :rules="[
+              (v) => !!rental.pickup_point || 'Pickup point is required',
+            ]"
             @click="pickUpDialog = true"
           />
         </v-col>
@@ -158,6 +160,7 @@
     <rental-location-selector
       mode="pickup"
       :selected="rental.pickup_point"
+      :location-slug="locationSlug"
       @selected="onPickupSelected"
       @close="pickUpDialog = false"
     />
@@ -177,6 +180,7 @@
     <rental-location-selector
       mode="drop"
       :selected="rental.drop_point"
+      :location-slug="locationSlug"
       @selected="onDropSelected"
       @close="dropDialog = false"
     />
@@ -207,6 +211,26 @@ const STORAGE_KEY = "g2a_rental_details_v1";
 
 const pickUpDialog = ref(false);
 const dropDialog = ref(false);
+
+/*
+|--------------------------------------------------------------------------
+| Location
+|--------------------------------------------------------------------------
+|
+| The quote (from /v1/booking-estimates/:estimate_id) carries the location
+| this product/booking belongs to. We use its slug to fetch the correct
+| set of pickup/drop points from the backend. Falls back to Port Blair,
+| the only rental city live today, if the quote hasn't resolved a slug.
+|
+*/
+
+const locationSlug = computed(
+  () => props.quote?.location?.slug || "port-blair",
+);
+
+// Out-of-city delivery surcharge. Configurable per-product via
+// config.out_of_city_charge; falls back to the platform default.
+const outOfCityCharge = computed(() => props.config?.out_of_city_charge ?? 100);
 
 /*
 |--------------------------------------------------------------------------
@@ -359,7 +383,7 @@ watch(
   },
   {
     immediate: true,
-  }
+  },
 );
 
 watch(
@@ -369,7 +393,7 @@ watch(
   },
   {
     immediate: true,
-  }
+  },
 );
 
 watch(
@@ -380,7 +404,7 @@ watch(
   },
   {
     deep: true,
-  }
+  },
 );
 
 /*

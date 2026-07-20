@@ -54,7 +54,13 @@
                 v-if="bookingData.guests"
                 class="d-flex justify-space-between py-2"
               >
-                <span class="data-label">Guests</span>
+                <span class="data-label">
+                  {{
+                    item.product_name?.toLowerCase().includes("bike")
+                      ? "Quantity"
+                      : "Guests"
+                  }}
+                </span>
                 <strong class="g2a-title-lg">{{ bookingData.guests }}</strong>
               </div>
 
