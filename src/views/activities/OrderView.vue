@@ -19,7 +19,7 @@
 
     <div v-else>
       <!-- ================= Hero ================= -->
-      <v-card rounded="lg" variant="outlined" class=" mb-6">
+      <v-card rounded="lg" variant="outlined" class="mb-6">
         <v-container>
           <div class="d-flex align-center flex-wrap ga-4">
             <v-avatar :color="statusAlert.type" variant="tonal" size="56">
@@ -36,11 +36,9 @@
             </div>
 
             <div class="d-flex align-center text-left text-sm-right">
-              <div class="g2a-text-caption text-greyDark">Order ID: </div>
+              <div class="g2a-text-caption text-greyDark">Order ID:</div>
               <div class="d-flex align-center">
-                <span class="g2a-title-2xl-1 ">{{
-                  order.order_id
-                }}</span>
+                <span class="g2a-title-2xl-1">{{ order.order_id }}</span>
                 <v-btn
                   :icon="copied ? 'mdi-check' : 'mdi-content-copy'"
                   :color="copied ? 'success' : undefined"
@@ -61,7 +59,7 @@
               <v-icon size="24" color="brandColor2" class="mr-1"
                 >mdi-calendar-outline</v-icon
               >
-              <span  class="g2a-title-lg text-greyDark"
+              <span class="g2a-title-lg text-greyDark"
                 >Placed {{ formatDate(order.created_at) }}</span
               >
             </div>
@@ -77,9 +75,9 @@
               <v-icon size="24" color="greyDark" class="mr-1"
                 >mdi-cash-check</v-icon
               >
-              <span class="g2a-title-lg"
-                >{{ currency(order.grand_total) }}</span
-              >
+              <span class="g2a-title-lg">{{
+                currency(order.grand_total)
+              }}</span>
             </div>
           </div>
         </v-container>
@@ -110,15 +108,12 @@
 
             <v-col cols="12" sm="9" class="pa-2">
               <div class="g2a-title-lg">{{ item.product_name }}</div>
-              <div
-                class="text-greyDark g2a-title-lg mt-1 d-flex align-center"
-              >
+              <div class="text-greyDark g2a-title-lg mt-1 d-flex align-center">
                 <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon>
                 {{ item.location_name }}
               </div>
               <div
                 v-if="bookingOf(item).selected_slot?.name"
-                
                 size="large"
                 class="text-brandColor2"
                 variant="tonal"
@@ -145,7 +140,11 @@
               v-if="bookingOf(item).guests"
               class="d-flex justify-space-between py-2"
             >
-              <span class="data-label">Guests</span>
+              {{
+                item.product_name?.toLowerCase().includes("bike")
+                  ? "Quantity"
+                  : "Guests"
+              }}
               <strong>{{ bookingOf(item).guests }}</strong>
             </div>
 
@@ -300,9 +299,7 @@
           </v-card>
 
           <template v-if="order.payments?.length">
-            <div
-              class=" g2a-title-lg text-greyDark mt-5 mb-2"
-            >
+            <div class="g2a-title-lg text-greyDark mt-5 mb-2">
               Payment history
             </div>
 
@@ -317,10 +314,7 @@
             >
               <div class="d-flex justify-space-between align-center py-1">
                 <span class="data-label">Payment Status</span>
-                <v-chip
-                  :color="paymentStatusColor(p.status)"
-                  variant="flat"
-                >
+                <v-chip :color="paymentStatusColor(p.status)" variant="flat">
                   {{ p.status?.toUpperCase() }}
                 </v-chip>
               </div>
