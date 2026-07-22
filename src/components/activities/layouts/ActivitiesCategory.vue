@@ -16,7 +16,7 @@
           class="fill-height d-flex align-end"
         >
           <div class="pa-6 text-white">
-            <div class="text-h4 font-weight-bold">
+            <div class="g2a-title-xl font-weight-bold">
               {{ category?.name }}
             </div>
 

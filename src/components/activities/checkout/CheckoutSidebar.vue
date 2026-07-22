@@ -228,6 +228,8 @@
           </div>
         </div>
 
+        
+
         <div
           v-if="pricing.tax"
           class="g2a-text-caption text-greyDark text-right mb-3"
@@ -240,21 +242,29 @@
           block
           rounded="lg"
           color="brandColor"
-          class="mt-3"
+          class="my-3"
           size="large"
           :loading="submitting"
           :disabled="!canProceed"
           aria-label="Continue to payment"
           @click="$emit('proceed')"
         >
-          Continue to Payment
+          Pay  {{ formatCurrency(pricing.grand_total) }}
         </v-btn>
+
+
+       
+        <div class="text-center py-2">
+          By clicking "Pay", you agree to the <span class="g2a-link">terms of service</span>.
+        </div>
+
+         <v-divider class="my-2"></v-divider>
 
         <div
           class="d-flex align-center justify-center g2a-text-caption text-greyDark mt-3"
         >
           <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
-          Secure checkout
+          No Hidden Charges
         </div>
       </v-card-text>
     </v-card>

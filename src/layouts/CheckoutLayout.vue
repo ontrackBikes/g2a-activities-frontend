@@ -30,7 +30,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-container style="max-width: 900px; min-height: calc(100vh - 220px)">
+      <v-container style="max-width: 1020px; min-height: calc(100vh - 220px)">
         <router-view />
       </v-container>
     </v-main>

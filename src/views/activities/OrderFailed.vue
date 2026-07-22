@@ -12,7 +12,7 @@
       <v-card-text class="text-center py-10">
 
         <v-avatar
-          size="90"
+          size="60"
           color="error"
         >
           <v-icon
@@ -23,7 +23,7 @@
           </v-icon>
         </v-avatar>
 
-        <div class="text-h4 font-weight-bold mt-6">
+        <div class="g2a-title-xl  mt-6">
           Payment Failed
         </div>
 
@@ -54,7 +54,9 @@
         <div class="d-flex justify-center ga-4 mt-8">
 
           <v-btn
-            color="primary"
+            flat
+            rounded="xl"
+            color="brandColor2"
             @click="retryPayment"
           >
             Retry Payment
@@ -62,6 +64,9 @@
 
           <v-btn
             variant="outlined"
+            flat
+            rounded="xl"
+            color="brandColor2"
             @click="$router.push('/')"
           >
             Back Home
