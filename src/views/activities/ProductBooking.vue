@@ -158,30 +158,33 @@
             </div>
           </div>
 
+          <v-card rounded="lg" flat v-if="productInclusions.length > 0" class="border my-4">
+            <v-container>
+              <div class="g2a-title-lg mb-3">Whats' included?</div>
+              <div
+                v-for="(inc, index) in productInclusions"
+                :key="index"
+                class="d-flex"
+              >
+                <div>-</div>
+                <div class="ml-2">{{ inc.content }}</div>
+              </div>
+            </v-container>
+          </v-card>
 
-          <div v-if="productInclusions.length > 0" class="my-4">
-            <div class="g2a-title-lg mb-3">Whats' included?</div>
-            <div
-              v-for="(inc, index) in productInclusions"
-              :key="index"
-              class="d-flex"
-            >
-              <div>-</div>
-              <div class="ml-2">{{ inc.content }}</div>
-            </div>
-          </div>
-
-          <div v-if="productTerms.length > 0" class="my-4">
-            <div class="g2a-title-lg mb-3">Terms & Conditions</div>
-            <div
-              v-for="(term, index) in productTerms"
-              :key="index"
-              class="d-flex"
-            >
-              <div>-</div>
-              <div class="ml-2">{{ term.content }}</div>
-            </div>
-          </div>
+          <v-card rounded="lg" flat v-if="productTerms.length > 0" class="border my-4">
+            <v-container>
+              <div class="g2a-title-lg mb-3">Terms & Conditions</div>
+              <div
+                v-for="(term, index) in productTerms"
+                :key="index"
+                class="d-flex"
+              >
+                <div>-</div>
+                <div class="ml-2">{{ term.content }}</div>
+              </div>
+            </v-container>
+          </v-card>
         </template>
 
         <div v-else class="mt-4 text-error">
@@ -400,7 +403,9 @@ const bookingTemplate = computed(() => product.value?.bookingTemplate);
 
 const productTerms = computed(() => quotation.value.product.terms ?? {});
 
-const productInclusions = computed(() => quotation.value.product.inclusions ?? {});
+const productInclusions = computed(
+  () => quotation.value.product.inclusions ?? {},
+);
 
 const pricing = computed(() => quotation.value.pricing ?? {});
 

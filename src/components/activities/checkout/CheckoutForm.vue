@@ -33,9 +33,75 @@
       <!-- LEFT -->
       <v-col cols="12" lg="7">
         <CheckoutRenderer
-          :booking-template="quote.product.bookingTemplate"
+          :booking-template="quote.product?.bookingTemplate"
           :quote="quote"
         />
+
+        <div v-if="quote.product?.highlights?.length > 0">
+          <v-card
+            rounded="lg"
+            flat
+            class="border my-4"
+            v-for="(higlight, index) in quote.product?.highlights"
+            :key="index"
+          >
+            <v-container>
+              <div>
+                <div class="d-flex">
+                  <v-icon
+                    icon="mdi-crown-outline"
+                    size="18"
+                    color="amber-darken-3"
+                    class="mt-1"
+                  />
+                  <div class="ml-2">
+                    <div class="g2a-title-lg">{{ higlight.title }}</div>
+                  <div class="">{{ higlight.content }}</div>
+                    </div>
+                </div>
+                
+              </div>
+            </v-container>
+          </v-card>
+        </div>
+
+        <v-card
+          rounded="lg"
+          flat
+          v-if="quote.product?.inclusions.length > 0"
+          class="border my-4"
+        >
+          <v-container>
+            <div class="g2a-title-lg mb-3">Whats' included?</div>
+            <div
+              v-for="(inc, index) in quote.product?.inclusions"
+              :key="index"
+              class="d-flex"
+            >
+              <div>-</div>
+              <div class="ml-2">{{ inc.content }}</div>
+            </div>
+          </v-container>
+        </v-card>
+
+        <v-card
+          rounded="lg"
+          flat
+          v-if="quote.product?.terms.length > 0"
+          class="border my-4"
+        >
+          <v-container>
+            <div class="g2a-title-lg mb-3">Terms & Conditions</div>
+            <div
+              v-for="(term, index) in quote.product?.terms"
+              :key="index"
+              class="d-flex"
+            >
+              <div>-</div>
+              <div class="ml-2">{{ term.content }}</div>
+            </div>
+          </v-container>
+        </v-card>
       </v-col>
 
       <!-- RIGHT -->

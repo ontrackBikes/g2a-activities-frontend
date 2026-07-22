@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="lg" variant="outlined" elevation="0">
-    <v-container class="py-2">
+    <v-container class="py-2"> 
       <div class="g2a-title-xl">
         <v-icon size="22"> mdi-motorbike </v-icon>
         {{ config.title || "Rental Details" }}
@@ -9,7 +9,7 @@
       <div v-if="config.description" class="mt-1">
         {{ config.description }}
       </div>
-    </v-container>
+    </v-container> 
 
     <v-divider />
 

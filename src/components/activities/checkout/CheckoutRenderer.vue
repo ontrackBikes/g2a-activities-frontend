@@ -1,12 +1,11 @@
 <template>
   <div>
-
     <SectionRenderer
       v-for="section in sections"
       :key="section.section"
       :section="section"
       :quote="quote"
-      class="mb-4"
+      class="my-4"
     />
   </div>
 </template>
@@ -29,8 +28,9 @@ const props = defineProps({
 });
 
 const sections = computed(() => {
-  return (
-    props.bookingTemplate?.booking_page_schema?.sections || []
-  );
+  return (props.bookingTemplate?.booking_page_schema?.sections || [])
+    .filter(section => section.enabled)
+    .sort((a, b) => (b.sort_order ?? 0) - (a.sort_order ?? 0));
 });
+
 </script>
