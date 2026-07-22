@@ -52,7 +52,7 @@
 
         <template v-else-if="rental.pickup_type === 'hotel'">
           <v-col cols="12">
-            <v-textarea
+            <v-text-field
               v-model="rental.pickup_hotel_name"
               placeholder="Enter your hotel name"
               density="compact"
@@ -119,7 +119,7 @@
 
         <template v-else-if="rental.drop_type === 'hotel'">
           <v-col cols="12">
-            <v-textarea
+            <v-text-field
               v-model="rental.drop_hotel_name"
               placeholder="Enter your hotel name"
               variant="outlined"

@@ -23,10 +23,21 @@ const router = createRouter({
       name: "Home",
       component: MainLayout,
       children: [
+     
         {
           path: "",
           name: "ActivitiesHome",
           component: ActivitiesHome,
+        },
+
+        {
+          path: "/select-pickup-delivery",
+          name: "Pick Delivery",
+          component: ActivitySearch,
+          redirect: (to) => ({
+            path: "/getting-around/bike-rentals/bike-rentals-in-port-blair/book",
+            query: to.query,   // retain query params
+          }),
         },
 
         {
