@@ -1,10 +1,10 @@
 <template>
   <v-card
     rounded="lg"
-    variant="outlined"
+    flat
     :disabled="loading"
     style="max-width: 600px; margin-bottom: 100px"
-    class="mx-auto"
+    class="border mx-auto my-4"
   >
     <v-container>
       <div class="d-flex align-center mb-4" v-if="product">
@@ -40,10 +40,10 @@
         />
 
         <template v-if="result.available">
-          <div class="my-4 text-success">
+          <!-- <div class="my-4 text-success">
             This product is available for booking. Click "Continue Booking" to
             proceed.
-          </div>
+          </div> -->
 
           <!-- Slot Selection -->
           <div v-if="isSlotPricing" class="mt-4">

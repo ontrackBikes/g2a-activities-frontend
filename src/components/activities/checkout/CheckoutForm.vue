@@ -29,7 +29,7 @@
   </v-alert>
 
   <v-form v-else ref="form" validate-on="submit">
-    <v-row>
+    <v-row class="my-2">
       <!-- LEFT -->
       <v-col cols="12" lg="7">
         <CheckoutRenderer
@@ -91,7 +91,7 @@
           class="border my-4"
         >
           <v-container>
-            <div class="g2a-title-lg mb-3">Terms & Conditions</div>
+            <div class="g2a-title-lg mb-3">Cancellation & Refund Policy</div>
             <div
               v-for="(term, index) in quote.product?.terms"
               :key="index"

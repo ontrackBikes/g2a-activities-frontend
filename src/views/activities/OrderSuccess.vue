@@ -56,7 +56,7 @@
             size="large"
             flat
             rounded="lg"
-            color="brandColor"
+            color="brandColor2"
             @click="viewOrder"
           >
             View Booking
@@ -66,7 +66,7 @@
             size="large"
             flat
             rounded="lg"
-            color="brandColor"
+            color="brandColor2"
             variant="outlined"
             @click="$router.push('/')"
           >
