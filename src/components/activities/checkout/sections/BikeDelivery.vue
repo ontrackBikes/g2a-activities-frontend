@@ -2,6 +2,7 @@
   <v-card rounded="lg" variant="outlined" elevation="0">
     <v-container class="py-2">
       <div class="g2a-title-xl">
+        <v-icon size="22"> mdi-motorbike </v-icon>
         {{ config.title || "Rental Details" }}
       </div>
 
@@ -321,23 +322,36 @@ const saveRentalDetails = (value) => {
 
 const normalizeRentalDetails = (rental) => {
   if (rental.pickup_type === "self") {
-    rental.pickup_hotel_name = "";
-    if (rental.pickup_point === undefined) rental.pickup_point = null;
+    delete rental.pickup_hotel_name;
+
+    if (!("pickup_point" in rental)) {
+      rental.pickup_point = null;
+    }
   } else {
-    rental.pickup_point = null;
-    if (rental.pickup_hotel_name === undefined) rental.pickup_hotel_name = "";
+    delete rental.pickup_point;
+
+    if (!("pickup_hotel_name" in rental)) {
+      rental.pickup_hotel_name = "";
+    }
   }
 
   if (rental.drop_type === "self") {
-    rental.drop_hotel_name = "";
-    if (rental.drop_point === undefined) rental.drop_point = null;
+    delete rental.drop_hotel_name;
+
+    if (!("drop_point" in rental)) {
+      rental.drop_point = null;
+    }
   } else {
-    rental.drop_point = null;
-    if (rental.drop_hotel_name === undefined) rental.drop_hotel_name = "";
+    delete rental.drop_point;
+
+    if (!("drop_hotel_name" in rental)) {
+      rental.drop_hotel_name = "";
+    }
   }
 
   return rental;
 };
+
 /*
 |--------------------------------------------------------------------------
 | Rental Details
