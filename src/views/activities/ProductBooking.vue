@@ -28,6 +28,7 @@
       <div v-else-if="result">
         <!-- Dynamic booking fields -->
         <BookingFieldRenderer
+          class="mb-2"
           v-for="field in fields"
           :key="field.field"
           v-model="form[field.field]"
@@ -40,7 +41,8 @@
 
         <template v-if="result.available">
           <div class="my-4 text-success">
-            This product is available for booking. Click "Continue Booking" to proceed.
+            This product is available for booking. Click "Continue Booking" to
+            proceed.
           </div>
 
           <!-- Slot Selection -->
@@ -298,6 +300,8 @@ const form = reactive({
 
   guests: Number(route.query.guests) > 0 ? Number(route.query.guests) : 1,
 
+  quantity: Number(route.query.quantity) > 0 ? Number(route.query.quantity) : 1,
+
   selected_slot_token: route.query.slot || null,
 
   pickup_date: formatDate(pickup),
@@ -309,6 +313,7 @@ watch(
     estimate_id: estimateId.value,
     date: form.date,
     guests: form.guests,
+    quantity: form.quantity,
     slot: form.selected_slot_token,
     pickup_date: form.pickup_date,
     return_date: form.return_date,
@@ -336,6 +341,10 @@ watch(
 
     if (query.guests && Number(query.guests) !== form.guests) {
       form.guests = Number(query.guests);
+    }
+
+    if (query.quantity && Number(query.quantity) !== form.quantity) {
+      form.quantity = Number(query.quantity);
     }
 
     if ((query.slot || null) !== form.selected_slot_token) {

@@ -60,7 +60,7 @@
         <template v-if="hasSlots">
           <v-divider class="my-5" />
 
-          <div class=" mb-3">Select Slot</div>
+          <div class="mb-3">Select Slot</div>
 
           <v-row no-gutters>
             <v-col cols="12" v-for="slot in slots" :key="slot.id" class="mb-2">
@@ -86,9 +86,7 @@
                     </div>
 
                     <div class="text-right">
-                      <div class="">
-                        ₹{{ currency(slot.price) }}
-                      </div>
+                      <div class="">₹{{ currency(slot.price) }}</div>
 
                       <div
                         class=""
@@ -112,7 +110,7 @@
         <template v-if="dailyPricing.length">
           <v-divider class="my-5" />
 
-          <div class=" mb-3">Daily Pricing</div>
+          <div class="mb-3">Daily Pricing</div>
 
           <div
             v-for="day in dailyPricing"
@@ -319,6 +317,8 @@ const bookingRows = computed(() => {
     rental_days: "Rental Days",
 
     guests: "Guests",
+
+    quantity: "Quantity",
   };
 
   return Object.entries(booking.value)

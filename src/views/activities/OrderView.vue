@@ -140,14 +140,16 @@
               v-if="bookingOf(item).guests"
               class="d-flex justify-space-between py-2"
             >
-              {{
-                item.product_name?.toLowerCase().includes("bike")
-                  ? "Quantity"
-                  : "Guests"
-              }}
+              Guests
               <strong>{{ bookingOf(item).guests }}</strong>
             </div>
-
+            <div
+              v-if="bookingOf(item).quantity"
+              class="d-flex justify-space-between py-2"
+            >
+              Quantity
+              <strong>{{ bookingOf(item).quantity }}</strong>
+            </div>
             <div
               v-if="bookingOf(item).selected_slot"
               class="d-flex justify-space-between py-2"

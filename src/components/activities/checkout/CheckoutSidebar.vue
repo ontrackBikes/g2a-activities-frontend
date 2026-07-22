@@ -405,6 +405,7 @@ const ROW_LABELS = {
   drop_time: "Return Time",
   rental_days: "Rental Days",
   guests: "Guests",
+  quantity: "Quantity",
 };
 
 const fieldLabels = computed(() => {
