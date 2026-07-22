@@ -12,18 +12,20 @@
       <v-row>
         <v-col cols="12" lg="7">
           <!-- Product -->
-          <v-card rounded="lg" variant="outlined">
+          <v-card rounded="lg" class="border" flat>
             <v-container>
-              <div class="d-flex">
-                <v-img
-                  :src="item.thumbnail_url"
-                  width="140"
-                  height="110"
-                  cover
-                  class="rounded-lg mr-2"
-                />
+              <v-row>
+                <v-col cols="3">
+                  <v-img
+                    :src="item.thumbnail_url"
+                    width="140"
+                    height="110"
+                    cover
+                    class="rounded-lg"
+                  />
+                </v-col>
 
-                <div>
+                <v-col>
                   <div class="g2a-title-xl">{{ item.product_name }}</div>
                   <div class="g2a-text-14 text-greyDark mt-1">
                     {{ item.location_name }}
@@ -34,18 +36,18 @@
                     <span class="g2a-title-xs">{{ order.order_id }}</span>
                   </div>
 
-                  <div>
-                    <v-chip size="large" color="orange" variant="tonal">
+                  <div class="my-2">
+                    <v-chip size="small" color="orange" variant="tonal">
                       {{ order.order_status }}
                     </v-chip>
                   </div>
-                </div>
-              </div>
+                </v-col>
+              </v-row>
             </v-container>
           </v-card>
 
           <!-- Booking Details -->
-          <v-card class="mt-5" rounded="lg" variant="outlined">
+          <v-card rounded="lg" class="border my-2" flat>
             <v-container>
               <div class="g2a-title-xl mb-1">Booking Details</div>
               <v-divider class="mb-2" />
@@ -336,7 +338,7 @@
 
         <!-- RIGHT -->
         <v-col cols="12" lg="5">
-          <v-card rounded="lg" variant="outlined" class="">
+          <v-card rounded="lg" class="border" flat>
             <v-container>
               <div class="g2a-title-xl mb-1">Payment Summary</div>
               <v-divider class="mb-2" />
@@ -400,6 +402,20 @@
               >
                 Pay Now
               </v-btn>
+
+              <div class="text-center py-2">
+                By clicking "Pay", you agree to the
+                <span class="g2a-link">terms of service</span>.
+              </div>
+
+              <v-divider class="my-2"></v-divider>
+
+              <div
+                class="d-flex align-center justify-center g2a-text-caption text-greyDark mt-3"
+              >
+                <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
+                No Hidden Charges
+              </div>
             </v-container>
           </v-card>
         </v-col>
@@ -472,6 +488,7 @@ const loadOrder = async () => {
     error.value = "Unable to load order.";
   } finally {
     loading.value = false;
+    //payNow()
   }
 };
 

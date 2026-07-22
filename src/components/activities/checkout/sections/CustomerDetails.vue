@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="lg" variant="outlined">
+  <v-card rounded="lg" class="border" flat>
     <v-container class="py-2">
       <div class="g2a-title-xl">
         {{ config.title || "Customer Details" }}

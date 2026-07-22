@@ -1,8 +1,7 @@
 <template>
-  <v-card rounded="lg" variant="outlined" elevation="0">
+  <v-card rounded="lg" class="border" flat>
     <v-container class="py-2"> 
       <div class="g2a-title-xl">
-        <v-icon size="22"> mdi-motorbike </v-icon>
         {{ config.title || "Rental Details" }}
       </div>
 

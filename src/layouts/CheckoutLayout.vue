@@ -30,9 +30,9 @@
     </v-app-bar>
 
     <v-main>
-      <v-container style="max-width: 1020px; min-height: calc(100vh - 220px)">
+      <div class="mx-auto" style="max-width: 1020px; min-height: calc(100vh - 220px)">
         <router-view />
-      </v-container>
+      </div>
     </v-main>
   </v-app>
 </template>
