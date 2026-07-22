@@ -22,6 +22,7 @@
         <v-col cols="12">
           <v-radio-group
             v-model="rental.pickup_type"
+            name="rental_pickup_type"
             inline
             hide-details="auto"
             :rules="[(v) => !!v || 'Please select a pickup option']"
@@ -90,6 +91,7 @@
         <v-col cols="12">
           <v-radio-group
             v-model="rental.drop_type"
+            name="rental_drop_type"
             inline
             hide-details="auto"
             :rules="[(v) => !!v || 'Please select a drop-off option']"
@@ -136,9 +138,8 @@
               rounded="lg"
               class="g2a-title-sm"
             >
-              Free within city limits. Extra charges (~{{
-                formatCurrency(outOfCityCharge)
-              }}) apply if outside. Our agent will contact you for more details.
+              Free within city limits. Extra charges (~₹100) apply if outside.
+              Our agent will contact you for more details.
             </v-alert>
           </v-col>
         </template>
@@ -320,36 +321,23 @@ const saveRentalDetails = (value) => {
 
 const normalizeRentalDetails = (rental) => {
   if (rental.pickup_type === "self") {
-    delete rental.pickup_hotel_name;
-
-    if (!("pickup_point" in rental)) {
-      rental.pickup_point = null;
-    }
+    rental.pickup_hotel_name = "";
+    if (rental.pickup_point === undefined) rental.pickup_point = null;
   } else {
-    delete rental.pickup_point;
-
-    if (!("pickup_hotel_name" in rental)) {
-      rental.pickup_hotel_name = "";
-    }
+    rental.pickup_point = null;
+    if (rental.pickup_hotel_name === undefined) rental.pickup_hotel_name = "";
   }
 
   if (rental.drop_type === "self") {
-    delete rental.drop_hotel_name;
-
-    if (!("drop_point" in rental)) {
-      rental.drop_point = null;
-    }
+    rental.drop_hotel_name = "";
+    if (rental.drop_point === undefined) rental.drop_point = null;
   } else {
-    delete rental.drop_point;
-
-    if (!("drop_hotel_name" in rental)) {
-      rental.drop_hotel_name = "";
-    }
+    rental.drop_point = null;
+    if (rental.drop_hotel_name === undefined) rental.drop_hotel_name = "";
   }
 
   return rental;
 };
-
 /*
 |--------------------------------------------------------------------------
 | Rental Details
@@ -402,9 +390,7 @@ watch(
     normalizeRentalDetails(value);
     saveRentalDetails(value);
   },
-  {
-    deep: true,
-  },
+  { deep: true, immediate: true },
 );
 
 /*
