@@ -29,7 +29,7 @@
   </v-alert>
 
   <v-form v-else ref="form" validate-on="submit">
-    <v-row>
+    <v-row class="my-2">
       <!-- LEFT -->
       <v-col cols="12" lg="7">
         <CheckoutRenderer
@@ -49,7 +49,7 @@
               <div>
                 <div class="d-flex">
                   <v-icon
-                    icon="mdi-crown-outline"
+                    :icon="getIcon(higlight.title)"
                     size="18"
                     color="amber-darken-3"
                     class="mt-1"
@@ -65,7 +65,7 @@
           </v-card>
         </div>
 
-        <v-card
+        <!-- <v-card
           rounded="lg"
           flat
           v-if="quote.product?.inclusions.length > 0"
@@ -82,7 +82,7 @@
               <div class="ml-2">{{ inc.content }}</div>
             </div>
           </v-container>
-        </v-card>
+        </v-card> -->
 
         <v-card
           rounded="lg"
@@ -91,7 +91,7 @@
           class="border my-4"
         >
           <v-container>
-            <div class="g2a-title-lg mb-3">Terms & Conditions</div>
+            <div class="g2a-title-lg mb-3">Cancellation & Refund Policy</div>
             <div
               v-for="(term, index) in quote.product?.terms"
               :key="index"
@@ -145,6 +145,17 @@ const checkoutError = ref("");
 const quote = ref(null);
 const loadingQuote = ref(true);
 const quoteError = ref("");
+
+
+const getIcon = (title) => {
+  if(title == 'Security Deposits'){
+    return 'mdi-security'
+  }
+  else if(title == 'Damage Policy'){
+    return 'mdi-information'
+  }
+  return 'mdi-crown-outline'
+}
 
 const loadQuote = async () => {
   loadingQuote.value = true;

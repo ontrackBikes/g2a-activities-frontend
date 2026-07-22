@@ -29,9 +29,8 @@
     <v-card
       v-else-if="quote"
       rounded="lg"
-      variant="outlined"
-      elevation="0"
-      class=""
+      class="border" 
+      flat
     >
       <!-- Product -->
       <v-card-item class="pa-5">
@@ -109,7 +108,7 @@
         bg-color="transparent"
       >
         <v-expansion-panel>
-          <v-expansion-panel-title class="g2a-title-2xl-2 text-greyDark">
+          <v-expansion-panel-title class="g2a-title-2xl-2 text-greyDark px-4">
             More details
           </v-expansion-panel-title>
 

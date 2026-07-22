@@ -5,7 +5,7 @@
       :key="section.section"
       :section="section"
       :quote="quote"
-      class="my-4"
+      class="mb-4"
     />
   </div>
 </template>

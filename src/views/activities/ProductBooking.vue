@@ -1,10 +1,10 @@
 <template>
   <v-card
     rounded="lg"
-    variant="outlined"
+    flat
     :disabled="loading"
     style="max-width: 600px; margin-bottom: 100px"
-    class="mx-auto"
+    class="border mx-auto my-4"
   >
     <v-container>
       <div class="d-flex align-center mb-4" v-if="product">
@@ -40,10 +40,10 @@
         />
 
         <template v-if="result.available">
-          <div class="my-4 text-success">
+          <!-- <div class="my-4 text-success">
             This product is available for booking. Click "Continue Booking" to
             proceed.
-          </div>
+          </div> -->
 
           <!-- Slot Selection -->
           <div v-if="isSlotPricing" class="mt-4">
@@ -173,7 +173,7 @@
               <v-divider class="mb-4" />
 
               <!-- Items -->
-              <div class="d-flex flex-wrap ga-6">
+              <div class="d-flex flex-wrap ">
                 <div
                   v-for="(inc, index) in productInclusions"
                   :key="index"
@@ -190,7 +190,40 @@
             </v-container>
           </v-card>
 
+
           <v-card
+            v-if="productExclusions.length"
+            rounded="xl"
+            variant="outlined"
+            class="my-4"
+          >
+            <v-container>
+              <!-- Heading -->
+              <div class="d-flex align-center ga-3 mb-4">
+                <div class="g2a-title-lg">What's not Included?</div>
+              </div>
+
+              <v-divider class="mb-4" />
+
+              <!-- Items -->
+              <div class="d-flex flex-wrap ">
+                <div
+                  v-for="(inc, index) in productExclusions"
+                  :key="index"
+                  class="d-flex align-center"
+                  style="min-width: 280px"
+                >
+                  <v-icon color="error" class="mr-3">
+                    mdi-close-circle
+                  </v-icon>
+
+                  <span>{{ inc.content }}</span>
+                </div>
+              </div>
+            </v-container>
+          </v-card>
+
+          <!-- <v-card
             rounded="lg"
             variant="outlined"
             v-if="productTerms.length > 0"
@@ -207,7 +240,7 @@
                 <div class="ml-2">{{ term.content }}</div>
               </div>
             </v-container>
-          </v-card>
+          </v-card> -->
         </template>
 
         <div v-else class="mt-4 text-error">
@@ -428,6 +461,10 @@ const productTerms = computed(() => quotation.value.product.terms ?? {});
 
 const productInclusions = computed(
   () => quotation.value.product.inclusions ?? {},
+);
+
+const productExclusions = computed(
+  () => quotation.value.product.exclusions ?? {},
 );
 
 const pricing = computed(() => quotation.value.pricing ?? {});
