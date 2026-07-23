@@ -112,6 +112,74 @@
             </div>
           </v-container>
         </v-card>
+
+        <!-- FAQs -->
+        <v-card
+          rounded="lg"
+          flat
+          v-if="quote.product?.faqs?.length > 0"
+          class="border my-4"
+        >
+          <v-expansion-panels variant="accordion" flat>
+            <v-expansion-panel>
+              <v-expansion-panel-title>
+                <div class="d-flex align-center">
+                  <v-icon
+                    icon="mdi-help-circle"
+                    size="18"
+                    color="amber-darken-3"
+                    class="mr-2"
+                  />
+                  <div class="g2a-title-lg">FAQs</div>
+                </div>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <div
+                  v-for="(faq, index) in quote.product.faqs"
+                  :key="index"
+                  class="mb-3"
+                >
+                  <div class="font-weight-medium">{{ faq.question }}</div>
+                  <div>{{ faq.answer }}</div>
+                </div>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
+
+        <!-- Terms & Conditions -->
+        <v-card
+          rounded="lg"
+          flat
+          v-if="quote.product?.terms?.length > 0"
+          class="border my-4"
+        >
+          <v-expansion-panels variant="accordion" flat>
+            <v-expansion-panel>
+              <v-expansion-panel-title>
+                <div class="d-flex align-center">
+                  <v-icon
+                    icon="mdi-file-document"
+                    size="18"
+                    color="amber-darken-3"
+                    class="mr-2"
+                  />
+                  <div class="g2a-title-lg">Terms & Conditions</div>
+                </div>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <div
+                  v-for="(term, index) in quote.product.terms"
+                  :key="index"
+                  class="d-flex mb-1"
+                >
+                  <div>-</div>
+                  <div class="ml-2">{{ term.content }}</div>
+                </div>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
       </v-col>
 
       <!-- RIGHT -->

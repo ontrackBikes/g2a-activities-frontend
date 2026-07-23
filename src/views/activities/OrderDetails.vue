@@ -10,7 +10,7 @@
 
     <template v-else-if="order">
       <v-row>
-        <v-col cols="12" lg="7">
+        <v-col cols="12" :lg="mobile ? 12 : 7">
           <!-- Product -->
           <v-card rounded="lg" class="border" flat>
             <v-container>
@@ -52,93 +52,53 @@
               <div class="g2a-title-xl mb-1">Booking Details</div>
               <v-divider class="mb-2" />
 
-              <div
+              <DetailRow
                 v-if="bookingData.guests"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label"> Guests </span>
-                <strong class="g2a-title-lg">{{ bookingData.guests }}</strong>
-              </div>
-
-              <div
+                label="Guests"
+                :value="bookingData.guests"
+              />
+              <DetailRow
                 v-if="bookingData.quantity"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label"> Quantity </span>
-                <strong class="g2a-title-lg">{{ bookingData.quantity }}</strong>
-              </div>
-
-              <div
+                label="Quantity"
+                :value="bookingData.quantity"
+              />
+              <DetailRow
                 v-if="bookingData.travel_date"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label">Travel Date</span>
-                <strong class="g2a-title-lg">{{
-                  formatDate(bookingData.travel_date)
-                }}</strong>
-              </div>
+                label="Travel Date"
+                :value="formatDate(bookingData.travel_date)"
+              />
 
-              <div
+              <DetailRow
                 v-if="bookingData.selected_slot"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label">Time Slot</span>
-                <strong class="g2a-title-lg">
-                  {{ bookingData.selected_slot.name }}
-                  ({{ formatTime(bookingData.selected_slot.start_time) }} -
-                  {{ formatTime(bookingData.selected_slot.end_time) }})
-                </strong>
-              </div>
+                label="Time Slot"
+                :value="`${bookingData.selected_slot.name} (${formatTime(bookingData.selected_slot.start_time)} - ${formatTime(bookingData.selected_slot.end_time)})`"
+              />
 
-              <div
+              <DetailRow
                 v-if="bookingData.pickup_date"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label">Pickup Date</span>
-                <strong class="g2a-title-lg">{{
-                  formatDate(bookingData.pickup_date)
-                }}</strong>
-              </div>
-
-              <div
+                label="Pickup Date"
+                :value="formatDate(bookingData.pickup_date)"
+              />
+              <DetailRow
                 v-if="bookingData.pickup_time"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label">Pickup Time</span>
-                <strong class="g2a-title-lg">{{
-                  formatTime(bookingData.pickup_time)
-                }}</strong>
-              </div>
-
-              <div
+                label="Pickup Time"
+                :value="formatTime(bookingData.pickup_time)"
+              />
+              <DetailRow
                 v-if="bookingData.drop_time"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label">Drop Time</span>
-                <strong class="g2a-title-lg">{{
-                  formatTime(bookingData.drop_time)
-                }}</strong>
-              </div>
-
-              <div
+                label="Drop Time"
+                :value="formatTime(bookingData.drop_time)"
+              />
+              <DetailRow
                 v-if="bookingData.return_date"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label">Return Date</span>
-                <strong class="g2a-title-lg">{{
-                  formatDate(bookingData.return_date)
-                }}</strong>
-              </div>
-
-              <div
+                label="Return Date"
+                :value="formatDate(bookingData.return_date)"
+              />
+              <DetailRow
                 v-if="bookingData.rental_days"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label">Rental Days</span>
-                <strong class="g2a-title-lg">{{
-                  bookingData.rental_days
-                }}</strong>
-              </div>
+                label="Rental Days"
+                :value="bookingData.rental_days"
+              />
             </v-container>
           </v-card>
 
@@ -153,34 +113,16 @@
               <div class="g2a-title-lg mb-1">Customer</div>
               <v-divider class="mb-2" />
 
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Name</span>
-                <strong class="g2a-title-lg">
-                  {{ order.customer_details.first_name }}
-                  {{ order.customer_details.last_name }}
-                </strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Mobile</span>
-                <strong class="g2a-title-lg">{{
-                  order.customer_details.phone
-                }}</strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Email</span>
-                <strong class="g2a-title-lg">{{
-                  order.customer_details.email
-                }}</strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Country</span>
-                <strong class="g2a-title-lg">{{
-                  order.customer_details.country
-                }}</strong>
-              </div>
+              <DetailRow
+                label="Name"
+                :value="`${order.customer_details.first_name} ${order.customer_details.last_name}`"
+              />
+              <DetailRow label="Mobile" :value="order.customer_details.phone" />
+              <DetailRow label="Email" :value="order.customer_details.email" />
+              <DetailRow
+                label="Country"
+                :value="order.customer_details.country"
+              />
             </v-container>
           </v-card>
 
@@ -195,40 +137,31 @@
               <div class="g2a-title-lg mb-1">Rental Details</div>
               <v-divider class="mb-2" />
 
-              <div
+              <DetailRow
                 v-if="rentalDetails.quantity"
-                class="d-flex justify-space-between py-2"
-              >
-                <span class="data-label">Quantity</span>
-                <strong class="g2a-title-lg">{{
-                  rentalDetails.quantity
-                }}</strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Pickup Time</span>
-                <strong class="g2a-title-lg">{{
-                  formatTime(rentalDetails.pickup_time)
-                }}</strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Pickup</span>
-                <strong class="g2a-title-lg">{{
-                  rentalDetails.pickup_type === "hotel"
+                label="Quantity"
+                :value="rentalDetails.quantity"
+              />
+              <DetailRow
+                label="Pickup Time"
+                :value="formatTime(rentalDetails.pickup_time)"
+              />
+              <DetailRow
+                label="Pickup"
+                :value="
+                  rentalDetails.pickup_type === 'hotel'
                     ? `Hotel Pickup - ${rentalDetails.pickup_hotel_name}`
                     : `Self Pickup - ${rentalDetails.pickup_point}`
-                }}</strong>
-              </div>
-
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Drop</span>
-                <strong class="g2a-title-lg">{{
-                  rentalDetails.drop_type === "hotel"
+                "
+              />
+              <DetailRow
+                label="Drop"
+                :value="
+                  rentalDetails.drop_type === 'hotel'
                     ? `Hotel Drop - ${rentalDetails.drop_hotel_name}`
                     : `Self Drop - ${rentalDetails.drop_point}`
-                }}</strong>
-              </div>
+                "
+              />
             </v-container>
           </v-card>
 
@@ -244,14 +177,12 @@
               <v-divider class="mb-2" />
 
               <div v-if="declaredConditions.length">
-                <div
+                <DetailRow
                   v-for="condition in declaredConditions"
                   :key="condition"
-                  class="d-flex justify-space-between py-2"
-                >
-                  <span class="data-label">{{ pretty(condition) }}</span>
-                  <strong class="g2a-title-lg">Yes</strong>
-                </div>
+                  :label="pretty(condition)"
+                  value="Yes"
+                />
 
                 <div v-if="medical.other_details" class="py-2">
                   <span class="data-label">Additional Details</span>
@@ -336,31 +267,172 @@
           </v-card>
         </v-col>
 
-        <!-- RIGHT -->
-        <v-col cols="12" lg="5">
-          <v-card rounded="lg" class="border" flat>
-            <v-container>
-              <div class="g2a-title-xl mb-1">Payment Summary</div>
-              <v-divider class="mb-2" />
+        <!-- RIGHT: desktop / tablet sticky summary card -->
+        <v-col v-if="!mobile" cols="12" lg="5">
+          <div class="position-sticky" style="top: 24px; z-index: 1">
+            <v-card rounded="lg" class="border" flat>
+              <v-container>
+                <div class="g2a-title-xl mb-1">Payment Summary</div>
+                <v-divider class="mb-2" />
 
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Subtotal</span>
-                <strong class="g2a-title-lg"
-                  >₹{{ currency(order.subtotal) }}</strong
+                <DetailRow
+                  label="Subtotal"
+                  :value="`₹${currency(order.subtotal)}`"
+                />
+                <DetailRow
+                  label="Discount"
+                  :value="`₹${currency(order.discount)}`"
+                />
+                <DetailRow label="Tax" :value="`₹${currency(order.tax)}`" />
+
+                <v-divider class="my-4" />
+
+                <div class="d-flex justify-space-between align-center">
+                  <span class="g2a-title-2xl-4">Total</span>
+                  <div class="g2a-title-lg text-brandColor2">
+                    ₹{{ currency(order.grand_total) }}
+                  </div>
+                </div>
+
+                <div v-if="order.payment_status == 'captured'">
+                  <div class="g2a-title-2xl-2 text-success mt-4">
+                    Payment already received for this order
+                  </div>
+                  <v-btn
+                    flat
+                    rounded="lg"
+                    block
+                    color="brandColor"
+                    size="large"
+                    class="mt-4"
+                    @click="viewOrder"
+                  >
+                    View
+                  </v-btn>
+                </div>
+
+                <v-btn
+                  v-else
+                  flat
+                  rounded="lg"
+                  block
+                  color="brandColor"
+                  size="large"
+                  class="mt-6"
+                  :disabled="order.order_status == 'confirmed'"
+                  :loading="paying"
+                  @click="payNow"
+                >
+                  Pay Now
+                </v-btn>
+
+                <div class="text-center py-2">
+                  By clicking "Pay", you agree to the
+                  <span class="g2a-link">terms of service</span>.
+                </div>
+
+                <v-divider class="my-2" />
+
+                <div
+                  class="d-flex align-center justify-center g2a-text-caption text-greyDark mt-3"
+                >
+                  <v-icon size="14" class="mr-1"
+                    >mdi-shield-check-outline</v-icon
+                  >
+                  No Hidden Charges
+                </div>
+              </v-container>
+            </v-card>
+          </div>
+        </v-col>
+      </v-row>
+
+      <!-- RIGHT: mobile fixed bottom bar + bottom sheet -->
+      <template v-if="mobile">
+        <div class="mobile-summary-bar">
+          <v-card flat rounded="0">
+            <v-card-text class="py-3">
+              <button
+                type="button"
+                class="d-flex align-center justify-space-between w-100 bg-transparent border-0 pa-0 mb-2"
+                aria-label="View payment summary"
+                aria-haspopup="dialog"
+                :aria-expanded="detailsSheet"
+                @click="detailsSheet = true"
+              >
+                <span class="d-flex flex-column text-left">
+                  <span class="g2a-text-caption text-greyDark"
+                    >Total payable</span
+                  >
+                  <span class="g2a-title-xl text-brandColor2"
+                    >₹{{ currency(order.grand_total) }}</span
+                  >
+                </span>
+                <span class="g2a-link g2a-title-2xl-2 d-flex align-center">
+                  Details
+                  <v-icon size="18" class="ml-1">mdi-chevron-up</v-icon>
+                </span>
+              </button>
+
+              <div v-if="order.payment_status == 'captured'">
+                <v-btn
+                  flat
+                  rounded="lg"
+                  block
+                  color="brandColor"
+                  size="large"
+                  @click="viewOrder"
+                  >View</v-btn
                 >
               </div>
+              <v-btn
+                v-else
+                flat
+                rounded="lg"
+                block
+                color="brandColor"
+                size="large"
+                :disabled="order.order_status == 'confirmed'"
+                :loading="paying"
+                @click="payNow"
+              >
+                Pay Now
+              </v-btn>
+            </v-card-text>
+          </v-card>
+        </div>
 
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Discount</span>
-                <strong class="g2a-title-lg"
-                  >₹{{ currency(order.discount) }}</strong
-                >
-              </div>
+        <!-- Reserves space so page content isn't hidden behind the fixed bar -->
+        <div class="mobile-summary-bar-spacer" />
 
-              <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Tax</span>
-                <strong class="g2a-title-lg">₹{{ currency(order.tax) }}</strong>
-              </div>
+        <v-bottom-sheet v-model="detailsSheet" inset scrollable>
+          <v-card
+            rounded="t-xl"
+            class="d-flex flex-column"
+            style="max-height: 90vh"
+          >
+            <div class="d-flex align-center justify-space-between pa-4">
+              <div class="g2a-title">Payment Summary</div>
+              <v-btn
+                icon="mdi-close"
+                variant="text"
+                size="small"
+                aria-label="Close details"
+                @click="detailsSheet = false"
+              />
+            </div>
+            <v-divider />
+
+            <div class="pa-4" style="overflow-y: auto">
+              <DetailRow
+                label="Subtotal"
+                :value="`₹${currency(order.subtotal)}`"
+              />
+              <DetailRow
+                label="Discount"
+                :value="`₹${currency(order.discount)}`"
+              />
+              <DetailRow label="Tax" :value="`₹${currency(order.tax)}`" />
 
               <v-divider class="my-4" />
 
@@ -370,9 +442,12 @@
                   ₹{{ currency(order.grand_total) }}
                 </div>
               </div>
+            </div>
 
+            <v-divider />
+            <div class="pa-4">
               <div v-if="order.payment_status == 'captured'">
-                <div class="g2a-title-2xl-2 text-success mt-4">
+                <div class="g2a-title-2xl-2 text-success mb-3">
                   Payment already received for this order
                 </div>
                 <v-btn
@@ -381,11 +456,9 @@
                   block
                   color="brandColor"
                   size="large"
-                  class="mt-4"
                   @click="viewOrder"
+                  >View</v-btn
                 >
-                  View
-                </v-btn>
               </div>
 
               <v-btn
@@ -395,7 +468,6 @@
                 block
                 color="brandColor"
                 size="large"
-                class="mt-6"
                 :disabled="order.order_status == 'confirmed'"
                 :loading="paying"
                 @click="payNow"
@@ -408,7 +480,7 @@
                 <span class="g2a-link">terms of service</span>.
               </div>
 
-              <v-divider class="my-2"></v-divider>
+              <v-divider class="my-2" />
 
               <div
                 class="d-flex align-center justify-center g2a-text-caption text-greyDark mt-3"
@@ -416,27 +488,51 @@
                 <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
                 No Hidden Charges
               </div>
-            </v-container>
+            </div>
           </v-card>
-        </v-col>
-      </v-row>
+        </v-bottom-sheet>
+      </template>
     </template>
   </v-container>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, h } from "vue";
 import { useRoute } from "vue-router";
+import { useDisplay } from "vuetify";
 import apiClient from "@/services/api";
 import router from "@/router";
 
 const route = useRoute();
+const { mobile } = useDisplay();
 
 const loading = ref(true);
 const paying = ref(false);
 const error = ref("");
+const detailsSheet = ref(false);
 
 const order = ref(null);
+
+/*
+|--------------------------------------------------------------------------
+| Reusable label/value row — used for booking details, customer info,
+| rental details, medical declarations and the payment breakdown, in both
+| the desktop card and the mobile bottom sheet.
+|--------------------------------------------------------------------------
+*/
+const DetailRow = (rowProps) =>
+  h("div", { class: "d-flex justify-space-between flex-wrap ga-2 py-2" }, [
+    h("span", { class: "data-label" }, rowProps.label),
+    h(
+      "strong",
+      { class: "g2a-title-lg text-right" },
+      String(rowProps.value ?? ""),
+    ),
+  ]);
+DetailRow.props = {
+  label: { type: String, default: "" },
+  value: { type: [String, Number], default: "" },
+};
 
 const item = computed(() => order.value?.items?.[0] || {});
 
@@ -547,3 +643,22 @@ const viewOrder = () => {
 
 onMounted(loadOrder);
 </script>
+
+<style scoped>
+/* Vuetify has no utility class for "stuck to the bottom of the viewport",
+   so this bit of positioning CSS is genuinely necessary. */
+.mobile-summary-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Reserves space at the end of the page so content isn't hidden behind the fixed bar. */
+.mobile-summary-bar-spacer {
+  height: calc(96px + env(safe-area-inset-bottom, 0));
+}
+</style>

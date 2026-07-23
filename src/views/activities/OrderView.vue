@@ -248,7 +248,10 @@
           </div>
           <div class="d-flex justify-space-between py-2">
             <span class="data-label">Mobile</span>
-            <strong>{{ customerDetails.phone || "—" }}</strong>
+            <strong
+              >{{ customerDetails.country_code }}
+              {{ customerDetails.phone || "—" }}</strong
+            >
           </div>
           <div class="d-flex justify-space-between py-2">
             <span class="data-label">Email</span>
