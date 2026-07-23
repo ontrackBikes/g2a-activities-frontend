@@ -56,10 +56,9 @@
                   />
                   <div class="ml-2">
                     <div class="g2a-title-lg">{{ higlight.title }}</div>
-                  <div class="">{{ higlight.content }}</div>
-                    </div>
+                    <div class="">{{ higlight.content }}</div>
+                  </div>
                 </div>
-                
               </div>
             </v-container>
           </v-card>
@@ -87,18 +86,29 @@
         <v-card
           rounded="lg"
           flat
-          v-if="quote.product?.terms.length > 0"
+          v-if="quote.product?.cancellation_policies?.length > 0"
           class="border my-4"
         >
           <v-container>
-            <div class="g2a-title-lg mb-3">Cancellation & Refund Policy</div>
-            <div
-              v-for="(term, index) in quote.product?.terms"
-              :key="index"
-              class="d-flex"
-            >
-              <div>-</div>
-              <div class="ml-2">{{ term.content }}</div>
+            <div class="d-flex">
+              <v-icon
+                icon="mdi-shield-check"
+                size="18"
+                color="amber-darken-3"
+                class="mt-1"
+              />
+              <div class="ml-2">
+                <div class="g2a-title-lg">Cancellation & Refund Policy</div>
+                <div
+                  v-for="(policy, index) in quote.product.cancellation_policies"
+                  :key="index"
+                >
+                  <div v-if="policy.title" class="font-weight-medium">
+                    {{ policy.title }}
+                  </div>
+                  <div>{{ policy.content }}</div>
+                </div>
+              </div>
             </div>
           </v-container>
         </v-card>
@@ -146,16 +156,14 @@ const quote = ref(null);
 const loadingQuote = ref(true);
 const quoteError = ref("");
 
-
 const getIcon = (title) => {
-  if(title == 'Security Deposits'){
-    return 'mdi-security'
+  if (title == "Security Deposits") {
+    return "mdi-security";
+  } else if (title == "Damage Policy") {
+    return "mdi-information";
   }
-  else if(title == 'Damage Policy'){
-    return 'mdi-information'
-  }
-  return 'mdi-crown-outline'
-}
+  return "mdi-crown-outline";
+};
 
 const loadQuote = async () => {
   loadingQuote.value = true;
