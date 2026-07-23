@@ -163,7 +163,7 @@ const countryListLoading = ref(true);
 const defaultCustomer = () => ({
   first_name: "",
   last_name: "",
-  country_code: "91",
+  country_code: null,
   phone: "",
   alternate_country_code: null,
   alternate_phone: null,
