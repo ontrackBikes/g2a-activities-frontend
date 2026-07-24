@@ -67,6 +67,23 @@
                 label="Travel Date"
                 :value="formatDate(bookingData.travel_date)"
               />
+              <DetailRow
+                v-if="bookingData.transfer_type"
+                label="Transfer Type"
+                :value="prettyTransferType(bookingData.transfer_type)"
+              />
+
+              <DetailRow
+                v-if="bookingData.pickup_location"
+                label="Pickup Location"
+                :value="`${bookingData.pickup_location.name} (${bookingData.pickup_location.type})`"
+              />
+
+              <DetailRow
+                v-if="bookingData.drop_location"
+                label="Drop Location"
+                :value="`${bookingData.drop_location.name} (${bookingData.drop_location.type})`"
+              />
 
               <DetailRow
                 v-if="bookingData.selected_slot"
@@ -585,6 +602,17 @@ const loadOrder = async () => {
   } finally {
     loading.value = false;
     //payNow()
+  }
+};
+
+const prettyTransferType = (type) => {
+  switch (type) {
+    case "airport_to_location":
+      return "Airport → Location";
+    case "location_to_airport":
+      return "Location → Airport";
+    default:
+      return type?.replaceAll("_", " ") || "";
   }
 };
 

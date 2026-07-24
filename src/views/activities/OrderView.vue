@@ -195,6 +195,38 @@
                 <strong>{{ formatDate(bookingOf(item).travel_date) }}</strong>
               </div>
             </template>
+
+            <!-- Airport Transfer -->
+            <template v-if="bookingOf(item).transfer_type">
+              <div class="d-flex justify-space-between py-2">
+                <span class="data-label">Transfer Type</span>
+                <strong>{{
+                  prettyTransferType(bookingOf(item).transfer_type)
+                }}</strong>
+              </div>
+
+              <div
+                v-if="bookingOf(item).pickup_location"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Pickup Location</span>
+                <strong>
+                  {{ bookingOf(item).pickup_location.name }} -
+                  {{ bookingOf(item).pickup_location.address }}
+                </strong>
+              </div>
+
+              <div
+                v-if="bookingOf(item).drop_location"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="data-label">Drop Location</span>
+                <strong>
+                  {{ bookingOf(item).drop_location.name }} -
+                  {{ bookingOf(item).drop_location.address }}
+                </strong>
+              </div>
+            </template>
           </v-container>
         </g2-a-expansion-panel>
 
@@ -418,6 +450,16 @@ const loadOrder = async () => {
         : "Unable to load booking.";
   } finally {
     loading.value = false;
+  }
+};
+const prettyTransferType = (type) => {
+  switch (type) {
+    case "airport_to_location":
+      return "Airport → Location";
+    case "location_to_airport":
+      return "Location → Airport";
+    default:
+      return type?.replaceAll("_", " ") || "-";
   }
 };
 
