@@ -206,13 +206,14 @@ const pickableLocations = computed(() => {
   return availableLocations.value.filter((loc) => loc.type !== "airport");
 });
 
-// form.pickup_location / form.drop_location are stored as plain numeric
-// ids (that's what the backend expects), but LocationPicker needs the
-// full location object to display a name/address. This bridges the two.
-const locationById = (id) => {
-  if (!id) return null;
+// Configured locations are stored as ids. A customer-entered location is
+// kept as its small custom-location object so it can be sent to the API.
+const locationById = (location) => {
+  if (!location) return null;
 
-  return availableLocations.value.find((loc) => loc.id === id) || null;
+  if (typeof location === "object") return location;
+
+  return availableLocations.value.find((loc) => loc.id === location) || null;
 };
 
 // Single watcher covering both triggers that affect the airport side:
@@ -251,11 +252,18 @@ watch(
 
 const updateSubField = (key, value) => {
   const isLocationField = key === "pickup_location" || key === "drop_location";
+  const locationValue = value?.is_custom
+    ? {
+        type: "custom",
+        name: value.name,
+        address: value.address,
+      }
+    : value?.id ?? null;
 
   emit("update:modelValue", {
     ...props.modelValue,
     transfer_type: transferType.value,
-    [key]: isLocationField ? (value?.id ?? null) : value,
+    [key]: isLocationField ? locationValue : value,
   });
 };
 
