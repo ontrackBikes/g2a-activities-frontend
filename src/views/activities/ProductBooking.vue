@@ -173,7 +173,7 @@
               <v-divider class="mb-4" />
 
               <!-- Items -->
-              <div class="d-flex flex-wrap ">
+              <div class="d-flex flex-wrap">
                 <div
                   v-for="(inc, index) in productInclusions"
                   :key="index"
@@ -190,7 +190,6 @@
             </v-container>
           </v-card>
 
-
           <v-card
             v-if="productExclusions.length"
             rounded="xl"
@@ -206,16 +205,14 @@
               <v-divider class="mb-4" />
 
               <!-- Items -->
-              <div class="d-flex flex-wrap ">
+              <div class="d-flex flex-wrap">
                 <div
                   v-for="(inc, index) in productExclusions"
                   :key="index"
                   class="d-flex align-center"
                   style="min-width: 280px"
                 >
-                  <v-icon color="error" class="mr-3">
-                    mdi-close-circle
-                  </v-icon>
+                  <v-icon color="error" class="mr-3"> mdi-close-circle </v-icon>
 
                   <span>{{ inc.content }}</span>
                 </div>
@@ -266,7 +263,9 @@
             color="brandColor"
             size="large"
             min-width="180"
-            :disabled="loading || (isSlotPricing && !selectedSlot)"
+            :disabled="
+              loading || (isSlotPricing && !selectedSlot) || !isFormValid
+            "
             @click="continueBooking"
           >
             Continue Booking
@@ -497,6 +496,93 @@ const isSlotPricing = computed(() => pricing.value.pricing_type === "SLOT");
 
 const selectedLocation = computed(() => result.value?.selected_location);
 
+/**
+ * Validation
+ *
+ * Every activity ships its own set of booking fields via
+ * bookingTemplate.product_page_schema.fields (field, label, required,
+ * hidden, visible), so validation here is driven entirely by that backend
+ * schema rather than any hardcoded, per-activity logic - whatever fields
+ * an activity sends, only the ones marked required and actually
+ * visible/rendered are checked.
+ *
+ * Almost every field type just needs a plain "is it blank" check on
+ * form[field.field]. A few field types store their value differently and
+ * need a small override:
+ * - drop_location: nested object, only "filled" once both a location and
+ *   a pickup time have been picked.
+ * - pickup_and_drop_date: its own form key is never written to -
+ *   PickupAndDropField.vue writes straight into form.pickup_date /
+ *   pickup_time / return_date - so we check those keys instead.
+ * - transfer_type: an object holding whichever sub-fields the backend
+ *   configured (field.config.fields, e.g. pickup_location, drop_location,
+ *   pickup_time) - only the sub-fields marked required there are checked,
+ *   so this adapts automatically if the backend adds/removes/relabels
+ *   sub-fields for a given activity.
+ */
+
+const isFieldEmpty = (field) => {
+  if (field.field === "drop_location") {
+    const value = form.drop_location;
+    return !value || !value.location || !value.pickupTime;
+  }
+
+  if (field.field === "pickup_and_drop_date") {
+    return !form.pickup_date || !form.pickup_time || !form.return_date;
+  }
+
+  if (field.field === "transfer_type") {
+    const value = form.transfer_type || {};
+    const subFields = field.config?.fields || [];
+
+    return subFields.some((subField) => {
+      if (!subField.required) return false;
+
+      const subValue = value[subField.field];
+
+      // Location sub-fields hold an object (from LocationPicker) - "empty"
+      // means no location was picked yet. Everything else (e.g. pickup
+      // time) is a plain string.
+      if (subField.field.includes("location")) {
+        return !subValue || !subValue.name;
+      }
+
+      return subValue === null || subValue === undefined || subValue === "";
+    });
+  }
+
+  const value = form[field.field];
+  return value === null || value === undefined || value === "";
+};
+
+const isFormValid = computed(() => {
+  return fields.value.every((field) => {
+    if (!field.required || field.hidden || field.visible === false) {
+      return true;
+    }
+
+    return !isFieldEmpty(field);
+  });
+});
+
+const pretty = (field) => {
+  return field.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+watch(
+  form,
+  () => {
+    fields.value.forEach((field) => {
+      if (!field.required) return;
+
+      if (!isFieldEmpty(field)) {
+        delete errors[field.field];
+      }
+    });
+  },
+  { deep: true },
+);
+
 const formatTime = (time) => {
   if (!time) return "";
 
@@ -580,6 +666,17 @@ watch(
 );
 
 const continueBooking = () => {
+  if (!isFormValid.value) {
+    fields.value.forEach((field) => {
+      if (field.required && isFieldEmpty(field)) {
+        errors[field.field] =
+          `${field.label || pretty(field.field)} is required`;
+      }
+    });
+
+    return;
+  }
+
   router.push({
     name: "Checkout",
     params: { estimate_id: estimateId.value },

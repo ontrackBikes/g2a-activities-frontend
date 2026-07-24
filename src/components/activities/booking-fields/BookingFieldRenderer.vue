@@ -11,12 +11,7 @@
     @update:modelValue="updateValue"
   />
 
-  <v-alert
-    v-else
-    type="warning"
-    variant="tonal"
-    density="compact"
-  >
+  <v-alert v-else type="warning" variant="tonal" density="compact">
     Unknown booking field:
     <strong>{{ field.field }}</strong>
   </v-alert>
@@ -57,9 +52,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits([
-  "update:modelValue",
-]);
+const emit = defineEmits(["update:modelValue"]);
 
 const fieldComponent = computed(() => {
   return fieldRegistry[props.field.field];

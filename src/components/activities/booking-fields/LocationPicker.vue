@@ -9,6 +9,7 @@
     density="compact"
     rounded="lg"
     readonly
+    class="mb-4"
     hide-details="auto"
     @click="dialog = true"
   />
