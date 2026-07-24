@@ -249,9 +249,16 @@
           </v-card> -->
         </template>
 
-        <div v-else class="mt-4 text-error">
+        <v-alert
+          v-else
+          :type="unavailableAlertType"
+          variant="tonal"
+          rounded="lg"
+          density="comfortable"
+          class="mt-2"
+        >
           {{ error || result.message }}
-        </div>
+        </v-alert>
       </div>
     </v-container>
   </v-card>
@@ -513,6 +520,16 @@ const selectedSlot = computed(() => availability.value.selected_slot ?? null);
 const isSlotPricing = computed(() => pricing.value.pricing_type === "SLOT");
 
 const selectedLocation = computed(() => result.value?.selected_location);
+
+const unavailableAlertType = computed(() => {
+  if (error.value) return "error";
+
+  const message = result.value?.message?.toLowerCase() ?? "";
+
+  if (message.includes("select")) return "info";
+
+  return "warning";
+});
 
 const formatTime = (time) => {
   if (!time) return "";
