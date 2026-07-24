@@ -40,10 +40,11 @@
 
         <location-picker
           v-else
-          :model-value="modelValue.pickup_location"
+          :model-value="locationById(modelValue.pickup_location)"
           :locations="pickableLocations"
           :loading="loadingLocations"
           :label="subFieldLabel('pickup_location', 'Pickup Location')"
+          :rules="pickupLocationRules"
           class="mb-4"
           @update:model-value="updateSubField('pickup_location', $event)"
         />
@@ -67,10 +68,11 @@
 
         <location-picker
           v-else
-          :model-value="modelValue.drop_location"
+          :model-value="locationById(modelValue.drop_location)"
           :locations="pickableLocations"
           :loading="loadingLocations"
           :label="subFieldLabel('drop_location', 'Drop Location')"
+          :rules="dropLocationRules"
           class="mb-4"
           @update:model-value="updateSubField('drop_location', $event)"
         />
@@ -81,11 +83,14 @@
         v-if="hasSubField('pickup_time')"
         :model-value="modelValue.pickup_time"
         :items="pickupTimeOptions"
+        item-title="title"
+        item-value="value"
         :label="subFieldLabel('pickup_time', 'Pickup Time')"
         placeholder="Select pickup time"
         variant="outlined"
         density="compact"
         rounded="lg"
+        :rules="pickupTimeRules"
         hide-details="auto"
         @update:model-value="updateSubField('pickup_time', $event)"
       />
@@ -125,23 +130,12 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-/**
- * The direction options (Airport → Location / Location → Airport) come
- * from field.config.options, so backend can relabel or reorder them
- * without a frontend change.
- */
 const directionOptions = computed(() => {
   return props.field.config?.options?.length
     ? props.field.config.options
     : DEFAULT_DIRECTION_OPTIONS;
 });
 
-/**
- * field.config.fields lists which sub-fields this activity actually wants
- * (pickup_location / drop_location / pickup_time) along with their labels.
- * Rendering off this list means an activity can drop a sub-field (e.g. no
- * pickup_time needed) without any component change.
- */
 const subFields = computed(() => props.field.config?.fields || []);
 
 const hasSubField = (key) => {
@@ -158,6 +152,37 @@ const subFieldLabel = (key, fallback) => {
   return match?.label || fallback;
 };
 
+const isSubFieldRequired = (key) => {
+  const match = subFields.value.find((subField) => subField.field === key);
+
+  return !!match?.required;
+};
+
+// Self-contained validation - which location is required flips with the
+// selected direction: the airport side is always auto-filled (and
+// disabled), so only the side the user actually has to pick themselves
+// carries a rule. Airport → Location needs a drop location; Location →
+// Airport needs a pickup location.
+const pickupLocationRules = computed(() => {
+  if (!hasSubField("pickup_location")) return [];
+  if (airportSideKey.value === "pickup_location") return [];
+
+  return [(v) => !!v || "Please select a pickup location"];
+});
+
+const dropLocationRules = computed(() => {
+  if (!hasSubField("drop_location")) return [];
+  if (airportSideKey.value === "drop_location") return [];
+
+  return [(v) => !!v || "Please select a drop location"];
+});
+
+const pickupTimeRules = computed(() => {
+  if (!isSubFieldRequired("pickup_time")) return [];
+
+  return [(v) => !!v || "Please select a pickup time"];
+});
+
 const transferType = ref(
   props.modelValue.transfer_type || directionOptions.value[0]?.value || "",
 );
@@ -165,12 +190,6 @@ const transferType = ref(
 const availableLocations = ref([]);
 const loadingLocations = ref(false);
 
-/**
- * Airport is the common endpoint on every transfer, regardless of
- * direction - so it's auto-filled rather than picked by the user.
- * "location_to_airport" -> pickup is the fixed side, drop is user-picked
- * and vice versa for "airport_to_location".
- */
 const airportLocation = computed(() => {
   return availableLocations.value.find((loc) => loc.type === "airport") || null;
 });
@@ -187,6 +206,15 @@ const pickableLocations = computed(() => {
   return availableLocations.value.filter((loc) => loc.type !== "airport");
 });
 
+// form.pickup_location / form.drop_location are stored as plain numeric
+// ids (that's what the backend expects), but LocationPicker needs the
+// full location object to display a name/address. This bridges the two.
+const locationById = (id) => {
+  if (!id) return null;
+
+  return availableLocations.value.find((loc) => loc.id === id) || null;
+};
+
 // Single watcher covering both triggers that affect the airport side:
 // the airport location finishing its fetch, and the direction being
 // flipped. Consolidated into one emit so the two concerns can't race
@@ -201,7 +229,7 @@ watch(
       newType === "airport_to_location" ? "pickup_location" : "drop_location";
 
     if (airportLocation.value) {
-      patch[newAirportKey] = airportLocation.value;
+      patch[newAirportKey] = airportLocation.value.id;
     }
 
     // Direction flipped - the side that used to hold the airport now
@@ -222,10 +250,12 @@ watch(
 );
 
 const updateSubField = (key, value) => {
+  const isLocationField = key === "pickup_location" || key === "drop_location";
+
   emit("update:modelValue", {
     ...props.modelValue,
     transfer_type: transferType.value,
-    [key]: value,
+    [key]: isLocationField ? (value?.id ?? null) : value,
   });
 };
 
@@ -247,33 +277,35 @@ const fetchLocations = async () => {
 
 onMounted(fetchLocations);
 
+// `value` must stay in 24-hour HH:mm form - that's what the backend's
+// pickup_time validation expects. `title` is just the display label.
 const pickupTimeOptions = [
-  "07:00 AM",
-  "07:30 AM",
-  "08:00 AM",
-  "08:30 AM",
-  "09:00 AM",
-  "09:30 AM",
-  "10:00 AM",
-  "10:30 AM",
-  "11:00 AM",
-  "11:30 AM",
-  "12:00 PM",
-  "12:30 PM",
-  "01:00 PM",
-  "01:30 PM",
-  "02:00 PM",
-  "02:30 PM",
-  "03:00 PM",
-  "03:30 PM",
-  "04:00 PM",
-  "04:30 PM",
-  "05:00 PM",
-  "05:30 PM",
-  "06:00 PM",
-  "06:30 PM",
-  "07:00 PM",
-  "07:30 PM",
-  "08:00 PM",
+  { title: "07:00 AM", value: "07:00" },
+  { title: "07:30 AM", value: "07:30" },
+  { title: "08:00 AM", value: "08:00" },
+  { title: "08:30 AM", value: "08:30" },
+  { title: "09:00 AM", value: "09:00" },
+  { title: "09:30 AM", value: "09:30" },
+  { title: "10:00 AM", value: "10:00" },
+  { title: "10:30 AM", value: "10:30" },
+  { title: "11:00 AM", value: "11:00" },
+  { title: "11:30 AM", value: "11:30" },
+  { title: "12:00 PM", value: "12:00" },
+  { title: "12:30 PM", value: "12:30" },
+  { title: "01:00 PM", value: "13:00" },
+  { title: "01:30 PM", value: "13:30" },
+  { title: "02:00 PM", value: "14:00" },
+  { title: "02:30 PM", value: "14:30" },
+  { title: "03:00 PM", value: "15:00" },
+  { title: "03:30 PM", value: "15:30" },
+  { title: "04:00 PM", value: "16:00" },
+  { title: "04:30 PM", value: "16:30" },
+  { title: "05:00 PM", value: "17:00" },
+  { title: "05:30 PM", value: "17:30" },
+  { title: "06:00 PM", value: "18:00" },
+  { title: "06:30 PM", value: "18:30" },
+  { title: "07:00 PM", value: "19:00" },
+  { title: "07:30 PM", value: "19:30" },
+  { title: "08:00 PM", value: "20:00" },
 ];
 </script>

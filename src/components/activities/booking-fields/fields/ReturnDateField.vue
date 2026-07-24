@@ -8,7 +8,7 @@
     density="compact"
     hide-details="auto"
     class="mb-3"
-    :error-messages="error ? [error] : []"
+    :rules="rules"
   />
 </template>
 
@@ -23,9 +23,9 @@ const props = defineProps({
     required: true,
   },
 
-  error: {
-    type: String,
-    default: "",
+  field: {
+    type: Object,
+    default: () => ({}),
   },
 });
 
@@ -40,5 +40,11 @@ const minimumDate = computed(() => {
 const model = computed({
   get: () => props.modelValue,
   set: (v) => emit("update:modelValue", v),
+});
+
+const rules = computed(() => {
+  if (!props.field?.required) return [];
+
+  return [(v) => !!v || "Return date is required"];
 });
 </script>

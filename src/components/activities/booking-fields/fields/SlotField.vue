@@ -9,14 +9,17 @@
     density="compact"
     variant="outlined"
     rounded="lg"
-    hide-details
+    :rules="rules"
+    hide-details="auto"
     class="mb-3"
     :required="field.required"
   />
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
   modelValue: [Number, String],
 
   slots: {
@@ -30,7 +33,14 @@ defineProps({
   },
 });
 
-defineEmits([
-  "update:modelValue",
-]);
+defineEmits(["update:modelValue"]);
+
+// Self-contained validation: only add a required rule when the backend
+// schema actually marks this field as required, so v-form picks it up
+// automatically without any parent-side error bookkeeping.
+const rules = computed(() => {
+  if (!props.field.required) return [];
+
+  return [(v) => !!v || `${props.field.label || "Slot"} is required`];
+});
 </script>

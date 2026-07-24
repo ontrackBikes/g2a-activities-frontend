@@ -1,5 +1,6 @@
 <template>
   <v-card
+    ref="topCard"
     rounded="lg"
     flat
     :disabled="loading"
@@ -27,17 +28,21 @@
 
       <div v-else-if="result">
         <!-- Dynamic booking fields -->
-        <BookingFieldRenderer
-          class="mb-2"
-          v-for="field in fields"
-          :key="field.field"
-          v-model="form[field.field]"
-          :field="field"
-          :slots="slots"
-          :form="form"
-          :error="errors[field.field]"
-          :maxQuantity="maxQuantity"
-        />
+        <v-form ref="bookingForm" @submit.prevent>
+          <BookingFieldRenderer
+            class="mb-2"
+            v-for="field in fields"
+            :key="field.field"
+            :model-value="fieldModel(field.field)"
+            @update:model-value="
+              (value) => handleFieldUpdate(field.field, value)
+            "
+            :field="field"
+            :slots="slots"
+            :form="form"
+            :maxQuantity="maxQuantity"
+          />
+        </v-form>
 
         <template v-if="result.available">
           <!-- <div class="my-4 text-success">
@@ -128,6 +133,10 @@
                   </div>
                 </v-card>
               </div>
+            </div>
+
+            <div v-if="slotError" class="text-error text-caption mt-2">
+              {{ slotError }}
             </div>
           </div>
 
@@ -263,9 +272,7 @@
             color="brandColor"
             size="large"
             min-width="180"
-            :disabled="
-              loading || (isSlotPricing && !selectedSlot) || !isFormValid
-            "
+            :disabled="loading"
             @click="continueBooking"
           >
             Continue Booking
@@ -333,7 +340,9 @@ const loading = ref(false);
 const error = ref("");
 const result = ref(null);
 
-const errors = reactive({});
+const slotError = ref("");
+const topCard = ref(null);
+const bookingForm = ref(null);
 
 const slotSearch = ref("");
 
@@ -372,6 +381,15 @@ const form = reactive({
   guests: Number(route.query.guests) > 0 ? Number(route.query.guests) : 1,
 
   quantity: Number(route.query.quantity) > 0 ? Number(route.query.quantity) : 1,
+
+  transfer_type:
+    route.query.transfer_type === "location_to_airport"
+      ? "location_to_airport"
+      : "airport_to_location",
+
+  pickup_location: Number(route.query.pickup_location) || null,
+
+  drop_location: Number(route.query.drop_location) || null,
 
   selected_slot_token: route.query.slot || null,
 
@@ -496,93 +514,6 @@ const isSlotPricing = computed(() => pricing.value.pricing_type === "SLOT");
 
 const selectedLocation = computed(() => result.value?.selected_location);
 
-/**
- * Validation
- *
- * Every activity ships its own set of booking fields via
- * bookingTemplate.product_page_schema.fields (field, label, required,
- * hidden, visible), so validation here is driven entirely by that backend
- * schema rather than any hardcoded, per-activity logic - whatever fields
- * an activity sends, only the ones marked required and actually
- * visible/rendered are checked.
- *
- * Almost every field type just needs a plain "is it blank" check on
- * form[field.field]. A few field types store their value differently and
- * need a small override:
- * - drop_location: nested object, only "filled" once both a location and
- *   a pickup time have been picked.
- * - pickup_and_drop_date: its own form key is never written to -
- *   PickupAndDropField.vue writes straight into form.pickup_date /
- *   pickup_time / return_date - so we check those keys instead.
- * - transfer_type: an object holding whichever sub-fields the backend
- *   configured (field.config.fields, e.g. pickup_location, drop_location,
- *   pickup_time) - only the sub-fields marked required there are checked,
- *   so this adapts automatically if the backend adds/removes/relabels
- *   sub-fields for a given activity.
- */
-
-const isFieldEmpty = (field) => {
-  if (field.field === "drop_location") {
-    const value = form.drop_location;
-    return !value || !value.location || !value.pickupTime;
-  }
-
-  if (field.field === "pickup_and_drop_date") {
-    return !form.pickup_date || !form.pickup_time || !form.return_date;
-  }
-
-  if (field.field === "transfer_type") {
-    const value = form.transfer_type || {};
-    const subFields = field.config?.fields || [];
-
-    return subFields.some((subField) => {
-      if (!subField.required) return false;
-
-      const subValue = value[subField.field];
-
-      // Location sub-fields hold an object (from LocationPicker) - "empty"
-      // means no location was picked yet. Everything else (e.g. pickup
-      // time) is a plain string.
-      if (subField.field.includes("location")) {
-        return !subValue || !subValue.name;
-      }
-
-      return subValue === null || subValue === undefined || subValue === "";
-    });
-  }
-
-  const value = form[field.field];
-  return value === null || value === undefined || value === "";
-};
-
-const isFormValid = computed(() => {
-  return fields.value.every((field) => {
-    if (!field.required || field.hidden || field.visible === false) {
-      return true;
-    }
-
-    return !isFieldEmpty(field);
-  });
-});
-
-const pretty = (field) => {
-  return field.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
-};
-
-watch(
-  form,
-  () => {
-    fields.value.forEach((field) => {
-      if (!field.required) return;
-
-      if (!isFieldEmpty(field)) {
-        delete errors[field.field];
-      }
-    });
-  },
-  { deep: true },
-);
-
 const formatTime = (time) => {
   if (!time) return "";
 
@@ -593,6 +524,43 @@ const formatTime = (time) => {
     minute: "2-digit",
     hour12: true,
   });
+};
+
+// The slot picker is a custom card grid, not a real Vuetify input, so it
+// can't register with v-form - clear its error manually once picked.
+watch(
+  () => form.selected_slot_token,
+  (token) => {
+    if (token) slotError.value = "";
+  },
+);
+
+// The `transfer_type` field component manages several sub-values
+// (transfer_type, pickup_location, drop_location, pickup_time) and emits
+// them together as one merged object. Every other field is a plain
+// scalar bound straight to form[field]. These two helpers keep both
+// shapes working without form.transfer_type ever ending up holding an
+// object instead of a string.
+const fieldModel = (fieldKey) => {
+  if (fieldKey === "transfer_type") {
+    return {
+      transfer_type: form.transfer_type,
+      pickup_location: form.pickup_location,
+      drop_location: form.drop_location,
+      pickup_time: form.pickup_time,
+    };
+  }
+
+  return form[fieldKey];
+};
+
+const handleFieldUpdate = (fieldKey, value) => {
+  if (fieldKey === "transfer_type" && value && typeof value === "object") {
+    Object.assign(form, value);
+    return;
+  }
+
+  form[fieldKey] = value;
 };
 
 /**
@@ -665,15 +633,22 @@ watch(
   { deep: true },
 );
 
-const continueBooking = () => {
-  if (!isFormValid.value) {
-    fields.value.forEach((field) => {
-      if (field.required && isFieldEmpty(field)) {
-        errors[field.field] =
-          `${field.label || pretty(field.field)} is required`;
-      }
-    });
+const continueBooking = async () => {
+  const { valid } = await bookingForm.value.validate();
 
+  let hasError = !valid;
+
+  if (isSlotPricing.value && !selectedSlot.value && !form.selected_slot_token) {
+    slotError.value = `Please select a ${
+      availability.value.slot_display_type || "slot"
+    } to continue`;
+    hasError = true;
+  } else {
+    slotError.value = "";
+  }
+
+  if (hasError) {
+    topCard.value?.$el?.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
 
