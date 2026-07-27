@@ -78,6 +78,7 @@
             >More details</v-expansion-panel-title
           >
           <v-expansion-panel-text>
+
             <DetailRow
               v-for="row in remainingRows"
               :key="row.label"
@@ -509,6 +510,45 @@ const detailsSheet = ref(false);
 |--------------------------------------------------------------------------
 */
 
+
+const formatValue = (value) => {
+  if (value == null) return "";
+
+  // Array
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => {
+        // Array of { label, value }
+        if (
+          item &&
+          typeof item === "object" &&
+          "label" in item &&
+          "value" in item
+        ) {
+          return `${item.label}: ${formatValue(item.value)}`;
+        }
+
+        return formatValue(item);
+      })
+      .join(", ");
+  }
+
+  // Object
+  if (typeof value === "object") {
+    // Prefer common display fields
+    if (value.name) return value.name;
+    if (value.label) return value.label;
+    if (value.title) return value.title;
+
+    // Fallback
+    return Object.values(value)
+      .map(formatValue)
+      .join(", ");
+  }
+
+  return String(value);
+};
+
 const DetailRow = (rowProps) =>
   h(
     "div",
@@ -523,10 +563,11 @@ const DetailRow = (rowProps) =>
       h(
         rowProps.bold ? "strong" : "span",
         { class: ["g2a-title-2xl-2 text-right", rowProps.valueClass] },
-        String(rowProps.value ?? ""),
+        formatValue(rowProps.value),
       ),
     ],
   );
+
 DetailRow.props = {
   label: { type: String, default: "" },
   value: { type: [String, Number], default: "" },
@@ -626,7 +667,7 @@ const bookingRows = computed(() =>
     })
     .map(([key, value]) => ({
       label: fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key),
-      value: key.includes("date") ? formatDate(value) : value,
+      value: key.includes("date") ? formatDate(value) : formatValue(value),
     })),
 );
 
