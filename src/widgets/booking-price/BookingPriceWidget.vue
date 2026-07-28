@@ -99,7 +99,7 @@ const props = defineProps({
 
   baseUrl: {
     type: String,
-    default: "http://localhost:5173",
+    default: "https://activities-test.go2andaman.com",
   },
 
   options: {

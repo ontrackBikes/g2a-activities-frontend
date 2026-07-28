@@ -26,7 +26,7 @@ document
       loader: async () => {
         const {
           slug,
-          baseUrl = "http://localhost:5173",
+          baseUrl = process.env.VITE_BASE_URL,
         } = element.dataset;
 
         if (!slug) {
