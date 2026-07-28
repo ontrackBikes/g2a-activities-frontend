@@ -14,7 +14,7 @@
 
     <div class="g2a-book-widget__body">
       <div class="g2a-book-widget__header">
-        <h3  v-if="settings.showProductName" class="g2a-book-widget__title">
+        <h3 v-if="settings.showProductName" class="g2a-book-widget__title">
           {{ product.name }}
         </h3>
 
@@ -48,27 +48,17 @@
         </div>
       </div>
 
-      <div
-        v-else-if="product.out_of_stock"
-        class="g2a-book-widget__status"
-      >
+      <div v-else-if="product.out_of_stock" class="g2a-book-widget__status">
         {{ settings.outOfStockText }}
       </div>
 
-      <div
-        v-if="settings.showMeta"
-        class="g2a-book-widget__meta"
-      >
-        <div
-          v-if="settings.showGuests && product.max_bookable_per_booking"
-        >
+      <div v-if="settings.showMeta" class="g2a-book-widget__meta">
+        <div v-if="settings.showGuests && product.max_bookable_per_booking">
           👥 Max {{ product.max_bookable_per_booking }} Guests
         </div>
 
-        <div
-          v-if="settings.showLocations && product.locations?.length"
-        >
-          📍 {{ product.locations.map(l => l.name).join(", ") }}
+        <div v-if="settings.showLocations && product.locations?.length">
+          📍 {{ product.locations.map((l) => l.name).join(", ") }}
         </div>
       </div>
 
@@ -99,7 +89,7 @@ const props = defineProps({
 
   baseUrl: {
     type: String,
-    default: "https://activities-test.go2andaman.com",
+    default: "https://activities.go2andaman.com",
   },
 
   options: {
@@ -117,7 +107,7 @@ const settings = computed(() => ({
   showLocations: false,
   showMeta: true,
   showButton: true,
-  showProductName:  true,
+  showProductName: true,
 
   buttonText: "Book Now",
 
@@ -143,9 +133,7 @@ const shortDescription = computed(() => {
 });
 
 const priceLabel = computed(() => {
-  return props.product.price_type === "SLOT"
-    ? "Starting from"
-    : "Flat Price";
+  return props.product.price_type === "SLOT" ? "Starting from" : "Flat Price";
 });
 
 function formatPrice(price) {
@@ -157,7 +145,7 @@ function formatPrice(price) {
 function bookNow() {
   if (!bookingUrl.value) return;
 
-  window.location.assign(bookingUrl.value);
+  window.open(bookingUrl.value, "_blank", "noopener,noreferrer");
 }
 </script>
 
@@ -169,7 +157,7 @@ function bookNow() {
   background: #fff;
   border: 1px solid #e8e8e8;
   border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   font-family: Inter, sans-serif;
 }
 
@@ -250,7 +238,7 @@ function bookNow() {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .g2a-book-widget__button:hover:not(:disabled) {
@@ -263,10 +251,10 @@ function bookNow() {
 }
 
 .g2a-book-widget--disabled {
-  opacity: .95;
+  opacity: 0.95;
 }
 
-@media (max-width:640px) {
+@media (max-width: 640px) {
   .g2a-book-widget {
     max-width: 100%;
   }
