@@ -1,9 +1,9 @@
 const API_BASE =
-  import.meta.env.VITE_API_BASE ||
-  "http://localhost:3000/api/v1";
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://activities-test.go2andaman.com/api";
 
 async function request(url, options = {}) {
-  const response = await fetch(`${API_BASE}${url}`, options);
+  const response = await fetch(`${API_BASE}/v1/${url}`, options);
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);

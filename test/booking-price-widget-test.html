@@ -7,7 +7,10 @@
 
     <title>Booking Price Widget Playground</title>
 
-    <link rel="stylesheet" href="../dist/widgets/booking-price/widget.css" />
+    <link
+      rel="stylesheet"
+      href="https://activities-test.go2andaman.com/widgets/booking-price/widget.css"
+    />
 
     <style>
       * {
@@ -222,7 +225,7 @@
 
       <div class="field">
         <label>Base URL</label>
-        <input id="baseUrl" value="http://localhost:5173" />
+        <input id="baseUrl" value="https://activities-test.go2andaman.com/" />
       </div>
 
       <div class="field">
@@ -350,7 +353,7 @@
         const scriptClose = "</scr" + "ipt>";
         document.getElementById("embedCode").value = `<link
   rel="stylesheet"
-  href="../dist/widgets/booking-price/widget.css"
+  href="https://activities-test.go2andaman.com/widgets/booking-price/widget.css"
 />
 
 <div
@@ -360,7 +363,7 @@ ${attributes}
 
 
 
-<script src="../dist/widgets/booking-price/widget.js">${scriptClose}`;
+<script src="https://activities-test.go2andaman.com/widgets/booking-price/widget.js">${scriptClose}`;
       }
 
       async function copyCode() {
@@ -421,7 +424,9 @@ ${attributes}
 
         script.id = "widget-script";
 
-        script.src = "../dist/widgets/booking-price/widget.js?ts=" + Date.now();
+        script.src =
+          "https://activities-test.go2andaman.com/widgets/booking-price/widget.js?ts=" +
+          Date.now();
 
         document.body.appendChild(script);
       }
