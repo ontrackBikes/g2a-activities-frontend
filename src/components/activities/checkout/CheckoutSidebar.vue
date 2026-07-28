@@ -55,7 +55,7 @@
       </v-card-item>
 
       <v-divider />
-
+      
       <v-container v-if="previewRows.length" class="pb-0">
         <DetailRow
           v-for="row in previewRows"

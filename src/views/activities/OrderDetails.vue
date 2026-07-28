@@ -10,358 +10,348 @@
 
     <template v-else-if="order">
       <v-row>
-        <v-col cols="12" :lg="mobile ? 12 : 7">
-          <!-- Product -->
-          <v-card rounded="lg" class="border" flat>
-            <v-container>
-              <v-row>
-                <v-col cols="3">
-                  <v-img
-                    :src="item.thumbnail_url"
-                    width="140"
-                    height="110"
-                    cover
-                    class="rounded-lg"
+        <v-col cols="12" lg="7">
+          <div
+            :class="!mobile ? 'position-sticky' : ''"
+            v-if="order.items"
+            style="top: 24px; z-index: 1"
+          >
+            <div v-for="item in order.items" :key="item.id">
+              <v-card rounded="lg" class="border" flat>
+                <!-- Product -->
+                <v-card-item class="pa-5">
+                  <template #prepend>
+                    <v-avatar rounded="lg" size="60" class="g2a-rounded-border">
+                      <v-img
+                        :src="item.thumbnail_url"
+                        :alt="item.thumbnail_url || 'Product image'"
+                        cover
+                      >
+                      </v-img>
+                    </v-avatar>
+                  </template>
+                  <template #default>
+                    <div class="g2a-title-lg">{{ item.product_name }}</div>
+                    <div class="g2a-text-14 text-greyDark mt-1">
+                      {{ item.location_name }}
+                    </div>
+                  </template>
+                </v-card-item>
+              </v-card>
+
+              <v-card
+                flat
+                class="border my-2"
+                rounded="lg"
+                v-if="item.booking_data"
+              >
+                <v-container>
+                  <div class="g2a-title-lg">Booking Info</div>
+                  <v-divider class="my-2" />
+                  <!-- {{ item.booking_data }} is { "guests": 1, "quantity": 1, "pickup_date": "2026-07-28", "pickup_time": "10:00", "return_date": "2026-07-29", "drop_time": "10:00", "rental_days": 1, "booking_mode": "date_range", "selected_slot": { "name": "DUCATI", "price": 450 } } -->
+                  <DetailRow
+                    v-if="item.booking_data.guests"
+                    label="Guests"
+                    :value="item.booking_data.guests"
                   />
-                </v-col>
+                  <DetailRow
+                    v-if="item.booking_data.quantity"
+                    label="Quantity"
+                    :value="item.booking_data.quantity"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.travel_date"
+                    label="Travel Date"
+                    :value="formatDate(item.booking_data.travel_date)"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.transfer_type"
+                    label="Transfer Type"
+                    :value="prettyTransferType(item.booking_data.transfer_type)"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.pickup_location"
+                    label="Pickup Location"
+                    :value="`${item.booking_data.pickup_location.name} (${item.booking_data.pickup_location.type})`"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.drop_location"
+                    label="Drop Location"
+                    :value="`${item.booking_data.drop_location.name} (${item.booking_data.drop_location.type})`"
+                  />
+                  <div
+                    v-if="item.booking_data.selected_slot"
+                    class="d-flex justify-space-between flex-wrap ga-2 py-2"
+                  >
+                    <div class="text-capitalize">{{ item.booking_data.selected_slot.slot_type || "Time Slot" }}</div>
+                    <div class="g2a-title-lg text-right">
+                      {{ item.booking_data.selected_slot.name }}
 
-                <v-col>
-                  <div class="g2a-title-xl">{{ item.product_name }}</div>
-                  <div class="g2a-text-14 text-greyDark mt-1">
-                    {{ item.location_name }}
+                      <span
+                        v-if="
+                          item.booking_data.selected_slot.start_time &&
+                          item.booking_data.selected_slot.end_time
+                        "
+                      >
+                        ({{
+                          formatTime(item.booking_data.selected_slot.start_time)
+                        }}
+                        -
+                        {{
+                          formatTime(item.booking_data.selected_slot.end_time)
+                        }})
+                      </span>
+                    </div>
+                  </div>
+                  <DetailRow
+                    v-if="item.booking_data.pickup_date"
+                    label="Pickup Date"
+                    :value="formatDate(item.booking_data.pickup_date)"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.pickup_time"
+                    label="Pickup Time"
+                    :value="formatTime(item.booking_data.pickup_time)"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.drop_time"
+                    label="Drop Time"
+                    :value="formatTime(item.booking_data.drop_time)"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.return_date"
+                    label="Return Date"
+                    :value="formatDate(item.booking_data.return_date)"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.rental_days"
+                    label="Rental Days"
+                    :value="item.booking_data.rental_days"
+                  />
+                </v-container>
+              </v-card>
+
+              <v-card
+                flat
+                class="border my-2"
+                rounded="lg"
+                v-if="item.rental_details"
+              >
+                <v-container>
+                  <div
+                    v-if="item.rental_details.pickup_point"
+                    class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center"
+                  >
+                    <div>
+                      Pickup Point ({{ item.rental_details?.pickup_type }})
+                    </div>
+                    <div class="text-right">
+                      <span class="g2a-title-lg ">{{ item.rental_details?.pickup_point?.name }}</span>
+                      <div>
+                        {{ item.rental_details?.pickup_point?.address }}
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <span class="g2a-title-xs">Order ID:</span>
-                    <span class="g2a-title-xs">{{ order.order_id }}</span>
+                  <div
+                    v-if="item.rental_details.pickup_point"
+                    class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center"
+                  >
+                    <div>Drop Point ({{ item.rental_details?.drop_type }})</div>
+                    <div class="text-right">
+                      <span class="g2a-title-lg text-right">{{ item.rental_details?.drop_point?.name }}</span>
+                      <div>{{ item.rental_details?.drop_point?.address }}</div>
+                    </div>
+                  </div>
+                </v-container>
+              </v-card>
+
+              <!-- Participants -->
+              <v-card
+                v-if="item.participants.length > 0"
+                class="border mt-5"
+                rounded="lg"
+                flat
+              >
+                <v-container>
+                  <div class="g2a-title-lg mb-1">Participants</div>
+                  <v-divider class="my-2" />
+
+                  <v-table>
+                    <thead>
+                      <tr>
+                        <th class="data-label">Name</th>
+                        <th class="data-label">Age</th>
+                        <th class="data-label">Gender</th>
+                        <th class="data-label">Nationality</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr v-for="(p, index) in item.participants" :key="index">
+                        <td class="g2a-title-lg g2a-title-2xl-2">
+                          {{ p.first_name }} {{ p.last_name }}
+                        </td>
+                        <td class="g2a-title-2xl-2">{{ p.age }}</td>
+                        <td class="g2a-title-2xl-2">{{ p.gender }}</td>
+                        <td class="g2a-title-2xl-2">{{ p.nationality }}</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-container>
+              </v-card>
+
+              <!-- Medical Declaration -->
+              <v-card
+                v-if="item.medical_declaration"
+                class="mt-5 border"
+                rounded="lg"
+                flat
+              >
+                <v-container>
+                  <div class="g2a-title-lg mb-1">Medical Declaration</div>
+                  <v-divider class="my-2" />
+
+                  <div v-if="item.medical_declaration">
+                    <!-- item.medical_declaration is an json lets print key and value -->
+                    <div
+                      v-for="(value, key) in item.medical_declaration"
+                      :key="key"
+                    >
+                      <DetailRow
+                        :label="pretty(key)"
+                        :value="value ? 'yes' : 'no'"
+                      />
+                    </div>
                   </div>
 
-                  <div class="my-2">
-                    <v-chip size="small" color="orange" variant="tonal">
-                      {{ order.order_status }}
-                    </v-chip>
+                  <div v-else class="g2a-title-2xl-2-light text-greyDark">
+                    No health conditions declared.
                   </div>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card>
-
-          <!-- Booking Details -->
-          <v-card rounded="lg" class="border my-2" flat>
-            <v-container>
-              <div class="g2a-title-xl mb-1">Booking Details</div>
-              <v-divider class="mb-2" />
-
-              <DetailRow
-                v-if="bookingData.guests"
-                label="Guests"
-                :value="bookingData.guests"
-              />
-              <DetailRow
-                v-if="bookingData.quantity"
-                label="Quantity"
-                :value="bookingData.quantity"
-              />
-              <DetailRow
-                v-if="bookingData.travel_date"
-                label="Travel Date"
-                :value="formatDate(bookingData.travel_date)"
-              />
-              <DetailRow
-                v-if="bookingData.transfer_type"
-                label="Transfer Type"
-                :value="prettyTransferType(bookingData.transfer_type)"
-              />
-
-              <DetailRow
-                v-if="bookingData.pickup_location"
-                label="Pickup Location"
-                :value="`${bookingData.pickup_location.name} (${bookingData.pickup_location.type})`"
-              />
-
-              <DetailRow
-                v-if="bookingData.drop_location"
-                label="Drop Location"
-                :value="`${bookingData.drop_location.name} (${bookingData.drop_location.type})`"
-              />
-
-              <DetailRow
-                v-if="bookingData.selected_slot"
-                label="Time Slot"
-                :value="`${bookingData.selected_slot.name} (${formatTime(bookingData.selected_slot.start_time)} - ${formatTime(bookingData.selected_slot.end_time)})`"
-              />
-
-              <DetailRow
-                v-if="bookingData.pickup_date"
-                label="Pickup Date"
-                :value="formatDate(bookingData.pickup_date)"
-              />
-              <DetailRow
-                v-if="bookingData.pickup_time"
-                label="Pickup Time"
-                :value="formatTime(bookingData.pickup_time)"
-              />
-              <DetailRow
-                v-if="bookingData.drop_time"
-                label="Drop Time"
-                :value="formatTime(bookingData.drop_time)"
-              />
-              <DetailRow
-                v-if="bookingData.return_date"
-                label="Return Date"
-                :value="formatDate(bookingData.return_date)"
-              />
-              <DetailRow
-                v-if="bookingData.rental_days"
-                label="Rental Days"
-                :value="bookingData.rental_days"
-              />
-            </v-container>
-          </v-card>
-
-          <!-- Customer -->
-          <v-card
-            v-if="sectionEnabled('customer_details')"
-            class="mt-5"
-            rounded="lg"
-            variant="outlined"
-          >
-            <v-container>
-              <div class="g2a-title-lg mb-1">Customer</div>
-              <v-divider class="mb-2" />
-
-              <DetailRow
-                label="Name"
-                :value="`${order.customer_details.first_name} ${order.customer_details.last_name}`"
-              />
-              <DetailRow label="Mobile" :value="order.customer_details.phone" />
-              <DetailRow label="Email" :value="order.customer_details.email" />
-              <DetailRow
-                label="Country"
-                :value="order.customer_details.country"
-              />
-            </v-container>
-          </v-card>
-
-          <!-- Rental Details -->
-          <v-card
-            v-if="sectionEnabled('rental_details')"
-            class="mt-5"
-            rounded="lg"
-            variant="outlined"
-          >
-            <v-container>
-              <div class="g2a-title-lg mb-1">Rental Details</div>
-              <v-divider class="mb-2" />
-
-              <DetailRow
-                v-if="rentalDetails.quantity"
-                label="Quantity"
-                :value="rentalDetails.quantity"
-              />
-              <DetailRow
-                label="Pickup Time"
-                :value="formatTime(rentalDetails.pickup_time)"
-              />
-              <DetailRow
-                label="Pickup"
-                :value="
-                  rentalDetails.pickup_type === 'hotel'
-                    ? `Hotel Pickup - ${rentalDetails.pickup_hotel_name}`
-                    : `Self Pickup - ${rentalDetails.pickup_point}`
-                "
-              />
-              <DetailRow
-                label="Drop"
-                :value="
-                  rentalDetails.drop_type === 'hotel'
-                    ? `Hotel Drop - ${rentalDetails.drop_hotel_name}`
-                    : `Self Drop - ${rentalDetails.drop_point}`
-                "
-              />
-            </v-container>
-          </v-card>
-
-          <!-- Medical Declaration -->
-          <v-card
-            v-if="sectionEnabled('medical_declaration')"
-            class="mt-5"
-            rounded="lg"
-            variant="outlined"
-          >
-            <v-container>
-              <div class="g2a-title-lg mb-1">Medical Declaration</div>
-              <v-divider class="mb-2" />
-
-              <div v-if="declaredConditions.length">
-                <DetailRow
-                  v-for="condition in declaredConditions"
-                  :key="condition"
-                  :label="pretty(condition)"
-                  value="Yes"
-                />
-
-                <div v-if="medical.other_details" class="py-2">
-                  <span class="data-label">Additional Details</span>
-                  <div class="g2a-title-lg mt-1">
-                    {{ medical.other_details }}
-                  </div>
-                </div>
-              </div>
-
-              <div v-else class="g2a-title-2xl-2-light text-greyDark">
-                No health conditions declared.
-              </div>
-            </v-container>
-          </v-card>
-
-          <!-- Participants -->
-          <v-card
-            v-if="sectionEnabled('participants')"
-            class="mt-5"
-            rounded="lg"
-            variant="outlined"
-          >
-            <v-container>
-              <div class="g2a-title-lg mb-1">Participants</div>
-              <v-divider class="mb-2" />
-
-              <v-table>
-                <thead>
-                  <tr>
-                    <th class="data-label">Name</th>
-                    <th class="data-label">Age</th>
-                    <th class="data-label">Gender</th>
-                    <th class="data-label">Nationality</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr v-for="(p, index) in participants" :key="index">
-                    <td class="g2a-title-lg g2a-title-2xl-2">
-                      {{ p.first_name }} {{ p.last_name }}
-                    </td>
-                    <td class="g2a-title-2xl-2">{{ p.age }}</td>
-                    <td class="g2a-title-2xl-2">{{ p.gender }}</td>
-                    <td class="g2a-title-2xl-2">{{ p.nationality }}</td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </v-container>
-          </v-card>
-
-          <!-- Ferry Seat Selection -->
-          <v-card
-            v-if="sectionEnabled('ferry_seat_selection')"
-            class="mt-5"
-            rounded="lg"
-            variant="outlined"
-          >
-            <v-container>
-              <div class="g2a-title-lg mb-1">Seat Selection</div>
-              <v-divider class="mb-2" />
-
-              <v-table>
-                <thead>
-                  <tr>
-                    <th class="data-label">Name</th>
-                    <th class="data-label">Seat Preference</th>
-                    <th class="data-label">Seat Number</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr v-for="(p, index) in participants" :key="index">
-                    <td class="g2a-title-lg g2a-title-2xl-2">
-                      {{ p.first_name }} {{ p.last_name }}
-                    </td>
-                    <td class="g2a-title-2xl-2">{{ p.seat_preference }}</td>
-                    <td class="g2a-title-2xl-2">{{ p.seat_number }}</td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </v-container>
-          </v-card>
+                </v-container>
+              </v-card>
+            </div>
+          </div>
         </v-col>
 
-        <!-- RIGHT: desktop / tablet sticky summary card -->
-        <v-col v-if="!mobile" cols="12" lg="5">
-          <div class="position-sticky" style="top: 24px; z-index: 1">
+        <v-col cols="12" lg="5">
+          <div
+            :class="!mobile ? 'position-sticky' : ''"
+            v-if="order.items"
+            style="top: 24px; z-index: 1"
+          >
+            <!-- Product -->
             <v-card rounded="lg" class="border" flat>
               <v-container>
-                <div class="g2a-title-xl mb-1">Payment Summary</div>
-                <v-divider class="mb-2" />
+               
+                  
+
+                  
+                    
+
+                    <div class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center">
+                      <div class="g2a-title-xs">Order ID</div>
+                      <div class="g2a-title-xs">{{ order.order_id }}</div>
+                    </div>
+
+                    <div class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center">
+                      <div>
+                        Payment Status
+                      </div>
+                      <v-chip size="small"  variant="tonal" :color="order_status == 'completed' ? 'success': 'orange'">
+                        {{ order.order_status }}
+                      </v-chip>
+                    </div>
+                  
+                
+              </v-container>
+            </v-card>
+
+            <!-- Customer -->
+            <v-card
+              v-if="order.customer_details"
+              class="border mt-5"
+              rounded="lg"
+              flat
+            >
+              <v-container>
+                <div class="g2a-title-lg mb-1">Billing Info</div>
+                <v-divider class="my-2" />
 
                 <DetailRow
-                  label="Subtotal"
-                  :value="`₹${currency(order.subtotal)}`"
+                  label="Name"
+                  :value="`${order.customer_details.first_name} ${order.customer_details.last_name}`"
                 />
                 <DetailRow
-                  label="Discount"
-                  :value="`₹${currency(order.discount)}`"
+                  label="Mobile"
+                  :value="order.customer_details.phone"
                 />
-                <DetailRow label="Tax" :value="`₹${currency(order.tax)}`" />
+                <DetailRow
+                  label="Email"
+                  :value="order.customer_details.email"
+                />
+                <DetailRow
+                  label="Country"
+                  :value="order.customer_details.country"
+                />
+              </v-container>
+            </v-card>
 
-                <v-divider class="my-4" />
+            <div v-if="!mobile">
+              <v-card flat rounded="lg" class="border mt-5">
+                <v-container>
+                  <button
+                    type="button"
+                    class="d-flex align-center justify-space-between w-100 bg-transparent border-0 pa-0 mb-2"
+                    aria-label="View payment summary"
+                    aria-haspopup="dialog"
+                    :aria-expanded="detailsSheet"
+                    @click="detailsSheet = true"
+                  >
+                    <span class="d-flex flex-column text-left">
+                      <span class="g2a-text-caption text-greyDark"
+                        >Total payable</span
+                      >
+                      <span class="g2a-title-xl text-brandColor2"
+                        >₹{{ currency(order.grand_total) }}</span
+                      >
+                    </span>
+                    <span class="g2a-link g2a-title-2xl-2 d-flex align-center">
+                      Details
+                    </span>
+                  </button>
 
-                <div class="d-flex justify-space-between align-center">
-                  <span class="g2a-title-2xl-4">Total</span>
-                  <div class="g2a-title-lg text-brandColor2">
-                    ₹{{ currency(order.grand_total) }}
-                  </div>
-                </div>
-
-                <div v-if="order.payment_status == 'captured'">
-                  <div class="g2a-title-2xl-2 text-success mt-4">
-                    Payment already received for this order
+                  <div v-if="order.payment_status == 'captured'">
+                    <v-btn
+                      flat
+                      rounded="lg"
+                      block
+                      color="brandColor"
+                      size="large"
+                      @click="viewOrder"
+                      >View</v-btn
+                    >
                   </div>
                   <v-btn
+                    v-else
                     flat
                     rounded="lg"
                     block
                     color="brandColor"
                     size="large"
-                    class="mt-4"
-                    @click="viewOrder"
+                    :disabled="order.order_status == 'confirmed'"
+                    :loading="paying"
+                    @click="payNow"
                   >
-                    View
+                    Pay Now
                   </v-btn>
-                </div>
-
-                <v-btn
-                  v-else
-                  flat
-                  rounded="lg"
-                  block
-                  color="brandColor"
-                  size="large"
-                  class="mt-6"
-                  :disabled="order.order_status == 'confirmed'"
-                  :loading="paying"
-                  @click="payNow"
-                >
-                  Pay Now
-                </v-btn>
-
-                <div class="text-center py-2">
-                  By clicking "Pay", you agree to the
-                  <span class="g2a-link">terms of service</span>.
-                </div>
-
-                <v-divider class="my-2" />
-
-                <div
-                  class="d-flex align-center justify-center g2a-text-caption text-greyDark mt-3"
-                >
-                  <v-icon size="14" class="mr-1"
-                    >mdi-shield-check-outline</v-icon
-                  >
-                  No Hidden Charges
-                </div>
-              </v-container>
-            </v-card>
+                </v-container>
+              </v-card>
+            </div>
           </div>
         </v-col>
+
+        <!-- RIGHT: desktop / tablet sticky summary card -->
       </v-row>
 
       <!-- RIGHT: mobile fixed bottom bar + bottom sheet -->
@@ -387,7 +377,7 @@
                 </span>
                 <span class="g2a-link g2a-title-2xl-2 d-flex align-center">
                   Details
-                  <v-icon size="18" class="ml-1">mdi-chevron-up</v-icon>
+                 
                 </span>
               </button>
 
@@ -422,9 +412,21 @@
         <!-- Reserves space so page content isn't hidden behind the fixed bar -->
         <div class="mobile-summary-bar-spacer" />
 
-        <v-bottom-sheet v-model="detailsSheet" inset scrollable>
+       
+      </template>
+    </template>
+     <v-dialog
+    v-model="detailsSheet"
+    max-width="700"
+    scrollable
+    scrim="rgba(15,23,42,.30)"
+    :style="{
+      backdropFilter: 'blur(5px)',
+      webkitBackdropFilter: 'blur(5px)',
+    }"
+  > 
           <v-card
-            rounded="t-xl"
+            rounded="lg"
             class="d-flex flex-column"
             style="max-height: 90vh"
           >
@@ -478,38 +480,12 @@
                 >
               </div>
 
-              <v-btn
-                v-else
-                flat
-                rounded="lg"
-                block
-                color="brandColor"
-                size="large"
-                :disabled="order.order_status == 'confirmed'"
-                :loading="paying"
-                @click="payNow"
-              >
-                Pay Now
-              </v-btn>
+              
 
-              <div class="text-center py-2">
-                By clicking "Pay", you agree to the
-                <span class="g2a-link">terms of service</span>.
-              </div>
-
-              <v-divider class="my-2" />
-
-              <div
-                class="d-flex align-center justify-center g2a-text-caption text-greyDark mt-3"
-              >
-                <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
-                No Hidden Charges
-              </div>
+              
             </div>
           </v-card>
-        </v-bottom-sheet>
-      </template>
-    </template>
+        </v-dialog>
   </v-container>
 </template>
 
@@ -553,21 +529,6 @@ DetailRow.props = {
 
 const item = computed(() => order.value?.items?.[0] || {});
 
-const enabledSections = computed(() => {
-  const sections =
-    item.value?.quotation?.product?.bookingTemplate?.booking_page_schema
-      ?.sections || [];
-
-  return sections
-    .filter((s) => s.enabled)
-    .sort((a, b) => a.sort_order - b.sort_order);
-});
-
-const sectionEnabled = (name) =>
-  enabledSections.value.some((s) => s.section === name);
-
-const bookingData = computed(() => item.value.booking_data || {});
-
 const formatDate = (d) => new Date(d).toLocaleDateString("en-IN");
 
 const formatTime = (t) => {
@@ -578,18 +539,6 @@ const formatTime = (t) => {
 };
 
 const payload = computed(() => item.value.booking_payload || {});
-
-const rentalDetails = computed(() => payload.value.rental_details || {});
-
-const medical = computed(() => payload.value.medical || {});
-
-const declaredConditions = computed(() =>
-  Object.entries(medical.value)
-    .filter(([key, value]) => key !== "other_details" && value === true)
-    .map(([key]) => key),
-);
-
-const participants = computed(() => item.value.participants || []);
 
 const loadOrder = async () => {
   try {
