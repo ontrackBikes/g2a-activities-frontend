@@ -19,7 +19,7 @@
 
     <div v-else>
       <!-- ================= Hero ================= -->
-      <v-card rounded="lg" variant="outlined" class="mb-6">
+      <v-card rounded="lg" flat class="mb-6 border">
         <v-container>
           <div class="d-flex align-center flex-wrap ga-4">
             <v-avatar :color="statusAlert.type" variant="tonal" size="56">
@@ -85,7 +85,7 @@
 
       <template v-for="(item, index) in items" :key="index">
         <!-- ================= Product ================= -->
-        <v-card rounded="lg" variant="outlined" class="mb-4">
+        <v-card rounded="lg" flat class="border mb-4">
           <v-row no-gutters>
             <v-col cols="12" sm="3">
               <v-img
@@ -107,18 +107,24 @@
             </v-col>
 
             <v-col cols="12" sm="9" class="pa-2">
-              <div class="g2a-title-lg">{{ item.product_name }}</div>
-              <div class="text-greyDark g2a-title-lg mt-1 d-flex align-center">
+              <div class="g2a-title-xl">
+                 <v-icon size="14" class="mr-1">mdi-check-circle</v-icon>
+                {{ item.product_name }}</div>
+              <div class="g2a-title-lg d-flex align-center">
                 <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon>
                 {{ item.location_name }}
               </div>
               <div
                 v-if="bookingOf(item).selected_slot?.name"
-                size="large"
-                class="text-brandColor2"
-                variant="tonal"
+                class="g2a-title-lg"
               >
+              
+                <v-icon size="14" class="mr-1">{{bookingOf(item).selected_slot.slot_type == 'TIME' ? 'mdi-timer': 'mdi-check-circle'}}</v-icon>
                 {{ bookingOf(item).selected_slot.name }}
+
+                <span v-if="bookingOf(item).selected_slot.start_time && bookingOf(item).selected_slot.end_time">
+                  ({{ bookingOf(item).selected_slot.start_time }} - {{ bookingOf(item).selected_slot.end_time }})
+                </span>
               </div>
             </v-col>
           </v-row>
