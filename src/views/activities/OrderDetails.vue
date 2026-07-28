@@ -83,7 +83,11 @@
                     v-if="item.booking_data.selected_slot"
                     class="d-flex justify-space-between flex-wrap ga-2 py-2"
                   >
-                    <div class="text-capitalize">{{ item.booking_data.selected_slot.slot_type || "Time Slot" }}</div>
+                    <div class="text-capitalize">
+                      {{
+                        item.booking_data.selected_slot.slot_type || "Time Slot"
+                      }}
+                    </div>
                     <div class="g2a-title-lg text-right">
                       {{ item.booking_data.selected_slot.name }}
 
@@ -146,7 +150,9 @@
                       Pickup Point ({{ item.rental_details?.pickup_type }})
                     </div>
                     <div class="text-right">
-                      <span class="g2a-title-lg ">{{ item.rental_details?.pickup_point?.name }}</span>
+                      <span class="g2a-title-lg">{{
+                        item.rental_details?.pickup_point?.name
+                      }}</span>
                       <div>
                         {{ item.rental_details?.pickup_point?.address }}
                       </div>
@@ -159,7 +165,9 @@
                   >
                     <div>Drop Point ({{ item.rental_details?.drop_type }})</div>
                     <div class="text-right">
-                      <span class="g2a-title-lg text-right">{{ item.rental_details?.drop_point?.name }}</span>
+                      <span class="g2a-title-lg text-right">{{
+                        item.rental_details?.drop_point?.name
+                      }}</span>
                       <div>{{ item.rental_details?.drop_point?.address }}</div>
                     </div>
                   </div>
@@ -243,27 +251,27 @@
             <!-- Product -->
             <v-card rounded="lg" class="border" flat>
               <v-container>
-               
-                  
+                <div
+                  class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center"
+                >
+                  <div class="g2a-title-xs">Order ID</div>
+                  <div class="g2a-title-xs">{{ order.order_id }}</div>
+                </div>
 
-                  
-                    
-
-                    <div class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center">
-                      <div class="g2a-title-xs">Order ID</div>
-                      <div class="g2a-title-xs">{{ order.order_id }}</div>
-                    </div>
-
-                    <div class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center">
-                      <div>
-                        Payment Status
-                      </div>
-                      <v-chip size="small"  variant="tonal" :color="order_status == 'completed' ? 'success': 'orange'">
-                        {{ order.order_status }}
-                      </v-chip>
-                    </div>
-                  
-                
+                <div
+                  class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center"
+                >
+                  <div>Payment Status</div>
+                  <v-chip
+                    size="small"
+                    variant="tonal"
+                    :color="
+                      order.order_status == 'confirmed' ? 'success' : 'orange'
+                    "
+                  >
+                    {{ order.order_status }}
+                  </v-chip>
+                </div>
               </v-container>
             </v-card>
 
@@ -332,19 +340,20 @@
                       >View</v-btn
                     >
                   </div>
-                  <v-btn
-                    v-else
-                    flat
-                    rounded="lg"
-                    block
-                    color="brandColor"
-                    size="large"
-                    :disabled="order.order_status == 'confirmed'"
-                    :loading="paying"
-                    @click="payNow"
-                  >
-                    Pay Now
-                  </v-btn>
+                  <div v-else>
+                    <v-icon color="success">mdi-check-circle</v-icon> You have
+                    already paid for this order.
+                    <v-btn
+                      size="large"
+                      flat
+                      rounded="lg"
+                      color="brandColor2"
+                      @click="viewOrder"
+                      class="mt-5"
+                    >
+                      View Order
+                    </v-btn>
+                  </div>
                 </v-container>
               </v-card>
             </div>
@@ -377,7 +386,6 @@
                 </span>
                 <span class="g2a-link g2a-title-2xl-2 d-flex align-center">
                   Details
-                 
                 </span>
               </button>
 
@@ -411,81 +419,65 @@
 
         <!-- Reserves space so page content isn't hidden behind the fixed bar -->
         <div class="mobile-summary-bar-spacer" />
-
-       
       </template>
     </template>
-     <v-dialog
-    v-model="detailsSheet"
-    max-width="700"
-    scrollable
-    scrim="rgba(15,23,42,.30)"
-    :style="{
-      backdropFilter: 'blur(5px)',
-      webkitBackdropFilter: 'blur(5px)',
-    }"
-  > 
-          <v-card
-            rounded="lg"
-            class="d-flex flex-column"
-            style="max-height: 90vh"
-          >
-            <div class="d-flex align-center justify-space-between pa-4">
-              <div class="g2a-title">Payment Summary</div>
-              <v-btn
-                icon="mdi-close"
-                variant="text"
-                size="small"
-                aria-label="Close details"
-                @click="detailsSheet = false"
-              />
+    <v-dialog
+      v-model="detailsSheet"
+      max-width="700"
+      scrollable
+      scrim="rgba(15,23,42,.30)"
+      :style="{
+        backdropFilter: 'blur(5px)',
+        webkitBackdropFilter: 'blur(5px)',
+      }"
+    >
+      <v-card rounded="lg" class="d-flex flex-column" style="max-height: 90vh">
+        <div class="d-flex align-center justify-space-between pa-4">
+          <div class="g2a-title">Payment Summary</div>
+          <v-btn
+            icon="mdi-close"
+            variant="text"
+            size="small"
+            aria-label="Close details"
+            @click="detailsSheet = false"
+          />
+        </div>
+        <v-divider />
+
+        <div class="pa-4" style="overflow-y: auto">
+          <DetailRow label="Subtotal" :value="`₹${currency(order.subtotal)}`" />
+          <DetailRow label="Discount" :value="`₹${currency(order.discount)}`" />
+          <DetailRow label="Tax" :value="`₹${currency(order.tax)}`" />
+
+          <v-divider class="my-4" />
+
+          <div class="d-flex justify-space-between align-center">
+            <span class="g2a-title-2xl-4">Total</span>
+            <div class="g2a-title-lg text-brandColor2">
+              ₹{{ currency(order.grand_total) }}
             </div>
-            <v-divider />
+          </div>
+        </div>
 
-            <div class="pa-4" style="overflow-y: auto">
-              <DetailRow
-                label="Subtotal"
-                :value="`₹${currency(order.subtotal)}`"
-              />
-              <DetailRow
-                label="Discount"
-                :value="`₹${currency(order.discount)}`"
-              />
-              <DetailRow label="Tax" :value="`₹${currency(order.tax)}`" />
-
-              <v-divider class="my-4" />
-
-              <div class="d-flex justify-space-between align-center">
-                <span class="g2a-title-2xl-4">Total</span>
-                <div class="g2a-title-lg text-brandColor2">
-                  ₹{{ currency(order.grand_total) }}
-                </div>
-              </div>
+        <v-divider />
+        <div class="pa-4">
+          <div v-if="order.payment_status == 'captured'">
+            <div class="g2a-title-2xl-2 text-success mb-3">
+              Payment already received for this order
             </div>
-
-            <v-divider />
-            <div class="pa-4">
-              <div v-if="order.payment_status == 'captured'">
-                <div class="g2a-title-2xl-2 text-success mb-3">
-                  Payment already received for this order
-                </div>
-                <v-btn
-                  flat
-                  rounded="lg"
-                  block
-                  color="brandColor"
-                  size="large"
-                  @click="viewOrder"
-                  >View</v-btn
-                >
-              </div>
-
-              
-
-              
-            </div>
-          </v-card>
-        </v-dialog>
+            <v-btn
+              flat
+              rounded="lg"
+              block
+              color="brandColor"
+              size="large"
+              @click="viewOrder"
+              >View</v-btn
+            >
+          </div>
+        </div>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 

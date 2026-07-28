@@ -59,7 +59,7 @@
             color="brandColor2"
             @click="viewOrder"
           >
-            View Booking
+            View Order
           </v-btn>
 
           <v-btn
