@@ -3,7 +3,7 @@ const API_BASE =
   "https://activities-test.go2andaman.com/api";
 
 async function request(url, options = {}) {
-  const response = await fetch(`${API_BASE}/v1/${url}`, options);
+  const response = await fetch(`${API_BASE}/v1${url}`, options);
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
