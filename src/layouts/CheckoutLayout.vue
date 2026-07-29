@@ -3,10 +3,14 @@
     <v-app-bar app flat height="76" class="border-b">
       <v-container
         fluid
-        class="px-4 px-md-8 h-100 d-flex align-center justify-space-between"
+        class="h-100 d-flex align-center justify-space-between"
       >
         <div class="d-flex align-center">
-          <RouterLink to="/" class="d-flex align-center text-decoration-none">
+          <RouterLink
+            to="https://go2andaman.com/book-experiences/"
+            target="_blank"
+            class="d-flex align-center text-decoration-none"
+          >
             <img :src="logo" width="180" alt="Go2Andaman" />
           </RouterLink>
 
@@ -19,18 +23,29 @@
               </v-icon>
 
               <div>
-                <div class="g2a-text-14 ">Andaman</div>
+                <div class="g2a-text-14">Andaman</div>
 
                 <div class="g2a-text-11">India</div>
               </div>
             </div>
           </template>
         </div>
+        <div class="d-flex align-center justify-center ">
+          <v-icon color="success" size="14" class="mr-1">mdi-lock</v-icon>
+          Secure Booking
+        </div>
       </v-container>
     </v-app-bar>
 
     <v-main>
-      <div class="mx-auto" style="max-width: 1020px; min-height: calc(100vh - 220px); margin-bottom: 120px">
+      <div
+        class="mx-auto"
+        style="
+          max-width: 1020px;
+          min-height: calc(100vh - 220px);
+          margin-bottom: 120px;
+        "
+      >
         <router-view />
       </div>
     </v-main>

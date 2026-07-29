@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="lg" variant="outlined" elevation="0">
+  <v-card rounded="lg" flat class="border">
     <v-container class="py-4">
       <div class="g2a-title-xl">
         {{ config.title || "Medical Declaration" }}

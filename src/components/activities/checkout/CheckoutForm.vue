@@ -29,7 +29,7 @@
   </v-alert>
 
   <v-form v-else ref="form" validate-on="submit">
-    <v-row class="my-2">
+    <v-row class="my-2" :no-gutters="mobile">
       <!-- LEFT -->
       <v-col cols="12" lg="7">
         <CheckoutRenderer

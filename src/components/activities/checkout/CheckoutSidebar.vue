@@ -62,7 +62,7 @@
           :key="row.label"
           :label="row.label"
           :value="row.value"
-          wrapper-class="mb-3"
+          
         />
       </v-container>
 
@@ -185,21 +185,23 @@
           <!-- &nbsp;{{ formatCurrency(pricing.grand_total) }} -->
         </v-btn>
 
-        <div class="text-center py-2">
+        <div>
           By clicking "Confirm & Pay", you agree to the
           <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
         </div>
         <v-divider class="my-2" />
         <div
-          class="d-flex align-center justify-center g2a-text-caption text-greyDark mt-3"
+          class="d-flex align-center justify-center text-greyDark mt-2"
         >
           <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
           No Hidden Charges
         </div>
+        
       </v-card-text>
     </v-card>
+    
 
-    <v-card v-else rounded="lg" variant="outlined" elevation="0">
+    <v-card v-else rounded="lg" flat class="border mt-4">
       <v-card-text class="text-center py-10">
         <v-icon size="40" color="grey">mdi-receipt-text-outline</v-icon>
         <div class="g2a-text-16 mt-2">
@@ -207,6 +209,8 @@
         </div>
       </v-card-text>
     </v-card>
+
+    
   </div>
 
   <!-- ============================== MOBILE: fixed bottom bar + bottom sheet ============================== -->
@@ -279,8 +283,7 @@
       </v-card>
     </div>
 
-    <!-- Reserves space so page content isn't hidden behind the fixed bar -->
-    <div class="mobile-summary-bar-spacer" />
+    
 
     <v-bottom-sheet v-if="quote" v-model="detailsSheet" inset scrollable>
       <v-card
@@ -289,7 +292,7 @@
         style="max-height: 90vh"
       >
         <div class="d-flex align-center justify-space-between pa-4">
-          <div class="g2a-title">Booking summary</div>
+          <div class="g2a-title-xl">Booking summary</div>
           <v-btn
             icon="mdi-close"
             variant="text"
@@ -344,7 +347,7 @@
             :key="row.label"
             :label="row.label"
             :value="row.value"
-            wrapper-class="mb-3"
+            
           />
 
           <template v-if="remainingRows.length || dailyPricing.length">
@@ -485,11 +488,30 @@
       </div>
     </v-card>
   </v-dialog>
+
+  <v-card v-if="mobile" rounded="lg" flat class="border">
+      <v-container>
+        <div>
+          By clicking "Confirm & Pay", you agree to the
+          <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
+        </div>
+        <v-divider class="my-2" />
+        <div
+          class="d-flex align-center justify-center text-greyDark mt-2"
+        >
+          <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
+          No Hidden Charges
+        </div>
+      </v-container>
+    </v-card>
+  <!-- Reserves space so page content isn't hidden behind the fixed bar -->
+    <div class="mobile-summary-bar-spacer" />
 </template>
 
 <script setup>
 import { computed, ref, h } from "vue";
 import { useDisplay } from "vuetify";
+import { VCol, VRow } from "vuetify/components";
 
 defineEmits(["proceed"]);
 
