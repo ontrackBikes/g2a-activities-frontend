@@ -149,7 +149,7 @@
         <div
           class="d-flex justify-space-between align-center flex-wrap ga-2 mb-1"
         >
-          <span>Total payable</span>
+          <div class="g2a-title-md">Total payable</div>
           <div class="text-right">
             <div
               v-if="pricing.discount"

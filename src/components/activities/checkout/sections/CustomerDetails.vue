@@ -8,7 +8,7 @@
 
     <v-divider />
 
-    <v-container>
+    <v-container class="py-2">
       <v-row>
         <!-- Name -->
         <v-col cols="12" md="6">
