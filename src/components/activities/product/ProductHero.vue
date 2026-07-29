@@ -61,7 +61,7 @@
               start
             />
 
-            <span class="g2a-title-sm font-weight-bold">{{ tag.name }}</span>
+            <span class="g2a-title-sm ">{{ tag.name }}</span>
           </v-chip>
           
         </div>

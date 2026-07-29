@@ -24,7 +24,7 @@
         <div class="text-greyDark">Order ID</div>
 
         <div class="d-flex align-center justify-center ga-1 mt-1">
-          <span class="g2a-title-2xl font-weight-bold">
+          <span class="g2a-title-lg">
             {{ route.params.order_id }}
           </span>
           <v-btn

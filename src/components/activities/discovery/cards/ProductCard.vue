@@ -18,7 +18,7 @@
         ></v-img>
       </v-col>
       <v-col cols="10" class="py-4">
-        <div class="g2a-title-lg font-weight-bold">
+        <div class="g2a-title-lg ">
           {{ product.name }}
         </div>
 
@@ -75,7 +75,7 @@
               start
             />
 
-            <span class="g2a-title-sm font-weight-bold">{{ tag.name }}</span>
+            <span class="g2a-title-sm ">{{ tag.name }}</span>
           </v-chip>
         </div>
       </v-img>
@@ -90,7 +90,7 @@
           -webkit-backdrop-filter: blur(5px)'
         "
       >
-        <v-chip color="error" variant="flat" class="font-weight-bold px-4">
+        <v-chip color="error" variant="flat" class=" px-4">
           Unavailable Currently
         </v-chip>
       </div>

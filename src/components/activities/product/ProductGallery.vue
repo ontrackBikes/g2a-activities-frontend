@@ -25,7 +25,7 @@
             v-if="index === 1 && remainingImages > 0"
             class="gallery-overlay"
           >
-            <span class="text-h5 font-weight-bold text-white">
+            <span class="text-h5  text-white">
               +{{ remainingImages }}
             </span>
           </div>

@@ -47,7 +47,7 @@
               />
 
               <div>
-                <div class="text-h5 font-weight-bold">
+                <div class="text-h5 ">
                   {{ category.overview?.product_types || 0 }}
                 </div>
 
@@ -64,7 +64,7 @@
               />
 
               <div>
-                <div class="text-h5 font-weight-bold">
+                <div class="text-h5 ">
                   {{ category.overview?.products || 0 }}
                 </div>
 

@@ -111,7 +111,7 @@
                 :key="index"
                 class="mb-3"
               >
-                <div class="font-weight-bold">{{ faq.question }}</div>
+                <div class="">{{ faq.question }}</div>
                 <div>{{ faq.answer }}</div>
               </div>
             </v-container>

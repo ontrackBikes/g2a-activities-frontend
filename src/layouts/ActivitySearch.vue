@@ -14,7 +14,7 @@
     </div>
 
     <template v-else-if="filteredResults.length">
-      <div class="g2a-text-14 font-weight-bold text-grey-darken-3 mb-4">
+      <div class="g2a-text-14  text-grey-darken-3 mb-4">
         Found {{ filteredResults.length }} result{{
           filteredResults.length > 1 ? "s" : ""
         }}
@@ -35,7 +35,7 @@
 
     <div v-else-if="props.searchTerm" class="text-center py-12">
       <v-icon size="64" color="grey-lighten-1">mdi-magnify-close</v-icon>
-      <div class="g2a-text-16 font-weight-bold mt-3">No results found</div>
+      <div class="g2a-text-16  mt-3">No results found</div>
       <div class="g2a-text-14 text-grey mt-1">
         Try modifying your query terms or selection tags.
       </div>
@@ -44,7 +44,7 @@
     <div v-else>
       <div v-if="recent.length" class="mb-5">
         <div class="d-flex align-center justify-space-between mb-3">
-          <span class="g2a-text-14 font-weight-bold">Recent Searches</span>
+          <span class="g2a-text-14 ">Recent Searches</span>
           <v-btn
             variant="text"
             density="compact"
