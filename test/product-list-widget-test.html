@@ -9,9 +9,10 @@
 
   <title>Product List Widget Playground</title>
 
+  <!-- href="https://activities-test.go2andaman.com/widgets/product-list/widget.css" -->
   <link
     rel="stylesheet"
-    href="../dist/widgets/product-list/widget.css"
+    href="https://activities-test.go2andaman.com/widgets/product-list/widget.css"
   />
 
   <style>
@@ -86,7 +87,7 @@
     <label>Base URL</label>
     <input
       id="baseUrl"
-      value="http://localhost:5173">
+      value="https://activities-test.go2andaman.com">
   </div>
 
   <div class="field">
@@ -208,7 +209,7 @@ function updateEmbedCode() {
   document.getElementById("embedCode").value =
 `<link
   rel="stylesheet"
-  href="../dist/widgets/product-list/widget.css"
+  href="https://activities-test.go2andaman.com/widgets/product-list/widget.css"
 />
 
 <div
@@ -216,7 +217,7 @@ function updateEmbedCode() {
 ${attributes}
 ></div>
 
-<script src="../dist/widgets/product-list/widget.js"><\/script>`;
+<script src="https://activities-test.go2andaman.com/widgets/product-list/widget.js"><\/script>`;
 }
 
 async function copyCode() {
@@ -282,7 +283,7 @@ function loadWidget() {
   script.id = "widget-script";
 
   script.src =
-    "../dist/widgets/product-list/widget.js?ts=" +
+    "https://activities-test.go2andaman.com/widgets/product-list/widget.js?ts=" +
     Date.now();
 
   document.body.appendChild(script);
