@@ -583,7 +583,7 @@ const DetailRow = (rowProps) =>
       h(
         "div",
         {
-          class: "g2a-title-lg",
+          class: "g2a-title-md",
           style: {
             overflowWrap: "anywhere",
             wordBreak: "break-word",

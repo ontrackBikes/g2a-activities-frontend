@@ -57,6 +57,7 @@
 
             <v-col cols="7" sm="8">
               <v-text-field
+                class="pl-2"
                 v-model="customer_details.phone"
                 placeholder="Mobile Number"
                 prepend-inner-icon="mdi-phone"
@@ -94,6 +95,7 @@
 
             <v-col cols="7" sm="8">
               <v-text-field
+              class="pl-2"
                 v-model="customer_details.alternate_phone"
                 placeholder="Alt. Mobile Number (optional)"
                 prepend-inner-icon="mdi-phone"

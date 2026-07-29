@@ -240,6 +240,10 @@
                         :value="value ? 'yes' : 'no'"
                       />
                     </div>
+
+                      <div v-if=" item.medical_declaration?.other_details">
+                        <DetailRow :label="'Comment'" :value="item.medical_declaration?.other_details"/>
+                      </div>
                   </div>
 
                   <div v-else class="g2a-title-2xl-2-light text-greyDark">
@@ -532,7 +536,7 @@ const DetailRow = (rowProps) =>
       h(
         "div",
         {
-          class: "g2a-title-lg",
+          class: "g2a-title-md",
           style: {
             overflowWrap: "anywhere",
             wordBreak: "break-word",

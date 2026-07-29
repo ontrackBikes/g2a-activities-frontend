@@ -17,11 +17,11 @@
     <div>
       <div v-for="(participant, index) in participants" :key="index">
         <v-container>
-          <div class="my-2">Participant {{ index + 1 }}</div>
+          <div class="my-2 g2a-title-md">Participant {{ index + 1 }}</div>
 
           <div>
             <v-row>
-              <v-col cols="12" md="6">
+              <v-col cols="6" md="6">
                 <v-text-field
                   v-model="participant.first_name"
                   label="First Name"
@@ -33,7 +33,7 @@
                 />
               </v-col>
 
-              <v-col cols="12" md="6">
+              <v-col cols="6" md="6">
                 <v-text-field
                   v-model="participant.last_name"
                   label="Last Name"
@@ -45,7 +45,7 @@
                 />
               </v-col>
 
-              <v-col cols="12" md="4">
+              <v-col cols="4" md="4">
                 <v-text-field
                   v-model.number="participant.age"
                   type="number"
@@ -58,7 +58,7 @@
                 />
               </v-col>
 
-              <v-col cols="12" md="4">
+              <v-col cols="4" md="4">
                 <v-select
                   v-model="participant.gender"
                   :items="genders"
@@ -71,7 +71,7 @@
                 />
               </v-col>
 
-              <v-col cols="12" md="4">
+              <v-col cols="4" md="4">
                 <v-select
                   v-model="participant.nationality"
                   :items="nationalities"
