@@ -32,7 +32,7 @@
           />
         </v-col>
 
-        <v-col v-if="flight.airline === 'others'" cols="12">
+        <v-col v-if="flight.airline === 'Others'" cols="12">
           <v-text-field
             v-model="flight.custom_airline"
             label="Airline Name"
@@ -87,28 +87,55 @@
 
       <v-divider />
 
-      <v-card-text
-        :style="{ maxHeight: mobile ? '100%' : '360px', overflowY: 'auto' }"
-      >
-        <v-row dense>
-          <v-col
-            v-for="operator in operators"
-            :key="operator.value"
-            md="3"
-            sm="4"
+      <v-card-text class="pa-4">
+        <v-text-field
+          v-model="search"
+          placeholder="Search airlines..."
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          density="compact"
+          rounded="lg"
+          hide-details
+          class="mb-4"
+        />
+
+        <v-list
+          lines="one"
+          density="comfortable"
+          :style="{ maxHeight: mobile ? '100%' : '360px', overflowY: 'auto' }"
+        >
+          <v-list-item
+            v-for="airline in filteredOperators"
+            :key="airline"
+            rounded="lg"
+            :active="flight.airline === airline"
+            @click="selectAirline(airline)"
           >
-            <v-chip
-              rounded="lg"
-              :color="flight.airline === operator.value ? 'primary' : undefined"
-              :variant="flight.airline === operator.value ? 'flat' : 'outlined'"
-              label
-              class="w-100 justify-center"
-              @click="selectAirline(operator.value)"
-            >
-              {{ operator.title }}
-            </v-chip>
-          </v-col>
-        </v-row>
+            <template #prepend>
+              <v-avatar color="brandColor2" variant="tonal">
+                <v-icon>mdi-airplane</v-icon>
+              </v-avatar>
+            </template>
+
+            <v-list-item-title>
+              {{ airline }}
+            </v-list-item-title>
+
+            <template v-if="flight.airline === airline" #append>
+              <v-icon color="brandColor2">mdi-check-circle</v-icon>
+            </template>
+          </v-list-item>
+
+          <template v-if="filteredOperators.length === 0">
+            <div class="text-center py-8">
+              <v-icon size="48" color="grey">mdi-airplane-off</v-icon>
+
+              <div class="text-medium-emphasis mt-2">
+                No matching airlines found.
+              </div>
+            </div>
+          </template>
+        </v-list>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -131,12 +158,26 @@ const props = defineProps({
 const booking = bookingStore;
 
 const DEFAULT_OPERATORS = [
-  { title: "IndiGo", value: "indigo" },
-  { title: "Air India", value: "air_india" },
-  { title: "SpiceJet", value: "spicejet" },
-  { title: "Vistara", value: "vistara" },
-  { title: "Akasa Air", value: "akasa_air" },
-  { title: "Alliance Air", value: "alliance_air" },
+  "IndiGo",
+  "Air India",
+  "Air India Express",
+  "Akasa Air",
+  "SpiceJet",
+  "Alliance Air",
+  "Star Air",
+  "Emirates",
+  "Qatar Airways",
+  "Etihad Airways",
+  "Singapore Airlines",
+  "Lufthansa",
+  "British Airways",
+  "Turkish Airlines",
+  "Air Arabia",
+  "Oman Air",
+  "Saudia",
+  "Malaysia Airlines",
+  "Thai Airways",
+  "SriLankan Airlines",
 ];
 
 // Backend can override the default carrier list via config.operators, but
@@ -147,7 +188,19 @@ const operators = computed(() => {
     ? props.config.operators
     : DEFAULT_OPERATORS;
 
-  return [...configured, { title: "Others", value: "others" }];
+  return [...configured, "Others"];
+});
+
+const search = ref("");
+
+const filteredOperators = computed(() => {
+  const query = search.value.trim().toLowerCase();
+
+  if (!query) return operators.value;
+
+  return operators.value.filter((airline) =>
+    airline.toLowerCase().includes(query),
+  );
 });
 
 const flight = computed({
@@ -173,20 +226,18 @@ const airlineDialog = ref(false);
 const airlineLabel = computed(() => {
   if (!flight.value.airline) return "";
 
-  if (flight.value.airline === "others") {
+  if (flight.value.airline === "Others") {
     return flight.value.custom_airline || "Others";
   }
 
-  return (
-    operators.value.find((operator) => operator.value === flight.value.airline)
-      ?.title || ""
-  );
+  return flight.value.airline;
 });
 
 const selectAirline = (value) => {
   flight.value.airline = value;
 
   airlineDialog.value = false;
+  search.value = "";
 };
 
 // Only the "Others" airline needs a free-text name - clear any stale
@@ -194,7 +245,7 @@ const selectAirline = (value) => {
 watch(
   () => flight.value.airline,
   (value) => {
-    if (value !== "others") {
+    if (value !== "Others") {
       flight.value.custom_airline = "";
     }
   },

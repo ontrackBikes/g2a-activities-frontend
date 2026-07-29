@@ -75,6 +75,42 @@ Configured via `.env` / `.env.production` (see `.env.example`), consumed with `i
 - `src/store/booking.js` is a minimal hand-rolled store (no Pinia/Vuex): a `reactive()` object plus `saveBooking`/`loadBooking`/`clearBooking` helpers that mirror state to `localStorage` under `g2a_booking`, so an in-progress booking survives page reloads/navigation through the checkout flow.
 - `src/services/api.js` is the axios client for the main app: attaches `Authorization: Bearer <authToken>` from `localStorage` on every request, and logs (but does not swallow) response errors via an interceptor.
 
+### Dynamic booking fields (product booking page)
+
+The booking form (quantity, dates, transfer type, etc.) is driven entirely by a schema the backend returns per product, not hardcoded per product type:
+
+- `src/components/activities/booking-fields/fieldRegistry.js` maps a schema field's `field` key (e.g. `"date"`, `"transfer_type"`, `"quantity"`) to the Vue component that renders it (`src/components/activities/booking-fields/fields/*.vue`).
+- `src/components/activities/booking-fields/BookingFieldRenderer.vue` looks up and renders the right component via `<component :is>` for each entry in the schema's `fields` array, forwarding `field`, `modelValue`, and — importantly — the whole shared `form` object as a prop.
+- `src/views/activities/ProductBooking.vue` is the actual live parent: it holds a single flat `reactive` `form` object keyed by field name (`form.date`, `form.transfer_type`, `form.pickup_location`, ...) and loops `v-for="field in fields"` over `BookingFieldRenderer`, passing that same `form` down to every field. Field components that need to know another field's value (e.g. `Transfertypefield.vue` reading `form.date` to restrict pickup times to 2+ hours from now, or `ReturnDateField.vue` reading `form.pickup_date`) just declare a `form` prop and read off it — the plumbing already exists, adding cross-field logic is opt-in per component.
+  - Note: `ActivityBookingCard.vue` also imports `BookingFieldRenderer` and keeps its own local `form`/`fields`, but never actually renders it — that code is dead. `ProductBooking.vue` is the one that matters.
+- New field types: add the component under `fields/`, register it in `fieldRegistry.js` under the schema key the backend will send, and add a `form` prop if it needs to read sibling fields.
+
+### Dynamic checkout sections
+
+Same registry pattern, one layer up, for the checkout page:
+
+- `src/components/activities/checkout/sectionRegistry.js` maps a schema section's `section` key (e.g. `"customer_details"`, `"rental_details"`, `"flight_details"`) to its component (`src/components/activities/checkout/sections/*.vue`) and a display title.
+- `CheckoutRenderer.vue` reads `bookingTemplate.booking_page_schema.sections`, filters to `enabled`, sorts by `sort_order` (descending), and renders each through `SectionRenderer.vue`, which resolves the component from the registry and passes it `config` (the section's own schema config) and `quote`.
+- Section components read/write their own slice of state directly on `bookingStore.form` (e.g. `booking.form.rental_details`, `booking.form.flight_details`), usually via a `computed({ get, set })` that lazily initializes the slice with sensible defaults. `CheckoutForm.vue` submits `bookingStore.form` as-is to `POST /v1/orders/:estimate_id` — there is no separate payload-assembly step, so a new section just needs to write into its own `booking.form.<key>` to be included in the order.
+- New sections: add the component under `sections/`, register it in `sectionRegistry.js` under the schema key the backend will send.
+
+### Dialog-based pickers
+
+Several pickers (`LocationPicker.vue`, `RentalDetails.vue`'s pickup/drop dialogs, `Transfertypefield.vue`'s pickup-time dialog, `FlightDetails.vue`'s airline dialog) use the same `v-dialog` styling convention for consistency — reuse it verbatim for new dialogs rather than Vuetify's defaults:
+
+```html
+<v-dialog
+  v-model="dialog"
+  max-width="500"
+  scrollable
+  :fullscreen="mobile"
+  scrim="rgba(15,23,42,.30)"
+  :style="{ backdropFilter: 'blur(5px)', webkitBackdropFilter: 'blur(5px)' }"
+>
+```
+
+`mobile` comes from `const { mobile } = useDisplay()` (from `"vuetify"`) so the dialog goes fullscreen on small screens. (`LocationPicker.vue` references `mobile` without importing `useDisplay` — a pre-existing bug there; don't copy that omission into new dialogs.)
+
 ### Widgets (`src/widgets/`)
 
 Widgets are independently bundled (IIFE, no code-splitting, terser-minified with console/debugger stripped) so they can be embedded on arbitrary third-party pages. There are two different integration patterns in use:
