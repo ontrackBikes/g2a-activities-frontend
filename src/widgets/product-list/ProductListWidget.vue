@@ -3,8 +3,8 @@
 
   <div v-else class="g2a-product-grid">
     <div
-      v-for="product in products"
-      :key="product.slug"
+      v-for="(product, index) in products"
+      :key="`${product.slug}-${product.locations?.[0]?.slug || index}`"
       class="g2a-book-widget"
       :class="{
         'g2a-book-widget--disabled': product.out_of_stock,
@@ -21,6 +21,10 @@
         <h3 class="g2a-book-widget__title">
           {{ product.name }}
         </h3>
+
+        <div v-if="product.locations?.length" class="g2a-book-widget__location">
+          📍 {{ product.locations[0].name }}
+        </div>
 
         <p class="g2a-book-widget__description">
           {{ truncate(product.short_description) }}
@@ -77,9 +81,7 @@ const settings = computed(() => ({
   buttonText: "Book Now",
   outOfStockText: "Currently Unavailable",
   outOfStockButtonText: "Unavailable",
-
   redirectTemplate: "/{category}/{productType}/{product}-in-{location}/book",
-
   ...props.options,
 }));
 
@@ -106,12 +108,10 @@ function bookNow(product) {
     .replace("{product}", product.slug)
     .replace("{location}", location);
 
-  const url = `${props.baseUrl}${path}`;
-
-  window.open(url, "_blank", "noopener,noreferrer");
+  window.open(`${props.baseUrl}${path}`, "_blank", "noopener,noreferrer");
 }
-
 </script>
+
 <style scoped>
 .g2a-product-grid {
   display: grid;
@@ -162,6 +162,13 @@ function bookNow(product) {
   color: #1f2937;
 }
 
+.g2a-book-widget__location {
+  margin: 8px 0 4px;
+  color: #0f766e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .g2a-book-widget__description {
   margin: 12px 0 18px;
   color: #6b7280;
@@ -199,7 +206,7 @@ function bookNow(product) {
   height: 48px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #FFC107, #FFC107);
+  background: #ffc107;
   color: #fff;
   font-size: 15px;
   font-weight: 700;
@@ -209,7 +216,7 @@ function bookNow(product) {
 
 .g2a-book-widget__button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(255, 152, 0, 0.35);
+  box-shadow: 0 8px 18px rgba(255, 193, 7, 0.35);
 }
 
 .g2a-book-widget__button:active:not(:disabled) {

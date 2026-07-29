@@ -47,5 +47,14 @@ export async function getProducts(params = {}) {
     `/products/app/products-list?${search.toString()}`
   );
 
-  return response.data;
+  return response.data.flatMap((product) => {
+    if (!product.locations?.length) {
+      return [{ ...product, locations: [] }];
+    }
+
+    return product.locations.map((location) => ({
+      ...product,
+      locations: [location],
+    }));
+  });
 }
