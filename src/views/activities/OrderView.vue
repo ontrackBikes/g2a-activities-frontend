@@ -30,7 +30,7 @@
 
             <div class="flex-grow-1">
               <div class="g2a-title-xl">{{ statusAlert.heading }}</div>
-              <div class="g2a-title-lg text-greyDark mt-1">
+              <div class="g2a-title-md text-greyDark mt-1">
                 {{ statusAlert.text }}
               </div>
             </div>
@@ -87,7 +87,7 @@
         <!-- ================= Product ================= -->
         <v-card rounded="lg" flat class="border mb-4">
           <v-row no-gutters>
-            <v-col cols="12" sm="3">
+            <v-col cols="3" sm="2">
               <v-img
                 :src="item.thumbnail_url"
                 :alt="item.product_name"
@@ -106,11 +106,11 @@
               </v-img>
             </v-col>
 
-            <v-col cols="12" sm="9" class="pa-2">
+            <v-col cols="9" sm="10" class="pa-2">
               <div class="g2a-title-xl">
                  <v-icon size="14" class="mr-1">mdi-check-circle</v-icon>
                 {{ item.product_name }}</div>
-              <div class="g2a-title-lg d-flex align-center">
+              <div class="g2a-title-md text-greyDark d-flex align-center">
                 <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon>
                 {{ item.location_name }}
               </div>
@@ -138,99 +138,100 @@
         >
           <v-container>
             <div class="d-flex justify-space-between py-2">
-              <span class="data-label">Booking ID</span>
-              <strong>{{ order.order_id }}</strong>
+              <span class="g2a-title-md text-greyDark">Booking ID</span>
+              <div class="g2a-title-md">{{ order.order_id }}</div>
             </div>
 
             <div
               v-if="bookingOf(item).guests"
               class="d-flex justify-space-between py-2"
             >
-              Guests
-              <strong>{{ bookingOf(item).guests }}</strong>
+              <div class="g2a-title-md text-greyDark"> Guests</div>
+             
+              <div class="g2a-title-md">{{ bookingOf(item).guests }}</div>
             </div>
             <div
               v-if="bookingOf(item).quantity"
               class="d-flex justify-space-between py-2"
             >
-              Quantity
-              <strong>{{ bookingOf(item).quantity }}</strong>
+               <div class="g2a-title-md text-greyDark">Quantity</div>
+              <div class="g2a-title-md">{{ bookingOf(item).quantity }}</div>
             </div>
             <div
               v-if="bookingOf(item).selected_slot"
               class="d-flex justify-space-between py-2"
             >
-              <span class="data-label">
+              <span class="g2a-title-md text-greyDark">
                 {{
                   bookingOf(item).booking_mode === "date_range"
                     ? "Vehicle"
                     : "Time Slot"
                 }}
               </span>
-              <strong>{{ bookingOf(item).selected_slot.name }}</strong>
+              <div class="g2a-title-md">{{ bookingOf(item).selected_slot.name }}</div>
             </div>
 
             <!-- Rental Booking -->
             <template v-if="bookingOf(item).booking_mode === 'date_range'">
               <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Pickup Date</span>
-                <strong>{{ formatDate(bookingOf(item).pickup_date) }}</strong>
+                <span class="g2a-title-md text-greyDark">Pickup Date</span>
+                <div class="g2a-title-md">{{ formatDate(bookingOf(item).pickup_date) }}</div>
               </div>
               <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Pickup Time</span>
-                <strong>{{ formatTime(bookingOf(item).pickup_time) }}</strong>
+                <span class="g2a-title-md text-greyDark">Pickup Time</span>
+                <div class="g2a-title-md">{{ formatTime(bookingOf(item).pickup_time) }}</div>
               </div>
               <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Return Date</span>
-                <strong>{{ formatDate(bookingOf(item).return_date) }}</strong>
+                <span class="g2a-title-md text-greyDark">Return Date</span>
+                <div class="g2a-title-md">{{ formatDate(bookingOf(item).return_date) }}</div>
               </div>
               <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Drop Time</span>
-                <strong>{{ formatTime(bookingOf(item).drop_time) }}</strong>
+                <span class="g2a-title-md text-greyDark">Drop Time</span>
+                <div class="g2a-title-md">{{ formatTime(bookingOf(item).drop_time) }}</div>
               </div>
               <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Rental Days</span>
-                <strong>{{ bookingOf(item).rental_days }}</strong>
+                <span class="g2a-title-md text-greyDark">Rental Days</span>
+                <div class="g2a-title-md">{{ bookingOf(item).rental_days }}</div>
               </div>
             </template>
 
             <!-- Activity Booking -->
             <template v-else-if="bookingOf(item).travel_date">
               <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Travel Date</span>
-                <strong>{{ formatDate(bookingOf(item).travel_date) }}</strong>
+                <span class="g2a-title-md text-greyDark">Travel Date</span>
+                <div class="g2a-title-md">{{ formatDate(bookingOf(item).travel_date) }}</div>
               </div>
             </template>
 
             <!-- Airport Transfer -->
             <template v-if="bookingOf(item).transfer_type">
               <div class="d-flex justify-space-between py-2">
-                <span class="data-label">Transfer Type</span>
-                <strong>{{
+                <span class="g2a-title-md text-greyDark">Transfer Type</span>
+                <div class="g2a-title-md">{{
                   prettyTransferType(bookingOf(item).transfer_type)
-                }}</strong>
+                }}</div>
               </div>
 
               <div
                 v-if="bookingOf(item).pickup_location"
                 class="d-flex justify-space-between py-2"
               >
-                <span class="data-label">Pickup Location</span>
-                <strong>
+                <span class="g2a-title-md text-greyDark">Pickup Location</span>
+                <div class="g2a-title-md">
                   {{ bookingOf(item).pickup_location.name }} -
                   {{ bookingOf(item).pickup_location.address }}
-                </strong>
+                </div>
               </div>
 
               <div
                 v-if="bookingOf(item).drop_location"
                 class="d-flex justify-space-between py-2"
               >
-                <span class="data-label">Drop Location</span>
-                <strong>
+                <span class="g2a-title-md text-greyDark">Drop Location</span>
+                <div class="g2a-title-md">
                   {{ bookingOf(item).drop_location.name }} -
                   {{ bookingOf(item).drop_location.address }}
-                </strong>
+                </div>
               </div>
             </template>
           </v-container>
@@ -242,14 +243,14 @@
           class="mb-4"
           title="Participants"
         >
-          <v-container>
+          
             <v-table density="compact" class="no-scrollbar">
               <thead>
                 <tr>
-                  <th class="data-label">Name</th>
-                  <th class="data-label">Age</th>
-                  <th class="data-label">Gender</th>
-                  <th class="data-label">Nationality</th>
+                  <th class="g2a-title-md text-greyDark">Name</th>
+                  <th class="g2a-title-md text-greyDark">Age</th>
+                  <th class="g2a-title-md text-greyDark">Gender</th>
+                  <th class="g2a-title-md text-greyDark">Nationality</th>
                 </tr>
               </thead>
               <tbody>
@@ -257,16 +258,16 @@
                   v-for="(p, pIndex) in item.participants"
                   :key="p.id ?? pIndex"
                 >
-                  <td class="g2a-title-lg g2a-title-lg">
+                  <td class="g2a-title-md">
                     {{ p.first_name }} {{ p.last_name }}
                   </td>
-                  <td class="g2a-title-lg">{{ p.age ?? "—" }}</td>
-                  <td class="g2a-title-lg">{{ p.gender || "—" }}</td>
-                  <td class="g2a-title-lg">{{ p.nationality || "—" }}</td>
+                  <td class="g2a-title-md">{{ p.age ?? "—" }}</td>
+                  <td class="g2a-title-md">{{ p.gender || "—" }}</td>
+                  <td class="g2a-title-md">{{ p.nationality || "—" }}</td>
                 </tr>
               </tbody>
             </v-table>
-          </v-container>
+       
         </g2-a-expansion-panel>
       </template>
 
@@ -278,26 +279,26 @@
       >
         <v-container>
           <div class="d-flex justify-space-between py-2">
-            <span class="data-label">Name</span>
-            <strong
+            <span class="g2a-title-md text-greyDark">Name</span>
+            <div class="g2a-title-md"
               >{{ customerDetails.first_name }}
-              {{ customerDetails.last_name }}</strong
+              {{ customerDetails.last_name }}</div
             >
           </div>
           <div class="d-flex justify-space-between py-2">
-            <span class="data-label">Mobile</span>
-            <strong
+            <span class="g2a-title-md text-greyDark">Mobile</span>
+            <div class="g2a-title-md"
               >{{ customerDetails.country_code }}
-              {{ customerDetails.phone || "—" }}</strong
+              {{ customerDetails.phone || "—" }}</div
             >
           </div>
           <div class="d-flex justify-space-between py-2">
-            <span class="data-label">Email</span>
-            <strong>{{ customerDetails.email || "—" }}</strong>
+            <span class="g2a-title-md text-greyDark">Email</span>
+            <div class="g2a-title-md">{{ customerDetails.email || "—" }}</div>
           </div>
           <div class="d-flex justify-space-between py-2">
-            <span class="data-label">Country</span>
-            <strong>{{ customerDetails.country || "—" }}</strong>
+            <span class="g2a-title-md text-greyDark">Country</span>
+            <div class="g2a-title-md">{{ customerDetails.country || "—" }}</div>
           </div>
         </v-container>
       </g2-a-expansion-panel>
@@ -310,20 +311,20 @@
       >
         <v-container>
           <div class="d-flex justify-space-between py-2">
-            <span class="data-label">Subtotal</span>
-            <strong>{{ currency(order.subtotal) }}</strong>
+            <span class="g2a-title-md text-greyDark">Subtotal</span>
+            <div class="g2a-title-md">{{ currency(order.subtotal) }}</div>
           </div>
 
           <div v-if="order.discount" class="d-flex justify-space-between py-2">
-            <span class="data-label">Discount</span>
-            <strong class="text-success"
-              >-{{ currency(order.discount) }}</strong
+            <span class="g2a-title-md text-greyDark">Discount</span>
+            <div class="g2a-title-md text-success"
+              >-{{ currency(order.discount) }}</div
             >
           </div>
 
           <div v-if="order.tax" class="d-flex justify-space-between py-2">
-            <span class="data-label">Tax</span>
-            <strong>{{ currency(order.tax) }}</strong>
+            <span class="g2a-title-md text-greyDark">Tax</span>
+            <div class="g2a-title-md">{{ currency(order.tax) }}</div>
           </div>
 
           <v-card
@@ -334,7 +335,7 @@
             class="pa-4 mt-4"
           >
             <div class="d-flex justify-space-between align-center">
-              <span class="g2a-title-2xl-4">Total Paid</span>
+              <span class="g2a-title-lg">Total Paid</span>
               <div class="g2a-title-lg text-brandColor2">
                 {{ currency(order.grand_total) }}
               </div>
@@ -342,7 +343,7 @@
           </v-card>
 
           <template v-if="order.payments?.length">
-            <div class="g2a-title-lg text-greyDark mt-5 mb-2">
+            <div class="g2a-title-lg text-greyDark my-4 ">
               Payment history
             </div>
 
@@ -356,22 +357,22 @@
               class="mb-3 pa-4"
             >
               <div class="d-flex justify-space-between align-center py-1">
-                <span class="data-label">Payment Status</span>
+                <span class="g2a-title-md text-greyDark">Payment Status</span>
                 <v-chip :color="paymentStatusColor(p.status)" variant="flat">
                   {{ p.status?.toUpperCase() }}
                 </v-chip>
               </div>
               <div class="d-flex justify-space-between py-1">
-                <span class="data-label">Amount</span>
-                <strong>{{ currency(p.amount) }}</strong>
+                <span class="g2a-title-md text-greyDark">Amount</span>
+                <div class="g2a-title-md">{{ currency(p.amount) }}</div>
               </div>
               <div class="d-flex justify-space-between py-1">
-                <span class="data-label">Payment Date</span>
-                <strong>{{ formatDateTime(p.paid_at || p.created_at) }}</strong>
+                <span class="g2a-title-md text-greyDark">Payment Date</span>
+                <div class="g2a-title-md">{{ formatDateTime(p.paid_at || p.created_at) }}</div>
               </div>
               <div class="d-flex justify-space-between py-1">
-                <span class="data-label">Payment ID</span>
-                <strong class="">{{ p.payment_id }}</strong>
+                <span class="g2a-title-md text-greyDark">Payment ID</span>
+                <div class="g2a-title-md">{{ p.payment_id }}</div>
               </div>
             </v-card>
           </template>

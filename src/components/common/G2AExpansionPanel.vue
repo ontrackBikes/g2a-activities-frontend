@@ -1,6 +1,6 @@
 <template>
-  <v-card rounded="lg" flat
-    class="g2a-expansion-panel"
+  <v-card rounded="lg" flat 
+    class="g2a-expansion-panel border"
     :class="{ open: isOpen }"
   >
     <button
@@ -9,7 +9,7 @@
       :aria-expanded="isOpen"
       @click="toggle"
     >
-      <div class="g2a-expansion-title">
+      <div class="g2a-expansion-title g2a-title-lg">
         <slot name="title">
           {{ title }}
         </slot>
@@ -148,7 +148,7 @@ const toggle = () => {
   align-items: center;
   justify-content: space-between;
 
-  padding: 20px 22px;
+  padding: 15px;
 
   transition: background .2s ease;
 }
@@ -159,8 +159,6 @@ const toggle = () => {
   flex: 1;
   text-align: left;
   font-weight: 600;
-  font-size: 15px;
-
 }
 
 .g2a-expansion-icon {
@@ -183,7 +181,6 @@ const toggle = () => {
 }
 
 .g2a-expansion-body {
-  padding: 0 22px 22px;
   line-height: 1.65;
 }
 </style>
