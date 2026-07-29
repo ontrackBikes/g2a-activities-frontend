@@ -186,7 +186,7 @@
               <!-- Participants -->
               <v-card
                 v-if="item.participants.length > 0"
-                class="border mt-5"
+                class="border my-2"
                 rounded="lg"
                 flat
               >
@@ -221,7 +221,7 @@
               <!-- Medical Declaration -->
               <v-card
                 v-if="item.medical_declaration"
-                class="mt-5 border"
+                class="my-2 border"
                 rounded="lg"
                 flat
               >
@@ -291,7 +291,7 @@
             <!-- Customer -->
             <v-card
               v-if="order.customer_details"
-              class="border mt-5"
+              class="border my-2"
               rounded="lg"
               flat
             >
@@ -319,7 +319,7 @@
             </v-card>
 
             <div v-if="!mobile">
-              <v-card flat rounded="lg" class="border mt-5">
+              <v-card flat rounded="lg" class="border my-2">
                 <v-container>
                   <button
                     type="button"
@@ -354,6 +354,10 @@
                     >
                       Pay Now
                     </v-btn>
+                    <div class="mt-4">
+                      By clicking "Pay Now", you agree to the
+                      <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
+                    </div>
                   </div>
                   <div v-else>
                     <div>
@@ -366,7 +370,7 @@
                       rounded="lg"
                       color="brandColor2"
                       @click="viewOrder"
-                      class="mt-5"
+                      class="my-2"
                     >
                       View Order
                     </v-btn>
@@ -419,6 +423,9 @@
                 >
                   Pay Now
                 </v-btn>
+
+               
+
               </div>
               <div v-else>
                 <div>
@@ -431,7 +438,7 @@
                   rounded="lg"
                   color="brandColor2"
                   @click="viewOrder"
-                  class="mt-5"
+                  class="my-2"
                 >
                   View Order
                 </v-btn>
@@ -439,6 +446,11 @@
             </v-card-text>
           </v-card>
         </div>
+
+         <div class="mt-4 text-center">
+                  By clicking "Confirm & Pay", you agree to the
+                  <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
+                </div>
 
         <!-- Reserves space so page content isn't hidden behind the fixed bar -->
         <div class="mobile-summary-bar-spacer" />

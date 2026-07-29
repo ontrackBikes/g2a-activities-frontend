@@ -185,11 +185,11 @@
           <!-- &nbsp;{{ formatCurrency(pricing.grand_total) }} -->
         </v-btn>
 
-        <div>
+        <!-- <div>
           By clicking "Confirm & Pay", you agree to the
           <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
         </div>
-        <v-divider class="my-2" />
+        <v-divider class="my-2" /> -->
         <div
           class="d-flex align-center justify-center text-greyDark mt-2"
         >
@@ -493,11 +493,11 @@
 
   <v-card v-if="mobile" rounded="lg" flat class="border">
       <v-container>
-        <div>
+        <!-- <div>
           By clicking "Confirm & Pay", you agree to the
           <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
         </div>
-        <v-divider class="my-2" />
+        <v-divider class="my-2" /> -->
         <div
           class="d-flex align-center justify-center text-greyDark mt-2"
         >

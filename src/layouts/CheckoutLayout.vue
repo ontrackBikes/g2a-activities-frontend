@@ -6,13 +6,13 @@
         class="h-100 d-flex align-center justify-space-between"
       >
         <div class="d-flex align-center">
-          <RouterLink
-            to="https://go2andaman.com/book-experiences/"
+          <a
+            href="https://go2andaman.com/book-experiences/"
             target="_blank"
             class="d-flex align-center text-decoration-none"
           >
             <img :src="logo" width="180" alt="Go2Andaman" />
-          </RouterLink>
+          </a>
 
           <template v-if="!mobile">
             <v-divider vertical class="mx-4 my-6" style="height: 22px" />
