@@ -73,7 +73,7 @@
             </div>
             <div class="d-flex align-center">
               <v-icon size="24" color="greyDark" class="mr-1"
-                >mdi-cash-check</v-icon
+                >mdi-cash</v-icon
               >
               <span class="g2a-title-lg">{{
                 currency(order.grand_total)
