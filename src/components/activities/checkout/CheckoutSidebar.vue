@@ -181,12 +181,13 @@
           aria-label="Continue to payment"
           @click="$emit('proceed')"
         >
-          Pay&nbsp;{{ formatCurrency(pricing.grand_total) }}
+          Confirm & Pay
+          <!-- &nbsp;{{ formatCurrency(pricing.grand_total) }} -->
         </v-btn>
 
         <div class="text-center py-2">
-          By clicking "Pay", you agree to the
-          <span class="g2a-link">terms of service</span>.
+          By clicking "Confirm & Pay", you agree to the
+          <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
         </div>
         <v-divider class="my-2" />
         <div
@@ -266,7 +267,9 @@
             aria-label="Continue to payment"
             @click="$emit('proceed')"
           >
-            Pay&nbsp;{{ formatCurrency(pricing.grand_total) }}
+            Confirm & Pay
+            
+            <!-- &nbsp;{{ formatCurrency(pricing.grand_total) }} -->
           </v-btn>
         </v-card-text>
 
@@ -550,23 +553,22 @@ const formatValue = (value) => {
 };
 
 const DetailRow = (rowProps) =>
-  h(
-    "div",
-    {
-      class: [
-        "d-flex justify-space-between flex-wrap ga-2",
-        rowProps.wrapperClass || "mb-2",
-      ],
-    },
-    [
-      h("span", { class: "g2a-title-2xl-2 text-greyDark" }, rowProps.label),
+  h(VRow, { noGutters: true, class: "py-2" }, [
+    h(VCol, { cols: 3 }, () => rowProps.label),
+    h(VCol, { cols: 9, class: "text-right" }, () =>
       h(
-        rowProps.bold ? "strong" : "span",
-        { class: ["g2a-title-2xl-2 text-right", rowProps.valueClass] },
-        formatValue(rowProps.value),
+        "div",
+        {
+          class: "g2a-title-lg",
+          style: {
+            overflowWrap: "anywhere",
+            wordBreak: "break-word",
+          },
+        },
+        rowProps.value,
       ),
-    ],
-  );
+    ),
+  ]);
 
 DetailRow.props = {
   label: { type: String, default: "" },

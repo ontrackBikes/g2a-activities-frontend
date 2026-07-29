@@ -51,7 +51,7 @@
                   <v-icon
                     :icon="getIcon(higlight.title)"
                     size="18"
-                    color="amber-darken-3"
+                    color="brandColor2"
                     class="mt-1"
                   />
                   <div class="ml-2">
@@ -94,7 +94,7 @@
               <v-icon
                 icon="mdi-shield-check"
                 size="18"
-                color="amber-darken-3"
+                color="brandColor2"
                 class="mt-1"
               />
               <div class="ml-2">
@@ -127,7 +127,7 @@
                   <v-icon
                     icon="mdi-help-circle"
                     size="18"
-                    color="amber-darken-3"
+                    color="brandColor2"
                     class="mr-2"
                   />
                   <div class="g2a-title-lg">FAQs</div>
@@ -139,7 +139,7 @@
                   :key="index"
                   class="mb-3"
                 >
-                  <div class="font-weight-medium">{{ faq.question }}</div>
+                  <div class="font-weight-bold">{{ faq.question }}</div>
                   <div>{{ faq.answer }}</div>
                 </div>
               </v-expansion-panel-text>
@@ -161,7 +161,7 @@
                   <v-icon
                     icon="mdi-file-document"
                     size="18"
-                    color="amber-darken-3"
+                    color="brandColor2"
                     class="mr-2"
                   />
                   <div class="g2a-title-lg">Terms & Conditions</div>

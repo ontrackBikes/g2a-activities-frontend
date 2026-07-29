@@ -79,16 +79,17 @@
                     label="Drop Location"
                     :value="`${item.booking_data.drop_location.name} (${item.booking_data.drop_location.type})`"
                   />
-                  <div
+                  <v-row
                     v-if="item.booking_data.selected_slot"
-                    class="d-flex justify-space-between flex-wrap ga-2 py-2"
+                    no-gutters
+                    class="py-2"
                   >
-                    <div class="text-capitalize">
+                    <v-col cols="3" class="text-capitalize">
                       {{
                         item.booking_data.selected_slot.slot_type || "Time Slot"
                       }}
-                    </div>
-                    <div class="g2a-title-lg text-right">
+                    </v-col>
+                    <v-col cols="9" class="g2a-title-lg text-right">
                       {{ item.booking_data.selected_slot.name }}
 
                       <span
@@ -105,8 +106,9 @@
                           formatTime(item.booking_data.selected_slot.end_time)
                         }})
                       </span>
-                    </div>
-                  </div>
+                    </v-col>
+                  </v-row>
+
                   <DetailRow
                     v-if="item.booking_data.pickup_date"
                     label="Pickup Date"
@@ -142,35 +144,42 @@
                 v-if="item.rental_details"
               >
                 <v-container>
-                  <div
+                  <v-row
+                    no-gutters
+                    class="py-2"
                     v-if="item.rental_details.pickup_point"
-                    class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center"
                   >
-                    <div>
+                    <v-col cols="3">
                       Pickup Point ({{ item.rental_details?.pickup_type }})
-                    </div>
-                    <div class="text-right">
+                    </v-col>
+                    <v-col cols="9" class="text-right">
                       <span class="g2a-title-lg">{{
                         item.rental_details?.pickup_point?.name
                       }}</span>
                       <div>
                         {{ item.rental_details?.pickup_point?.address }}
                       </div>
-                    </div>
-                  </div>
+                    </v-col>
+                  </v-row>
 
-                  <div
+                  <v-row
                     v-if="item.rental_details.pickup_point"
-                    class="d-flex justify-space-between flex-wrap ga-2 py-2 align-center"
+                    no-gutters
+                    class="py-2"
                   >
-                    <div>Drop Point ({{ item.rental_details?.drop_type }})</div>
-                    <div class="text-right">
-                      <span class="g2a-title-lg text-right">{{
+                    <v-col cols="3"
+                      >Drop Point ({{ item.rental_details?.drop_type }})</v-col
+                    >
+                    <v-col cols="9" class="text-right">
+                      <span class="g2a-title-lg">
+                        {{ item.rental_details?.drop_hotel_name }}
+                      </span>
+                      <span class="g2a-title-lg">{{
                         item.rental_details?.drop_point?.name
                       }}</span>
                       <div>{{ item.rental_details?.drop_point?.address }}</div>
-                    </div>
-                  </div>
+                    </v-col>
+                  </v-row>
                 </v-container>
               </v-card>
 
@@ -328,21 +337,25 @@
                       Details
                     </span>
                   </button>
-
-                  <div v-if="order.payment_status == 'captured'">
+                  <div v-if="order.order_status == 'pending_payment'">
                     <v-btn
                       flat
                       rounded="lg"
                       block
                       color="brandColor"
                       size="large"
-                      @click="viewOrder"
-                      >View</v-btn
+                      :disabled="order.order_status == 'confirmed'"
+                      :loading="paying"
+                      @click="payNow"
                     >
+                      Pay Now
+                    </v-btn>
                   </div>
                   <div v-else>
-                    <v-icon color="success">mdi-check-circle</v-icon> You have
-                    already paid for this order.
+                    <div>
+                      <v-icon color="success">mdi-check-circle</v-icon> Order is
+                      already confirmed.
+                    </div>
                     <v-btn
                       size="large"
                       flat
@@ -389,30 +402,36 @@
                 </span>
               </button>
 
-              <div v-if="order.payment_status == 'captured'">
+              <div v-if="order.order_status == 'pending_payment'">
                 <v-btn
                   flat
                   rounded="lg"
                   block
                   color="brandColor"
                   size="large"
-                  @click="viewOrder"
-                  >View</v-btn
+                  :disabled="order.order_status == 'confirmed'"
+                  :loading="paying"
+                  @click="payNow"
                 >
+                  Pay Now
+                </v-btn>
               </div>
-              <v-btn
-                v-else
-                flat
-                rounded="lg"
-                block
-                color="brandColor"
-                size="large"
-                :disabled="order.order_status == 'confirmed'"
-                :loading="paying"
-                @click="payNow"
-              >
-                Pay Now
-              </v-btn>
+              <div v-else>
+                <div>
+                  <v-icon color="success">mdi-check-circle</v-icon> Order is
+                  already confirmed.
+                </div>
+                <v-btn
+                  size="large"
+                  flat
+                  rounded="lg"
+                  color="brandColor2"
+                  @click="viewOrder"
+                  class="mt-5"
+                >
+                  View Order
+                </v-btn>
+              </div>
             </v-card-text>
           </v-card>
         </div>
@@ -487,6 +506,7 @@ import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 import apiClient from "@/services/api";
 import router from "@/router";
+import { VCol, VRow } from "vuetify/components";
 
 const route = useRoute();
 const { mobile } = useDisplay();
@@ -506,14 +526,23 @@ const order = ref(null);
 |--------------------------------------------------------------------------
 */
 const DetailRow = (rowProps) =>
-  h("div", { class: "d-flex justify-space-between flex-wrap ga-2 py-2" }, [
-    h("span", { class: "data-label" }, rowProps.label),
-    h(
-      "strong",
-      { class: "g2a-title-lg text-right" },
-      String(rowProps.value ?? ""),
+  h(VRow, { noGutters: true, class: "py-2" }, [
+    h(VCol, { cols: 3 }, () => rowProps.label),
+    h(VCol, { cols: 9, class: "text-right" }, () =>
+      h(
+        "div",
+        {
+          class: "g2a-title-lg",
+          style: {
+            overflowWrap: "anywhere",
+            wordBreak: "break-word",
+          },
+        },
+        rowProps.value,
+      ),
     ),
   ]);
+
 DetailRow.props = {
   label: { type: String, default: "" },
   value: { type: [String, Number], default: "" },
