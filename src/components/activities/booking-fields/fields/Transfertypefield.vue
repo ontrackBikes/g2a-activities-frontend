@@ -79,21 +79,78 @@
       </template>
 
       <!-- Pickup Time -->
-      <v-select
-        v-if="hasSubField('pickup_time')"
-        :model-value="modelValue.pickup_time"
-        :items="pickupTimeOptions"
-        item-title="title"
-        item-value="value"
-        :label="subFieldLabel('pickup_time', 'Pickup Time')"
-        placeholder="Select pickup time"
-        variant="outlined"
-        density="compact"
-        rounded="lg"
-        :rules="pickupTimeRules"
-        hide-details="auto"
-        @update:model-value="updateSubField('pickup_time', $event)"
-      />
+      <template v-if="hasSubField('pickup_time')">
+        <v-text-field
+          :model-value="pickupTimeLabel"
+          :label="subFieldLabel('pickup_time', 'Pickup Time')"
+          placeholder="Select pickup time"
+          variant="outlined"
+          density="compact"
+          rounded="lg"
+          prepend-inner-icon="mdi-clock-outline"
+          :rules="pickupTimeRules"
+          hide-details="auto"
+          readonly
+          @click="pickupTimeDialog = true"
+        />
+
+        <v-dialog
+          v-model="pickupTimeDialog"
+          max-width="500"
+          scrim="rgba(15,23,42,.30)"
+          :style="{
+            backdropFilter: 'blur(5px)',
+            webkitBackdropFilter: 'blur(5px)',
+          }"
+        >
+          <v-card rounded="lg" flat>
+            <v-toolbar density="comfortable" color="transparent">
+              <v-toolbar-title>Select Pickup Time</v-toolbar-title>
+
+              <v-spacer />
+
+              <v-btn icon variant="text" @click="pickupTimeDialog = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-toolbar>
+
+            <v-divider />
+
+            <v-card-text
+              :style="{ maxHeight: mobile ? '100%' : '360px', overflowY: 'auto' }"
+            >
+              <v-row dense>
+                <v-col
+                  v-for="option in pickupTimeOptions"
+                  :key="option.value"
+                  md="3"
+                  sm="4"
+                >
+                  <v-chip
+                    rounded="lg"
+                    :color="
+                      modelValue.pickup_time === option.value
+                        ? 'primary'
+                        : undefined
+                    "
+                    :variant="
+                      modelValue.pickup_time === option.value
+                        ? 'flat'
+                        : 'outlined'
+                    "
+                    :disabled="option.disabled"
+                    label
+                    class="w-100 justify-center"
+                    @click="selectPickupTime(option.value)"
+                  >
+                    {{ option.title }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </template>
 
       <div class="mt-5 text-warning">
         Within city limit INR 450, outside city limits starts from INR 800.
@@ -104,8 +161,11 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
+import { useDisplay } from "vuetify";
 import apiClient from "@/services/api";
 import LocationPicker from "../LocationPicker.vue";
+
+const { mobile } = useDisplay();
 
 const DEFAULT_DIRECTION_OPTIONS = [
   { label: "Airport → Location", value: "airport_to_location" },
@@ -125,6 +185,10 @@ const props = defineProps({
   field: {
     type: Object,
     required: true,
+  },
+  form: {
+    type: Object,
+    default: () => ({}),
   },
 });
 
@@ -287,7 +351,7 @@ onMounted(fetchLocations);
 
 // `value` must stay in 24-hour HH:mm form - that's what the backend's
 // pickup_time validation expects. `title` is just the display label.
-const pickupTimeOptions = [
+const PICKUP_TIME_SLOTS = [
   { title: "07:00 AM", value: "07:00" },
   { title: "07:30 AM", value: "07:30" },
   { title: "08:00 AM", value: "08:00" },
@@ -316,4 +380,63 @@ const pickupTimeOptions = [
   { title: "07:30 PM", value: "19:30" },
   { title: "08:00 PM", value: "20:00" },
 ];
+
+const toMinutes = (hhmm) => {
+  const [hours, minutes] = hhmm.split(":").map(Number);
+
+  return hours * 60 + minutes;
+};
+
+// Pickup time only needs to be restricted when the selected date (from
+// DateField, via the shared `form`) is today - any future date is
+// already more than 2 hours out.
+const minAllowedMinutes = computed(() => {
+  const today = new Date().toISOString().split("T")[0];
+
+  if (props.form.date !== today) return null;
+
+  const now = new Date();
+
+  return now.getHours() * 60 + now.getMinutes() + 120;
+});
+
+const pickupTimeOptions = computed(() => {
+  const minMinutes = minAllowedMinutes.value;
+
+  return PICKUP_TIME_SLOTS.map((slot) => ({
+    ...slot,
+    disabled: minMinutes !== null && toMinutes(slot.value) < minMinutes,
+  }));
+});
+
+const pickupTimeDialog = ref(false);
+
+const pickupTimeLabel = computed(() => {
+  const match = pickupTimeOptions.value.find(
+    (option) => option.value === props.modelValue.pickup_time,
+  );
+
+  return match?.title || "";
+});
+
+const selectPickupTime = (value) => {
+  updateSubField("pickup_time", value);
+
+  pickupTimeDialog.value = false;
+};
+
+// If the date changes (or time passes) and the currently selected pickup
+// time falls before the new cutoff, it's no longer a valid choice - drop
+// it instead of silently keeping a disabled option selected.
+watch(pickupTimeOptions, (options) => {
+  const current = props.modelValue.pickup_time;
+
+  if (!current) return;
+
+  const option = options.find((item) => item.value === current);
+
+  if (option?.disabled) {
+    updateSubField("pickup_time", "");
+  }
+});
 </script>

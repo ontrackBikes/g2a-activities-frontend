@@ -32,6 +32,10 @@
           </v-btn>
         </div>
       </div>
+
+      <div v-if="field.description" class="text-caption text-greyDark mt-1">
+        {{ field.description }}
+      </div>
     </div>
   </v-card>
 </template>
