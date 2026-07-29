@@ -1,8 +1,8 @@
 import CustomerDetails from "./sections/CustomerDetails.vue";
 import Participants from "./sections/Participants.vue";
 import MedicalDeclaration from "./sections/MedicalDeclaration.vue";
-import BikeDelivery from "./sections/BikeDelivery.vue";
 import FerrySeatSelection from "./sections/FerrySeatSelection.vue";
+import RentalDetails from "./sections/RentalDetails.vue";
 
 export default {
   customer_details: {
@@ -21,7 +21,7 @@ export default {
   },
 
   rental_details: {
-    component: BikeDelivery,
+    component: RentalDetails,
     title: "Rental Details",
   },
 

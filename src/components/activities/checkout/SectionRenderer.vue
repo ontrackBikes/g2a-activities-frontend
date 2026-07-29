@@ -1,9 +1,11 @@
 <template>
-  <component
+  <div class="mb-4">
+    <component
     :is="component"
     :config="section.config"
     :quote="quote"
   />
+  </div>
 </template>
 
 <script setup>

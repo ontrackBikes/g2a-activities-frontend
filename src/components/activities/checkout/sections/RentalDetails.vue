@@ -18,7 +18,7 @@
         <span class="g2a-title-md text-uppercase">Getting the Vehicle</span>
       </div>
 
-      <v-row>
+      <v-row no-gutters>
         <v-col cols="12">
           <v-radio-group
             v-model="rental.pickup_type"
@@ -69,7 +69,7 @@
               variant="tonal"
               density="compact"
               rounded="lg"
-              class="g2a-title-sm"
+              class="g2a-title-sm my-4"
             >
               Free within city limits. Extra charges (~₹100) apply if outside.
               Our agent will contact you for more details.
@@ -87,7 +87,7 @@
         <span class="g2a-title-md text-uppercase">Returning the Vehicle</span>
       </div>
 
-      <v-row>
+      <v-row no-gutters>
         <v-col cols="12">
           <v-radio-group
             v-model="rental.drop_type"
@@ -136,7 +136,7 @@
               variant="tonal"
               density="compact"
               rounded="lg"
-              class="g2a-title-sm"
+              class="g2a-title-sm my-4"
             >
               Free within city limits. Extra charges (~₹100) apply if outside.
               Our agent will contact you for more details.
