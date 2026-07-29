@@ -48,7 +48,6 @@
                 <v-container>
                   <div class="g2a-title-lg">Booking Info</div>
                   <v-divider class="my-2" />
-                  <!-- {{ item.booking_data }} is { "guests": 1, "quantity": 1, "pickup_date": "2026-07-28", "pickup_time": "10:00", "return_date": "2026-07-29", "drop_time": "10:00", "rental_days": 1, "booking_mode": "date_range", "selected_slot": { "name": "DUCATI", "price": 450 } } -->
                   <DetailRow
                     v-if="item.booking_data.guests"
                     label="Guests"
@@ -133,6 +132,36 @@
                     v-if="item.booking_data.rental_days"
                     label="Rental Days"
                     :value="item.booking_data.rental_days"
+                  />
+                </v-container>
+              </v-card>
+
+              <v-card
+                flat
+                class="border my-2"
+                rounded="lg"
+                v-if="item.flight_details"
+              >
+                <v-container>
+                  <div class="g2a-title-lg">Flight Info</div>
+                  <v-divider class="my-2" />
+
+                  <DetailRow
+                    v-if="
+                      item.flight_details?.airline ||
+                      item.flight_details?.custom_airline
+                    "
+                    label="Airline"
+                    :value="
+                      item.flight_details?.airline ||
+                      item.flight_details?.custom_airline
+                    "
+                  />
+
+                  <DetailRow
+                    v-if="item.flight_details?.flight_number"
+                    label="Flight Number"
+                    :value="item.flight_details?.flight_number"
                   />
                 </v-container>
               </v-card>
