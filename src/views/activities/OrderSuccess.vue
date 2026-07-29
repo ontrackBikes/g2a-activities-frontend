@@ -2,43 +2,47 @@
   <v-container class="py-12">
     <v-card
       max-width="620"
-      class="mx-auto"
-      rounded="lg"
+      class="mx-auto success-card"
+      rounded="xl"
       elevation="0"
       variant="outlined"
     >
       <v-card-text class="text-center py-10 px-6 px-sm-10">
-        <v-avatar size="72" color="success" variant="tonal">
-          <v-icon size="44" color="success"> mdi-check-bold </v-icon>
-        </v-avatar>
+        <div class="success-icon-wrap mx-auto mb-6">
+          <svg viewBox="0 0 80 80" width="96" height="96" class="success-check">
+            <circle class="success-check__fill" cx="40" cy="40" r="34" />
+            <circle class="success-check__ring" cx="40" cy="40" r="36" />
+            <path class="success-check__tick" d="M22 41 L33 52 L58 27" />
+          </svg>
+        </div>
 
-        <div class="g2a-title-2xl mt-6">Booking Confirmed</div>
+        <div class="g2a-title-xl fade-in-up delay-1">Booking Confirmed</div>
 
-        <div class="mt-2">
+        <div class="g2a-title-base text-greyDark mt-2 fade-in-up delay-2">
           Thank you for booking with Go2Andaman. Your payment has been received
           successfully.
         </div>
 
-        <v-divider class="my-8" />
+        <div class="order-id-box mt-8 fade-in-up delay-3">
+          <div class="g2a-title-sm text-greyDark text-uppercase">Order ID</div>
 
-        <div class="text-greyDark">Order ID</div>
-
-        <div class="d-flex align-center justify-center ga-1 mt-1">
-          <span class="g2a-title-lg">
-            {{ route.params.order_id }}
-          </span>
-          <v-btn
-            :icon="copied ? 'mdi-check' : 'mdi-content-copy'"
-            :color="copied ? 'success' : 'greyDark'"
-            size="small"
-            variant="text"
-            aria-label="Copy order ID"
-            @click="copyOrderId"
-          />
+          <div class="d-flex align-center justify-center ga-1 mt-1">
+            <span class="g2a-title-lg">
+              {{ route.params.order_id }}
+            </span>
+            <v-btn
+              :icon="copied ? 'mdi-check' : 'mdi-content-copy'"
+              :color="copied ? 'success' : 'greyDark'"
+              size="small"
+              variant="text"
+              aria-label="Copy order ID"
+              @click="copyOrderId"
+            />
+          </div>
         </div>
 
         <v-alert
-          class="mt-8 text-left"
+          class="mt-6 text-left fade-in-up delay-4"
           variant="tonal"
           rounded="lg"
           type="success"
@@ -47,7 +51,9 @@
           A confirmation email and booking voucher will be sent shortly.
         </v-alert>
 
-        <div class="d-flex flex-wrap justify-center ga-4 mt-8">
+        <div
+          class="d-flex flex-wrap justify-center ga-4 mt-8 fade-in-up delay-5"
+        >
           <v-btn
             size="large"
             flat
@@ -103,3 +109,133 @@ const copyOrderId = async () => {
   }
 };
 </script>
+
+<style scoped>
+.success-card {
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 24px 48px -28px rgba(0, 99, 0, 0.3);
+  overflow: hidden;
+}
+
+/* Icon */
+
+.success-icon-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.success-icon-wrap::before,
+.success-icon-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgb(var(--v-theme-success));
+  opacity: 0;
+  animation: success-ping 1.2s ease-out 0.9s;
+}
+
+.success-icon-wrap::after {
+  animation-delay: 1.15s;
+}
+
+.success-check__fill {
+  fill: rgb(var(--v-theme-successLight1));
+  transform-origin: center;
+  animation: success-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.success-check__ring {
+  fill: none;
+  stroke: rgb(var(--v-theme-success));
+  stroke-width: 3;
+  stroke-dasharray: 227;
+  stroke-dashoffset: 227;
+  animation: success-draw 0.6s ease-out 0.15s forwards;
+}
+
+.success-check__tick {
+  fill: none;
+  stroke: rgb(var(--v-theme-success));
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 51;
+  stroke-dashoffset: 51;
+  animation: success-draw 0.35s ease-out 0.65s forwards;
+}
+
+/* Order ID */
+
+.order-id-box {
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  background: rgb(var(--v-theme-successLight2));
+  padding: 16px;
+}
+
+/* Entrance */
+
+.fade-in-up {
+  opacity: 0;
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.delay-1 {
+  animation-delay: 0.7s;
+}
+.delay-2 {
+  animation-delay: 0.8s;
+}
+.delay-3 {
+  animation-delay: 0.9s;
+}
+.delay-4 {
+  animation-delay: 1s;
+}
+.delay-5 {
+  animation-delay: 1.1s;
+}
+
+/* Keyframes */
+
+@keyframes success-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes success-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes success-ping {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
