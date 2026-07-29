@@ -29,7 +29,8 @@
   </v-alert>
 
   <v-form v-else ref="form" validate-on="submit">
-    <v-row class="my-2" :no-gutters="mobile">
+    <v-container>
+      <v-row :no-gutters="mobile">
       <!-- LEFT -->
       <v-col cols="12" lg="7">
         <CheckoutRenderer
@@ -192,6 +193,7 @@
         />
       </v-col>
     </v-row>
+    </v-container>
   </v-form>
 </template>
 
@@ -204,9 +206,11 @@ import CheckoutSidebar from "./CheckoutSidebar.vue";
 
 import apiClient from "@/services/api.js";
 import { bookingStore } from "@/store/booking.js";
+import { useDisplay } from "vuetify";
 
 const router = useRouter();
 const route = useRoute();
+const { mobile } = useDisplay();
 
 // bookingStore already holds `product`, `bookingTemplate`, and `form`
 // (populated in ProductDetails.vue via saveBooking(), then reloaded in

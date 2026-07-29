@@ -431,7 +431,9 @@
             aria-label="Continue to payment"
             @click="$emit('proceed')"
           >
-            Pay&nbsp;{{ formatCurrency(pricing.grand_total) }}
+            Confirm & Pay
+            
+            <!-- &nbsp;{{ formatCurrency(pricing.grand_total) }} -->
           </v-btn>
         </div>
       </v-card>
