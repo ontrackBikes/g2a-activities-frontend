@@ -31,41 +31,41 @@
   <v-form v-else ref="form" validate-on="submit">
     <v-container>
       <v-row :no-gutters="mobile">
-      <!-- LEFT -->
-      <v-col cols="12" lg="7">
-        <CheckoutRenderer
-          :booking-template="quote.product?.bookingTemplate"
-          :quote="quote"
-        />
+        <!-- LEFT -->
+        <v-col cols="12" lg="7">
+          <CheckoutRenderer
+            :booking-template="quote.product?.bookingTemplate"
+            :quote="quote"
+          />
 
-        <div v-if="quote.product?.highlights?.length > 0">
-          <v-card
-            rounded="lg"
-            flat
-            class="border my-4"
-            v-for="(higlight, index) in quote.product?.highlights"
-            :key="index"
-          >
-            <v-container>
-              <div>
-                <div class="d-flex">
-                  <v-icon
-                    :icon="getIcon(higlight.title)"
-                    size="18"
-                    color="brandColor2"
-                    class="mt-1"
-                  />
-                  <div class="ml-2">
-                    <div class="g2a-title-lg">{{ higlight.title }}</div>
-                    <div class="">{{ higlight.content }}</div>
+          <div v-if="quote.product?.highlights?.length > 0">
+            <v-card
+              rounded="lg"
+              flat
+              class="border my-4"
+              v-for="(higlight, index) in quote.product?.highlights"
+              :key="index"
+            >
+              <v-container>
+                <div>
+                  <div class="d-flex">
+                    <v-icon
+                      :icon="getIcon(higlight.title)"
+                      size="18"
+                      color="brandColor2"
+                      class="mt-1"
+                    />
+                    <div class="ml-2">
+                      <div class="g2a-title-lg">{{ higlight.title }}</div>
+                      <div class="">{{ higlight.content }}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </v-container>
-          </v-card>
-        </div>
+              </v-container>
+            </v-card>
+          </div>
 
-        <!-- <v-card
+          <!-- <v-card
           rounded="lg"
           flat
           v-if="quote.product?.inclusions.length > 0"
@@ -84,115 +84,116 @@
           </v-container>
         </v-card> -->
 
-        <v-card
-          rounded="lg"
-          flat
-          v-if="quote.product?.cancellation_policies?.length > 0"
-          class="border my-4"
-        >
-          <v-container>
-            <div class="d-flex">
-              <v-icon
-                icon="mdi-shield-check"
-                size="18"
-                color="brandColor2"
-                class="mt-1"
-              />
-              <div class="ml-2">
-                <div class="g2a-title-lg">Cancellation & Refund Policy</div>
-                <div
-                  v-for="(policy, index) in quote.product.cancellation_policies"
-                  :key="index"
-                >
-                  <div v-if="policy.title" class="font-weight-medium">
-                    {{ policy.title }}
+          <v-card
+            rounded="lg"
+            flat
+            v-if="quote.product?.cancellation_policies?.length > 0"
+            class="border my-4"
+          >
+            <v-container>
+              <div class="d-flex">
+                <v-icon
+                  icon="mdi-shield-check"
+                  size="18"
+                  color="brandColor2"
+                  class="mt-1"
+                />
+                <div class="ml-2">
+                  <div class="g2a-title-lg">Cancellation & Refund Policy</div>
+                  <div
+                    v-for="(policy, index) in quote.product
+                      .cancellation_policies"
+                    :key="index"
+                  >
+                    <div v-if="policy.title" class="font-weight-medium">
+                      {{ policy.title }}
+                    </div>
+                    <div>{{ policy.content }}</div>
                   </div>
-                  <div>{{ policy.content }}</div>
                 </div>
               </div>
-            </div>
-          </v-container>
-        </v-card>
+            </v-container>
+          </v-card>
 
-        <!-- FAQs -->
-        <v-card
-          rounded="lg"
-          flat
-          v-if="quote.product?.faqs?.length > 0"
-          class="border my-4"
-        >
-          <v-expansion-panels variant="accordion" flat>
-            <v-expansion-panel>
-              <v-expansion-panel-title>
-                <div class="d-flex align-center">
-                  <v-icon
-                    icon="mdi-help-circle"
-                    size="18"
-                    color="brandColor2"
-                    class="mr-2"
-                  />
-                  <div class="g2a-title-lg">FAQs</div>
-                </div>
-              </v-expansion-panel-title>
-              <v-expansion-panel-text>
-                <div
-                  v-for="(faq, index) in quote.product.faqs"
-                  :key="index"
-                  class="mb-3"
-                >
-                  <div class="font-weight-bold">{{ faq.question }}</div>
-                  <div>{{ faq.answer }}</div>
-                </div>
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card>
+          <!-- FAQs -->
+          <v-card
+            rounded="lg"
+            flat
+            v-if="quote.product?.faqs?.length > 0"
+            class="border my-4"
+          >
+            <v-expansion-panels variant="accordion" flat>
+              <v-expansion-panel>
+                <v-expansion-panel-title>
+                  <div class="d-flex align-center">
+                    <v-icon
+                      icon="mdi-help-circle"
+                      size="18"
+                      color="brandColor2"
+                      class="mr-2"
+                    />
+                    <div class="g2a-title-lg">FAQs</div>
+                  </div>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <div
+                    v-for="(faq, index) in quote.product.faqs"
+                    :key="index"
+                    class="mb-3"
+                  >
+                    <div class="font-weight-bold">{{ faq.question }}</div>
+                    <div>{{ faq.answer }}</div>
+                  </div>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-card>
 
-        <!-- Terms & Conditions -->
-        <v-card
-          rounded="lg"
-          flat
-          v-if="quote.product?.terms?.length > 0"
-          class="border my-4"
-        >
-          <v-expansion-panels variant="accordion" flat>
-            <v-expansion-panel>
-              <v-expansion-panel-title>
-                <div class="d-flex align-center">
-                  <v-icon
-                    icon="mdi-file-document"
-                    size="18"
-                    color="brandColor2"
-                    class="mr-2"
-                  />
-                  <div class="g2a-title-lg">Terms & Conditions</div>
-                </div>
-              </v-expansion-panel-title>
-              <v-expansion-panel-text>
-                <div
-                  v-for="(term, index) in quote.product.terms"
-                  :key="index"
-                  class="d-flex mb-1"
-                >
-                  <div>-</div>
-                  <div class="ml-2">{{ term.content }}</div>
-                </div>
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card>
-      </v-col>
+          <!-- Terms & Conditions -->
+          <v-card
+            rounded="lg"
+            flat
+            v-if="quote.product?.terms?.length > 0"
+            class="border my-4"
+          >
+            <v-expansion-panels variant="accordion" flat>
+              <v-expansion-panel>
+                <v-expansion-panel-title>
+                  <div class="d-flex align-center">
+                    <v-icon
+                      icon="mdi-file-document"
+                      size="18"
+                      color="brandColor2"
+                      class="mr-2"
+                    />
+                    <div class="g2a-title-lg">Terms & Conditions</div>
+                  </div>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <div
+                    v-for="(term, index) in quote.product.terms"
+                    :key="index"
+                    class="d-flex mb-1"
+                  >
+                    <div>-</div>
+                    <div class="ml-2">{{ term.content }}</div>
+                  </div>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-card>
+        </v-col>
 
-      <!-- RIGHT -->
-      <v-col cols="12" lg="5">
-        <CheckoutSidebar
-          :quote="quote"
-          :submitting="submitting"
-          :error="checkoutError"
-          @proceed="continueToPayment"
-        />
-      </v-col>
-    </v-row>
+        <!-- RIGHT -->
+        <v-col cols="12" lg="5">
+          <CheckoutSidebar
+            :quote="quote"
+            :submitting="submitting"
+            :error="checkoutError"
+            @proceed="continueToPayment"
+          />
+        </v-col>
+      </v-row>
     </v-container>
   </v-form>
 </template>
@@ -288,10 +289,18 @@ const continueToPayment = async () => {
       },
     });
   } catch (err) {
-    checkoutError.value =
-      err.response?.data?.message ||
-      err.message ||
-      "Unable to proceed to payment. Please try again.";
+    const response = err.response?.data;
+
+    if (response?.errors?.length) {
+      checkoutError.value = response.errors
+        .flatMap((section) => section.errors)
+        .join("\n");
+    } else {
+      checkoutError.value =
+        response?.message ||
+        err.message ||
+        "Unable to proceed to payment. Please try again.";
+    }
   } finally {
     submitting.value = false;
   }

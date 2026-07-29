@@ -241,9 +241,12 @@
                       />
                     </div>
 
-                      <div v-if=" item.medical_declaration?.other_details">
-                        <DetailRow :label="'Comment'" :value="item.medical_declaration?.other_details"/>
-                      </div>
+                    <div v-if="item.medical_declaration?.other_details">
+                      <DetailRow
+                        :label="'Comment'"
+                        :value="item.medical_declaration?.other_details"
+                      />
+                    </div>
                   </div>
 
                   <div v-else class="g2a-title-2xl-2-light text-greyDark">
@@ -356,7 +359,12 @@
                     </v-btn>
                     <div class="mt-4">
                       By clicking "Pay Now", you agree to the
-                      <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
+                      <a
+                        href="https://go2andaman.com/terms-of-service/"
+                        target="_blank"
+                        class="g2a-link"
+                        >terms of service</a
+                      >.
                     </div>
                   </div>
                   <div v-else>
@@ -423,9 +431,6 @@
                 >
                   Pay Now
                 </v-btn>
-
-               
-
               </div>
               <div v-else>
                 <div>
@@ -447,10 +452,15 @@
           </v-card>
         </div>
 
-         <div class="mt-4 text-center">
-                  By clicking "Confirm & Pay", you agree to the
-                  <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
-                </div>
+        <div class="mt-4 text-center">
+          By clicking "Confirm & Pay", you agree to the
+          <a
+            href="https://go2andaman.com/terms-of-service/"
+            target="_blank"
+            class="g2a-link"
+            >terms of service</a
+          >.
+        </div>
 
         <!-- Reserves space so page content isn't hidden behind the fixed bar -->
         <div class="mobile-summary-bar-spacer" />

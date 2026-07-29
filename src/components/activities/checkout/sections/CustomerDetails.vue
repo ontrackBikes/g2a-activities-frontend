@@ -90,12 +90,13 @@
                 rounded="lg"
                 hide-details="auto"
                 menu-icon=""
+                :rules="alternateCountryCodeRules"
               />
             </v-col>
 
             <v-col cols="7" sm="8">
               <v-text-field
-              class="pl-2"
+                class="pl-2"
                 v-model="customer_details.alternate_phone"
                 placeholder="Alt. Mobile Number (optional)"
                 prepend-inner-icon="mdi-phone"
@@ -300,6 +301,17 @@ const rules = {
   required: (label) => (v) => !!v || `${label} is required`,
 };
 
+const alternateCountryCodeRules = [
+  (v) => {
+    if (
+      customer_details.value.alternate_phone &&
+      !customer_details.value.alternate_country_code
+    ) {
+      return "Country Code is required";
+    }
+    return true;
+  },
+];
 const emailRules = [
   (v) => !!v || "Email Address is required",
   (v) =>
