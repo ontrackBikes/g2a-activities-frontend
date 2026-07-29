@@ -151,7 +151,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import CheckoutRenderer from "./CheckoutRenderer.vue";
@@ -216,12 +216,32 @@ const loadQuote = async () => {
 
 onMounted(loadQuote);
 
+const scrollToFirstError = async () => {
+  await nextTick();
+
+  const formEl = form.value?.$el;
+  if (!formEl) return;
+
+  const firstInvalid = formEl.querySelector(
+    ".v-input--error, .v-field--error, [aria-invalid='true']",
+  );
+  if (!firstInvalid) return;
+
+  firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  const focusable = firstInvalid.querySelector(
+    "input, textarea, select, [tabindex]",
+  );
+  focusable?.focus({ preventScroll: true });
+};
+
 const continueToPayment = async () => {
   checkoutError.value = "";
 
   const { valid } = await form.value.validate();
 
   if (!valid) {
+    scrollToFirstError(); // <-- only new line inside continueToPayment
     return;
   }
 
