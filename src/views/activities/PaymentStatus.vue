@@ -83,12 +83,12 @@ onMounted(() => {
   // Poll every 3 seconds
   pollTimer = setInterval(checkStatus, 3000);
 
-  // Maximum wait time: 60 seconds
+  // Maximum wait time: 30 seconds
   timeoutTimer = setTimeout(() => {
     if (paymentStatus.value !== "paid") {
       redirectToFailed();
     }
-  }, 60000);
+  }, 30000);
 });
 
 onUnmounted(() => {
