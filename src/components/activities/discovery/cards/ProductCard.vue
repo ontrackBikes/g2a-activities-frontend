@@ -22,7 +22,7 @@
           {{ product.name }}
         </div>
 
-        <div v-if="product.locations.length > 1">view all locations ></div>
+        <div class="text-caption" v-if="product.locations.length > 1">view all locations ></div>
         <div v-else>
           <span
             v-if="product.next_available_slot && !product.out_of_stock"

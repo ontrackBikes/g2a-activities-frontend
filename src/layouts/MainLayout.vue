@@ -146,7 +146,7 @@
         <v-card-text class="pa-0 overflow-y-auto">
           <v-container style="max-width: 800px" class="py-6 px-4">
             <ActivitySearch
-              :search-term="searchTerm"
+              v-model:search-term="searchTerm"
               @close="closeSearchDialog"
               @update-loading="(val) => (loading = val)"
             />

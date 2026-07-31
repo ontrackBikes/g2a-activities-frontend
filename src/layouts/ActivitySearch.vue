@@ -1,30 +1,43 @@
 <template>
   <div>
     <div v-if="loading">
-      <v-row class="ga-y-2">
-        <v-col v-for="i in 4" :key="i" cols="12" sm="6" class="pa-2">
+      <v-row>
+        <v-col v-for="i in 4" :key="i" cols="12" class="py-1">
           <v-skeleton-loader
-            class="border rounded-xl"
+            class="border rounded-lg"
             type="list-item-avatar-two-line"
           />
         </v-col>
       </v-row>
     </div>
 
-    <template v-else-if="filteredResults.length">
-      <div class="g2a-text-14 text-grey-darken-3 mb-4">
+    <template v-else-if="results.length">
+      <v-chip-group v-model="activeCategory" mandatory class="mb-2">
+        <v-chip
+          v-for="category in filterCategories"
+          :key="category"
+          :value="category"
+          filter
+          variant="outlined"
+          color="brandColor2"
+          rounded="lg"
+        >
+          {{ category }}
+        </v-chip>
+      </v-chip-group>
+
+      <div class="g2a-title-sm text-greyDark mb-3">
         Found {{ filteredResults.length }} result{{
-          filteredResults.length > 1 ? "s" : ""
+          filteredResults.length === 1 ? "" : "s"
         }}
       </div>
 
-      <v-row no-gutters>
+      <v-row v-if="filteredResults.length" no-gutters>
         <v-col
           v-for="product in filteredResults"
           :key="product.slug"
           cols="12"
-          sm="12"
-          class="pa-1"
+          class="py-1"
         >
           <product-card
             :product="product"
@@ -33,20 +46,27 @@
           ></product-card>
         </v-col>
       </v-row>
+
+      <div v-else class="text-center text-greyDark py-8">
+        No results in "{{ activeCategory }}". Try another category.
+      </div>
     </template>
 
-    <div v-else-if="props.searchTerm" class="text-center py-12">
-      <v-icon size="64" color="grey-lighten-1">mdi-magnify-close</v-icon>
-      <div class="g2a-text-16 mt-3">No results found</div>
-      <div class="g2a-text-14 text-grey mt-1">
+    <div
+      v-else-if="props.searchTerm"
+      class="d-flex flex-column align-center justify-center py-16 text-center empty-state"
+    >
+      <v-icon icon="mdi-magnify-close" size="56" color="greyLight" class="mb-4" />
+      <div class="g2a-title-2xl mb-1">No results found</div>
+      <div class="text-greyDark">
         Try modifying your query terms or selection tags.
       </div>
     </div>
 
     <div v-else>
-      <div v-if="recent.length" class="mb-5">
+      <div v-if="recent.length" class="mb-6">
         <div class="d-flex align-center justify-space-between mb-3">
-          <span class="g2a-text-14">Recent Searches</span>
+          <span class="g2a-title-sm">Recent Searches</span>
           <v-btn
             variant="text"
             density="compact"
@@ -59,47 +79,43 @@
         </div>
 
         <div class="d-flex flex-wrap ga-2">
-          <v-card
-            flat
+          <v-chip
             v-for="item in recent"
             :key="item"
+            variant="outlined"
+            color="brandColor2"
             rounded="lg"
-            class="border pa-3"
             @click="selectRecent(item)"
           >
             {{ item }}
-          </v-card>
+          </v-chip>
         </div>
       </div>
 
-      <div>
-        <div v-if="trendingMock.length">
-          <div v-for="collection in trendingMock" :key="collection.id">
-            <!-- Header -->
-            <div class="d-flex align-center justify-space-between my-2">
-              <div>
-                <div class="g2a-text-15">
-                  {{ collection.name }}
-                </div>
-              </div>
-            </div>
-
-            <!-- Products -->
-            <v-row no-gutters>
-              <v-col
-                v-for="product in collection.products"
-                :key="product.slug"
-                cols="12"
-                class="my-2"
-              >
-                <product-card
-                  :mini="true"
-                  :product="product"
-                  @click="openProduct"
-                />
-              </v-col>
-            </v-row>
+      <div v-if="trendingMock.length">
+        <div
+          v-for="collection in trendingMock"
+          :key="collection.id"
+          class="mb-6"
+        >
+          <div class="g2a-title-sm mb-3">
+            {{ collection.name }}
           </div>
+
+          <v-row no-gutters>
+            <v-col
+              v-for="product in collection.products"
+              :key="product.slug"
+              cols="12"
+              class="py-1"
+            >
+              <product-card
+                :mini="true"
+                :product="product"
+                @click="openProduct"
+              />
+            </v-col>
+          </v-row>
         </div>
       </div>
     </div>
@@ -164,7 +180,6 @@ const clearRecent = () => {
 // Triggers active searching when clicking Chip or Trending items
 const selectRecent = (term) => {
   emit("update:searchTerm", term);
-  fetchResults(term);
 };
 
 const fetchResults = async (query) => {
