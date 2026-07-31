@@ -5,7 +5,7 @@
         v-model="pickupDate"
         type="date"
         label="Pickup Date"
-        :min="today"
+        :min="tomorrowString"
         :error-messages="error ? [error] : []"
         variant="outlined"
         density="compact"
@@ -77,12 +77,15 @@ const props = defineProps({
 
 const todayDate = new Date();
 
-const today = todayDate.toISOString().split("T")[0];
-
 const tomorrow = new Date(todayDate);
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 const tomorrowString = tomorrow.toISOString().split("T")[0];
+
+const dayAfterTomorrow = new Date(todayDate);
+dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+
+const dayAfterTomorrowString = dayAfterTomorrow.toISOString().split("T")[0];
 
 const pickupTimeOptions = [
   { title: "10:00 AM", value: "10:00" },
@@ -106,7 +109,7 @@ const pickupTimeOptions = [
 
 const pickupDate = computed({
   get() {
-    return props.form.pickup_date || today;
+    return props.form.pickup_date || tomorrowString;
   },
   set(value) {
     props.form.pickup_date = value;
@@ -124,7 +127,7 @@ const pickupTime = computed({
 
 const returnDate = computed({
   get() {
-    return props.form.return_date || tomorrowString;
+    return props.form.return_date || dayAfterTomorrowString;
   },
   set(value) {
     props.form.return_date = value;
@@ -132,7 +135,7 @@ const returnDate = computed({
 });
 
 const minimumReturnDate = computed(() => {
-  return pickupDate.value || today;
+  return pickupDate.value || tomorrowString;
 });
 
 watch(
@@ -155,7 +158,7 @@ watch(
   () => props.form,
   () => {
     if (!props.form.pickup_date) {
-      props.form.pickup_date = today;
+      props.form.pickup_date = tomorrowString;
     }
 
     if (!props.form.pickup_time) {
@@ -163,7 +166,7 @@ watch(
     }
 
     if (!props.form.return_date) {
-      props.form.return_date = tomorrowString;
+      props.form.return_date = dayAfterTomorrowString;
     }
   },
   {
