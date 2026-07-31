@@ -48,6 +48,7 @@ export default createVuetify({
           warningLight2: "#FFF8E2",
 
           error: "#FF6B36",
+          errorLight1: "#FDEAE3",
           errorLight2: "#FAF4F4",
 
           infoLight: "#F2F6FF",
@@ -141,6 +142,7 @@ export default createVuetify({
           warningLight2: "#5C4520",
 
           error: "#EF5350",
+          errorLight1: "#4E2A22",
           errorLight2: "#3A1E1E",
 
           infoLight: "#1F2937",
