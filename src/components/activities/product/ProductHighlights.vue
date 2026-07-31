@@ -1,6 +1,6 @@
 <template>
   <div v-if="activeHighlights.length">
-    <div class="g2a-title-2xl mb-3">Highlights</div>
+    <!-- <div class="g2a-title-2xl mb-3">Highlights</div> -->
 
     <v-row>
       <v-col
@@ -19,10 +19,18 @@
               class="mt-1"
             />
 
-            <div class="g2a-title-lg">
+            <div class="ml-1">
+              <div class="g2a-title-lg">
+              {{ item.title }}
+            </div>
+
+            <div>
               {{ item.content }}
             </div>
+            </div>
+            
           </div>
+          
         </v-card>
       </v-col>
     </v-row>

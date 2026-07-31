@@ -2,22 +2,18 @@
   <div v-if="activeItems.length">
     <div class="g2a-title-2xl mb-3">Things to Know</div>
 
-    <ul class="things-list g2a-title-lg">
+    <ul>
       <li
         v-for="(item, index) in activeItems"
         :key="item.id || index"
-        class="things-item"
       >
-        <v-icon
-          icon="mdi-check-circle-outline"
-          size="18"
-          color="success"
-          class="mt-1"
-        />
-
-        <span class="g2a-title-lg font-weight-medium line-height-relaxed">
+        
+        <div class="g2a-title-lg" v-if="item.title">
+          {{ item.title }}
+        </div>
+        <div>
           {{ item.content }}
-        </span>
+        </div>
       </li>
     </ul>
   </div>

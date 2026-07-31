@@ -71,9 +71,7 @@
           <ProductThingsToKnow :items="product.thingsToKnow" />
         </div>
 
-        <div v-if="product.tags?.length" class="mt-8">
-          <ProductTags :tags="product.tags" />
-        </div>
+       
 
         <div
           v-if="
@@ -108,6 +106,11 @@
             :products="relatedProducts"
           />
         </div>
+
+         <div v-if="product.tags?.length" class="mt-8">
+          <ProductTags :tags="product.tags" />
+        </div>
+        
       </v-col>
 
       <!-- Booking Sidebar -->

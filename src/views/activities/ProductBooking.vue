@@ -168,85 +168,48 @@
           </div>
 
           <v-card
-            v-if="productInclusions.length"
+            v-if="productInclusions.length || productExclusions.length"
             rounded="xl"
             variant="outlined"
             class="my-4"
           >
             <v-container>
-              <!-- Heading -->
-              <div class="d-flex align-center ga-3 mb-4">
-                <div class="g2a-title-lg">What's Included?</div>
-              </div>
-
-              <v-divider class="mb-4" />
-
               <!-- Items -->
-              <div class="d-flex flex-wrap">
-                <div
-                  v-for="(inc, index) in productInclusions"
-                  :key="index"
-                  class="d-flex align-center"
-                  style="min-width: 280px"
-                >
-                  <v-icon color="success" class="mr-3">
-                    mdi-check-circle
-                  </v-icon>
+              <v-row>
+                <v-col v-if="productInclusions.length">
+                  <div>
+                    <div class="g2a-title-lg">Included</div>
+                  </div>
+                  <v-divider class="my-2"></v-divider>
+                  <div
+                    v-for="(inc, index) in productInclusions"
+                    :key="index"
+                    class="d-flex"
+                  >
+                    <v-icon color="success" class="mr-3"> mdi-check </v-icon>
 
-                  <span>{{ inc.content }}</span>
-                </div>
-              </div>
+                    <span>{{ inc.content }}</span>
+                  </div>
+                </v-col>
+                <v-col v-if="productExclusions.length">
+                  <div>
+                    <div class="g2a-title-lg">Excluded</div>
+                  </div>
+                  <v-divider class="my-2"></v-divider>
+
+                  <div
+                    v-for="(inc, index) in productExclusions"
+                    :key="index"
+                    class="d-flex"
+                  >
+                    <v-icon color="error" class="mr-3"> mdi-close </v-icon>
+
+                    <span>{{ inc.content }}</span>
+                  </div>
+                </v-col>
+              </v-row>
             </v-container>
           </v-card>
-
-          <v-card
-            v-if="productExclusions.length"
-            rounded="xl"
-            variant="outlined"
-            class="my-4"
-          >
-            <v-container>
-              <!-- Heading -->
-              <div class="d-flex align-center ga-3 mb-4">
-                <div class="g2a-title-lg">What's not Included?</div>
-              </div>
-
-              <v-divider class="mb-4" />
-
-              <!-- Items -->
-              <div class="d-flex flex-wrap">
-                <div
-                  v-for="(inc, index) in productExclusions"
-                  :key="index"
-                  class="d-flex align-center"
-                  style="min-width: 280px"
-                >
-                  <v-icon color="error" class="mr-3"> mdi-close-circle </v-icon>
-
-                  <span>{{ inc.content }}</span>
-                </div>
-              </div>
-            </v-container>
-          </v-card>
-
-          <!-- <v-card
-            rounded="lg"
-            variant="outlined"
-            v-if="productTerms.length > 0"
-            class="border my-4"
-          >
-            <v-container>
-              <div class="g2a-title-lg mb-3">Terms & Conditions</div>
-              <div
-                v-for="(term, index) in productTerms"
-                :key="index"
-                class="d-flex"
-              >
-                <div>-</div>
-                <div class="ml-2">{{ term.content }}</div>
-              </div>
-            </v-container>
-          </v-card> -->
         </template>
 
         <v-alert

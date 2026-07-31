@@ -30,6 +30,9 @@ body {
 .g2a-text-secondary {
   color: $text-secondary;
 }
+div{
+  @include typography($font-size-base, $font-weight-medium, 24px);
+}
 
 // Headings
 .g2a-heading {
