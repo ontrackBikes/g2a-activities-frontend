@@ -1,7 +1,5 @@
 <template>
   <div>
-
-
     <div v-if="loading">
       <v-row class="ga-y-2">
         <v-col v-for="i in 4" :key="i" cols="12" sm="6" class="pa-2">
@@ -14,7 +12,7 @@
     </div>
 
     <template v-else-if="filteredResults.length">
-      <div class="g2a-text-14  text-grey-darken-3 mb-4">
+      <div class="g2a-text-14 text-grey-darken-3 mb-4">
         Found {{ filteredResults.length }} result{{
           filteredResults.length > 1 ? "s" : ""
         }}
@@ -28,14 +26,18 @@
           sm="12"
           class="pa-1"
         >
-          <product-card :product="product" :mini="true"  @click="openProduct"></product-card>
-         </v-col>
+          <product-card
+            :product="product"
+            :mini="true"
+            @click="openProduct"
+          ></product-card>
+        </v-col>
       </v-row>
     </template>
 
     <div v-else-if="props.searchTerm" class="text-center py-12">
       <v-icon size="64" color="grey-lighten-1">mdi-magnify-close</v-icon>
-      <div class="g2a-text-16  mt-3">No results found</div>
+      <div class="g2a-text-16 mt-3">No results found</div>
       <div class="g2a-text-14 text-grey mt-1">
         Try modifying your query terms or selection tags.
       </div>
@@ -44,12 +46,12 @@
     <div v-else>
       <div v-if="recent.length" class="mb-5">
         <div class="d-flex align-center justify-space-between mb-3">
-          <span class="g2a-text-14 ">Recent Searches</span>
+          <span class="g2a-text-14">Recent Searches</span>
           <v-btn
             variant="text"
             density="compact"
             color="brandColor2"
-            class="text-none "
+            class="text-none"
             @click="clearRecent"
           >
             Clear all
@@ -57,18 +59,16 @@
         </div>
 
         <div class="d-flex flex-wrap ga-2">
-          <v-chip
+          <v-card
+            flat
             v-for="item in recent"
             :key="item"
-            variant="outlined"
-            color="grey-darken-2"
-            class="text-none font-weight-medium px-3 cursor-pointer"
-            label
-            size="large"
+            rounded="lg"
+            class="border pa-3"
             @click="selectRecent(item)"
           >
             {{ item }}
-          </v-chip>
+          </v-card>
         </div>
       </div>
 
@@ -168,8 +168,7 @@ const selectRecent = (term) => {
 };
 
 const fetchResults = async (query) => {
-  if(query.length < 2) 
-  return;
+  if (query.length < 2) return;
   if (!query?.trim()) {
     results.value = [];
     return;
@@ -179,7 +178,7 @@ const fetchResults = async (query) => {
 
   loading.value = true;
   emit("update-loading", true);
-  
+
   try {
     const { data } = await apiClient.get("/v1/products/search", {
       params: { q: query },
@@ -212,8 +211,8 @@ watch(
   },
 );
 
-const openProduct = ({ product, location }) => { // category is not nested to produdt type
-
+const openProduct = ({ product, location }) => {
+  // category is not nested to produdt type
 
   const productType = product.product_type;
   const category = product.category;
@@ -228,7 +227,7 @@ const openProduct = ({ product, location }) => { // category is not nested to pr
       product: slug,
     },
   });
-    emit("close")
+  emit("close");
 };
 onMounted(() => {
   loadTrending();

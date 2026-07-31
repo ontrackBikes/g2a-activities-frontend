@@ -378,6 +378,17 @@
           </template>
         </v-container>
       </g2-a-expansion-panel>
+
+
+      <v-card flat class="border" rounded="lg">
+        <v-container class="text-center">
+
+          <div class="my-4 g2a-title-xl">Looking for more products?</div>
+          <v-btn href="https://go2andaman.com/book-experiences/" target="_blank" color="brandColor" rounded="lg" flat size="x-large">
+            Explore
+          </v-btn>
+        </v-container>
+      </v-card>
     </div>
   </v-container>
 </template>

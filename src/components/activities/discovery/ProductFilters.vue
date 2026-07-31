@@ -6,7 +6,8 @@
     <div class="d-flex align-center ga-2 no-scrollbar overflow-x-auto">
       <!-- Filter button -->
       <v-btn
-        variant="outlined"
+        flat
+        class="border"
         rounded="lg"
         prepend-icon="mdi-tune-variant"
         @click="openDialog"
@@ -25,7 +26,8 @@
         <template #activator="{ props: menuProps }">
           <v-btn
             v-bind="menuProps"
-            variant="outlined"
+            flat
+        class="border"
             rounded="lg"
             append-icon="mdi-chevron-down"
           >
@@ -67,7 +69,8 @@
       <!-- Sort By -->
       <v-menu v-model="sortMenuOpen" :close-on-content-click="true">
         <template #activator="{ props: menuProps }">
-          <v-btn v-bind="menuProps" variant="outlined" rounded="lg">
+          <v-btn v-bind="menuProps" flat
+        class="border" rounded="lg">
             {{ activeSortLabel }}
           </v-btn>
         </template>
@@ -97,7 +100,8 @@
       <v-btn
         v-for="tag in tags.slice(0, 3)"
         :key="tag.slug"
-        variant="outlined"
+        flat
+        class="border"
         rounded="lg"
         :style="
           safeVal.tagSlugs.includes(tag.slug)
