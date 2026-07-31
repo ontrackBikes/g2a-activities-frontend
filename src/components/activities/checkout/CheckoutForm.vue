@@ -111,7 +111,7 @@
                 :key="index"
                 class="mb-3"
               >
-                <div class="">{{ faq.question }}</div>
+                <div class="g2a-title-lg">{{ faq.question }}</div>
                 <div>{{ faq.answer }}</div>
               </div>
             </v-container>
@@ -139,6 +139,7 @@
         <!-- RIGHT -->
         <v-col cols="12" lg="5">
           <CheckoutSidebar
+            
             :quote="quote"
             :submitting="submitting"
             :error="checkoutError"

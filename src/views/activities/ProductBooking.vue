@@ -329,16 +329,17 @@ const isValidDate = (value) => {
 
 let pickup = isValidDate(route.query.pickup_date)
   ? moment(route.query.pickup_date, "YYYY-MM-DD")
-  : moment(today);
+  : moment(tomorrow);
 
-// Pickup cannot be in the past
-if (pickup.isBefore(today, "day")) {
-  pickup = moment(today);
+// Pickup must be at least tomorrow — bumps forward a stale cached/URL
+// value (e.g. "today", saved before this rule existed) automatically.
+if (!pickup.isAfter(today, "day")) {
+  pickup = moment(tomorrow);
 }
 
 let returnDate = isValidDate(route.query.return_date)
   ? moment(route.query.return_date, "YYYY-MM-DD")
-  : moment(tomorrow);
+  : moment(pickup).add(1, "day");
 
 // Return must be after pickup
 if (!returnDate.isAfter(pickup, "day")) {

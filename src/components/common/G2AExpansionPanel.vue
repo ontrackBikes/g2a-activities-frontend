@@ -1,7 +1,7 @@
 <template>
-  <v-card rounded="lg" flat 
-    class="g2a-expansion-panel border"
-    :class="{ open: isOpen }"
+  <v-card rounded="lg" flat
+    class="g2a-expansion-panel"
+    :class="{ open: isOpen, border }"
   >
     <button
       class="g2a-expansion-header"
@@ -9,7 +9,7 @@
       :aria-expanded="isOpen"
       @click="toggle"
     >
-      <div class="g2a-expansion-title g2a-title-lg">
+      <div class="g2a-expansion-title" :class="titleClass">
         <slot name="title">
           {{ title }}
         </slot>
@@ -44,7 +44,14 @@
   </v-card>
 </template>
 <script setup>
-import { ref, watch, nextTick, onMounted } from "vue";
+import { ref, computed, watch, nextTick, onMounted } from "vue";
+
+const titleSizeClasses = {
+  lg: "g2a-title-lg",
+  md: "g2a-title-md",
+  sm: "g2a-title-sm",
+  default: "g2a-title-base",
+};
 
 const props = defineProps({
   title: String,
@@ -52,6 +59,17 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false,
+  },
+
+  border: {
+    type: Boolean,
+    default: true,
+  },
+
+  titleSize: {
+    type: String,
+    default: "lg",
+    validator: (value) => ["lg", "md", "sm", "default"].includes(value),
   },
 });
 
@@ -63,6 +81,8 @@ const emit = defineEmits([
 
 const isOpen = ref(props.modelValue);
 const body = ref(null);
+
+const titleClass = computed(() => titleSizeClasses[props.titleSize]);
 
 watch(
   () => props.modelValue,

@@ -1,6 +1,6 @@
 <template>
   <!-- ============================== DESKTOP / TABLET: sticky card ============================== -->
-  <div v-if="!mobile" class="position-sticky" style="top: 24px; z-index: 1">
+  <div v-if="!mobile" class="mt-4" :class="detailsExpanded ? '' : 'position-sticky'" style="top: 24px; z-index: 1">
     <v-card v-if="loading" rounded="lg" variant="outlined" elevation="0">
       <v-card-item class="pa-5">
         <template #prepend>
@@ -65,19 +65,17 @@
           
         />
       </v-container>
+     
 
-      <v-expansion-panels
+      <G2AExpansionPanel
+        v-model="detailsExpanded"
         v-if="hasMoreDetails"
-        flat
-        variant="accordion"
-        class="no-padding-title"
-        bg-color="transparent"
+        title="More Details"
+        :border="false"
+        :title-size="'default'"
       >
-        <v-expansion-panel>
-          <v-expansion-panel-title class="g2a-title-2xl-2 text-greyDark px-4"
-            >More details</v-expansion-panel-title
-          >
-          <v-expansion-panel-text>
+        
+          <v-container>
 
             <DetailRow
               v-for="row in remainingRows"
@@ -127,9 +125,9 @@
               wrapper-class="mb-0"
               bold
             />
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
+          </v-container>
+       
+      </G2AExpansionPanel>
 
       <v-divider />
 
@@ -511,6 +509,7 @@
 </template>
 
 <script setup>
+import G2AExpansionPanel from "@/components/common/G2AExpansionPanel.vue";
 import { computed, ref, h } from "vue";
 import { useDisplay } from "vuetify";
 import { VCol, VRow } from "vuetify/components";
@@ -528,6 +527,7 @@ const { mobile } = useDisplay();
 
 const pricingDialog = ref(false);
 const detailsSheet = ref(false);
+const detailsExpanded = ref(null);
 
 /*
 |--------------------------------------------------------------------------
@@ -578,8 +578,8 @@ const formatValue = (value) => {
 
 const DetailRow = (rowProps) =>
   h(VRow, { noGutters: true, class: "py-2" }, [
-    h(VCol, { cols: 3 }, () => rowProps.label),
-    h(VCol, { cols: 9, class: "text-right" }, () =>
+    h(VCol, { cols: 4 }, () => rowProps.label),
+    h(VCol, { cols: 8, class: "text-right" }, () =>
       h(
         "div",
         {
