@@ -1,5 +1,10 @@
 <template>
-  <v-container class="py-12">
+  <v-container v-if="checking" class="py-16 text-center">
+    <v-progress-circular indeterminate size="60" color="primary" />
+    <div class="g2a-title-lg mt-6">Confirming your payment...</div>
+  </v-container>
+
+  <v-container v-else class="py-12">
     <v-card
       max-width="620"
       class="mx-auto success-card"
@@ -83,12 +88,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import apiClient from "@/services/api";
 
 const route = useRoute();
 const router = useRouter();
 const copied = ref(false);
+const checking = ref(true);
 
 const viewOrder = () => {
   router.replace({
@@ -98,6 +105,31 @@ const viewOrder = () => {
     },
   });
 };
+
+// Landing here (deep link, reload, back button) doesn't guarantee the
+// payment actually succeeded — confirm with the server before showing
+// the confirmation UI, and bounce to the failed page if it didn't.
+const verifyPayment = async () => {
+  try {
+    const { data } = await apiClient.get(
+      `/v1/orders/${route.params.order_id}/verify-payment`,
+    );
+
+    if (data.data.payment_status !== "paid") {
+      router.replace({
+        name: "OrderFailed",
+        params: { order_id: route.params.order_id },
+      });
+      return;
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    checking.value = false;
+  }
+};
+
+onMounted(verifyPayment);
 
 const copyOrderId = async () => {
   try {
