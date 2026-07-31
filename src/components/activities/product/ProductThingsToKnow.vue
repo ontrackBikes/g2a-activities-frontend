@@ -2,20 +2,30 @@
   <div v-if="activeItems.length">
     <div class="g2a-title-2xl mb-3">Things to Know</div>
 
-    <ul>
-      <li
-        v-for="(item, index) in activeItems"
-        :key="item.id || index"
-      >
-        
-        <div class="g2a-title-lg" v-if="item.title">
-          {{ item.title }}
+    <v-card flat rounded="lg" class="border">
+      <v-container>
+        <div
+          v-for="item in activeItems"
+          :key="item.id"
+          class="d-flex align-start ga-2 mb-3"
+        >
+          <v-icon
+            icon="mdi-circle-small"
+            size="18"
+            color="grey-darken-1"
+            class="flex-shrink-0 mt-1"
+          />
+          <div>
+            <div class="g2a-title-lg" v-if="item.title">
+              {{ item.title }}
+            </div>
+            <span class="">
+              {{ item.content }}
+            </span>
+          </div>
         </div>
-        <div>
-          {{ item.content }}
-        </div>
-      </li>
-    </ul>
+      </v-container>
+    </v-card>
   </div>
 </template>
 
@@ -32,21 +42,3 @@ const props = defineProps({
 const activeItems = computed(() => props.items || []);
 </script>
 
-<style scoped>
-.things-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.things-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  line-height: 1.6;
-}
-
-.things-item:last-child {
-  margin-bottom: 0;
-}
-</style>

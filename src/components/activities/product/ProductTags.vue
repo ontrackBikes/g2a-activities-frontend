@@ -4,20 +4,24 @@
       Tags
     </div>
 
-    <v-chip
-      v-for="tag in tags"
-      :key="tag.id"
-      class="me-2"
-      color="brandColor2"
-      variant="outlined"
-    >
-      {{ tag.name }}
-    </v-chip>
+    <div class="d-flex flex-wrap ga-2">
+      <v-chip
+        v-for="tag in tags"
+        :key="tag.id"
+        rounded="lg"
+        class="border"
+      >
+        {{ tag.name }}
+      </v-chip>
+    </div>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  tags: Array,
+  tags: {
+    type: Array,
+    default: () => [],
+  },
 });
 </script>

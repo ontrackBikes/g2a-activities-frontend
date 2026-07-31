@@ -1,11 +1,8 @@
 <template>
-  <div class="my-4">
+  <div>
     <!-- Header -->
-    <div class="mb-8">
-      <div class="g2a-heading">
-        {{ title }}
-      </div>
-     
+    <div class="my-8 g2a-title-2xl">
+      {{ title }}
     </div>
 
     <!-- Collections -->

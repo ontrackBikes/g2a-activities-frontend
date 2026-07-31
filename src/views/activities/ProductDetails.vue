@@ -33,12 +33,27 @@
   <!-- Content -->
   <template v-else-if="product">
     <!-- Breadcrumb -->
-    <div class="d-flex align-center ga-1  text-greyDark my-4">
-      <span class="cursor-pointer" @click="$router.push('/v2')"
-        >Activities</span
-      >
+    <div class="d-flex align-center flex-wrap ga-1 text-greyDark my-4">
+      <span class="cursor-pointer" @click="goHome">Activities</span>
+
       <v-icon icon="mdi-chevron-right" size="14" />
-      <span class="text-brandColor2  truncate-two-lines">
+      <span
+        class="cursor-pointer text-capitalize"
+        @click="goToCategory"
+      >
+        {{ product.category?.name || route.params.category }}
+      </span>
+
+      <v-icon icon="mdi-chevron-right" size="14" />
+      <span
+        class="cursor-pointer text-capitalize"
+        @click="goToProductType"
+      >
+        {{ product.product_type?.name || route.params.productType }}
+      </span>
+
+      <v-icon icon="mdi-chevron-right" size="14" />
+      <span class="text-brandColor2 truncate-two-lines">
         {{ product.name }}
       </span>
     </div>
@@ -71,8 +86,6 @@
           <ProductThingsToKnow :items="product.thingsToKnow" />
         </div>
 
-       
-
         <div
           v-if="
             product.inclusions?.some((i) => i.active) ||
@@ -100,17 +113,16 @@
           <ProductTerms :terms="product.terms" />
         </div>
 
-        <div v-if="relatedProducts.length" class="mt-10">
+        <div v-if="relatedProducts.length" class="mt-8">
           <ProductRelated
             title="You May Also Like"
             :products="relatedProducts"
           />
         </div>
 
-         <div v-if="product.tags?.length" class="mt-8">
+        <div v-if="product.tags?.length" class="mt-8">
           <ProductTags :tags="product.tags" />
         </div>
-        
       </v-col>
 
       <!-- Booking Sidebar -->
@@ -135,12 +147,13 @@
         <v-card v-else rounded="lg" variant="outlined">
           <v-container class="text-center py-10">
             <v-icon size="48" color="brandColor">mdi-map-marker</v-icon>
-            <div class="g2a-title-lg mt-4">Choose your location</div>
-            <div class="g2a-title-lg mb-6">
-              Please select the location where you'd like to book this activity.
+            <div class="g2a-title-lg mt-4 mb-1">Choose your location</div>
+            <div class="text-greyDark mb-6">
+              Please select the location where you'd like to book this
+              activity.
             </div>
             <v-btn
-              rounded
+              rounded="lg"
               color="brandColor"
               flat
               @click="showLocationDialog = true"
@@ -154,10 +167,18 @@
   </template>
 
   <!-- Not found fallback -->
-  <v-container v-else class="py-16 text-center">
-    <v-icon size="72" color="grey">mdi-emoticon-sad-outline</v-icon>
-    <div class="g2a-title-lg mt-4">Activity not found</div>
-    <v-btn class="mt-6" color="brandColor" flat @click="$router.push('/v2')">
+  <v-container
+    v-else
+    class="d-flex flex-column align-center justify-center py-16 text-center"
+  >
+    <v-icon size="56" color="greyLight" class="mb-4">
+      mdi-emoticon-sad-outline
+    </v-icon>
+    <div class="g2a-title-2xl mb-1">Activity not found</div>
+    <div class="text-greyDark mb-4">
+      This activity may have been removed or the link is incorrect.
+    </div>
+    <v-btn rounded="lg" color="brandColor" flat @click="goHome">
       Browse Activities
     </v-btn>
   </v-container>
@@ -170,11 +191,13 @@
 
   <v-dialog
     v-model="showLocationDialog"
-    max-width="420"
+    max-width="480"
+    scrollable
+    :fullscreen="mobile"
     scrim="rgba(15, 23, 42, 0.3)"
     :style="{
-      backdropFilter: 'blur(2px)',
-      webkitBackdropFilter: 'blur(2px)',
+      backdropFilter: 'blur(5px)',
+      webkitBackdropFilter: 'blur(5px)',
     }"
   >
     <v-card rounded="lg" elevation="6">
@@ -182,7 +205,9 @@
         <div class="d-flex justify-space-between align-center">
           <div>
             <div class="g2a-title-2xl">Choose Location</div>
-          <div>Select the location you'd like to continue with.</div>
+            <div class="text-greyDark">
+              Select the location you'd like to continue with.
+            </div>
           </div>
           <v-btn
             size="small"
@@ -194,8 +219,6 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </div>
-
-        
       </v-container>
 
       <v-divider />
@@ -212,14 +235,20 @@
         >
           <div class="d-flex justify-space-between align-center">
             <div class="d-flex align-center">
-              <div>
-                <v-avatar size="38" color="brandColor2" variant="tonal">
-                  <v-icon size="20">mdi-map-marker</v-icon>
-                </v-avatar>
-              </div>
+              <v-avatar size="38" color="brandColor2" variant="tonal">
+                <v-icon size="20">mdi-map-marker</v-icon>
+              </v-avatar>
 
-              <div class="g2a-title-lg ml-2">
-                {{ location.name }}
+              <div class="ml-2">
+                <div class="g2a-title-lg">
+                  {{ location.name }}
+                </div>
+                <div
+                  v-if="location.starting_price"
+                  class="g2a-title-xs text-greyDark"
+                >
+                  Starts @{{ location.starting_price }}
+                </div>
               </div>
             </div>
             <v-icon size="18" color="grey"> mdi-chevron-right </v-icon>
@@ -236,6 +265,7 @@
 import apiClient from "@/services/api";
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
+import { useDisplay } from "vuetify";
 
 import ProductAbout from "../../components/activities/product/ProductAbout.vue";
 import ProductTags from "../../components/activities/product/ProductTags.vue";
@@ -255,6 +285,7 @@ import { saveBooking } from "@/store/booking.js";
 import router from "@/router/index.js";
 
 const route = useRoute();
+const { mobile } = useDisplay();
 
 const loading = ref(true);
 const error = ref(null);
@@ -414,6 +445,23 @@ const loadProduct = async () => {
     }
   }
 };
+
+const goHome = () => router.push({ name: "ActivitiesHome" });
+
+const goToCategory = () =>
+  router.push({
+    name: "ActivitiesCategory",
+    params: { category: route.params.category },
+  });
+
+const goToProductType = () =>
+  router.push({
+    name: "ActivitiesProductType",
+    params: {
+      category: route.params.category,
+      productType: route.params.productType,
+    },
+  });
 
 const selectLocation = async (location) => {
   showLocationDialog.value = false;
