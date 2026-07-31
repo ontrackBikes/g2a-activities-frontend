@@ -4,13 +4,14 @@
       {{ field.label || "Select Date" }}
     </div>
 
-    <div class="date-strip">
+    <div ref="stripRef" class="date-strip">
       <template v-for="date in dates" :key="date.value">
         <div v-if="date.showMonth" class="month-card py-2">
           <span>{{ date.month }}</span>
         </div>
 
         <v-card
+          :ref="(el) => setCardRef(el, date.value)"
           class="date-card py-4"
           :class="{ active: modelValue === date.value }"
           elevation="0"
@@ -27,6 +28,10 @@
       </template>
     </div>
 
+    <div v-if="selectedDateLabel" class="text-body-2 mt-2">
+      Selected date: <strong>{{ selectedDateLabel }}</strong>
+    </div>
+
     <div v-if="error" class="text-error text-caption mt-2">
       {{ error }}
     </div>
@@ -34,7 +39,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   modelValue: String,
@@ -49,16 +54,43 @@ const props = defineProps({
     default: "",
   },
 });
-
 const emit = defineEmits(["update:modelValue"]);
 
 const today = new Date().toISOString().split("T")[0];
+
+const stripRef = ref(null);
+const cardRefs = new Map();
+
+const setCardRef = (el, value) => {
+  if (el) {
+    cardRefs.set(value, el.$el || el);
+  } else {
+    cardRefs.delete(value);
+  }
+};
+
+const scrollToSelected = (behavior = "smooth") => {
+  const card = props.modelValue && cardRefs.get(props.modelValue);
+  if (!card || !stripRef.value) return;
+
+  const strip = stripRef.value;
+  const left = card.offsetLeft - strip.offsetWidth / 2 + card.offsetWidth / 2;
+
+  strip.scrollTo({ left, behavior });
+};
 
 onMounted(() => {
   if (!props.modelValue) {
     emit("update:modelValue", today);
   }
+
+  nextTick(() => scrollToSelected("auto"));
 });
+
+watch(
+  () => props.modelValue,
+  () => nextTick(() => scrollToSelected("smooth")),
+);
 
 const dates = computed(() => {
   const items = [];
@@ -93,6 +125,17 @@ const dates = computed(() => {
 const select = (value) => {
   emit("update:modelValue", value);
 };
+
+const selectedDateLabel = computed(() => {
+  if (!props.modelValue) return "";
+
+  return new Date(props.modelValue).toLocaleDateString("en-IN", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+});
 </script>
 
 <style scoped>

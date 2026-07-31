@@ -1,10 +1,19 @@
 <template>
   <v-card class="border" variant="outlined" rounded="lg">
-    <div class="pa-2 px-4">
+    <v-container>
       <div class="d-flex align-center justify-space-between">
-        <span class="g2a-title-md">
-          {{ field.label || "Quantity" }}
-        </span>
+        <div>
+          <span class="g2a-title-md">
+            {{ field.label || "Quantity" }}
+          </span>
+          <div
+            v-if="field.description"
+            class="text-greyDark d-flex align-center"
+          >
+            <!-- <v-icon color="info" class="mr-2"> mdi-information </v-icon> -->
+            <div>{{ field.description }}</div>
+          </div>
+        </div>
 
         <div class="d-flex align-center ga-2">
           <v-btn
@@ -32,12 +41,12 @@
           </v-btn>
         </div>
       </div>
-
-      <div v-if="field.description" class="text-caption text-greyDark mt-1">
-        {{ field.description }}
-      </div>
-    </div>
+    </v-container>
   </v-card>
+  <!-- <div v-if="field.description" class="text-greyDark my-4 d-flex align-center">
+    <v-icon color="info"> mdi-information </v-icon>
+    <div class="ml-2">{{ field.description }}</div>
+  </div> -->
 </template>
 
 <script setup>
