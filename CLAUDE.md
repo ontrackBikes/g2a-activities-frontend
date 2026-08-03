@@ -54,7 +54,7 @@ When adding a new generic widget, drop it under `src/widgets/<name>/` with its o
 
 Configured via `.env` / `.env.production` (see `.env.example`), consumed with `import.meta.env.*`:
 
-- `VITE_API_BASE_URL` — backend API base (e.g. `http://localhost:3000/api` or `https://activities-test.go2andaman.com/api`)
+- `VITE_API_BASE_URL` — backend API base (e.g. `http://localhost:3000/api` or `https://activities.go2andaman.com/api`)
 - `VITE_BASE_URL` — base URL of the booking site itself, used for building redirect/deep links (widgets link back here)
 - `VITE_RAZORPAY_KEY_ID` — Razorpay checkout key
 

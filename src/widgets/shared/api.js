@@ -1,6 +1,6 @@
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
-  "https://activities-test.go2andaman.com/api";
+  "https://activities.go2andaman.com/api";
 
 async function request(url, options = {}) {
   const response = await fetch(`${API_BASE}/v1${url}`, options);
