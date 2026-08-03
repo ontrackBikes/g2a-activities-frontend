@@ -44,7 +44,7 @@
         <div class="g2a-book-widget__amount">
           ₹{{ formatPrice(product.starting_price) }}
 
-          <span>/ guest</span>
+          <span>/ {{product.pricing_mode }}</span>
         </div>
       </div>
 
@@ -54,7 +54,7 @@
 
       <div v-if="settings.showMeta" class="g2a-book-widget__meta">
         <div v-if="settings.showGuests && product.max_bookable_per_booking">
-          👥 Max {{ product.max_bookable_per_booking }} Guests
+          👥 Max {{ product.max_bookable_per_booking }} / {{product.pricing_mode }}
         </div>
 
         <div v-if="settings.showLocations && product.locations?.length">
