@@ -58,6 +58,12 @@
       />
     </v-col>
   </v-row>
+
+  <v-card flat class="border mb-4" rounded="xl">
+    <v-container class="text-warning my-auto d-flex align-center">
+      <v-icon class="mr-2">mdi-information</v-icon> Drop time is automatically set to 24 hours after pickup time. You can contact us if you need a different drop time.
+    </v-container>
+  </v-card>
 </template>
 
 <script setup>

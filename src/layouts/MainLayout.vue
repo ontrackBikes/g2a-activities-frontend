@@ -26,7 +26,7 @@
             style="height: 22px"
           />
 
-          <div
+          <!-- <div
             v-if="!mobile"
             class="d-flex align-center"
             style="line-height: 1.2"
@@ -40,7 +40,7 @@
               >
               <span class="g2a-title-md">India</span>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div

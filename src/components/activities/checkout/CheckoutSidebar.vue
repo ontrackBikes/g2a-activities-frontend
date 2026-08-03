@@ -62,7 +62,6 @@
           :key="row.label"
           :label="row.label"
           :value="row.value"
-          
         />
       </v-container>
      

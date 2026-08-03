@@ -14,7 +14,7 @@
             <img :src="logo" width="180" alt="Go2Andaman" />
           </a>
 
-          <template v-if="!mobile">
+          <!-- <template v-if="!mobile">
             <v-divider vertical class="mx-4 my-6" style="height: 22px" />
 
             <div class="d-flex align-center">
@@ -28,7 +28,7 @@
                 <div class="g2a-text-11">India</div>
               </div>
             </div>
-          </template>
+          </template> -->
         </div>
         <div class="d-flex align-center justify-center ">
           <v-icon color="success" size="14" class="mr-1">mdi-lock</v-icon>
