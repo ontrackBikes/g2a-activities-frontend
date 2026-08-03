@@ -48,14 +48,15 @@
                 <v-container>
                   <div class="g2a-title-lg">Booking Info</div>
                   <v-divider class="my-2" />
+        
                   <DetailRow
-                    v-if="item.booking_data.guests"
+                    v-if="item.booking_data.guests && item.product_name !== 'Bike Rentals'"
                     label="Guests"
                     :value="item.booking_data.guests"
                   />
                   <DetailRow
                     v-if="item.booking_data.quantity"
-                    label="Quantity"
+                    :label="'Quantity' + (item.product_name === 'Bike Rentals' ? ' (Bikes)' : '')"
                     :value="item.booking_data.quantity"
                   />
                   <DetailRow
