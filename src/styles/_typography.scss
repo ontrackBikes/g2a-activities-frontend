@@ -1,0 +1,113 @@
+// Typography Variables
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+$font-size-3xl: 30px;
+$font-size-4xl: 36px;
+$font-size-5xl: 48px;
+
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$text-secondary: #545459;
+
+// Typography Mixin
+@mixin typography($size, $weight, $line-height) {
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $line-height;
+}
+
+// Base
+body {
+  @include typography($font-size-sm, 400, 1.5);
+}
+
+.g2a-text-secondary {
+  color: $text-secondary;
+}
+div{
+  @include typography($font-size-base, $font-weight-medium, 24px);
+}
+
+// Headings
+.g2a-heading {
+  @include typography(50px, $font-weight-bold, 36px);
+  font-family: "TrashHand"
+}
+.g2a-heading-md {
+  @include typography(36px, $font-weight-medium, 36px);
+  font-family: "TrashHand"
+}
+.g2a-heading-sm {
+  @include typography(26px, $font-weight-medium, 36px);
+  font-family: "TrashHand"
+}
+
+.g2a-title-xs {
+  @include typography($font-size-xs, $font-weight-medium, 18px);
+}
+
+.g2a-title-sm {
+  @include typography($font-size-sm, $font-weight-medium, 20px);
+}
+
+.g2a-title-md {
+  @include typography($font-size-base, $font-weight-semibold, 22px);
+}
+
+.g2a-title-base {
+  @include typography($font-size-base, $font-weight-medium, 24px);
+}
+
+.g2a-title-lg {
+  @include typography($font-size-lg, $font-weight-semibold, 24px);
+}
+
+.g2a-title-xl {
+  @include typography($font-size-xl, $font-weight-semibold, 30px);
+}
+
+.g2a-title-2xl {
+  @include typography($font-size-2xl, $font-weight-bold, 32px);
+}
+
+.g2a-title-xlxl {
+  @include typography($font-size-3xl, $font-weight-bold, 38px);
+}
+
+.g2a-title-4xl {
+  @include typography($font-size-4xl, $font-weight-bold, 44px);
+}
+
+.g2a-title-5xl {
+  @include typography($font-size-5xl, $font-weight-bold, 56px);
+}
+
+.v-card.v-card--variant-outlined {
+  border-color: rgba(0, 0, 0, 0.12);
+  /* Same as Vuetify 2 default */
+}
+
+.v-btn,
+.v-tab {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.v-btn {
+  font-weight: 600;
+}
+
+.g2a-link {
+  color: rgb(var(--v-theme-brandColor2));
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+.g2a-link:hover {
+   color: rgb(var(--v-theme-brandColor2Dark));
+}

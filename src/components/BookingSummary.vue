@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-card elevation="0" class="g2a-rounded-border border bg-white">
+    <v-card elevation="0" class="g2a-rounded-border border">
       <v-alert color="background">
-        <div class="g2a-text-20 g2a-text-bold-600">
+        <div class="g2a-text-20 ">
           Booking Summary
         </div>
       </v-alert>
@@ -18,11 +18,11 @@
             </v-col>
 
             <v-col>
-              <p class="g2a-text-bold-600 g2a-text-15 mb-0">
+              <p class=" g2a-text-15 mb-0">
                 {{ productInfo.label }} -
                 {{ bookingData.selectedLocation?.name }}
               </p>
-              <p class="g2a-text-13 text-grey mb-0">
+              <p class=" text-grey mb-0">
                 {{ bookingData.quantity }} Vehicle<span v-if="bookingData.quantity > 1">s</span>
               </p>
             </v-col>
@@ -36,10 +36,10 @@
           <!-- Duration -->
           <v-row class="my-1" dense no-gutters>
             <v-col cols="5">
-              <p class="g2a-text-13 text-grey">Duration</p>
+              <p class=" text-grey">Duration</p>
             </v-col>
             <v-col cols="7" class="text-right">
-              <p class="g2a-text-bold-500 g2a-text-14">
+              <p class="g2a-title-lg-500">
                 {{ calculateDuration * 24 }} hrs ({{ calculateDuration }} Day<span
                   v-if="calculateDuration > 1">s</span>)
               </p>
@@ -49,30 +49,30 @@
           <!-- Dates -->
           <v-row class="my-1" dense no-gutters>
             <v-col cols="5">
-              <p class="g2a-text-13 text-grey">Dates</p>
+              <p class=" text-grey">Dates</p>
             </v-col>
             <v-col cols="7" class="text-right">
-              <p class="g2a-text-bold-500 g2a-text-14">{{ formatDateRange }}</p>
+              <p class="g2a-title-lg-500">{{ formatDateRange }}</p>
             </v-col>
           </v-row>
 
           <!-- Pickup -->
           <v-row class="my-1" dense no-gutters>
             <v-col cols="5">
-              <p class="g2a-text-13 text-grey">Pickup</p>
+              <p class=" text-grey">Pickup</p>
             </v-col>
             <v-col cols="7" class="text-right">
-              <p class="g2a-text-bold-500 g2a-text-14">{{ pickupDisplay }}</p>
+              <p class="g2a-title-lg-500">{{ pickupDisplay }}</p>
             </v-col>
           </v-row>
 
           <!-- Dropoff -->
           <v-row class="my-1" dense no-gutters>
             <v-col cols="5">
-              <p class="g2a-text-13 text-grey">Dropoff</p>
+              <p class=" text-grey">Dropoff</p>
             </v-col>
             <v-col cols="7" class="text-right">
-              <p class="g2a-text-bold-500 g2a-text-14">{{ dropoffDisplay }}</p>
+              <p class="g2a-title-lg-500">{{ dropoffDisplay }}</p>
             </v-col>
           </v-row>
         </div>
@@ -89,7 +89,7 @@
               </p>
             </v-col>
             <v-col cols="5" class="text-right">
-              <p class="g2a-text-bold-500 g2a-text-15">
+              <p class="g2a-title-lg-500 g2a-text-15">
                 ₹{{ calculateDuration * rentalTotalCost * bookingData.quantity }}
               </p>
             </v-col>
@@ -102,7 +102,7 @@
               <p class="g2a-text-14">Delivery Charge</p>
             </v-col>
             <v-col cols="5" class="text-right">
-              <p class="g2a-text-bold-500 g2a-text-15">
+              <p class="g2a-title-lg-500 g2a-text-15">
                 ₹{{ hotelDeliveryCharge }}
               </p>
             </v-col>
@@ -115,7 +115,7 @@
               <p class="g2a-text-14">Pickup Charge</p>
             </v-col>
             <v-col cols="5" class="text-right">
-              <p class="g2a-text-bold-500 g2a-text-15">
+              <p class="g2a-title-lg-500 g2a-text-15">
                 ₹{{ hotelPickupCharge }}
               </p>
             </v-col>
@@ -127,21 +127,21 @@
         <!-- Total -->
         <v-row class="mt-3" dense no-gutters>
           <v-col cols="5">
-            <p class="g2a-text-bold-600 g2a-text-16">Total</p>
+            <p class=" g2a-text-16">Total</p>
           </v-col>
           <v-col cols="7" class="text-right">
-            <p class="g2a-text-bold-700 g2a-text-16">₹{{ totalPrice }}</p>
+            <p class=" g2a-text-16">₹{{ totalPrice }}</p>
           </v-col>
         </v-row>
 
         <v-row dense no-gutters v-if="totalPrice - payNowAmountTotal > 0">
           <v-col cols="7">
-            <p class="g2a-text-bold-600 g2a-text-16 text-brandColor">
+            <p class=" g2a-text-16 text-brandColor">
               Pay After Confirmation
             </p>
           </v-col>
           <v-col cols="5" class="text-right">
-            <p class="g2a-text-bold-700 g2a-text-16 text-brandColor">
+            <p class=" g2a-text-16 text-brandColor">
               ₹{{ totalPrice - payNowAmountTotal }}
             </p>
           </v-col>
@@ -149,10 +149,10 @@
         <v-divider class="my-2"></v-divider>
         <v-row dense no-gutters>
           <v-col cols="5">
-            <p class="g2a-text-bold-600 g2a-text-18 text-darkGreen1">Payable</p>
+            <p class=" g2a-title-lg text-darkGreen1">Payable</p>
           </v-col>
           <v-col cols="7" class="text-right">
-            <p class="g2a-text-bold-700 g2a-text-18 text-darkGreen1">
+            <p class=" g2a-title-lg text-darkGreen1">
               ₹{{ payNowAmountTotal }}
             </p>
           </v-col>
@@ -164,7 +164,7 @@
           <v-icon color="grey" size="14" class="me-2">
             mdi-shield-check
           </v-icon>
-          <span class="g2a-text-13 text-grey">No hidden charges</span>
+          <span class=" text-grey">No hidden charges</span>
         </div>
       </v-alert>
     </v-card>

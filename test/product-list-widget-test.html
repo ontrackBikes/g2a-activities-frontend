@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Product List Widget Playground</title>
+
+  <!-- href="https://activities-test.go2andaman.com/widgets/product-list/widget.css" -->
+  <link
+    rel="stylesheet"
+    href="https://activities-test.go2andaman.com/widgets/product-list/widget.css"
+  />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 32px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .controls {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .actions {
+      grid-column: 1 / -1;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      background: #ffc107;
+      font-weight: bold;
+    }
+
+    #widget {
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Product List Widget Playground</h1>
+
+<div class="controls">
+
+  <div class="field">
+    <label>Base URL</label>
+    <input
+      id="baseUrl"
+      value="https://activities-test.go2andaman.com">
+  </div>
+
+  <div class="field">
+    <label>Page</label>
+    <input
+      id="page"
+      type="number"
+      value="1">
+  </div>
+
+  <div class="field">
+    <label>Limit</label>
+    <input
+      id="limit"
+      type="number"
+      value="12">
+  </div>
+
+  <div class="field">
+    <label>Sort</label>
+    <select id="sort">
+      <option value="">-- None --</option>
+      <option value="price_asc">price_asc</option>
+      <option value="price_desc" selected>price_desc</option>
+      <option value="featured">featured</option>
+      <option value="latest">latest</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Product Type Slug</label>
+    <input
+      id="productTypeSlug"
+      value="bike-rentals">
+  </div>
+
+  <div class="field">
+    <label>Location Slugs</label>
+    <input
+      id="locationSlugs"
+      placeholder="port-blair">
+  </div>
+
+  <div class="field">
+    <label>Tag Slugs</label>
+    <input
+      id="tagSlugs"
+      placeholder="best-seller">
+  </div>
+
+  <div class="field">
+    <label>Redirect Template</label>
+    <input
+      id="redirectTemplate"
+      value="/{category}/{productType}/{product}-in-{location}/book">
+  </div>
+
+  <div class="actions">
+    <button onclick="loadWidget()">
+      🔄 Reload Widget
+    </button>
+
+    <button
+      id="copyBtn"
+      onclick="copyCode()">
+      📋 Copy Embed Code
+    </button>
+  </div>
+
+</div>
+
+<h2>Generated Embed Code</h2>
+
+<textarea
+  id="embedCode"
+  readonly
+  rows="16"
+  style="
+    width:100%;
+    margin-bottom:32px;
+    padding:16px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    font-family:Consolas,monospace;
+    font-size:13px;
+  "></textarea>
+
+<h2>Live Preview</h2>
+
+<div
+  id="widget"
+  class="g2a-product-list-widget">
+</div>
+
+<script>
+
+function value(id) {
+  return document.getElementById(id).value;
+}
+
+function updateEmbedCode() {
+
+  const attrs = [
+    ["base-url", value("baseUrl")],
+    ["page", value("page")],
+    ["limit", value("limit")],
+    ["sort", value("sort")],
+    ["product-type-slug", value("productTypeSlug")],
+    ["location-slugs", value("locationSlugs")],
+    ["tag-slugs", value("tagSlugs")],
+    ["redirect-template", value("redirectTemplate")]
+  ];
+
+  const attributes = attrs
+    .filter(([, value]) => value !== "")
+    .map(([key, value]) => `  data-${key}="${value}"`)
+    .join("\n");
+
+  document.getElementById("embedCode").value =
+`<link
+  rel="stylesheet"
+  href="https://activities-test.go2andaman.com/widgets/product-list/widget.css"
+/>
+
+<div
+  class="g2a-product-list-widget"
+${attributes}
+></div>
+
+<script src="https://activities-test.go2andaman.com/widgets/product-list/widget.js"><\/script>`;
+}
+
+async function copyCode() {
+
+  await navigator.clipboard.writeText(
+    document.getElementById("embedCode").value
+  );
+
+  const btn =
+    document.getElementById("copyBtn");
+
+  btn.innerHTML = "✅ Copied";
+
+  setTimeout(() => {
+    btn.innerHTML = "📋 Copy Embed Code";
+  }, 1500);
+
+}
+
+function loadWidget() {
+
+  const widget =
+    document.getElementById("widget");
+
+  widget.innerHTML = "";
+
+  widget.dataset.baseUrl =
+    value("baseUrl");
+
+  widget.dataset.page =
+    value("page");
+
+  widget.dataset.limit =
+    value("limit");
+
+  widget.dataset.sort =
+    value("sort");
+
+  widget.dataset.productTypeSlug =
+    value("productTypeSlug");
+
+  widget.dataset.locationSlugs =
+    value("locationSlugs");
+
+  widget.dataset.tagSlugs =
+    value("tagSlugs");
+
+  widget.dataset.redirectTemplate =
+    value("redirectTemplate");
+
+  updateEmbedCode();
+
+  const old =
+    document.getElementById("widget-script");
+
+  if (old) {
+    old.remove();
+  }
+
+  const script =
+    document.createElement("script");
+
+  script.id = "widget-script";
+
+  script.src =
+    "https://activities-test.go2andaman.com/widgets/product-list/widget.js?ts=" +
+    Date.now();
+
+  document.body.appendChild(script);
+
+}
+
+loadWidget();
+
+</script>
+
+</body>
+</html>

@@ -7,7 +7,7 @@
           <template v-if="loading">
             <v-progress-circular indeterminate size="48" class="mb-4" />
             <h3>Verifying Payment</h3>
-            <p class="text-medium-emphasis">
+            <p class="g2a-text-14">
               Please wait while we confirm your payment
             </p>
           </template>
@@ -74,7 +74,7 @@
 
             <h3 class="text-error">Payment Failed</h3>
 
-            <p class="text-medium-emphasis mt-2">
+            <p class="g2a-text-14 mt-2">
               {{
                 orderInfo.reason ||
                 "Payment could not be completed if the amount is debited it will be refunded back to you within 5-7 working days."
@@ -86,7 +86,7 @@
               block
               color="brandColor"
               class="mt-4"
-              rounded="xl"
+              rounded="lg"
               size="x-large"
               @click="retryPayment"
             >
@@ -102,7 +102,7 @@
 
             <h3 class="text-brandColor">Payment Pending</h3>
 
-            <p class="text-medium-emphasis mt-2">
+            <p class="g2a-text-14 mt-2">
               {{
                 orderInfo.reason ||
                 "We are waiting for confirmation from the bank"
@@ -114,7 +114,7 @@
               block
               color="brandColor"
               class="mt-4"
-              rounded="xl"
+              rounded="lg"
               size="x-large"
               @click="retryPayment"
             >

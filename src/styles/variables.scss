@@ -2,6 +2,18 @@
 
 $body-font-family: "Roobert", sans-serif;
 
+.rounded-lg {
+  border-radius: 16px !important;
+}
+
+@font-face {
+  font-family: "TrashHand";
+  src: url("@/assets/fonts/TrashHand.TTF") format("truetype"),
+    url("@/assets/fonts/TrashHand.TTF") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
 // Regular
 @font-face {
   font-family: "Roobert";
@@ -107,3 +119,35 @@ $body-font-family: "Roobert", sans-serif;
 body {
   font-family: $body-font-family;
 }
+/* variables.scss */
+
+.brand-gradient {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--v-theme-brandColorFade)) 0%,
+    rgba(var(--v-theme-brandColorFade), 0) 100%
+  );
+}
+
+.brand-gradient-text {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--v-theme-brandColorFade)) 0%,
+    rgba(var(--v-theme-brandColorFade), 0) 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+
+.glass {
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(243, 239, 239, 0.28);
+}
+

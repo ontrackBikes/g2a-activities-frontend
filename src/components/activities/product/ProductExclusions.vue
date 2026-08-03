@@ -1,0 +1,44 @@
+<template>
+  <v-card
+    v-if="activeExclusions.length"
+    rounded="lg"
+    variant="outlined"
+    height="100%"
+  >
+    <v-card-text>
+      <div class="g2a-title-lg mb-4 text-error">Not Included</div>
+
+      <div
+        v-for="item in activeExclusions"
+        :key="item.id"
+        class="d-flex align-start ga-2 mb-3"
+      >
+        <v-icon
+          icon="mdi-close"
+          size="18"
+          color="error"
+          class="mt-1 flex-shrink-0"
+        />
+
+        <span class="g2a-title-lg">
+          {{ item.content }}
+        </span>
+      </div>
+    </v-card-text>
+  </v-card>
+</template>
+
+<script setup>
+import { computed } from "vue";
+
+const props = defineProps({
+  exclusions: {
+    type: Array,
+    default: () => [],
+  },
+});
+
+const activeExclusions = computed(() =>
+  props.exclusions.filter((item) => item.active),
+);
+</script>

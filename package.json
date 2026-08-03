@@ -12,6 +12,8 @@
     "build": "vite build --mode development",
     "build:staging": "vite build --mode staging",
     "build:production": "vite build --mode production",
+    "build:widgets": "node scripts/build-widgets.js",
+    "build:booking-price-widget": "vite build --config vite.booking-price-widget.config.js",
     "build:activities-bike-rentals-widget:dev": "vite build --config vite.activities-bike-rentals-widget.config.js --mode development",
     "build:activities-bike-rentals-widget:staging": "vite build --config vite.activities-bike-rentals-widget.config.js --mode staging",
     "build:activities-bike-rentals-widget:production": "vite build --config vite.activities-bike-rentals-widget.config.js --mode production",
@@ -27,6 +29,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.1.14",
     "@mdi/font": "^7.4.47",
     "@vueuse/core": "^13.9.0",
     "axios": "^1.13.2",
