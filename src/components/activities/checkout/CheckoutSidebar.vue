@@ -690,10 +690,18 @@ const bookingRows = computed(() =>
       if (indexB === -1) return -1;
       return indexA - indexB;
     })
-    .map(([key, value]) => ({
-      label: fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key),
-      value: key.includes("date") ? formatDate(value) : formatValue(value),
-    })),
+    .map(([key, value]) => {
+      const label = fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
+      const isTimeLabel = label === "Pickup Time" || label === "Return Time";
+      return {
+        label,
+        value: key.includes("date")
+          ? formatDate(value)
+          : isTimeLabel
+            ? formatTime(value)
+            : formatValue(value),
+      };
+    }),
 );
 
 // First 3 rows (+ selected slot) show up-front; the rest live under "More details".
@@ -739,7 +747,31 @@ const formatDate = (date) => {
   });
 };
 
-defineExpose({ formatCurrency, formatDate });
+// Backend sends pickup/drop times as bare "HH:mm" (or "HH:mm:ss") strings,
+// which `new Date()` can't parse directly — so match the hour/minute manually
+// before falling back to a full date parse for anything else (e.g. ISO datetimes).
+const formatTime = (value) => {
+  if (value == null || value === "") return value;
+
+  const match = String(value).match(/^(\d{1,2}):(\d{2})/);
+  if (match) {
+    let hours = parseInt(match[1], 10);
+    const minutes = match[2];
+    const period = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    return `${hours}:${minutes} ${period}`;
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return parsed.toLocaleTimeString("en-IN", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
+defineExpose({ formatCurrency, formatDate, formatTime });
 </script>
 
 <style scoped>
