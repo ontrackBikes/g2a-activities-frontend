@@ -41,6 +41,7 @@
             :slots="slots"
             :form="form"
             :maxQuantity="maxQuantity"
+            :serviceHours="serviceHours"
           />
         </v-form>
 
@@ -478,6 +479,8 @@ const fields = computed(
 );
 
 const slots = computed(() => availability.value.slots ?? []);
+
+const serviceHours = computed(() => availability.value.service_hours ?? []);
 
 const selectedSlot = computed(() => availability.value.selected_slot ?? null);
 

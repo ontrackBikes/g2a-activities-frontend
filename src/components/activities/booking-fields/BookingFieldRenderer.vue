@@ -6,6 +6,7 @@
     :field="field"
     :slots="slots"
     :form="form"
+    :serviceHours="serviceHours"
     :error="error"
     :maxQuantity="maxQuantity"
     @update:modelValue="updateValue"
@@ -40,6 +41,11 @@ const props = defineProps({
   form: {
     type: Object,
     default: () => ({}),
+  },
+
+  serviceHours: {
+    type: Array,
+    default: () => [],
   },
 
   error: {

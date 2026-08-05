@@ -122,7 +122,7 @@
                 overflowY: 'auto',
               }"
             >
-              <v-row dense>
+              <v-row v-if="pickupTimeOptions.length" dense>
                 <v-col
                   v-for="option in pickupTimeOptions"
                   :key="option.value"
@@ -150,6 +150,10 @@
                   </v-chip>
                 </v-col>
               </v-row>
+
+              <div v-else class="text-medium-emphasis text-body-2 pa-2">
+                No pickup slots are available for the selected service hours.
+              </div>
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -190,6 +194,10 @@ const props = defineProps({
     required: true,
   },
   form: {
+    type: Object,
+    default: () => ({}),
+  },
+  serviceHours: {
     type: Object,
     default: () => ({}),
   },
@@ -352,37 +360,91 @@ const fetchLocations = async () => {
 
 onMounted(fetchLocations);
 
-// `value` must stay in 24-hour HH:mm form - that's what the backend's
+// ---------------------------------------------------------------------
+// Pickup time slot generation
+//
+// Slots are derived from `serviceHours.start_time` / `end_time` (both
+// "HH:mm" or "HH:mm:ss" strings) rather than a hardcoded list, at a
+// fixed 30-minute cadence. This also supports overnight service windows
+// (e.g. start 22:00, end 06:00) and rounds ragged boundary times like
+// "22:29:00" down/up to the nearest valid slot.
+// ---------------------------------------------------------------------
+
+const SLOT_INTERVAL_MINUTES = 30;
+const MINUTES_IN_DAY = 24 * 60;
+
+const parseTimeToMinutes = (value, fallback) => {
+  if (!value || typeof value !== "string") return fallback;
+
+  const [hoursStr, minutesStr] = value.split(":");
+  const hours = Number(hoursStr);
+  const minutes = Number(minutesStr);
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return fallback;
+
+  return hours * 60 + minutes;
+};
+
+const formatMinutesToHHmm = (totalMinutes) => {
+  const normalized =
+    ((totalMinutes % MINUTES_IN_DAY) + MINUTES_IN_DAY) % MINUTES_IN_DAY;
+  const hours = Math.floor(normalized / 60);
+  const minutes = normalized % 60;
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+};
+
+const formatMinutesToLabel = (totalMinutes) => {
+  const normalized =
+    ((totalMinutes % MINUTES_IN_DAY) + MINUTES_IN_DAY) % MINUTES_IN_DAY;
+  const hours24 = Math.floor(normalized / 60);
+  const minutes = normalized % 60;
+
+  const period = hours24 >= 12 ? "PM" : "AM";
+  const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
+
+  return `${String(hours12).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${period}`;
+};
+
+// Rounds the configured start up, and end down, to the nearest slot
+// boundary so every generated option is bookable and none of them spill
+// outside the service window. If end <= start, the window is treated as
+// spanning midnight (e.g. 22:00 -> 06:00).
+const serviceWindowMinutes = computed(() => {
+  const rawStart = parseTimeToMinutes(props.serviceHours?.start_time, 0);
+  const rawEnd = parseTimeToMinutes(
+    props.serviceHours?.end_time,
+    MINUTES_IN_DAY,
+  );
+
+  const start =
+    Math.ceil(rawStart / SLOT_INTERVAL_MINUTES) * SLOT_INTERVAL_MINUTES;
+
+  let end = Math.ceil(rawEnd / SLOT_INTERVAL_MINUTES) * SLOT_INTERVAL_MINUTES;
+
+  if (end <= start) {
+    end += MINUTES_IN_DAY;
+  }
+
+  return { start, end };
+});
+
+// `value` stays in 24-hour HH:mm form - that's what the backend's
 // pickup_time validation expects. `title` is just the display label.
-const PICKUP_TIME_SLOTS = [
-  { title: "07:00 AM", value: "07:00" },
-  { title: "07:30 AM", value: "07:30" },
-  { title: "08:00 AM", value: "08:00" },
-  { title: "08:30 AM", value: "08:30" },
-  { title: "09:00 AM", value: "09:00" },
-  { title: "09:30 AM", value: "09:30" },
-  { title: "10:00 AM", value: "10:00" },
-  { title: "10:30 AM", value: "10:30" },
-  { title: "11:00 AM", value: "11:00" },
-  { title: "11:30 AM", value: "11:30" },
-  { title: "12:00 PM", value: "12:00" },
-  { title: "12:30 PM", value: "12:30" },
-  { title: "01:00 PM", value: "13:00" },
-  { title: "01:30 PM", value: "13:30" },
-  { title: "02:00 PM", value: "14:00" },
-  { title: "02:30 PM", value: "14:30" },
-  { title: "03:00 PM", value: "15:00" },
-  { title: "03:30 PM", value: "15:30" },
-  { title: "04:00 PM", value: "16:00" },
-  { title: "04:30 PM", value: "16:30" },
-  { title: "05:00 PM", value: "17:00" },
-  { title: "05:30 PM", value: "17:30" },
-  { title: "06:00 PM", value: "18:00" },
-  { title: "06:30 PM", value: "18:30" },
-  { title: "07:00 PM", value: "19:00" },
-  { title: "07:30 PM", value: "19:30" },
-  { title: "08:00 PM", value: "20:00" },
-];
+// Generated fresh whenever serviceHours changes.
+const PICKUP_TIME_SLOTS = computed(() => {
+  const { start, end } = serviceWindowMinutes.value;
+  const slots = [];
+
+  for (let minutes = start; minutes <= end; minutes += SLOT_INTERVAL_MINUTES) {
+    slots.push({
+      title: formatMinutesToLabel(minutes),
+      value: formatMinutesToHHmm(minutes),
+    });
+  }
+
+  return slots;
+});
 
 const toMinutes = (hhmm) => {
   const [hours, minutes] = hhmm.split(":").map(Number);
@@ -406,7 +468,7 @@ const minAllowedMinutes = computed(() => {
 const pickupTimeOptions = computed(() => {
   const minMinutes = minAllowedMinutes.value;
 
-  return PICKUP_TIME_SLOTS.map((slot) => ({
+  return PICKUP_TIME_SLOTS.value.map((slot) => ({
     ...slot,
     disabled: minMinutes !== null && toMinutes(slot.value) < minMinutes,
   }));
