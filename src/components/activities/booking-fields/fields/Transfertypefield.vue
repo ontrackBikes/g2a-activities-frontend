@@ -117,7 +117,10 @@
             <v-divider />
 
             <v-card-text
-              :style="{ maxHeight: mobile ? '100%' : '360px', overflowY: 'auto' }"
+              :style="{
+                maxHeight: mobile ? '100%' : '360px',
+                overflowY: 'auto',
+              }"
             >
               <v-row dense>
                 <v-col
@@ -322,7 +325,7 @@ const updateSubField = (key, value) => {
         name: value.name,
         address: value.address,
       }
-    : value?.id ?? null;
+    : (value?.id ?? null);
 
   emit("update:modelValue", {
     ...props.modelValue,
@@ -389,7 +392,6 @@ const toMinutes = (hhmm) => {
 
 // Pickup time only needs to be restricted when the selected date (from
 // DateField, via the shared `form`) is today - any future date is
-// already more than 2 hours out.
 const minAllowedMinutes = computed(() => {
   const today = new Date().toISOString().split("T")[0];
 
@@ -397,7 +399,8 @@ const minAllowedMinutes = computed(() => {
 
   const now = new Date();
 
-  return now.getHours() * 60 + now.getMinutes() + 120;
+  // 12 hours = 720 minutes
+  return now.getHours() * 60 + now.getMinutes() + 720;
 });
 
 const pickupTimeOptions = computed(() => {
