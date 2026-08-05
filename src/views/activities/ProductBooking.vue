@@ -41,6 +41,7 @@
             :slots="slots"
             :form="form"
             :maxQuantity="maxQuantity"
+            :location-slug="selectedLocation?.slug"
           />
         </v-form>
 
@@ -532,11 +533,22 @@ const fieldModel = (fieldKey) => {
     };
   }
 
+  if (fieldKey === "pickup_and_drop_location") {
+    return {
+      pickup_location: form.pickup_location,
+      drop_location: form.drop_location,
+    };
+  }
+
   return form[fieldKey];
 };
 
 const handleFieldUpdate = (fieldKey, value) => {
-  if (fieldKey === "transfer_type" && value && typeof value === "object") {
+  if (
+    (fieldKey === "transfer_type" || fieldKey === "pickup_and_drop_location") &&
+    value &&
+    typeof value === "object"
+  ) {
     Object.assign(form, value);
     return;
   }
@@ -558,6 +570,21 @@ const checkAvailability = async () => {
     const payload = {
       ...form,
     };
+
+    // `transfer_type` only means anything for products whose schema
+    // actually has a `transfer_type` field - other products (e.g. ones
+    // using `pickup_and_drop_location`) shouldn't send it at all.
+    const hasTransferTypeField = fields.value.some(
+      (field) => field.field === "transfer_type",
+    );
+
+    if (!hasTransferTypeField) {
+      delete payload.transfer_type;
+    }
+
+    if (selectedLocation.value?.slug) {
+      payload.location_slug = selectedLocation.value.slug;
+    }
 
     if (estimateId.value) {
       payload.estimate_id = estimateId.value;

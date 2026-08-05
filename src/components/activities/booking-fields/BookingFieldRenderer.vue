@@ -8,6 +8,7 @@
     :form="form"
     :error="error"
     :maxQuantity="maxQuantity"
+    :location-slug="locationSlug"
     @update:modelValue="updateValue"
   />
 
@@ -49,6 +50,11 @@ const props = defineProps({
   maxQuantity: {
     type: Number,
     default: 10,
+  },
+
+  locationSlug: {
+    type: String,
+    default: "",
   },
 });
 
