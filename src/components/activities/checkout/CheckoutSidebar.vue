@@ -1,6 +1,11 @@
 <template>
   <!-- ============================== DESKTOP / TABLET: sticky card ============================== -->
-  <div v-if="!mobile" class="mt-4" :class="detailsExpanded ? '' : 'position-sticky'" style="top: 24px; z-index: 1">
+  <div
+    v-if="!mobile"
+    class="mt-4"
+    :class="detailsExpanded ? '' : 'position-sticky'"
+    style="top: 24px; z-index: 1"
+  >
     <v-card v-if="loading" rounded="lg" variant="outlined" elevation="0">
       <v-card-item class="pa-5">
         <template #prepend>
@@ -55,7 +60,7 @@
       </v-card-item>
 
       <v-divider />
-      
+
       <v-container v-if="previewRows.length" class="pb-0">
         <DetailRow
           v-for="row in previewRows"
@@ -64,7 +69,6 @@
           :value="row.value"
         />
       </v-container>
-     
 
       <G2AExpansionPanel
         v-model="detailsExpanded"
@@ -73,59 +77,56 @@
         :border="false"
         :title-size="'default'"
       >
-        
-          <v-container>
+        <v-container>
+          <DetailRow
+            v-for="row in remainingRows"
+            :key="row.label"
+            :label="row.label"
+            :value="row.value"
+            bold
+          />
 
+          <v-divider v-if="dailyPricing.length" class="my-4" />
+          <template v-if="dailyPricing.length">
+            <div class="g2a-title-2xl-2 mb-3">Daily pricing</div>
             <DetailRow
-              v-for="row in remainingRows"
-              :key="row.label"
-              :label="row.label"
-              :value="row.value"
+              v-for="day in previewDailyPricing"
+              :key="day.date"
+              :label="formatDate(day.date)"
+              :value="formatCurrency(day.unit_price)"
               bold
             />
+            <button
+              v-if="hasMorePricing"
+              type="button"
+              class="g2a-link g2a-title-2xl-2 bg-transparent border-0 pa-0"
+              @click.stop="pricingDialog = true"
+            >
+              View all {{ dailyPricing.length }} days
+            </button>
+          </template>
 
-            <v-divider v-if="dailyPricing.length" class="my-4" />
-            <template v-if="dailyPricing.length">
-              <div class="g2a-title-2xl-2 mb-3">Daily pricing</div>
-              <DetailRow
-                v-for="day in previewDailyPricing"
-                :key="day.date"
-                :label="formatDate(day.date)"
-                :value="formatCurrency(day.unit_price)"
-                bold
-              />
-              <button
-                v-if="hasMorePricing"
-                type="button"
-                class="g2a-link g2a-title-2xl-2 bg-transparent border-0 pa-0"
-                @click.stop="pricingDialog = true"
-              >
-                View all {{ dailyPricing.length }} days
-              </button>
-            </template>
-
-            <v-divider class="my-4" />
-            <DetailRow
-              :label="`Subtotal${pricing.quantity > 1 ? ` (x${pricing.quantity})` : ''}`"
-              :value="formatCurrency(pricing.subtotal)"
-              bold
-            />
-            <DetailRow
-              v-if="pricing.discount"
-              label="Discount"
-              :value="`-${formatCurrency(pricing.discount)}`"
-              value-class="text-success"
-              bold
-            />
-            <DetailRow
-              v-if="pricing.tax"
-              label="Taxes & fees"
-              :value="formatCurrency(pricing.tax)"
-              wrapper-class="mb-0"
-              bold
-            />
-          </v-container>
-       
+          <v-divider class="my-4" />
+          <DetailRow
+            :label="`Subtotal${pricing.quantity > 1 ? ` (x${pricing.quantity})` : ''}`"
+            :value="formatCurrency(pricing.subtotal)"
+            bold
+          />
+          <DetailRow
+            v-if="pricing.discount"
+            label="Discount"
+            :value="`-${formatCurrency(pricing.discount)}`"
+            value-class="text-success"
+            bold
+          />
+          <DetailRow
+            v-if="pricing.tax"
+            label="Taxes & fees"
+            :value="formatCurrency(pricing.tax)"
+            wrapper-class="mb-0"
+            bold
+          />
+        </v-container>
       </G2AExpansionPanel>
 
       <v-divider />
@@ -187,16 +188,12 @@
           <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
         </div>
         <v-divider class="my-2" /> -->
-        <div
-          class="d-flex align-center justify-center text-greyDark mt-2"
-        >
+        <div class="d-flex align-center justify-center text-greyDark mt-2">
           <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
           No Hidden Charges
         </div>
-        
       </v-card-text>
     </v-card>
-    
 
     <v-card v-else rounded="lg" flat class="border mt-4">
       <v-card-text class="text-center py-10">
@@ -206,8 +203,6 @@
         </div>
       </v-card-text>
     </v-card>
-
-    
   </div>
 
   <!-- ============================== MOBILE: fixed bottom bar + bottom sheet ============================== -->
@@ -269,7 +264,7 @@
             @click="$emit('proceed')"
           >
             Confirm & Pay
-            
+
             <!-- &nbsp;{{ formatCurrency(pricing.grand_total) }} -->
           </v-btn>
         </v-card-text>
@@ -279,8 +274,6 @@
         }}</v-card-text>
       </v-card>
     </div>
-
-    
 
     <v-bottom-sheet v-if="quote" v-model="detailsSheet" inset scrollable>
       <v-card
@@ -344,7 +337,6 @@
             :key="row.label"
             :label="row.label"
             :value="row.value"
-            
           />
 
           <template v-if="remainingRows.length || dailyPricing.length">
@@ -429,7 +421,7 @@
             @click="$emit('proceed')"
           >
             Confirm & Pay
-            
+
             <!-- &nbsp;{{ formatCurrency(pricing.grand_total) }} -->
           </v-btn>
         </div>
@@ -489,22 +481,20 @@
   </v-dialog>
 
   <v-card v-if="mobile" rounded="lg" flat class="border">
-      <v-container>
-        <!-- <div>
+    <v-container>
+      <!-- <div>
           By clicking "Confirm & Pay", you agree to the
           <a href="https://go2andaman.com/terms-of-service/" target="_blank" class="g2a-link">terms of service</a>.
         </div>
         <v-divider class="my-2" /> -->
-        <div
-          class="d-flex align-center justify-center text-greyDark mt-2"
-        >
-          <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
-          No Hidden Charges
-        </div>
-      </v-container>
-    </v-card>
+      <div class="d-flex align-center justify-center text-greyDark mt-2">
+        <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
+        No Hidden Charges
+      </div>
+    </v-container>
+  </v-card>
   <!-- Reserves space so page content isn't hidden behind the fixed bar -->
-    <div class="mobile-summary-bar-spacer" />
+  <div class="mobile-summary-bar-spacer" />
 </template>
 
 <script setup>
@@ -536,7 +526,6 @@ const detailsExpanded = ref(null);
 |--------------------------------------------------------------------------
 */
 
-
 const formatValue = (value) => {
   if (value == null) return "";
 
@@ -567,9 +556,7 @@ const formatValue = (value) => {
     if (value.title) return value.title;
 
     // Fallback
-    return Object.values(value)
-      .map(formatValue)
-      .join(", ");
+    return Object.values(value).map(formatValue).join(", ");
   }
 
   return String(value);
@@ -656,6 +643,9 @@ const canProceed = computed(
 |--------------------------------------------------------------------------
 */
 
+// Only genuinely structural date/time keys go here. Anything product-
+// specific (guests, quantity, custom attributes) must be declared in that
+// product's schema to show up — see SYSTEM_FIELD_KEYS below.
 const ROW_LABELS = {
   travel_date: "Travel Date",
   pickup_date: "Pickup Date",
@@ -663,18 +653,77 @@ const ROW_LABELS = {
   return_date: "Return Date",
   drop_time: "Return Time",
   rental_days: "Rental Days",
-  guests: "Guests",
-  quantity: "Quantity",
 };
 const ROW_ORDER = Object.keys(ROW_LABELS);
 
-const fieldLabels = computed(() => {
-  const fields =
-    props.quote?.product?.bookingTemplate?.product_page_schema?.fields || [];
-  return fields.reduce((acc, field) => {
+// Each product's booking template already carries a per-field `visible` /
+// `hidden` flag (see product_page_schema.fields on the schema), and some
+// fields (e.g. transfer_type) nest their own sub-fields under `config.fields`
+// (pickup_location, drop_location, pickup_time). We flatten all of that into
+// one lookup so both top-level and nested fields resolve correctly.
+const flattenSchemaFields = (fields = []) =>
+  fields.reduce((acc, field) => {
+    acc.push(field);
+    if (Array.isArray(field.config?.fields)) {
+      acc.push(...flattenSchemaFields(field.config.fields));
+    }
+    return acc;
+  }, []);
+
+const schemaFields = computed(() =>
+  flattenSchemaFields(
+    props.quote?.product?.bookingTemplate?.product_page_schema?.fields || [],
+  ),
+);
+
+const schemaFieldByKey = computed(() =>
+  schemaFields.value.reduce((acc, field) => {
+    acc[field.field] = field;
+    return acc;
+  }, {}),
+);
+
+const fieldLabels = computed(() =>
+  schemaFields.value.reduce((acc, field) => {
     acc[field.field] = field.label || prettyLabel(field.field);
     return acc;
-  }, {});
+  }, {}),
+);
+
+// Structural date/time keys are intrinsic to every booking and show even
+// when a product's schema doesn't explicitly declare them (schemas mostly
+// describe form INPUTS, and date pickers/slot pickers aren't always modeled
+// as a "field"). Everything else -- guests, quantity, custom attributes --
+// only shows if the product's schema actually defines that field, so it's
+// opt-in per product instead of tagging along on whatever the backend
+// happens to attach to the booking payload.
+const SYSTEM_FIELD_KEYS = new Set(ROW_ORDER);
+
+// No matching schema field -> only show if it's a structural system field.
+// Matching schema field -> only show if not explicitly hidden for this product.
+const isFieldHiddenInSummary = (key) => {
+  const field = schemaFieldByKey.value[key];
+  if (field) {
+    return field.hidden === true || field.visible === false;
+  }
+  return !SYSTEM_FIELD_KEYS.has(key);
+};
+
+// Resolves a raw stored value (e.g. "airport_to_location") to its schema-
+// defined option label (e.g. "Airport → Location"), when the field has a
+// config.options list. Falls back to null so the caller can use formatValue.
+const resolveOptionLabel = (key, value) => {
+  const options = schemaFieldByKey.value[key]?.config?.options;
+  if (!Array.isArray(options)) return null;
+  return options.find((option) => option.value === value)?.label ?? null;
+};
+
+// Row order follows the schema's field order first, then any system/legacy
+// keys (travel_date, etc.) that aren't part of the schema at all.
+const fieldOrder = computed(() => {
+  const schemaOrder = schemaFields.value.map((field) => field.field);
+  const extras = ROW_ORDER.filter((key) => !schemaOrder.includes(key));
+  return [...schemaOrder, ...extras];
 });
 
 const bookingRows = computed(() =>
@@ -682,16 +731,18 @@ const bookingRows = computed(() =>
     .filter(
       ([, value]) => value !== null && value !== undefined && value !== "",
     )
+    .filter(([key]) => !isFieldHiddenInSummary(key))
     .sort(([a], [b]) => {
-      const indexA = ROW_ORDER.indexOf(a);
-      const indexB = ROW_ORDER.indexOf(b);
+      const indexA = fieldOrder.value.indexOf(a);
+      const indexB = fieldOrder.value.indexOf(b);
       if (indexA === -1 && indexB === -1) return 0;
       if (indexA === -1) return 1;
       if (indexB === -1) return -1;
       return indexA - indexB;
     })
     .map(([key, value]) => {
-      const label = fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
+      const label =
+        fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
       const isTimeLabel = label === "Pickup Time" || label === "Return Time";
       return {
         label,
@@ -699,7 +750,7 @@ const bookingRows = computed(() =>
           ? formatDate(value)
           : isTimeLabel
             ? formatTime(value)
-            : formatValue(value),
+            : (resolveOptionLabel(key, value) ?? formatValue(value)),
       };
     }),
 );

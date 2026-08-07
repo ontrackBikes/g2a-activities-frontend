@@ -9,6 +9,8 @@
     :serviceHours="serviceHours"
     :error="error"
     :maxQuantity="maxQuantity"
+    :locationSlug="locationSlug"
+    :productSlug="productSlug"
     @update:modelValue="updateValue"
   />
 
@@ -55,6 +57,15 @@ const props = defineProps({
   maxQuantity: {
     type: Number,
     default: 10,
+  },
+
+  locationSlug: {
+    type: String,
+    default: "",
+  },
+  productSlug: {
+    type: String,
+    default: "",
   },
 });
 

@@ -2,46 +2,14 @@
   <v-card class="border" variant="outlined" rounded="lg">
     <div class="pa-2 px-4">
       <div class="g2a-title-md mb-3">
-        {{ field.label || "Transfer Details" }}
+        {{ field.label || "Pickup & Drop Details" }}
       </div>
 
-      <!-- Transfer Direction -->
-      <v-radio-group
-        v-model="transferType"
-        inline
-        density="compact"
-        hide-details
-        class="mb-4"
-      >
-        <v-radio
-          v-for="option in directionOptions"
-          :key="option.value"
-          :label="option.label"
-          :value="option.value"
-          class="mr-2"
-        />
-      </v-radio-group>
-
-      <!-- Pickup Location (always on top, like a ride-hailing app) -->
+      <!-- Pickup Location -->
       <template v-if="hasSubField('pickup_location')">
-        <v-text-field
-          v-if="airportSideKey === 'pickup_location'"
-          :model-value="airportLocation?.name || 'Loading airport...'"
-          :label="subFieldLabel('pickup_location', 'Pickup Location')"
-          variant="outlined"
-          density="compact"
-          rounded="lg"
-          hide-details="auto"
-          prepend-inner-icon="mdi-airplane"
-          class="mb-4"
-          readonly
-          disabled
-        />
-
         <location-picker
-          v-else
           :model-value="locationById(modelValue.pickup_location)"
-          :locations="pickableLocations"
+          :locations="availableLocations"
           :loading="loadingLocations"
           :label="subFieldLabel('pickup_location', 'Pickup Location')"
           :rules="pickupLocationRules"
@@ -50,26 +18,11 @@
         />
       </template>
 
-      <!-- Drop Location (always below pickup) -->
+      <!-- Drop Location -->
       <template v-if="hasSubField('drop_location')">
-        <v-text-field
-          v-if="airportSideKey === 'drop_location'"
-          :model-value="airportLocation?.name || 'Loading airport...'"
-          :label="subFieldLabel('drop_location', 'Drop Location')"
-          variant="outlined"
-          density="compact"
-          rounded="lg"
-          hide-details="auto"
-          prepend-inner-icon="mdi-airplane"
-          class="mb-4"
-          readonly
-          disabled
-        />
-
         <location-picker
-          v-else
           :model-value="locationById(modelValue.drop_location)"
-          :locations="pickableLocations"
+          :locations="availableLocations"
           :loading="loadingLocations"
           :label="subFieldLabel('drop_location', 'Drop Location')"
           :rules="dropLocationRules"
@@ -167,23 +120,17 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useDisplay } from "vuetify";
 import apiClient from "@/services/api";
 import LocationPicker from "../LocationPicker.vue";
 
 const { mobile } = useDisplay();
 
-const DEFAULT_DIRECTION_OPTIONS = [
-  { label: "Airport → Location", value: "airport_to_location" },
-  { label: "Location → Airport", value: "location_to_airport" },
-];
-
 const props = defineProps({
   modelValue: {
     type: Object,
     default: () => ({
-      transfer_type: "",
       pickup_location: null,
       drop_location: null,
       pickup_time: "",
@@ -213,12 +160,6 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const directionOptions = computed(() => {
-  return props.field.config?.options?.length
-    ? props.field.config.options
-    : DEFAULT_DIRECTION_OPTIONS;
-});
-
 const subFields = computed(() => props.field.config?.fields || []);
 
 const hasSubField = (key) => {
@@ -238,55 +179,53 @@ const subFieldLabel = (key, fallback) => {
 const isSubFieldRequired = (key) => {
   const match = subFields.value.find((subField) => subField.field === key);
 
-  return !!match?.required;
+  // Pickup/drop location default to required for a cab service unless the
+  // backend explicitly says otherwise.
+  return match ? !!match.required : true;
 };
 
-// Self-contained validation - which location is required flips with the
-// selected direction: the airport side is always auto-filled (and
-// disabled), so only the side the user actually has to pick themselves
-// carries a rule. Airport → Location needs a drop location; Location →
-// Airport needs a pickup location.
 const pickupLocationRules = computed(() => {
   if (!hasSubField("pickup_location")) return [];
-  if (airportSideKey.value === "pickup_location") return [];
+  if (!isSubFieldRequired("pickup_location")) return [];
 
-  return [(v) => !!v || "Please select a pickup location"];
+  return [
+    (v) => !!v || "Please select a pickup location",
+    () =>
+      !isSameLocation.value || "Pickup and drop locations cannot be the same",
+  ];
 });
 
 const dropLocationRules = computed(() => {
   if (!hasSubField("drop_location")) return [];
-  if (airportSideKey.value === "drop_location") return [];
+  if (!isSubFieldRequired("drop_location")) return [];
 
-  return [(v) => !!v || "Please select a drop location"];
+  return [
+    (v) => !!v || "Please select a drop location",
+    () =>
+      !isSameLocation.value || "Pickup and drop locations cannot be the same",
+  ];
 });
 
 const pickupTimeRules = computed(() => {
+  if (!hasSubField("pickup_time")) return [];
   if (!isSubFieldRequired("pickup_time")) return [];
 
   return [(v) => !!v || "Please select a pickup time"];
 });
 
-const transferType = ref(
-  props.modelValue.transfer_type || directionOptions.value[0]?.value || "",
-);
-
 const availableLocations = ref([]);
 const loadingLocations = ref(false);
 
-const airportLocation = computed(() => {
-  return availableLocations.value.find((loc) => loc.type === "airport") || null;
-});
+const isSameLocation = computed(() => {
+  const pickup = props.modelValue.pickup_location;
+  const drop = props.modelValue.drop_location;
 
-const airportSideKey = computed(() => {
-  return transferType.value === "airport_to_location"
-    ? "pickup_location"
-    : "drop_location";
-});
+  if (!pickup || !drop) return false;
 
-// A user picking their own location shouldn't be offered the airport
-// itself as an option there.
-const pickableLocations = computed(() => {
-  return availableLocations.value.filter((loc) => loc.type !== "airport");
+  const pickupId = typeof pickup === "object" ? pickup.id : pickup;
+  const dropId = typeof drop === "object" ? drop.id : drop;
+
+  return pickupId === dropId;
 });
 
 // Configured locations are stored as ids. A customer-entered location is
@@ -299,42 +238,9 @@ const locationById = (location) => {
   return availableLocations.value.find((loc) => loc.id === location) || null;
 };
 
-// Single watcher covering both triggers that affect the airport side:
-// the airport location finishing its fetch, and the direction being
-// flipped. Consolidated into one emit so the two concerns can't race
-// each other and clobber one another's update.
-watch(
-  [transferType, airportLocation],
-  ([newType], oldValues) => {
-    const [oldType] = oldValues || [];
-    const patch = { transfer_type: newType };
-
-    const newAirportKey =
-      newType === "airport_to_location" ? "pickup_location" : "drop_location";
-
-    if (airportLocation.value) {
-      patch[newAirportKey] = airportLocation.value.id;
-    }
-
-    // Direction flipped - the side that used to hold the airport now
-    // needs a real, deliberate pick from the user instead of stale data.
-    if (oldType && oldType !== newType) {
-      const oldAirportKey =
-        oldType === "airport_to_location" ? "pickup_location" : "drop_location";
-
-      patch[oldAirportKey] = null;
-    }
-
-    emit("update:modelValue", {
-      ...props.modelValue,
-      ...patch,
-    });
-  },
-  { immediate: true },
-);
-
 const updateSubField = (key, value) => {
   const isLocationField = key === "pickup_location" || key === "drop_location";
+
   const locationValue = value?.is_custom
     ? {
         type: "custom",
@@ -343,11 +249,25 @@ const updateSubField = (key, value) => {
       }
     : (value?.id ?? null);
 
-  emit("update:modelValue", {
+  const updated = {
     ...props.modelValue,
-    transfer_type: transferType.value,
     [key]: isLocationField ? locationValue : value,
-  });
+  };
+
+  // Prevent pickup & drop from being the same
+  if (
+    updated.pickup_location &&
+    updated.drop_location &&
+    updated.pickup_location === updated.drop_location
+  ) {
+    if (key === "pickup_location") {
+      updated.drop_location = null;
+    } else {
+      updated.pickup_location = null;
+    }
+  }
+
+  emit("update:modelValue", updated);
 };
 
 const fetchLocations = async () => {
@@ -470,6 +390,7 @@ const toMinutes = (hhmm) => {
 
 // Pickup time only needs to be restricted when the selected date (from
 // DateField, via the shared `form`) is today - any future date is
+// unrestricted.
 const minAllowedMinutes = computed(() => {
   const today = new Date().toISOString().split("T")[0];
 

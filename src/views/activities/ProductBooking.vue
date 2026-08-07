@@ -42,6 +42,8 @@
             :form="form"
             :maxQuantity="maxQuantity"
             :serviceHours="serviceHours"
+            :productSlug="product?.slug"
+            :locationSlug="selectedLocation?.slug"
           />
         </v-form>
 
@@ -363,6 +365,8 @@ const form = reactive({
 
   drop_location: Number(route.query.drop_location) || null,
 
+  pickup_time: route.query.pickup_time || "",
+
   selected_slot_token: route.query.slot || null,
 
   pickup_date: formatDate(pickup),
@@ -535,11 +539,23 @@ const fieldModel = (fieldKey) => {
     };
   }
 
+  if (fieldKey === "pickup_and_drop_location") {
+    return {
+      pickup_location: form.pickup_location,
+      drop_location: form.drop_location,
+      pickup_time: form.pickup_time,
+    };
+  }
+
   return form[fieldKey];
 };
 
 const handleFieldUpdate = (fieldKey, value) => {
-  if (fieldKey === "transfer_type" && value && typeof value === "object") {
+  if (
+    (fieldKey === "transfer_type" || fieldKey === "pickup_and_drop_location") &&
+    value &&
+    typeof value === "object"
+  ) {
     Object.assign(form, value);
     return;
   }
