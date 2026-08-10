@@ -69,6 +69,13 @@ const update = (value) => {
         type: "custom",
         name: value.name,
         address: value.address,
+        // lat/lng come from a Google Places search result and are required
+        // for KM_BASED (distance-tier) pricing. A manually typed location
+        // (no map pick) won't have these — omit rather than send null so
+        // the backend schema (which only accepts numbers) doesn't reject it.
+        ...(value.lat != null && value.lng != null
+          ? { lat: value.lat, lng: value.lng }
+          : {}),
       }
     : (value?.id ?? null);
 

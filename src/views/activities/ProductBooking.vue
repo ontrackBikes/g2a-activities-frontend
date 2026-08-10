@@ -44,6 +44,7 @@
             :serviceHours="serviceHours"
             :productSlug="product?.slug"
             :locationSlug="selectedLocation?.slug"
+            :pricing="pricing"
           />
         </v-form>
 
@@ -234,7 +235,15 @@
       <v-container>
         <div class="booking-footer-content">
           <div>
-            <div class="text-grey">Total Price</div>
+            <div class="text-grey">
+              Total Price
+              <span v-if="isKmBasedPricing && pricing.distance_km != null">
+                · {{ pricing.distance_km }} km
+                <template v-if="pricing.duration_minutes != null">
+                  (~{{ pricing.duration_minutes }} min)
+                </template>
+              </span>
+            </div>
 
             <div class="g2a-title-lg">₹{{ pricing.grand_total }}</div>
           </div>
@@ -489,6 +498,9 @@ const serviceHours = computed(() => availability.value.service_hours ?? []);
 const selectedSlot = computed(() => availability.value.selected_slot ?? null);
 
 const isSlotPricing = computed(() => pricing.value.pricing_type === "SLOT");
+const isKmBasedPricing = computed(
+  () => pricing.value.pricing_type === "KM_BASED",
+);
 
 const selectedLocation = computed(() => result.value?.selected_location);
 

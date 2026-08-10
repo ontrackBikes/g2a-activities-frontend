@@ -11,6 +11,7 @@
     :maxQuantity="maxQuantity"
     :locationSlug="locationSlug"
     :productSlug="productSlug"
+    :pricing="pricing"
     @update:modelValue="updateValue"
   />
 
@@ -66,6 +67,13 @@ const props = defineProps({
   productSlug: {
     type: String,
     default: "",
+  },
+
+  // KM_BASED products need distance_km / duration_minutes / unit_price
+  // from the latest availability check to show a live distance/price hint.
+  pricing: {
+    type: Object,
+    default: () => ({}),
   },
 });
 

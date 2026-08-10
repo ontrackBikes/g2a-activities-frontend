@@ -108,6 +108,12 @@
 
           <v-divider class="my-4" />
           <DetailRow
+            v-if="isKmBasedPricing && pricing.distance_km != null"
+            label="Distance"
+            :value="distanceLabel"
+            bold
+          />
+          <DetailRow
             :label="`Subtotal${pricing.quantity > 1 ? ` (x${pricing.quantity})` : ''}`"
             :value="formatCurrency(pricing.subtotal)"
             bold
@@ -371,6 +377,12 @@
 
           <v-divider class="my-4" />
           <DetailRow
+            v-if="isKmBasedPricing && pricing.distance_km != null"
+            label="Distance"
+            :value="distanceLabel"
+            bold
+          />
+          <DetailRow
             :label="`Subtotal${pricing.quantity > 1 ? ` (x${pricing.quantity})` : ''}`"
             :value="formatCurrency(pricing.subtotal)"
             bold
@@ -606,6 +618,20 @@ const pricing = computed(() => ({
   grand_total: 0,
   ...props.quote?.pricing,
 }));
+
+const isKmBasedPricing = computed(
+  () => pricing.value.pricing_type === "KM_BASED",
+);
+
+const distanceLabel = computed(() => {
+  const km = pricing.value.distance_km;
+
+  if (km == null) return "";
+
+  const minutes = pricing.value.duration_minutes;
+
+  return minutes != null ? `${km} km (~${minutes} min)` : `${km} km`;
+});
 
 const availability = computed(() => ({
   slots: [],

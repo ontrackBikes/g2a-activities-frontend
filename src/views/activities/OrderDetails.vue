@@ -48,15 +48,21 @@
                 <v-container>
                   <div class="g2a-title-lg">Booking Info</div>
                   <v-divider class="my-2" />
-        
+
                   <DetailRow
-                    v-if="item.booking_data.guests && item.product_name !== 'Bike Rentals'"
+                    v-if="
+                      item.booking_data.guests &&
+                      item.product_name !== 'Bike Rentals'
+                    "
                     label="Guests"
                     :value="item.booking_data.guests"
                   />
                   <DetailRow
                     v-if="item.booking_data.quantity"
-                    :label="'Quantity' + (item.product_name === 'Bike Rentals' ? ' (Bikes)' : '')"
+                    :label="
+                      'Quantity' +
+                      (item.product_name === 'Bike Rentals' ? ' (Bikes)' : '')
+                    "
                     :value="item.booking_data.quantity"
                   />
                   <DetailRow
@@ -75,9 +81,33 @@
                     :value="`${item.booking_data.pickup_location.name} (${item.booking_data.pickup_location.type})`"
                   />
                   <DetailRow
+                    v-if="item.booking_data.pickup_location?.address"
+                    label="Pickup Address"
+                    :value="item.booking_data.pickup_location.address"
+                  />
+                  <DetailRow
                     v-if="item.booking_data.drop_location"
                     label="Drop Location"
                     :value="`${item.booking_data.drop_location.name} (${item.booking_data.drop_location.type})`"
+                  />
+                  <DetailRow
+                    v-if="item.booking_data.drop_location?.address"
+                    label="Drop Address"
+                    :value="item.booking_data.drop_location.address"
+                  />
+                  <DetailRow
+                    v-if="
+                      isKmBasedItem(item) && item.pricing?.distance_km != null
+                    "
+                    label="Distance"
+                    :value="distanceValue(item)"
+                  />
+                  <DetailRow
+                    v-if="
+                      isKmBasedItem(item) && item.pricing?.unit_price != null
+                    "
+                    label="Fare"
+                    :value="`₹${currency(item.pricing.unit_price)}`"
                   />
                   <v-row
                     v-if="item.booking_data.selected_slot"
@@ -629,6 +659,21 @@ const loadOrder = async () => {
     loading.value = false;
     //payNow()
   }
+};
+
+// Distance-tier (KM_BASED) pricing: `item.pricing` is the full quote
+// snapshot saved on the order (see order.controller.js), so distance_km /
+// duration_minutes / unit_price are already available per item — no
+// extra API call needed here.
+const isKmBasedItem = (orderItem) =>
+  orderItem?.pricing?.pricing_type === "KM_BASED";
+
+const distanceValue = (orderItem) => {
+  const km = orderItem?.pricing?.distance_km;
+  if (km == null) return "";
+
+  const minutes = orderItem?.pricing?.duration_minutes;
+  return minutes != null ? `${km} km (~${minutes} min)` : `${km} km`;
 };
 
 const prettyTransferType = (type) => {

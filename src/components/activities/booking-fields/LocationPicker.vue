@@ -46,17 +46,19 @@
         <!-- Search -->
         <v-text-field
           v-model="search"
-          placeholder="Search hotels, jetties, restaurants..."
+          placeholder="Search hotels, jetties, restaurants, or any address..."
           prepend-inner-icon="mdi-magnify"
           variant="outlined"
           density="compact"
           rounded="lg"
           hide-details
+          clearable
           class="mb-4"
+          :loading="searchingPlaces"
         />
 
-        <!-- Categories -->
-        <div class="d-flex flex-wrap ga-2 mb-4">
+        <!-- Categories (only relevant while browsing configured locations) -->
+        <div v-if="!isSearching" class="d-flex flex-wrap ga-2 mb-4">
           <v-chip-group v-model="selectedCategory" mandatory>
             <v-chip value="all"> All </v-chip>
 
@@ -72,8 +74,8 @@
           </v-chip-group>
         </div>
 
-        <!-- Locations -->
-        <v-list lines="two" density="comfortable">
+        <!-- Configured Locations -->
+        <v-list v-if="!isSearching" lines="two" density="comfortable">
           <v-list-item
             v-for="location in filteredLocations"
             :key="location.id"
@@ -108,9 +110,49 @@
             </div>
           </template>
         </v-list>
+
+        <!-- Google Places Search Results -->
+        <v-list v-else lines="two" density="comfortable">
+          <v-list-item
+            v-for="place in placeResults"
+            :key="place.place_id"
+            rounded="lg"
+            @click="selectPlace(place)"
+          >
+            <template #prepend>
+              <v-avatar color="primary" variant="tonal">
+                <v-icon>mdi-map-marker</v-icon>
+              </v-avatar>
+            </template>
+
+            <v-list-item-title>
+              {{ place.name }}
+            </v-list-item-title>
+
+            <v-list-item-subtitle>
+              {{ place.description }}
+            </v-list-item-subtitle>
+          </v-list-item>
+
+          <!-- Loading -->
+          <div v-if="searchingPlaces" class="text-center py-8">
+            <v-progress-circular indeterminate color="primary" />
+          </div>
+
+          <!-- Empty / Error -->
+          <template v-else-if="placeResults.length === 0">
+            <div class="text-center py-8">
+              <v-icon size="48" color="grey"> mdi-map-search </v-icon>
+
+              <div class="text-medium-emphasis mt-2">
+                {{ placeSearchError || "No matching places found." }}
+              </div>
+            </div>
+          </template>
+        </v-list>
       </v-card-text>
 
-      <v-card-actions>
+      <v-card-actions v-if="!isSearching">
         <!-- Manual Entry -->
         <v-divider class="my-4" />
 
@@ -121,7 +163,7 @@
           prepend-icon="mdi-map-marker-plus"
           @click="manualDialog = true"
         >
-          Can't find your location?
+          Can't find your location? Enter it manually
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -133,6 +175,12 @@
       <v-card-title> Enter Location </v-card-title>
 
       <v-card-text>
+        <v-alert type="info" variant="tonal" density="compact" class="mb-3">
+          Search above for the exact address whenever possible — pricing for
+          this service is calculated from real map distance, and a manually
+          typed location without map coordinates may not be priced accurately.
+        </v-alert>
+
         <v-text-field
           v-model="manualLocation.name"
           label="Location Name"
@@ -168,7 +216,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
+import { useDisplay } from "vuetify";
+import apiClient from "@/services/api";
+
+const { mobile } = useDisplay();
 
 const props = defineProps({
   modelValue: {
@@ -213,7 +265,7 @@ const filteredLocations = computed(() => {
     items = items.filter((item) => item.type === selectedCategory.value);
   }
 
-  if (search.value.trim()) {
+  if (search.value?.trim()) {
     const q = search.value.toLowerCase();
 
     items = items.filter((item) =>
@@ -227,6 +279,86 @@ const filteredLocations = computed(() => {
 
   return items;
 });
+
+/*
+|--------------------------------------------------------------------------
+| Google Places search
+|--------------------------------------------------------------------------
+| Once the query is long enough (and doesn't already match a configured
+| location), fall back to a live Google Places text search via the backend
+| (`GET /places/search`) so the customer can pick a real address with
+| lat/lng — required for KM_BASED (distance-tier) pricing to work.
+*/
+
+const MIN_QUERY_LENGTH = 3;
+
+const isSearching = computed(
+  () => (search.value?.trim().length || 0) >= MIN_QUERY_LENGTH,
+);
+
+const placeResults = ref([]);
+const searchingPlaces = ref(false);
+const placeSearchError = ref("");
+
+let searchTimer = null;
+let searchToken = 0;
+
+const runPlaceSearch = async (query) => {
+  const token = ++searchToken;
+
+  searchingPlaces.value = true;
+  placeSearchError.value = "";
+
+  try {
+    const { data } = await apiClient.get("/v1/places/search", {
+      params: { q: query },
+    });
+
+    if (token !== searchToken) return;
+
+    placeResults.value = data?.data || [];
+  } catch (err) {
+    if (token !== searchToken) return;
+
+    console.error("Failed to search places", err);
+    placeResults.value = [];
+    placeSearchError.value =
+      err?.response?.data?.message || "Unable to search locations right now.";
+  } finally {
+    if (token === searchToken) searchingPlaces.value = false;
+  }
+};
+
+watch(search, (value) => {
+  clearTimeout(searchTimer);
+
+  const query = value?.trim() || "";
+
+  if (query.length < MIN_QUERY_LENGTH) {
+    placeResults.value = [];
+    placeSearchError.value = "";
+    return;
+  }
+
+  searchTimer = setTimeout(() => runPlaceSearch(query), 350);
+});
+
+const selectPlace = (place) => {
+  emit("update:modelValue", {
+    id: null,
+    type: "custom",
+    name: place.name,
+    address: place.description,
+    lat: place.lat,
+    lng: place.lng,
+    is_custom: true,
+  });
+
+  dialog.value = false;
+
+  search.value = "";
+  placeResults.value = [];
+};
 
 const selectLocation = (location) => {
   emit("update:modelValue", location);

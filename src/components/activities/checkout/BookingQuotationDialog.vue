@@ -138,6 +138,19 @@
               </strong>
             </div>
 
+            <div
+              v-if="isKmBasedPricing && finalPricing.distance_km != null"
+              class="d-flex justify-space-between"
+            >
+              <span>Distance</span>
+              <strong>
+                {{ finalPricing.distance_km }} km
+                <template v-if="finalPricing.duration_minutes != null">
+                  (~{{ finalPricing.duration_minutes }} min)
+                </template>
+              </strong>
+            </div>
+
             <div class="d-flex justify-space-between">
               <span>Subtotal</span>
               <strong> ₹{{ currency(finalPricing.subtotal) }} </strong>
@@ -226,6 +239,10 @@ const slots = computed(() => availability.value.slots || []);
 const dailyPricing = computed(() => availability.value.daily_pricing || []);
 
 const hasSlots = computed(() => slots.value.length > 0);
+
+const isKmBasedPricing = computed(
+  () => pricing.value.pricing_type === "KM_BASED",
+);
 
 /*
 |--------------------------------------------------------------------------

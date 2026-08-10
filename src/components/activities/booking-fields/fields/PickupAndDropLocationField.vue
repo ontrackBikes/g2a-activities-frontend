@@ -112,8 +112,21 @@
         </v-dialog>
       </template>
 
-      <div class="mt-5 text-warning">
-        Within city limit INR 450, outside city limits starts from INR 800.
+      <div
+        v-if="isKmBasedPricing"
+        class="mt-5 text-medium-emphasis text-body-2"
+      >
+        <v-icon size="16" class="mr-1">mdi-map-marker-distance</v-icon>
+        Price is calculated by road distance between your pickup and drop
+        locations
+        <template v-if="distanceKm != null">
+          — <strong>{{ distanceKm }} km</strong>
+          <span v-if="durationMinutes != null">
+            (~{{ durationMinutes }} min)</span
+          >, starting from <strong>{{ formattedFromPrice }}</strong
+          >.
+        </template>
+        <template v-else> once both locations are selected. </template>
       </div>
     </div>
   </v-card>
@@ -156,9 +169,32 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  // Latest availability/pricing result for this product (from
+  // ProductBooking.vue's `pricing` computed). Used to show a live
+  // distance/price hint for KM_BASED products once both locations are set.
+  pricing: {
+    type: Object,
+    default: () => ({}),
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
+
+const isKmBasedPricing = computed(
+  () => props.pricing?.pricing_type === "KM_BASED",
+);
+
+const distanceKm = computed(() => props.pricing?.distance_km ?? null);
+
+const durationMinutes = computed(() => props.pricing?.duration_minutes ?? null);
+
+const formattedFromPrice = computed(() => {
+  const price = props.pricing?.unit_price;
+
+  return Number.isFinite(Number(price))
+    ? `₹${Number(price).toLocaleString("en-IN")}`
+    : "";
+});
 
 const subFields = computed(() => props.field.config?.fields || []);
 
@@ -246,6 +282,13 @@ const updateSubField = (key, value) => {
         type: "custom",
         name: value.name,
         address: value.address,
+        // lat/lng come from a Google Places search result and are required
+        // for KM_BASED (distance-tier) pricing. A manually typed location
+        // (no map pick) won't have these — omit rather than send null so
+        // the backend schema (which only accepts numbers) doesn't reject it.
+        ...(value.lat != null && value.lng != null
+          ? { lat: value.lat, lng: value.lng }
+          : {}),
       }
     : (value?.id ?? null);
 
