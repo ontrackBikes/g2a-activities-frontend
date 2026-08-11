@@ -151,66 +151,6 @@
           </template>
         </v-list>
       </v-card-text>
-
-      <v-card-actions v-if="!isSearching">
-        <!-- Manual Entry -->
-        <v-divider class="my-4" />
-
-        <v-btn
-          block
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-map-marker-plus"
-          @click="manualDialog = true"
-        >
-          Can't find your location? Enter it manually
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
-  <!-- Manual Location Dialog -->
-  <v-dialog v-model="manualDialog" max-width="500">
-    <v-card rounded="xl">
-      <v-card-title> Enter Location </v-card-title>
-
-      <v-card-text>
-        <v-alert type="info" variant="tonal" density="compact" class="mb-3">
-          Search above for the exact address whenever possible — pricing for
-          this service is calculated from real map distance, and a manually
-          typed location without map coordinates may not be priced accurately.
-        </v-alert>
-
-        <v-text-field
-          v-model="manualLocation.name"
-          label="Location Name"
-          placeholder="Hotel, Jetty, Landmark..."
-          variant="outlined"
-          density="compact"
-          rounded="lg"
-          class="mb-3"
-        />
-
-        <v-textarea
-          v-model="manualLocation.address"
-          label="Address"
-          placeholder="Enter full address"
-          variant="outlined"
-          density="compact"
-          rounded="lg"
-          rows="3"
-        />
-      </v-card-text>
-
-      <v-divider />
-
-      <v-card-actions>
-        <v-spacer />
-
-        <v-btn variant="text" @click="manualDialog = false"> Cancel </v-btn>
-
-        <v-btn color="primary" @click="confirmManualLocation"> Confirm </v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -242,15 +182,9 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 const dialog = ref(false);
-const manualDialog = ref(false);
 
 const search = ref("");
 const selectedCategory = ref("all");
-
-const manualLocation = ref({
-  name: "",
-  address: "",
-});
 
 const displayValue = computed(() => {
   if (!props.modelValue) return "";
@@ -367,28 +301,6 @@ const selectLocation = (location) => {
 
   search.value = "";
   selectedCategory.value = "all";
-};
-
-const confirmManualLocation = () => {
-  if (!manualLocation.value.name.trim()) return;
-
-  emit("update:modelValue", {
-    id: null,
-    type: "custom",
-    name: manualLocation.value.name,
-    address: manualLocation.value.address,
-    lat: null,
-    lng: null,
-    is_custom: true,
-  });
-
-  manualLocation.value = {
-    name: "",
-    address: "",
-  };
-
-  manualDialog.value = false;
-  dialog.value = false;
 };
 
 const getIcon = (type) => {
