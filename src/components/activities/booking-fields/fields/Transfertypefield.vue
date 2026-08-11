@@ -274,7 +274,11 @@ const availableLocations = ref([]);
 const loadingLocations = ref(false);
 
 const airportLocation = computed(() => {
-  return availableLocations.value.find((loc) => loc.type === "airport") || null;
+  return (
+    availableLocations.value.find((loc) =>
+      (loc.place_types || []).includes("airport"),
+    ) || null
+  );
 });
 
 const airportSideKey = computed(() => {
@@ -286,7 +290,9 @@ const airportSideKey = computed(() => {
 // A user picking their own location shouldn't be offered the airport
 // itself as an option there.
 const pickableLocations = computed(() => {
-  return availableLocations.value.filter((loc) => loc.type !== "airport");
+  return availableLocations.value.filter(
+    (loc) => !(loc.place_types || []).includes("airport"),
+  );
 });
 
 // Configured locations are stored as ids. A customer-entered location is
@@ -340,6 +346,15 @@ const updateSubField = (key, value) => {
         type: "custom",
         name: value.name,
         address: value.address,
+        // lat/lng/signature come from a Google Places search result and are
+        // required together for KM_BASED (distance-tier) pricing and for the
+        // backend to verify the location. A manually typed location (no map
+        // pick) won't have these — omit rather than send null so the backend
+        // schema doesn't reject a partial submission.
+        ...(value.lat != null && value.lng != null && value.signature
+          ? { lat: value.lat, lng: value.lng, signature: value.signature }
+          : {}),
+        ...(value.place_types ? { place_types: value.place_types } : {}),
       }
     : (value?.id ?? null);
 

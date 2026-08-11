@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ location?.type }}
     <SectionRenderer
       v-for="section in sections"
       :key="section.section"
@@ -32,10 +31,14 @@ const props = defineProps({
 // sometimes not) - so these sections are added automatically based on the
 // locations actually picked for this booking, on top of whatever the
 // product's own booking page schema configures.
-const isAirportLocation = (location) =>
-  location?.type === "airport" || /airport/i.test(location?.name || "");
+const hasLocationType = (location, type) =>
+  (location?.place_types || []).includes(type);
 
-const isJettyLocation = (location) => location?.type === "jetty";
+const isAirportLocation = (location) =>
+  hasLocationType(location, "airport") ||
+  /airport/i.test(location?.name || "");
+
+const isJettyLocation = (location) => hasLocationType(location, "jetty");
 
 const locationDerivedSections = computed(() => {
   const booking = props.quote?.booking || {};

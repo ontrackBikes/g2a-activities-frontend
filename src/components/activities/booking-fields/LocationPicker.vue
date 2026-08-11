@@ -85,7 +85,7 @@
             <template #prepend>
               <v-avatar color="primary" variant="tonal">
                 <v-icon>
-                  {{ getIcon(location.type) }}
+                  {{ getIcon(location.place_types) }}
                 </v-icon>
               </v-avatar>
             </template>
@@ -121,7 +121,9 @@
           >
             <template #prepend>
               <v-avatar color="primary" variant="tonal">
-                <v-icon>mdi-map-marker</v-icon>
+                <v-icon>
+                  {{ getIcon(place.place_types) }}
+                </v-icon>
               </v-avatar>
             </template>
 
@@ -196,14 +198,16 @@ const filteredLocations = computed(() => {
   let items = [...props.locations];
 
   if (selectedCategory.value !== "all") {
-    items = items.filter((item) => item.type === selectedCategory.value);
+    items = items.filter((item) =>
+      (item.place_types || []).includes(selectedCategory.value),
+    );
   }
 
   if (search.value?.trim()) {
     const q = search.value.toLowerCase();
 
     items = items.filter((item) =>
-      [item.name, item.address, item.type]
+      [item.name, item.address, ...(item.place_types || [])]
         .filter(Boolean)
         .join(" ")
         .toLowerCase()
@@ -285,6 +289,10 @@ const selectPlace = (place) => {
     address: place.description,
     lat: place.lat,
     lng: place.lng,
+    // Required alongside lat/lng when submitting a custom location -
+    // opaque, server-generated, and tied to this exact lat/lng pair.
+    signature: place.signature,
+    place_types: place.place_types,
     is_custom: true,
   });
 
@@ -303,28 +311,17 @@ const selectLocation = (location) => {
   selectedCategory.value = "all";
 };
 
-const getIcon = (type) => {
-  switch (type) {
-    case "hotel":
-      return "mdi-bed";
+const getIcon = (placeTypes) => {
+  const types = placeTypes || [];
 
-    case "jetty":
-      return "mdi-ferry";
+  if (types.includes("jetty")) return "mdi-ferry";
+  if (types.includes("airport")) return "mdi-airplane";
+  if (types.includes("hotel") || types.includes("lodging")) return "mdi-bed";
+  if (types.includes("restaurant")) return "mdi-silverware-fork-knife";
+  if (types.includes("attraction") || types.includes("tourist_attraction"))
+    return "mdi-camera";
+  if (types.includes("landmark")) return "mdi-map-marker";
 
-    case "restaurant":
-      return "mdi-silverware-fork-knife";
-
-    case "airport":
-      return "mdi-airplane";
-
-    case "attraction":
-      return "mdi-camera";
-
-    case "landmark":
-      return "mdi-map-marker";
-
-    default:
-      return "mdi-map-marker";
-  }
+  return "mdi-map-marker";
 };
 </script>

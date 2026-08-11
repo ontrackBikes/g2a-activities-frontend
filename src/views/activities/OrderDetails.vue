@@ -78,7 +78,7 @@
                   <DetailRow
                     v-if="item.booking_data.pickup_location"
                     label="Pickup Location"
-                    :value="`${item.booking_data.pickup_location.name} (${item.booking_data.pickup_location.type})`"
+                    :value="`${item.booking_data.pickup_location.name} (${locationTypeLabel(item.booking_data.pickup_location)})`"
                   />
                   <DetailRow
                     v-if="item.booking_data.pickup_location?.address"
@@ -88,7 +88,7 @@
                   <DetailRow
                     v-if="item.booking_data.drop_location"
                     label="Drop Location"
-                    :value="`${item.booking_data.drop_location.name} (${item.booking_data.drop_location.type})`"
+                    :value="`${item.booking_data.drop_location.name} (${locationTypeLabel(item.booking_data.drop_location)})`"
                   />
                   <DetailRow
                     v-if="item.booking_data.drop_location?.address"
@@ -686,6 +686,14 @@ const prettyTransferType = (type) => {
       return type?.replaceAll("_", " ") || "";
   }
 };
+
+// Configured locations carry categories in `place_types` (array); a
+// customer-entered location just carries the literal `type: "custom"`
+// discriminator instead - fall back to that when place_types is absent.
+const locationTypeLabel = (location) =>
+  location?.place_types?.length
+    ? location.place_types.join(", ")
+    : location?.type || "";
 
 const payNow = async () => {
   paying.value = true;

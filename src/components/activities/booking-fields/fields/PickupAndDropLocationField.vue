@@ -314,13 +314,15 @@ const updateSubField = (key, value) => {
         type: "custom",
         name: value.name,
         address: value.address,
-        // lat/lng come from a Google Places search result and are required
-        // for KM_BASED (distance-tier) pricing. A manually typed location
-        // (no map pick) won't have these — omit rather than send null so
-        // the backend schema (which only accepts numbers) doesn't reject it.
-        ...(value.lat != null && value.lng != null
-          ? { lat: value.lat, lng: value.lng }
+        // lat/lng/signature come from a Google Places search result and are
+        // required together for KM_BASED (distance-tier) pricing and for the
+        // backend to verify the location. A manually typed location (no map
+        // pick) won't have these — omit rather than send null so the backend
+        // schema doesn't reject a partial submission.
+        ...(value.lat != null && value.lng != null && value.signature
+          ? { lat: value.lat, lng: value.lng, signature: value.signature }
           : {}),
+        ...(value.place_types ? { place_types: value.place_types } : {}),
       }
     : (value?.id ?? null);
 
