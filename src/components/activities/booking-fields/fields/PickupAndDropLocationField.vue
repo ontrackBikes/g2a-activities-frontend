@@ -1,35 +1,60 @@
 <template>
   <v-card class="border" variant="outlined" rounded="lg">
     <div class="pa-2 px-4">
-      <div class="g2a-title-md mb-3">
+      <div class="g2a-title-md mb-4">
         {{ field.label || "Pickup & Drop Details" }}
       </div>
 
-      <!-- Pickup Location -->
-      <template v-if="hasSubField('pickup_location')">
-        <location-picker
-          :model-value="locationById(modelValue.pickup_location)"
-          :locations="availableLocations"
-          :loading="loadingLocations"
-          :label="subFieldLabel('pickup_location', 'Pickup Location')"
-          :rules="pickupLocationRules"
-          class="mb-4"
-          @update:model-value="updateSubField('pickup_location', $event)"
-        />
-      </template>
+      <!-- PICKUP / DROP — connector rail with swap, Ola/Uber style -->
+      <div
+        v-if="hasSubField('pickup_location') || hasSubField('drop_location')"
+        class="d-flex"
+      >
+        <!-- Rail: pickup dot -> dashed line -> drop marker -->
+        <div class="rail d-flex flex-column align-center mr-3">
+          <span class="rail-dot rail-dot--pickup" />
+          <span class="rail-line" />
+          <span class="rail-dot rail-dot--drop" />
+        </div>
 
-      <!-- Drop Location -->
-      <template v-if="hasSubField('drop_location')">
-        <location-picker
-          :model-value="locationById(modelValue.drop_location)"
-          :locations="availableLocations"
-          :loading="loadingLocations"
-          :label="subFieldLabel('drop_location', 'Drop Location')"
-          :rules="dropLocationRules"
-          class="mb-4"
-          @update:model-value="updateSubField('drop_location', $event)"
-        />
-      </template>
+        <div class="flex-grow-1 position-relative min-w-0">
+          <template v-if="hasSubField('pickup_location')">
+            <location-picker
+              :model-value="locationById(modelValue.pickup_location)"
+              :locations="availableLocations"
+              :loading="loadingLocations"
+              :label="subFieldLabel('pickup_location', 'Pickup Location')"
+              :rules="pickupLocationRules"
+              class="mb-4"
+              @update:model-value="updateSubField('pickup_location', $event)"
+            />
+          </template>
+
+          <template v-if="hasSubField('drop_location')">
+            <location-picker
+              :model-value="locationById(modelValue.drop_location)"
+              :locations="availableLocations"
+              :loading="loadingLocations"
+              :label="subFieldLabel('drop_location', 'Drop Location')"
+              :rules="dropLocationRules"
+              class="mb-4"
+              @update:model-value="updateSubField('drop_location', $event)"
+            />
+          </template>
+
+          <!-- Swap button, pinned to the rail -->
+          <v-btn
+            v-if="canSwap"
+            class="swap-btn"
+            icon="mdi-swap-vertical"
+            size="small"
+            variant="elevated"
+            color="surface"
+            :disabled="!modelValue.pickup_location && !modelValue.drop_location"
+            @click="swapLocations"
+          />
+        </div>
+      </div>
 
       <!-- Pickup Time -->
       <template v-if="hasSubField('pickup_time')">
@@ -49,14 +74,16 @@
 
         <v-dialog
           v-model="pickupTimeDialog"
-          max-width="500"
+          max-width="480"
+          :fullscreen="mobile"
+          :transition="mobile ? 'dialog-bottom-transition' : undefined"
           scrim="rgba(15,23,42,.30)"
           :style="{
             backdropFilter: 'blur(5px)',
             webkitBackdropFilter: 'blur(5px)',
           }"
         >
-          <v-card rounded="lg" flat>
+          <v-card :rounded="mobile ? 0 : 'lg'" flat height="100%">
             <v-toolbar density="comfortable" color="transparent">
               <v-toolbar-title>Select Pickup Time</v-toolbar-title>
 
@@ -71,7 +98,7 @@
 
             <v-card-text
               :style="{
-                maxHeight: mobile ? '100%' : '360px',
+                maxHeight: mobile ? 'calc(100% - 64px)' : '360px',
                 overflowY: 'auto',
               }"
             >
@@ -79,8 +106,9 @@
                 <v-col
                   v-for="option in pickupTimeOptions"
                   :key="option.value"
-                  md="3"
+                  cols="6"
                   sm="4"
+                  md="3"
                 >
                   <v-chip
                     rounded="lg"
@@ -112,11 +140,15 @@
         </v-dialog>
       </template>
 
-      <div
+      <v-alert
         v-if="isKmBasedPricing"
-        class="mt-5 text-medium-emphasis text-body-2"
+        density="compact"
+        variant="tonal"
+        color="primary"
+        icon="mdi-map-marker-distance"
+        rounded="lg"
+        class="mt-2 text-caption"
       >
-        <v-icon size="16" class="mr-1">mdi-map-marker-distance</v-icon>
         Price is calculated by road distance between your pickup and drop
         locations
         <template v-if="distanceKm != null">
@@ -127,7 +159,7 @@
           >.
         </template>
         <template v-else> once both locations are selected. </template>
-      </div>
+      </v-alert>
     </div>
   </v-card>
 </template>
@@ -313,6 +345,23 @@ const updateSubField = (key, value) => {
   emit("update:modelValue", updated);
 };
 
+// -------------------------------------------------------------------
+// Swap — the little reversing arrows between pickup & drop that every
+// ride-hailing app has. Bypasses updateSubField's same-location guard
+// since a straight swap can never produce a collision.
+// -------------------------------------------------------------------
+const canSwap = computed(
+  () => hasSubField("pickup_location") && hasSubField("drop_location"),
+);
+
+const swapLocations = () => {
+  emit("update:modelValue", {
+    ...props.modelValue,
+    pickup_location: props.modelValue.drop_location,
+    drop_location: props.modelValue.pickup_location,
+  });
+};
+
 const fetchLocations = async () => {
   if (!props.productSlug || !props.locationSlug) return;
 
@@ -485,3 +534,48 @@ watch(pickupTimeOptions, (options) => {
   }
 });
 </script>
+
+<style scoped>
+/* Signature element: the pickup -> drop connector rail. Everything else
+   in this file leans on Vuetify utility classes / props by design. */
+.rail {
+  width: 20px;
+  padding-top: 18px;
+  padding-bottom: 34px;
+}
+
+.rail-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgb(var(--v-theme-success));
+}
+
+.rail-dot--drop {
+  border-radius: 3px;
+  border-color: rgb(var(--v-theme-error));
+}
+
+.rail-line {
+  flex: 1;
+  width: 0;
+  min-height: 32px;
+  border-left: 2px dashed rgba(var(--v-theme-on-surface), 0.25);
+  margin: 6px 0;
+}
+
+.swap-btn {
+  position: absolute;
+  top: 28px;
+  right: 4px;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.15) !important;
+}
+
+@media (max-width: 600px) {
+  .swap-btn {
+    top: 24px;
+    right: 0;
+  }
+}
+</style>

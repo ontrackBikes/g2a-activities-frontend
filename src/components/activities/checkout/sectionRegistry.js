@@ -4,6 +4,7 @@ import MedicalDeclaration from "./sections/MedicalDeclaration.vue";
 import FerrySeatSelection from "./sections/FerrySeatSelection.vue";
 import RentalDetails from "./sections/RentalDetails.vue";
 import FlightDetails from "./sections/FlightDetails.vue";
+import FerryDetails from "./sections/FerryDetails.vue";
 
 export default {
   customer_details: {
@@ -35,5 +36,9 @@ export default {
     component: FlightDetails,
     title: "Flight Details",
   },
-};
 
+  ferry_details: {
+    component: FerryDetails,
+    title: "Ferry Details",
+  },
+};
