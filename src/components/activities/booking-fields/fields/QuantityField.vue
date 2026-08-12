@@ -51,6 +51,15 @@
         1 Rider + 1 Pillion + 1 Child (less than 5 years old) per scooty.
       </v-container>
     </v-card>
+
+
+    <v-card v-if="isCabService" flat class="border mt-4" rounded="lg">
+      <v-container class="text-primary my-auto d-flex align-center">
+        <v-icon class="mr-2">mdi-information</v-icon>
+        Maximum 4 passengers and 2 luggage items per cab.
+      </v-container>
+    </v-card>
+
   </div>
 </template>
 
@@ -82,7 +91,7 @@ const minAllowed = computed(() => props.field?.min ?? 1);
 const quantityCount = computed(() => props.modelValue || minAllowed.value);
 const maxAllowed = computed(() => props.maxQuantity || 10);
 const isBikeRentals = computed(() => props.productTypeSlug === "bike-rentals");
-
+const isCabService = computed(() => props.productTypeSlug === "cab-service");
 const increase = () => {
   if (quantityCount.value >= maxAllowed.value) return;
 

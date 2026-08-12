@@ -11,11 +11,11 @@
         class="d-flex"
       >
         <!-- Rail: pickup dot -> dashed line -> drop marker -->
-        <div class="rail d-flex flex-column align-center mr-3">
+        <!-- <div class="rail d-flex flex-column align-center mr-3">
           <span class="rail-dot rail-dot--pickup" />
           <span class="rail-line" />
           <span class="rail-dot rail-dot--drop" />
-        </div>
+        </div> -->
 
         <div class="flex-grow-1 position-relative min-w-0">
           <template v-if="hasSubField('pickup_location')">
@@ -140,7 +140,7 @@
         </v-dialog>
       </template>
 
-      <v-alert
+      <!-- <v-alert
         v-if="isKmBasedPricing"
         density="compact"
         variant="tonal"
@@ -159,7 +159,7 @@
           >.
         </template>
         <template v-else> once both locations are selected. </template>
-      </v-alert>
+      </v-alert> -->
     </div>
   </v-card>
 </template>

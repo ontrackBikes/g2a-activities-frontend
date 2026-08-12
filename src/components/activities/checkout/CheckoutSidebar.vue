@@ -107,12 +107,12 @@
           </template>
 
           <!-- <v-divider class="my-4" /> -->
-          <DetailRow
+          <!-- <DetailRow
             v-if="isKmBasedPricing && pricing.distance_km != null"
             label="Distance"
             :value="distanceLabel"
             bold
-          />
+          /> -->
           <!-- <DetailRow
             :label="`Subtotal${pricing.quantity > 1 ? ` (x${pricing.quantity})` : ''}`"
             :value="formatCurrency(pricing.subtotal)"

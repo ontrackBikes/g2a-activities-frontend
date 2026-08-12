@@ -252,12 +252,12 @@
           <div>
             <div class="text-grey">
               Total Price
-              <span v-if="isKmBasedPricing && pricing.distance_km != null">
+              <!-- <span v-if="isKmBasedPricing && pricing.distance_km != null">
                 · {{ pricing.distance_km }} km
                 <template v-if="pricing.duration_minutes != null">
                   (~{{ pricing.duration_minutes }} min)
                 </template>
-              </span>
+              </span> -->
             </div>
 
             <div class="g2a-title-lg">₹{{ pricing.grand_total }}</div>
