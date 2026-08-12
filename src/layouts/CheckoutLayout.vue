@@ -46,6 +46,8 @@
           margin-bottom: 120px;
         "
       >
+        <BookingStepper v-if="currentStep" :model-value="currentStep" />
+
         <router-view />
       </div>
     </v-main>
@@ -55,9 +57,20 @@
 <script setup>
 import { computed } from "vue";
 import { useDisplay, useTheme } from "vuetify";
+import { useRoute } from "vue-router";
+import BookingStepper from "@/components/common/BookingStepper.vue";
 
 const { mobile } = useDisplay();
 const theme = useTheme();
+const route = useRoute();
+
+const STEP_BY_ROUTE_NAME = {
+  ProductBooking: 1,
+  Checkout: 2,
+  OrderDetails: 3,
+};
+
+const currentStep = computed(() => STEP_BY_ROUTE_NAME[route.name] ?? null);
 
 const logo = computed(() =>
   theme.global.current.value.dark

@@ -1,8 +1,20 @@
 <template>
   <v-card rounded="xl">
     <v-toolbar flat density="comfortable">
+      <v-btn
+        v-if="view === 'hotel'"
+        icon="mdi-arrow-left"
+        variant="text"
+        @click="view = 'list'"
+      />
+
       <v-toolbar-title class="g2a-title-lg">
-        Select {{ mode === "pickup" ? "Pickup" : "Drop" }} Point
+        <template v-if="view === 'list'">
+          Select {{ mode === "pickup" ? "Pickup" : "Drop" }} Point
+        </template>
+        <template v-else>
+          {{ mode === "pickup" ? "Deliver to Hotel" : "Drop at Hotel" }}
+        </template>
       </v-toolbar-title>
 
       <v-spacer />
@@ -12,7 +24,8 @@
 
     <v-divider />
 
-    <v-card-text class="pa-4">
+    <!-- Self pickup/drop point list -->
+    <v-card-text v-if="view === 'list'" class="pa-4">
       <!-- Loading -->
       <div
         v-if="loading"
@@ -67,7 +80,7 @@
             <v-row no-gutters>
               <!-- Image -->
               <v-col cols="4" md="4">
-                <v-img :src="item.image" height="180" cover class="fill-height">
+                <v-img :src="item.image" height="100" cover class="fill-height">
                   <template #error>
                     <div
                       class="d-flex align-center justify-center fill-height bg-grey-lighten-3"
@@ -97,9 +110,9 @@
                         {{ item.name }}
                       </div>
 
-                      <div class="mt-2">
+                      <!-- <div class="mt-2">
                         {{ item.address }}
-                      </div>
+                      </div> -->
                     </div>
                   </div>
 
@@ -120,7 +133,7 @@
 
                     <span v-else />
 
-                    <v-btn
+                    <!-- <v-btn
                       v-if="selected?.id !== item.id"
                       color="brandColor2"
                       variant="tonal"
@@ -128,11 +141,11 @@
                       @click.stop="selectLocation(item)"
                     >
                       Select
-                    </v-btn>
+                    </v-btn> -->
 
-                    <v-chip v-else color="success" variant="flat">
+                    <!-- <v-chip v-if="selected?.id == item.id" color="success" variant="flat">
                       Selected
-                    </v-chip>
+                    </v-chip> -->
                   </div>
                 </v-container>
               </v-col>
@@ -140,6 +153,55 @@
           </v-card>
         </v-col>
       </v-row>
+
+      <v-btn
+        block
+        variant="outlined"
+        color="brandColor2"
+        rounded="lg"
+        size="large"
+        class="mt-4"
+        prepend-icon="mdi-domain"
+        @click="view = 'hotel'"
+      >
+        {{ mode === "pickup" ? "Deliver to Hotel" : "Drop at Hotel" }}
+      </v-btn>
+    </v-card-text>
+
+    <!-- Hotel address form -->
+    <v-card-text v-else class="pa-4">
+      <v-text-field
+        v-model="hotelName"
+        placeholder="Enter your hotel name"
+        density="compact"
+        variant="outlined"
+        rounded="lg"
+        autofocus
+        hide-details="auto"
+      />
+
+      <v-alert
+        type="info"
+        variant="tonal"
+        density="compact"
+        rounded="lg"
+        class="g2a-title-sm mt-4"
+      >
+        Free within city limits. Extra charges (~₹100) apply if outside. Our
+        agent will contact you for more details.
+      </v-alert>
+
+      <v-btn
+        block
+        color="brandColor2"
+        rounded="lg"
+        size="large"
+        class="mt-4"
+        :disabled="!hotelName.trim()"
+        @click="confirmHotel"
+      >
+        Confirm
+      </v-btn>
     </v-card-text>
   </v-card>
 </template>
@@ -166,9 +228,40 @@ const props = defineProps({
     type: String,
     default: "port-blair",
   },
+
+  // Whether the field this dialog was opened from currently holds a
+  // hotel delivery/return instead of a self point — used to land on the
+  // hotel form (pre-filled) when reopening.
+  selectedType: {
+    type: String,
+    default: "self",
+  },
+
+  hotelName: {
+    type: String,
+    default: "",
+  },
 });
 
-const emit = defineEmits(["selected", "close"]);
+const emit = defineEmits(["selected", "hotel-selected", "close"]);
+
+/*
+|--------------------------------------------------------------------------
+| View state
+|--------------------------------------------------------------------------
+|
+| The dialog has two views: the list of self pickup/drop points, and a
+| simple form for entering a hotel address. It opens straight into
+| whichever one matches the field's current selection.
+|
+*/
+
+const view = ref(props.selectedType === "hotel" ? "hotel" : "list");
+const hotelName = ref(props.hotelName || "");
+
+const confirmHotel = () => {
+  emit("hotel-selected", hotelName.value.trim());
+};
 
 /*
 |--------------------------------------------------------------------------

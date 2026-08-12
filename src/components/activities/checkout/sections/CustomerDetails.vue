@@ -14,7 +14,7 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="customer_details.first_name"
-            placeholder="First Name"
+            placeholder="Billing Name*"
             density="compact"
             variant="outlined"
             rounded="lg"
@@ -26,7 +26,7 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="customer_details.last_name"
-            placeholder="Last Name"
+            placeholder="Last Name*"
             density="compact"
             variant="outlined"
             rounded="lg"
@@ -59,7 +59,7 @@
               <v-text-field
                 class="pl-2"
                 v-model="customer_details.phone"
-                placeholder="Mobile Number"
+                placeholder="Mobile Number*"
                 prepend-inner-icon="mdi-phone"
                 density="compact"
                 variant="outlined"
@@ -115,10 +115,10 @@
           </v-row>
         </v-col>
 
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="12">
           <v-text-field
             v-model="customer_details.email"
-            placeholder="Email Address"
+            placeholder="Email Address*"
             prepend-inner-icon="mdi-email-outline"
             density="compact"
             variant="outlined"
@@ -128,7 +128,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="6">
+        <!-- <v-col cols="12" md="6">
           <v-text-field
             v-model="customer_details.country"
             placeholder="Country"
@@ -139,7 +139,7 @@
             hide-details="auto"
             :rules="[rules.required('Country')]"
           />
-        </v-col>
+        </v-col> -->
       </v-row>
     </v-container>
   </v-card>

@@ -61,7 +61,7 @@
                     v-if="item.booking_data.quantity"
                     :label="
                       'Quantity' +
-                      (item.product_name === 'Bike Rentals' ? ' (Bikes)' : '')
+                      (item.product_name === 'Bike Rentals' ? ' (Scooty)' : '')
                     "
                     :value="item.booking_data.quantity"
                   />
@@ -216,9 +216,9 @@
                       <span class="g2a-title-lg">{{
                         item.rental_details?.pickup_point?.name
                       }}</span>
-                      <div>
+                      <!-- <div>
                         {{ item.rental_details?.pickup_point?.address }}
-                      </div>
+                      </div> -->
                     </v-col>
                   </v-row>
 
@@ -374,10 +374,10 @@
                   label="Email"
                   :value="order.customer_details.email"
                 />
-                <DetailRow
+                <!-- <DetailRow
                   label="Country"
                   :value="order.customer_details.country"
-                />
+                /> -->
               </v-container>
             </v-card>
 
@@ -417,7 +417,7 @@
                     >
                       Pay Now
                     </v-btn>
-                    <div class="mt-4">
+                    <div class="mt-4 text-center">
                       By clicking "Pay Now", you agree to the
                       <a
                         href="https://go2andaman.com/terms-of-service/"

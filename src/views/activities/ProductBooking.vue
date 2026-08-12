@@ -182,34 +182,44 @@
               <!-- Items -->
               <v-row>
                 <v-col v-if="productInclusions.length">
-                  <div>
-                    <div class="g2a-title-lg">Inclusions</div>
-                  </div>
+                  <div class="g2a-title-lg">Inclusions</div>
                   <v-divider class="my-2"></v-divider>
+
                   <div
                     v-for="(inc, index) in productInclusions"
                     :key="index"
-                    class="d-flex"
+                    class="d-flex align-start my-2 g2a-title-xs"
                   >
-                    <v-icon color="success" class="mr-3"> mdi-check </v-icon>
+                    <v-icon
+                      color="success"
+                      size="15"
+                      class="mr-2 mt-1 flex-shrink-0"
+                    >
+                      mdi-check-circle
+                    </v-icon>
 
-                    <span>{{ inc.content }}</span>
+                    <div>{{ inc.content }}</div>
                   </div>
                 </v-col>
+
                 <v-col v-if="productExclusions.length">
-                  <div>
-                    <div class="g2a-title-lg">Exclusions</div>
-                  </div>
+                  <div class="g2a-title-lg">Exclusions</div>
                   <v-divider class="my-2"></v-divider>
 
                   <div
                     v-for="(inc, index) in productExclusions"
                     :key="index"
-                    class="d-flex"
+                    class="d-flex align-start my-2 g2a-title-xs"
                   >
-                    <v-icon color="error" class="mr-3"> mdi-close </v-icon>
+                    <v-icon
+                      color="error"
+                      size="15"
+                      class="mr-2 mt-1 flex-shrink-0"
+                    >
+                      mdi-close-circle
+                    </v-icon>
 
-                    <span>{{ inc.content }}</span>
+                    <div>{{ inc.content }}</div>
                   </div>
                 </v-col>
               </v-row>

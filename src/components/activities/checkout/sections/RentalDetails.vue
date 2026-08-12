@@ -20,62 +20,35 @@
 
       <v-row no-gutters>
         <v-col cols="12">
-          <v-radio-group
-            v-model="rental.pickup_type"
-            name="rental_pickup_type"
-            inline
-            hide-details="auto"
-            :rules="[(v) => !!v || 'Please select a pickup option']"
-          >
-            <v-radio label="Self Pickup" value="self" />
-            <v-radio label="Hotel Pickup" value="hotel" class="ml-4" />
-          </v-radio-group>
-        </v-col>
-
-        <v-col v-if="rental.pickup_type === 'self'" cols="12">
           <v-text-field
-            :model-value="rental.pickup_point?.name"
-            label="Select Pickup Point"
-            prepend-inner-icon="mdi-map-marker"
+            :model-value="pickupDisplay"
+            label="Pickup Point"
+            :prepend-inner-icon="
+              rental.pickup_type === 'hotel' ? 'mdi-domain' : 'mdi-map-marker'
+            "
             append-inner-icon="mdi-chevron-down"
             variant="outlined"
             density="compact"
             rounded="lg"
             readonly
             hide-details="auto"
-            :rules="[
-              (v) => !!rental.pickup_point || 'Pickup point is required',
-            ]"
+            :rules="[(v) => !!v || 'Please select a pickup option']"
             @click="pickUpDialog = true"
           />
         </v-col>
 
-        <template v-else-if="rental.pickup_type === 'hotel'">
-          <v-col cols="12">
-            <v-text-field
-              v-model="rental.pickup_hotel_name"
-              placeholder="Enter your hotel name"
-              density="compact"
-              variant="outlined"
-              rounded="lg"
-              hide-details="auto"
-              :rules="[(v) => !!v || 'Hotel name is required']"
-            />
-          </v-col>
-
-          <v-col cols="12">
-            <v-alert
-              type="info"
-              variant="tonal"
-              density="compact"
-              rounded="lg"
-              class="g2a-title-sm my-4"
-            >
-              Free within city limits. Extra charges (~₹100) apply if outside.
-              Our agent will contact you for more details.
-            </v-alert>
-          </v-col>
-        </template>
+        <v-col v-if="rental.pickup_type === 'hotel'" cols="12">
+          <v-alert
+            type="info"
+            variant="tonal"
+            density="compact"
+            rounded="lg"
+            class="g2a-title-sm mt-4"
+          >
+            Free within city limits. Extra charges (~₹100) apply if outside.
+            Our agent will contact you for more details.
+          </v-alert>
+        </v-col>
       </v-row>
     </v-container>
 
@@ -89,60 +62,35 @@
 
       <v-row no-gutters>
         <v-col cols="12">
-          <v-radio-group
-            v-model="rental.drop_type"
-            name="rental_drop_type"
-            inline
-            hide-details="auto"
-            :rules="[(v) => !!v || 'Please select a drop-off option']"
-          >
-            <v-radio label="Self Drop" value="self" />
-            <v-radio label="Hotel Drop" value="hotel" class="ml-4" />
-          </v-radio-group>
-        </v-col>
-
-        <v-col v-if="rental.drop_type === 'self'" cols="12">
           <v-text-field
-            :model-value="rental.drop_point?.name"
-            label="Select Drop Point"
-            prepend-inner-icon="mdi-map-marker"
+            :model-value="dropDisplay"
+            label="Drop Point"
+            :prepend-inner-icon="
+              rental.drop_type === 'hotel' ? 'mdi-domain' : 'mdi-map-marker'
+            "
             append-inner-icon="mdi-chevron-down"
             variant="outlined"
             density="compact"
             rounded="lg"
             readonly
             hide-details="auto"
-            :rules="[(v) => !!rental.drop_point || 'Drop point is required']"
+            :rules="[(v) => !!v || 'Please select a drop-off option']"
             @click="dropDialog = true"
           />
         </v-col>
 
-        <template v-else-if="rental.drop_type === 'hotel'">
-          <v-col cols="12">
-            <v-text-field
-              v-model="rental.drop_hotel_name"
-              placeholder="Enter your hotel name"
-              variant="outlined"
-              density="compact"
-              rounded="lg"
-              hide-details="auto"
-              :rules="[(v) => !!v || 'Hotel name is required']"
-            />
-          </v-col>
-
-          <v-col cols="12">
-            <v-alert
-              type="info"
-              variant="tonal"
-              density="compact"
-              rounded="lg"
-              class="g2a-title-sm my-4"
-            >
-              Free within city limits. Extra charges (~₹100) apply if outside.
-              Our agent will contact you for more details.
-            </v-alert>
-          </v-col>
-        </template>
+        <v-col v-if="rental.drop_type === 'hotel'" cols="12">
+          <v-alert
+            type="info"
+            variant="tonal"
+            density="compact"
+            rounded="lg"
+            class="g2a-title-sm mt-4"
+          >
+            Free within city limits. Extra charges (~₹100) apply if outside.
+            Our agent will contact you for more details.
+          </v-alert>
+        </v-col>
       </v-row>
     </v-container>
   </v-card>
@@ -162,7 +110,10 @@
       mode="pickup"
       :selected="rental.pickup_point"
       :location-slug="locationSlug"
+      :selected-type="rental.pickup_type"
+      :hotel-name="rental.pickup_hotel_name"
       @selected="onPickupSelected"
+      @hotel-selected="onPickupHotelSelected"
       @close="pickUpDialog = false"
     />
   </v-dialog>
@@ -182,7 +133,10 @@
       mode="drop"
       :selected="rental.drop_point"
       :location-slug="locationSlug"
+      :selected-type="rental.drop_type"
+      :hotel-name="rental.drop_hotel_name"
       @selected="onDropSelected"
+      @hotel-selected="onDropHotelSelected"
       @close="dropDialog = false"
     />
   </v-dialog>
@@ -240,14 +194,50 @@ const outOfCityCharge = computed(() => props.config?.out_of_city_charge ?? 100);
 */
 
 const onPickupSelected = (location) => {
+  rental.value.pickup_type = "self";
   rental.value.pickup_point = location;
   pickUpDialog.value = false;
 };
 
 const onDropSelected = (location) => {
+  rental.value.drop_type = "self";
   rental.value.drop_point = location;
   dropDialog.value = false;
 };
+
+const onPickupHotelSelected = (hotelName) => {
+  rental.value.pickup_type = "hotel";
+  rental.value.pickup_hotel_name = hotelName;
+  pickUpDialog.value = false;
+};
+
+const onDropHotelSelected = (hotelName) => {
+  rental.value.drop_type = "hotel";
+  rental.value.drop_hotel_name = hotelName;
+  dropDialog.value = false;
+};
+
+/*
+|--------------------------------------------------------------------------
+| Field display text
+|--------------------------------------------------------------------------
+*/
+
+const pickupDisplay = computed(() => {
+  if (rental.value.pickup_type === "hotel") {
+    return rental.value.pickup_hotel_name || "";
+  }
+
+  return rental.value.pickup_point?.name || "";
+});
+
+const dropDisplay = computed(() => {
+  if (rental.value.drop_type === "hotel") {
+    return rental.value.drop_hotel_name || "";
+  }
+
+  return rental.value.drop_point?.name || "";
+});
 
 /*
 |--------------------------------------------------------------------------
