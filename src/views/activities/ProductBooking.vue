@@ -160,7 +160,7 @@
             >
               <span>{{ day.date }}</span>
 
-              <strong> ₹{{ day.unit_price }} </strong>
+              <strong> ₹{{ day.unit_price * form.quantity }} </strong>
             </div>
 
             <div
@@ -300,7 +300,7 @@
             {{ day.date }}
           </template>
 
-          <template #append> ₹{{ day.unit_price }} </template>
+          <template #append> ₹{{ day.unit_price * form.quantity }} </template>
         </v-list-item>
       </v-list>
       <v-spacer />

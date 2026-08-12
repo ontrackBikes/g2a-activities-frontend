@@ -93,7 +93,7 @@
               v-for="day in previewDailyPricing"
               :key="day.date"
               :label="formatDate(day.date)"
-              :value="formatCurrency(day.unit_price)"
+              :value="formatCurrency(day.unit_price * (pricing.quantity || 1))"
               bold
             />
             <button
@@ -368,7 +368,7 @@
                 v-for="day in previewDailyPricing"
                 :key="day.date"
                 :label="formatDate(day.date)"
-                :value="formatCurrency(day.unit_price)"
+                :value="formatCurrency(day.unit_price * (pricing.quantity || 1))"
                 bold
               />
               <button
@@ -481,7 +481,7 @@
           >
           <template #append
             ><strong class="g2a-title-2xl-2">{{
-              formatCurrency(day.unit_price)
+              formatCurrency(day.unit_price * (pricing.quantity || 1))
             }}</strong></template
           >
         </v-list-item>

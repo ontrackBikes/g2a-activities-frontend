@@ -121,7 +121,7 @@
               {{ formatDate(day.date) }}
             </span>
 
-            <strong> ₹{{ currency(day.unit_price) }} </strong>
+            <strong> ₹{{ currency(day.unit_price * (pricing.quantity || 1)) }} </strong>
           </div>
         </template>
       </v-container>
