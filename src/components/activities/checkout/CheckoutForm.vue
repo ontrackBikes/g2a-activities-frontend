@@ -29,7 +29,7 @@
   </v-alert>
 
   <v-form v-else ref="form" validate-on="submit">
-    <v-container>
+    <v-container class="px-0">
       <v-row :no-gutters="mobile">
         <!-- LEFT -->
         <v-col cols="12" lg="7">

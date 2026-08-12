@@ -510,6 +510,12 @@
         <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
         No Hidden Charges
       </div>
+      <v-divider class="my-2" />
+        <div class="d-flex align-center justify-center text-greyDark mt-2 text-caption text-center">
+           <!-- make it short  -->
+            Go2Andaman is not a provider of the activities listed on this website. We are a platform that connects travelers with local activity providers. 
+        </div>
+        
     </v-container>
   </v-card>
   <!-- Reserves space so page content isn't hidden behind the fixed bar -->

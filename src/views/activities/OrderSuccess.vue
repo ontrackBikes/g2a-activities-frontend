@@ -116,6 +116,15 @@ const verifyPayment = async () => {
     );
 
     if (data.data.payment_status !== "paid") {
+      try {
+        await apiClient.post(
+          `/v1/orders/${route.params.order_id}/notify-payment-pending`,
+          {},
+        );
+      } catch (notifyErr) {
+        console.error(notifyErr);
+      }
+
       router.replace({
         name: "OrderFailed",
         params: { order_id: route.params.order_id },

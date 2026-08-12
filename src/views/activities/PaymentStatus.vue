@@ -37,9 +37,18 @@ const paymentStatus = ref("pending");
 let pollTimer = null;
 let timeoutTimer = null;
 
-const redirectToFailed = () => {
+const redirectToFailed = async () => {
   clearInterval(pollTimer);
   clearTimeout(timeoutTimer);
+
+  try {
+    await apiClient.post(
+      `/v1/orders/${route.params.order_id}/notify-payment-pending`,
+      {},
+    );
+  } catch (notifyErr) {
+    console.error(notifyErr);
+  }
 
   router.replace({
     name: "OrderFailed",

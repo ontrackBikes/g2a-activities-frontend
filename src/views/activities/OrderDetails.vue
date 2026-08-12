@@ -1,5 +1,5 @@
 <template>
-  <v-container class="g2a-container-width py-8 mx-auto">
+  <v-container class="g2a-container-width py-8 px-0 mx-auto">
     <div v-if="loading" class="text-center py-10">
       <v-progress-circular indeterminate color="primary" />
     </div>
@@ -637,8 +637,8 @@ const order = ref(null);
 */
 const DetailRow = (rowProps) =>
   h(VRow, { noGutters: true, class: "py-2" }, [
-    h(VCol, { cols: 3 }, () => rowProps.label),
-    h(VCol, { cols: 9, class: "text-right" }, () =>
+    h(VCol, { md: 3, cols: 5 }, () => rowProps.label),
+    h(VCol, { md: 9, cols: 7, class: "text-right" }, () =>
       h(
         "div",
         {
