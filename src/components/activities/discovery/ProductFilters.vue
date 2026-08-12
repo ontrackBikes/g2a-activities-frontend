@@ -118,7 +118,7 @@
         v-if="hasActiveFilters"
         variant="text"
         color="error"
-        rounded="xl"
+        rounded="lg"
         prepend-icon="mdi-close-circle-outline"
         @click="$emit('reset')"
       >

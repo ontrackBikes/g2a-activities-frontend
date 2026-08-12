@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="xl">
+  <v-card rounded="lg">
     <v-toolbar flat density="comfortable">
       <v-btn
         v-if="view === 'hotel'"
@@ -69,7 +69,7 @@
       <v-row v-else>
         <v-col v-for="item in locations" :key="item.id" cols="12">
           <v-card
-            rounded="xl"
+            rounded="lg"
             flat
             class="location-card"
             :class="{

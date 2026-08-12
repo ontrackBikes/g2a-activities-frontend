@@ -151,7 +151,7 @@
                   />
                   <DetailRow
                     v-if="item.booking_data.drop_time"
-                    label="Drop Time"
+                    label="Return Time"
                     :value="formatTime(item.booking_data.drop_time)"
                   />
                   <DetailRow
@@ -207,37 +207,60 @@
                   <v-row
                     no-gutters
                     class="py-2"
-                    v-if="item.rental_details.pickup_point"
+                    v-if="
+                      item.rental_details.pickup_type === 'hotel'
+                        ? item.rental_details.pickup_hotel_name
+                        : item.rental_details.pickup_point
+                    "
                   >
                     <v-col cols="3">
                       Pickup Point ({{ item.rental_details?.pickup_type }})
                     </v-col>
                     <v-col cols="9" class="text-right">
-                      <span class="g2a-title-lg">{{
-                        item.rental_details?.pickup_point?.name
-                      }}</span>
-                      <!-- <div>
-                        {{ item.rental_details?.pickup_point?.address }}
-                      </div> -->
+                      <template
+                        v-if="item.rental_details.pickup_type === 'hotel'"
+                      >
+                        <span class="g2a-title-lg">{{
+                          item.rental_details?.pickup_hotel_name
+                        }}</span>
+                      </template>
+                      <template v-else>
+                        <span class="g2a-title-lg">{{
+                          item.rental_details?.pickup_point?.name
+                        }}</span>
+                        <!-- <div>
+                          {{ item.rental_details?.pickup_point?.address }}
+                        </div> -->
+                      </template>
                     </v-col>
                   </v-row>
 
                   <v-row
-                    v-if="item.rental_details.pickup_point"
                     no-gutters
                     class="py-2"
+                    v-if="
+                      item.rental_details.drop_type === 'hotel'
+                        ? item.rental_details.drop_hotel_name
+                        : item.rental_details.drop_point
+                    "
                   >
                     <v-col cols="3"
                       >Drop Point ({{ item.rental_details?.drop_type }})</v-col
                     >
                     <v-col cols="9" class="text-right">
-                      <span class="g2a-title-lg">
-                        {{ item.rental_details?.drop_hotel_name }}
-                      </span>
-                      <span class="g2a-title-lg">{{
-                        item.rental_details?.drop_point?.name
-                      }}</span>
-                      <div>{{ item.rental_details?.drop_point?.address }}</div>
+                      <template v-if="item.rental_details.drop_type === 'hotel'">
+                        <span class="g2a-title-lg">{{
+                          item.rental_details?.drop_hotel_name
+                        }}</span>
+                      </template>
+                      <template v-else>
+                        <span class="g2a-title-lg">{{
+                          item.rental_details?.drop_point?.name
+                        }}</span>
+                        <!-- <div>
+                          {{ item.rental_details?.drop_point?.address }}
+                        </div> -->
+                      </template>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -417,6 +440,7 @@
                     >
                       Pay Now
                     </v-btn>
+                    <v-divider class="my-4"></v-divider>
                     <div class="mt-4 text-center">
                       By clicking "Pay Now", you agree to the
                       <a

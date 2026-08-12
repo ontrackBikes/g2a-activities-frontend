@@ -39,7 +39,7 @@
 
     <v-main>
       <div
-        class="mx-auto"
+        class="mx-auto px-4"
         style="
           max-width: 1020px;
           min-height: calc(100vh - 220px);
@@ -48,7 +48,9 @@
       >
         <BookingStepper v-if="currentStep" :model-value="currentStep" />
 
-        <router-view />
+       <div class="mx-auto">
+         <router-view />
+       </div>
       </div>
     </v-main>
   </v-app>

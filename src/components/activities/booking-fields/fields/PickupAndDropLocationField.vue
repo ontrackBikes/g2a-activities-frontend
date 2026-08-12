@@ -1,5 +1,5 @@
 <template>
-  <v-card class="border" variant="outlined" rounded="lg">
+  <v-card class="border" flat rounded="lg">
     <div class="pa-2 px-4">
       <div class="g2a-title-md mb-4">
         {{ field.label || "Pickup & Drop Details" }}

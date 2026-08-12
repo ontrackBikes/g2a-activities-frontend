@@ -5,7 +5,6 @@
     :loading="loadingLocations"
     :label="field.label || 'Pickup Location'"
     :rules="rules"
-    class="mb-3"
     @update:model-value="update"
   />
 </template>

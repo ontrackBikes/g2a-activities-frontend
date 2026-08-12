@@ -136,7 +136,7 @@
             <v-btn
               icon="mdi-close"
               variant="icon"
-              rounded="xl"
+              rounded="lg"
               @click="closeSearchDialog"
             >
             </v-btn>

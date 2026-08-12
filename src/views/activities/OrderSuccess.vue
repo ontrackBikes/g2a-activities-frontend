@@ -8,7 +8,7 @@
     <v-card
       max-width="620"
       class="mx-auto success-card"
-      rounded="xl"
+      rounded="lg"
       elevation="0"
       variant="outlined"
     >

@@ -11,7 +11,6 @@
     rounded="lg"
     :rules="rules"
     hide-details="auto"
-    class="mb-3"
     :required="field.required"
   />
 </template>

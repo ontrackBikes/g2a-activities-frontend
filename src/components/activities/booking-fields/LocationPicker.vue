@@ -28,7 +28,7 @@
       webkitBackdropFilter: 'blur(5px)',
     }"
   >
-    <v-card rounded="xl" min-height="95vh">
+    <v-card rounded="lg" min-height="95vh">
       <!-- Header -->
       <v-toolbar density="comfortable" color="transparent">
         <v-toolbar-title>Select Location</v-toolbar-title>

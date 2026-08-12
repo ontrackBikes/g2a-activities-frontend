@@ -8,7 +8,6 @@
     variant="outlined"
     density="compact"
     hide-details="auto"
-    class="mb-3"
   />
 </template>
 

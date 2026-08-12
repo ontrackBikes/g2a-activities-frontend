@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div>
     <v-text-field
       :model-value="pickupTimeLabel"
       :label="field.label || 'Pickup Time'"

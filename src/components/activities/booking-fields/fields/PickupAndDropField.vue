@@ -1,67 +1,73 @@
 <template>
-  <v-row class="my-2">
-    <v-col cols="12" md="8">
-      <v-text-field
-        v-model="pickupDate"
-        type="date"
-        label="Pickup Date"
-        :min="tomorrowString"
-        :error-messages="error ? [error] : []"
-        variant="outlined"
-        density="compact"
-        hide-details="auto"
-        rounded="lg"
-      />
-    </v-col>
+  <v-card class="border" flat rounded="lg">
+    <v-container>
+      <v-row>
+      <v-col cols="12" md="6">
+        <v-text-field
+          v-model="pickupDate"
+          type="date"
+          label="Pickup Date"
+          :min="tomorrowString"
+          :error-messages="error ? [error] : []"
+          variant="outlined"
+          density="compact"
+          hide-details="auto"
+          rounded="lg"
+        />
+      </v-col>
 
-    <v-col cols="12" md="4">
-      <v-select
-        v-model="pickupTime"
-        :items="pickupTimeOptions"
-        item-title="title"
-        item-value="value"
-        label="Pickup Time"
-        variant="outlined"
-        density="compact"
-        hide-details="auto"
-        rounded="lg"
-      />
-    </v-col>
+      <v-col cols="12" md="6">
+        <v-select
+          v-model="pickupTime"
+          :items="pickupTimeOptions"
+          item-title="title"
+          item-value="value"
+          label="Pickup Time"
+          variant="outlined"
+          density="compact"
+          hide-details="auto"
+          rounded="lg"
+        />
+      </v-col>
 
-    <v-col cols="12" md="8">
-      <v-text-field
-        v-model="returnDate"
-        type="date"
-        label="Drop Date"
-        :min="minimumReturnDate"
-        :error-messages="error ? [error] : []"
-        variant="outlined"
-        density="compact"
-        hide-details="auto"
-        rounded="lg"
-      />
-    </v-col>
+      <v-col cols="12" md="6">
+        <v-text-field
+          v-model="returnDate"
+          type="date"
+          label="Drop Date"
+          :min="minimumReturnDate"
+          :error-messages="error ? [error] : []"
+          variant="outlined"
+          density="compact"
+          hide-details="auto"
+          rounded="lg"
+        />
+      </v-col>
 
-    <v-col cols="12" md="4">
-      <v-select
-        v-model="pickupTime"
-        :items="pickupTimeOptions"
-        item-title="title"
-        item-value="value"
-        label="Drop Time"
-        variant="outlined"
-        density="compact"
-        hide-details="auto"
-        rounded="lg"
-        readonly
-        disabled
-      />
-    </v-col>
-  </v-row>
+      <v-col cols="12" md="6">
+        <v-select
+          v-model="pickupTime"
+          :items="pickupTimeOptions"
+          item-title="title"
+          item-value="value"
+          label="Drop Time"
+          variant="outlined"
+          density="compact"
+          hide-details="auto"
+          rounded="lg"
+          readonly
+          disabled
+        />
+      </v-col>
+    </v-row>
 
-  <v-card flat class="border mb-4" rounded="xl">
-    <v-container class="text-warning my-auto d-flex align-center">
-      <v-icon class="mr-2">mdi-information</v-icon> Drop time is automatically set to 24 hours after pickup time. You can contact us if you need a different drop time.
+    <v-card flat class="border mt-4" rounded="lg">
+      <v-container class="text-warning my-auto d-flex align-center">
+        <v-icon class="mr-2">mdi-information</v-icon> Drop time is
+        automatically set to 24 hours after pickup time. You can contact us
+        if you need a different drop time.
+      </v-container>
+    </v-card>
     </v-container>
   </v-card>
 </template>
@@ -181,3 +187,13 @@ watch(
   },
 );
 </script>
+
+<style scoped>
+/* Native date inputs shrink to fit their text, so the browser's
+   calendar icon ends up right after the value instead of at the far
+   right of the field - force it to fill the input so the icon lands
+   at the field's right edge. */
+:deep(input[type="date"]) {
+  width: 100%;
+}
+</style>

@@ -4,7 +4,6 @@
     rounded="lg"
     flat
     :disabled="loading"
-    style="max-width: 600px; margin-bottom: 100px"
     class="border mx-auto my-4"
   >
     <v-container>
@@ -24,29 +23,33 @@
         </div>
       </div>
 
-      <div v-if="loading && !result">Loading...</div>
+      
+    </v-container>
+  </v-card>
+  <div v-if="loading && !result">Loading...</div>
 
       <div v-else-if="result">
         <!-- Dynamic booking fields -->
         <v-form ref="bookingForm" @submit.prevent>
-          <BookingFieldRenderer
-            class="mb-2"
-            v-for="field in fields"
-            :key="field.field"
-            :model-value="fieldModel(field.field)"
-            @update:model-value="
-              (value) => handleFieldUpdate(field.field, value)
-            "
-            :field="field"
-            :slots="slots"
-            :form="form"
-            :maxQuantity="maxQuantity"
-            :serviceHours="serviceHours"
-            :productSlug="product?.slug"
-            :productTypeSlug="route.params.productType"
-            :locationSlug="selectedLocation?.slug"
-            :pricing="pricing"
-          />
+          <div class="d-flex flex-column ga-4">
+            <BookingFieldRenderer
+              v-for="field in fields"
+              :key="field.field"
+              :model-value="fieldModel(field.field)"
+              @update:model-value="
+                (value) => handleFieldUpdate(field.field, value)
+              "
+              :field="field"
+              :slots="slots"
+              :form="form"
+              :maxQuantity="maxQuantity"
+              :serviceHours="serviceHours"
+              :productSlug="product?.slug"
+              :productTypeSlug="route.params.productType"
+              :locationSlug="selectedLocation?.slug"
+              :pricing="pricing"
+            />
+          </div>
         </v-form>
 
         <template v-if="result.available">
@@ -172,23 +175,17 @@
             </div>
           </div>
 
-          <v-card
-            v-if="productInclusions.length || productExclusions.length"
-            rounded="xl"
-            variant="outlined"
-            class="my-4"
-          >
-            <v-container>
-              <!-- Items -->
-              <v-row>
-                <v-col v-if="productInclusions.length">
-                  <div class="g2a-title-lg">Inclusions</div>
-                  <v-divider class="my-2"></v-divider>
-
+          <v-row class="my-4">
+            <v-col v-if="productInclusions.length" cols="12" md="6">
+              <v-card rounded="lg" flat class="h-100 border">
+                <div class="pa-4" style="background-color: #f2f7f2">
+                  <div class="g2a-title-lg text-success">What's Included?</div>
+                </div>
+                <v-container>
                   <div
                     v-for="(inc, index) in productInclusions"
                     :key="index"
-                    class="d-flex align-start my-2 g2a-title-xs"
+                    class="d-flex align-start mb-2 g2a-title-xs"
                   >
                     <v-icon
                       color="success"
@@ -200,16 +197,22 @@
 
                     <div>{{ inc.content }}</div>
                   </div>
-                </v-col>
+                </v-container>
+              </v-card>
+            </v-col>
 
-                <v-col v-if="productExclusions.length">
-                  <div class="g2a-title-lg">Exclusions</div>
-                  <v-divider class="my-2"></v-divider>
-
+            <v-col v-if="productExclusions.length" cols="12" md="6">
+              <v-card rounded="lg" flat class="h-100 border">
+                <div class="pa-4" style="background-color: #f2f7f2">
+                  <div class="g2a-title-lg text-error">
+                    What's not included?
+                  </div>
+                </div>
+                <v-container>
                   <div
                     v-for="(inc, index) in productExclusions"
                     :key="index"
-                    class="d-flex align-start my-2 g2a-title-xs"
+                    class="d-flex align-start mb-2 g2a-title-xs"
                   >
                     <v-icon
                       color="error"
@@ -221,10 +224,12 @@
 
                     <div>{{ inc.content }}</div>
                   </div>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card>
+                </v-container>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          
         </template>
 
         <v-alert
@@ -238,11 +243,10 @@
           {{ error || result.message }}
         </v-alert>
       </div>
-    </v-container>
-  </v-card>
 
   <div v-if="result?.available" class="booking-footer">
     <v-card flat color="surface">
+      <v-divider />
       <v-container>
         <div class="booking-footer-content">
           <div>
@@ -734,7 +738,6 @@ const continueBooking = async () => {
 }
 
 .booking-footer-content {
-  max-width: 600px;
   margin: 0 auto;
   display: flex;
   align-items: center;

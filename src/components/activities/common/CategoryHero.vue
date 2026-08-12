@@ -1,7 +1,7 @@
 <template>
   <v-card
     flat
-    rounded="xl"
+    rounded="lg"
     class="overflow-hidden text-white"
     :style="{
       backgroundImage: `linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.55)), url(${coverImage})`,

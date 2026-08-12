@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex align-start justify-center py-4 px-2 flex-wrap">
+  <div class="stepper d-flex align-start justify-center flex-wrap">
     <template v-for="(label, index) in steps" :key="label">
-      <div class="d-flex flex-column align-center" style="min-width: 110px">
+      <div class="stepper-step d-flex flex-column align-center">
         <v-avatar
-          :size="40"
+          class="stepper-avatar"
           :color="index < modelValue - 1 ? 'brandColor2' : 'transparent'"
           :style="
             index < modelValue - 1
@@ -17,12 +17,12 @@
                 }
           "
         >
-          <v-icon v-if="index < modelValue - 1" color="white" size="20">
+          <v-icon v-if="index < modelValue - 1" color="white" class="stepper-check-icon">
             mdi-check
           </v-icon>
           <span
             v-else
-            class="g2a-title-md"
+            class="stepper-number"
             :class="index === modelValue - 1 ? 'text-brandColor2' : 'text-greyDark'"
           >
             {{ index + 1 }}
@@ -30,7 +30,7 @@
         </v-avatar>
 
         <div
-          class="mt-2 text-center g2a-text-14"
+          class="stepper-label mt-2 text-center"
           :class="index <= modelValue - 1 ? '' : 'text-greyDark'"
         >
           {{ label }}
@@ -39,13 +39,8 @@
 
       <div
         v-if="index < steps.length - 1"
-        class="flex-grow-1"
-        style="
-          height: 2px;
-          margin-top: 19px;
-          min-width: 24px;
-          background-color: rgb(var(--v-theme-brandColor2));
-        "
+        class="stepper-line flex-grow-1"
+        style="background-color: rgb(var(--v-theme-brandColor2))"
       ></div>
     </template>
   </div>
@@ -64,3 +59,69 @@ defineProps({
   },
 });
 </script>
+
+<style scoped>
+.stepper {
+  padding: 16px 8px;
+}
+
+.stepper-step {
+  min-width: 110px;
+}
+
+.stepper-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.stepper-check-icon {
+  font-size: 20px;
+}
+
+.stepper-number {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.stepper-label {
+  font-size: 14px;
+}
+
+.stepper-line {
+  height: 2px;
+  margin-top: 19px;
+  min-width: 24px;
+}
+
+@media (max-width: 600px) {
+  .stepper {
+    padding: 12px 4px;
+  }
+
+  .stepper-step {
+    min-width: 72px;
+  }
+
+  .stepper-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .stepper-check-icon {
+    font-size: 14px;
+  }
+
+  .stepper-number {
+    font-size: 12px;
+  }
+
+  .stepper-label {
+    font-size: 11px;
+  }
+
+  .stepper-line {
+    margin-top: 13px;
+    min-width: 12px;
+  }
+}
+</style>
