@@ -85,9 +85,9 @@
             :value="row.value"
             bold
           />
-
-          <v-divider v-if="dailyPricing.length" class="my-4" />
-          <template v-if="dailyPricing.length">
+        
+          <v-divider v-if="dailyPricing.length > 1" class="my-4" />
+          <template v-if="dailyPricing.length > 1">
             <div class="g2a-title-2xl-2 mb-3">Daily pricing</div>
             <DetailRow
               v-for="day in previewDailyPricing"
@@ -106,18 +106,18 @@
             </button>
           </template>
 
-          <v-divider class="my-4" />
+          <!-- <v-divider class="my-4" /> -->
           <DetailRow
             v-if="isKmBasedPricing && pricing.distance_km != null"
             label="Distance"
             :value="distanceLabel"
             bold
           />
-          <DetailRow
+          <!-- <DetailRow
             :label="`Subtotal${pricing.quantity > 1 ? ` (x${pricing.quantity})` : ''}`"
             :value="formatCurrency(pricing.subtotal)"
             bold
-          />
+          /> -->
           <DetailRow
             v-if="pricing.discount"
             label="Discount"
@@ -198,6 +198,13 @@
           <v-icon size="14" class="mr-1">mdi-shield-check-outline</v-icon>
           No Hidden Charges
         </div>
+
+        <v-divider class="my-2" />
+        <div class="d-flex align-center justify-center text-greyDark mt-2 text-caption">
+           <!-- make it short  -->
+            Go2Andaman is not a provider of the activities listed on this website. We are a platform that connects travelers with local activity providers. 
+        </div>
+      
       </v-card-text>
     </v-card>
 

@@ -43,6 +43,7 @@
             :maxQuantity="maxQuantity"
             :serviceHours="serviceHours"
             :productSlug="product?.slug"
+            :productTypeSlug="route.params.productType"
             :locationSlug="selectedLocation?.slug"
             :pricing="pricing"
           />
@@ -182,7 +183,7 @@
               <v-row>
                 <v-col v-if="productInclusions.length">
                   <div>
-                    <div class="g2a-title-lg">Included</div>
+                    <div class="g2a-title-lg">Inclusions</div>
                   </div>
                   <v-divider class="my-2"></v-divider>
                   <div
@@ -197,7 +198,7 @@
                 </v-col>
                 <v-col v-if="productExclusions.length">
                   <div>
-                    <div class="g2a-title-lg">Excluded</div>
+                    <div class="g2a-title-lg">Exclusions</div>
                   </div>
                   <v-divider class="my-2"></v-divider>
 

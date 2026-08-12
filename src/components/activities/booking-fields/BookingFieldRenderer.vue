@@ -11,6 +11,7 @@
     :maxQuantity="maxQuantity"
     :locationSlug="locationSlug"
     :productSlug="productSlug"
+    :productTypeSlug="productTypeSlug"
     :pricing="pricing"
     @update:modelValue="updateValue"
   />
@@ -65,6 +66,10 @@ const props = defineProps({
     default: "",
   },
   productSlug: {
+    type: String,
+    default: "",
+  },
+  productTypeSlug: {
     type: String,
     default: "",
   },
