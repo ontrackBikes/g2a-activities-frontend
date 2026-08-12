@@ -659,10 +659,10 @@ const selectedSlotRow = computed(() => {
   const slot = selectedSlot.value;
   if (!slot) return null;
   return {
-    label: slot.slot_type === "TIME" ? "Time" : "Variant",
+    label: slot.slot_type === "TIME" ? "Time Slot" : "Variant",
     value:
       slot.slot_type === "TIME"
-        ? `${slot.start_time} - ${slot.end_time}`
+        ? `${slot.start_time}`
         : slot.name,
   };
 });

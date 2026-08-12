@@ -125,7 +125,7 @@
                         v-if="slot.slot_type == 'TIME'"
                       >
                         <v-icon size="14">mdi-clock-outline</v-icon>
-                        {{ formatTime(slot.start_time) }}
+                        Starts from {{ formatTime(slot.start_time) }}
                         <!-- —
                         {{ formatTime(slot.end_time) }} -->
                       </div>

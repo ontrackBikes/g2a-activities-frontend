@@ -5,6 +5,7 @@ import FerrySeatSelection from "./sections/FerrySeatSelection.vue";
 import RentalDetails from "./sections/RentalDetails.vue";
 import FlightDetails from "./sections/FlightDetails.vue";
 import FerryDetails from "./sections/FerryDetails.vue";
+import OptForPickupAndDrop from "./sections/OptForPickupAndDrop.vue";
 
 export default {
   customer_details: {
@@ -40,5 +41,10 @@ export default {
   ferry_details: {
     component: FerryDetails,
     title: "Ferry Details",
+  },
+
+  opt_for_pickup_and_drop: {
+    component: OptForPickupAndDrop,
+    title: "Pickup & Drop",
   },
 };
