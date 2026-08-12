@@ -116,10 +116,10 @@
                   >
                     <v-col cols="3" class="text-capitalize">
                       {{
-                        item.booking_data.selected_slot.slot_type || "Time Slot"
+                        item.booking_data.selected_slot.slot_type === 'TIME' ? "Time Slot" : item.booking_data.selected_slot.slot_type
                       }}
                     </v-col>
-                    <v-col cols="9" class="g2a-title-lg text-right">
+                    <v-col cols="9" class="g2a-title-md text-right">
                       {{ item.booking_data.selected_slot.name }}
 
                       <span
@@ -320,7 +320,7 @@
                     >
                       <DetailRow
                         :label="pretty(key)"
-                        :value="value ? 'yes' : 'no'"
+                        :value="value ? 'Yes' : 'No'"
                       />
                     </div>
 

@@ -5,10 +5,10 @@
         {{ config.title || "Medical Declaration" }}
       </div>
 
-      <div class=" mt-1">
+      <div class="mt-1">
         {{
           config.description ||
-          "Please answer honestly. Your safety is our highest priority."
+          "Please go through this before your activity. Your safety is our highest priority."
         }}
       </div>
     </v-container>
@@ -16,38 +16,59 @@
     <v-divider />
 
     <v-container>
+      <div class="g2a-title-md">All the participants</div>
+
+      <div class="mt-2">
+        This is the Scuba Medical Form. No need to fill it - just go through
+        it as a pre-emptive reference check list. It’s a standard ask before
+        any adventure sport.
+      </div>
+
+      <div class="mt-2">
+        If the answer is a NO to everything, then nothing to worry and no
+        other medical certificate is needed.
+      </div>
+
+      <div class="mt-2">
+        If there is a YES, then you need to produce a doctor certificate that
+        you can do this activity.
+      </div>
+
+      <div class="mt-2">
+        If anyone is above the age of 50, they need to get the form signed by
+        a Doctor - irrespective of the answers - as per the local
+        administration rules.
+      </div>
+
+      <v-btn
+        :href="scubaMedicalFormUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        download
+        variant="outlined"
+        color="brandColor2"
+        rounded="lg"
+        class="mt-4"
+        prepend-icon="mdi-download"
+      >
+        Download Scuba Medical Form
+      </v-btn>
+
       <v-checkbox
-        v-for="question in questions"
-        :key="question.key"
-        v-model="medical[question.key]"
-        :label="question.label"
+        v-model="medical.acknowledged"
+        class="mt-2"
         color="primary"
         hide-details="auto"
         density="compact"
-      />
-
-      <v-textarea
-        v-if="hasMedicalIssue"
-        v-model="medical.other_details"
-        label="Please provide more details"
-        variant="outlined"
-        rows="4"
-        class="mt-2"
-        hide-details="auto"
         :rules="[
-          (v) => !medical.other || !!v || 'Please provide additional details',
+          (v) => !!v || 'Please confirm you have gone through the Scuba Medical Form',
         ]"
-      />
-
-      <v-alert
-        v-if="hasMedicalIssue"
-        type="warning"
-        variant="tonal"
-        class="mt-4"
       >
-        Certain medical conditions may require approval from the dive instructor
-        before participation.
-      </v-alert>
+        <template #label>
+          I confirm all participants have gone through the Scuba Medical Form
+          and the declaration above.
+        </template>
+      </v-checkbox>
     </v-container>
   </v-card>
 </template>
@@ -65,66 +86,21 @@ const props = defineProps({
 
 const booking = bookingStore;
 
+const scubaMedicalFormUrl = "/uploads/scuba-medical-form.pdf";
+
 const medical = computed({
   get() {
-    if (!booking.form.medical) {
-      booking.form.medical = {
-        asthma: false,
-        heart_disease: false,
-        epilepsy: false,
-        pregnant: false,
-        diabetes: false,
-        recent_surgery: false,
-        ear_problem: false,
-        other: false,
-        other_details: "",
+    if (!booking.form.medical_declaration) {
+      booking.form.medical_declaration = {
+        acknowledged: false,
       };
     }
 
-    return booking.form.medical;
+    return booking.form.medical_declaration;
   },
 
   set(value) {
-    booking.form.medical = value;
+    booking.form.medical_declaration = value;
   },
-});
-
-const questions = [
-  {
-    key: "asthma",
-    label: "I have Asthma",
-  },
-  {
-    key: "heart_disease",
-    label: "I have Heart Disease",
-  },
-  {
-    key: "epilepsy",
-    label: "I have Epilepsy",
-  },
-  {
-    key: "pregnant",
-    label: "I am Pregnant",
-  },
-  {
-    key: "diabetes",
-    label: "I have Diabetes",
-  },
-  {
-    key: "recent_surgery",
-    label: "I have undergone recent surgery",
-  },
-  {
-    key: "ear_problem",
-    label: "I have Ear / Sinus Problems",
-  },
-  {
-    key: "other",
-    label: "Other Medical Condition",
-  },
-];
-
-const hasMedicalIssue = computed(() => {
-  return questions.some((question) => medical.value[question.key]);
 });
 </script>
