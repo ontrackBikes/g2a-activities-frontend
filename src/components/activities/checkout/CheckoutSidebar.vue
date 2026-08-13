@@ -201,8 +201,8 @@
 
         <v-divider class="my-2" />
         <div class="d-flex align-center justify-center text-greyDark mt-2 text-caption text-center">
-           <!-- make it short  -->
-            Go2Andaman is not a provider of the activities listed on this website. We are a platform that connects travelers with local activity providers. 
+ 
+            Discover and book Andaman experiences with trusted local operators through Go2Andaman. Activities are operated by local providers in accordance with applicable regulatory requirements.
         </div>
       
       </v-card-text>
@@ -512,8 +512,7 @@
       </div>
       <v-divider class="my-2" />
         <div class="d-flex align-center justify-center text-greyDark mt-2 text-caption text-center">
-           <!-- make it short  -->
-            Go2Andaman is not a provider of the activities listed on this website. We are a platform that connects travelers with local activity providers. 
+            Discover and book Andaman experiences with trusted local operators through Go2Andaman. Activities are operated by local providers in accordance with applicable regulatory requirements.
         </div>
         
     </v-container>

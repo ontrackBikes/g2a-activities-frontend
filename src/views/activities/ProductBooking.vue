@@ -203,7 +203,7 @@
 
             <v-col v-if="productExclusions.length" cols="12" md="6">
               <v-card rounded="lg" flat class="h-100 border">
-                <div class="pa-4" style="background-color: #f2f7f2">
+                <div class="pa-4" style="background-color: #FAF4F4">
                   <div class="g2a-title-lg text-error">
                     What's not included?
                   </div>
