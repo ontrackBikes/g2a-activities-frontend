@@ -166,6 +166,7 @@
               variant="tonal"
               density="comfortable"
               class="mb-3"
+              rounded="lg"
             >
               Your preferred time slot is subject to availability. If unavailable, we'll contact you with an available time slot.
             </v-alert>
@@ -499,16 +500,25 @@ watch(
 );
 
 const filteredSlots = computed(() => {
-  if (!slotSearch.value) return slots.value;
+  const search = slotSearch.value?.toLowerCase().trim();
 
-  const search = slotSearch.value.toLowerCase().trim();
+  const filtered = !search
+    ? slots.value
+    : slots.value.filter((slot) => {
+        return (
+          slot.name?.toLowerCase().includes(search) ||
+          formatTime(slot.start_time)?.toLowerCase().includes(search) ||
+          formatTime(slot.end_time)?.toLowerCase().includes(search)
+        );
+      });
 
-  return slots.value.filter((slot) => {
-    return (
-      slot.name?.toLowerCase().includes(search) ||
-      formatTime(slot.start_time)?.toLowerCase().includes(search) ||
-      formatTime(slot.end_time)?.toLowerCase().includes(search)
-    );
+  // Earliest start_time first; slots without a start_time (e.g. non-TIME
+  // variants) sort after timed ones, in their original order.
+  return [...filtered].sort((a, b) => {
+    if (!a.start_time && !b.start_time) return 0;
+    if (!a.start_time) return 1;
+    if (!b.start_time) return -1;
+    return a.start_time.localeCompare(b.start_time);
   });
 });
 
