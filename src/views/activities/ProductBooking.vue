@@ -61,7 +61,9 @@
           <!-- Slot Selection -->
           <div v-if="isSlotPricing" class="mt-4">
             <div class="g2a-title-lg mb-3">
-              Select {{ isScubaDiving ? "Preferred " : "" }}{{ availability.slot_display_type == "TIME" ? "Time Slot" : availability.slot_display_type }}
+              {{ availability.slot_display_name || (availability.slot_display_type == "TIME"
+                ? "Select Time Slot"
+                : `Select ${availability.slot_display_type}`) }}
             </div>
             
             <v-text-field
@@ -107,6 +109,7 @@
                     <!-- Left -->
                     <div class="flex-grow-1">
                       <div class="d-flex align-center">
+                        
                         <div class="slot-name">
                           {{ slot.name }}
                         </div>
@@ -120,6 +123,8 @@
                         >
                           Few left
                         </v-chip>
+
+                      
                       </div>
 
                       <div
@@ -127,9 +132,15 @@
                         v-if="slot.slot_type == 'TIME'"
                       >
                         <v-icon size="14">mdi-clock-outline</v-icon>
-                        Starts from {{ formatTime(slot.start_time) }}
-                        <!-- —
-                        {{ formatTime(slot.end_time) }} -->
+                        <template v-if="slot.is_start_time_only">
+                          Starts {{ formatTime(slot.start_time) }}
+                        </template>
+                        <template v-else>
+                          {{ formatTime(slot.start_time) }} —
+                          {{ formatTime(slot.end_time) }}
+                        </template>  <span >
+                        {{slot.is_preferred ? "(Preferred only)" : ""}}
+                       </span>
                       </div>
                     </div>
 
@@ -150,7 +161,7 @@
             </div>
 
             <v-alert
-              v-if="isScubaDiving"
+              v-if="selectedSlot?.is_preferred"
               type="info"
               variant="tonal"
               density="comfortable"
@@ -571,9 +582,6 @@ const selectedSlot = computed(() => availability.value.selected_slot ?? null);
 const isSlotPricing = computed(() => pricing.value.pricing_type === "SLOT");
 const isKmBasedPricing = computed(
   () => pricing.value.pricing_type === "KM_BASED",
-);
-const isScubaDiving = computed(
-  () => route.params.productType === "scuba-diving",
 );
 
 const selectedLocation = computed(() => result.value?.selected_location);

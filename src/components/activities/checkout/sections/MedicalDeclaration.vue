@@ -16,30 +16,18 @@
     <v-divider />
 
     <v-container>
-      <div class="g2a-title-md">All the participants</div>
+      <div class="g2a-title-md">For all participants</div>
 
-      <div class="mt-2">
-        This is the Scuba Medical Form. No need to fill it - just go through
-        it as a pre-emptive reference check list. It’s a standard ask before
-        any adventure sport.
-      </div>
 
-      <div class="mt-2">
-        If the answer is a NO to everything, then nothing to worry and no
-        other medical certificate is needed.
-      </div>
-
-      <div class="mt-2">
-        If there is a YES, then you need to produce a doctor certificate that
-        you can do this activity.
-      </div>
-
-      <div class="mt-2">
-        If anyone is above the age of 50, they need to get the form signed by
-        a Doctor - irrespective of the answers - as per the local
-        administration rules.
-      </div>
-
+      <v-container>
+        <ul>
+        <li>This is for reference only. No need to fill it out.</li>
+        <li>if all answers are "No", no medical certificate is required.</li>
+        <li>if any answer is "Yes", you'll need a doctor's fitness certificate.</li>
+        <li>Participants above 50 years must provide a signed doctor's certificate, regardless of their answers.</li>
+      </ul>
+      </v-container>
+ 
       <v-btn
         :href="scubaMedicalFormUrl"
         target="_blank"
@@ -48,7 +36,7 @@
         variant="outlined"
         color="brandColor2"
         rounded="lg"
-        class="mt-4"
+        class="my-2"
         prepend-icon="mdi-download"
       >
         Download Scuba Medical Form
@@ -65,8 +53,7 @@
         ]"
       >
         <template #label>
-          I confirm all participants have gone through the Scuba Medical Form
-          and the declaration above.
+          I confirm that all participants have reviewed the Scuba Medical Form and declaration above.
         </template>
       </v-checkbox>
     </v-container>
