@@ -526,6 +526,7 @@ import G2AExpansionPanel from "@/components/common/G2AExpansionPanel.vue";
 import { computed, ref, h } from "vue";
 import { useDisplay } from "vuetify";
 import { VCol, VRow } from "vuetify/components";
+import { bookingStore } from "@/store/booking";
 
 defineEmits(["proceed"]);
 
@@ -666,6 +667,27 @@ const selectedSlotRow = computed(() => {
   };
 });
 
+// "opt_for_pickup_and_drop" lives in bookingStore.form (the section writes
+// there directly, see OptForPickupAndDrop.vue) rather than in the fetched
+// quote, so it's read live off the store instead of `booking.value`. Only
+// shown when the product's schema actually offers the option.
+const pickupAndDropSectionEnabled = computed(() =>
+  (
+    props.quote?.product?.bookingTemplate?.booking_page_schema?.sections || []
+  ).some(
+    (section) => section.section === "opt_for_pickup_and_drop" && section.enabled,
+  ),
+);
+
+const optForPickupAndDropRow = computed(() => {
+  if (!pickupAndDropSectionEnabled.value) return null;
+
+  return {
+    label: "Pickup & Drop",
+    value: bookingStore.form.opt_for_pickup_and_drop ? "Opted" : "Not opted",
+  };
+});
+
 const dailyPricing = computed(() => availability.value.daily_pricing || []);
 const previewDailyPricing = computed(() => dailyPricing.value.slice(0, 3));
 const hasMorePricing = computed(() => dailyPricing.value.length > 3);
@@ -793,10 +815,14 @@ const bookingRows = computed(() =>
     }),
 );
 
-// First 3 rows (+ selected slot) show up-front; the rest live under "More details".
+// First 3 rows (+ selected slot, + pickup & drop opt-in) show up-front;
+// the rest live under "More details".
 const previewRows = computed(() => {
   const rows = bookingRows.value.slice(0, 3);
-  return selectedSlotRow.value ? [...rows, selectedSlotRow.value] : rows;
+  const extraRows = [selectedSlotRow.value, optForPickupAndDropRow.value].filter(
+    Boolean,
+  );
+  return [...rows, ...extraRows];
 });
 const remainingRows = computed(() => bookingRows.value.slice(3));
 const hasMoreDetails = computed(

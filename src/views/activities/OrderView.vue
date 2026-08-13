@@ -181,6 +181,16 @@
               </div>
             </div>
 
+            <div
+              v-if="item.opt_for_pickup_and_drop != null"
+              class="d-flex justify-space-between py-2"
+            >
+              <span class="g2a-title-md text-greyDark">Pickup & Drop</span>
+              <div class="g2a-title-md">
+                {{ item.opt_for_pickup_and_drop ? "Opted" : "Not opted" }}
+              </div>
+            </div>
+
             <!-- Rental Booking -->
             <template v-if="bookingOf(item).booking_mode === 'date_range'">
               <div class="d-flex justify-space-between py-2">

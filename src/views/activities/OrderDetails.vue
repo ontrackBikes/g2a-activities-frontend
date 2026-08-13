@@ -140,6 +140,11 @@
                   </v-row>
 
                   <DetailRow
+                    v-if="item.opt_for_pickup_and_drop != null"
+                    label="Pickup & Drop"
+                    :value="item.opt_for_pickup_and_drop ? 'Opted' : 'Not opted'"
+                  />
+                  <DetailRow
                     v-if="item.booking_data.pickup_date"
                     label="Pickup Date"
                     :value="formatDate(item.booking_data.pickup_date)"
