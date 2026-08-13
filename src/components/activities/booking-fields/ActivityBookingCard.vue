@@ -47,6 +47,9 @@
           Book Now
         </v-btn>
       </div>
+      <div class="mt-4 text-success">
+        {{ nextAvailableDate ? `Next available date: ${nextAvailableDate}` : "" }}
+      </div>
     </v-card>
     <v-card
       class="my-4 border"

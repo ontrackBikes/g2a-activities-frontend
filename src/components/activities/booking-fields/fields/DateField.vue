@@ -2,6 +2,7 @@
   <div>
     <div class="g2a-title-lg mb-3">
       {{ field.label || "Select Date" }}
+      
     </div>
 
     <div ref="stripRef" class="date-strip">
@@ -29,8 +30,11 @@
     </div>
 
     <div v-if="selectedDateLabel" class="text-body-2 mt-2">
-      Selected date: <strong>{{ selectedDateLabel }}</strong>
+      Selected date: <strong>{{ selectedDateLabel }}</strong> <span v-if="nextAvailableDate">
+        , Next available date: {{ nextAvailableDate }}
+      </span>
     </div>
+    
 
     <div v-if="error" class="text-error text-caption mt-2">
       {{ error }}
@@ -50,6 +54,11 @@ const props = defineProps({
   },
 
   error: {
+    type: String,
+    default: "",
+  },
+
+  nextAvailableDate: {
     type: String,
     default: "",
   },

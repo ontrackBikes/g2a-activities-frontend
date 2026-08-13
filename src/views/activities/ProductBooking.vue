@@ -20,6 +20,11 @@
           <div class="text-grey">
             {{ selectedLocation?.name }}
           </div>
+          <!-- <div class="text-grey">
+            <span v-if="product?.next_available_date">
+              Next available date: {{ product.next_available_date }}
+            </span>
+          </div> -->
         </div>
       </div>
 
@@ -48,6 +53,7 @@
               :productTypeSlug="route.params.productType"
               :locationSlug="selectedLocation?.slug"
               :pricing="pricing"
+              :nextAvailableDate="product?.next_available_date"
             />
           </div>
         </v-form>
