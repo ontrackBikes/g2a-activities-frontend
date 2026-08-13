@@ -342,6 +342,27 @@
                   </div>
                 </v-container>
               </v-card>
+
+
+              <v-card
+                flat
+                class="border my-2"
+                rounded="lg"
+                
+              >
+                <v-container>
+                  <div class="g2a-title-lg">What happens after payment?</div>
+                  <v-divider class="my-2" />
+                  
+                    <div>You'll receive a confirmation voucher shortly after your payment is processed. If additional information is required, our agents will contact you.</div>
+                    <!-- <ul>
+                    <li>If vendor confirmation is required, our operations team will contact you.</li>
+                    <li>Your booking voucher will be emailed once confirmed.</li>
+                    <li>Please carry a valid Government ID during your activity.</li>
+                  </ul> -->
+                 
+                  </v-container>
+                  </v-card>
             </div>
           </div>
         </v-col>

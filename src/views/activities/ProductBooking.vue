@@ -63,15 +63,7 @@
             <div class="g2a-title-lg mb-3">
               Select {{ isScubaDiving ? "Preferred " : "" }}{{ availability.slot_display_type == "TIME" ? "Time Slot" : availability.slot_display_type }}
             </div>
-            <v-alert
-              v-if="isScubaDiving"
-              type="info"
-              variant="tonal"
-              density="comfortable"
-              class="mb-3"
-            >
-              This is just your preferred time slot and may change based on availability.
-            </v-alert>
+            
             <v-text-field
               v-if="slots.length > 4"
               v-model="slotSearch"
@@ -84,6 +76,7 @@
               hide-details
               class="mb-4"
             />
+
             <v-alert
               v-if="filteredSlots.length === 0"
               type="info"
@@ -144,7 +137,7 @@
 
                     <div class="text-right ml-4">
                       <div class="slot-price">
-                        ₹{{ Number(slot.price).toLocaleString() }}
+                        ₹{{ (Number(slot.price) * (pricing.quantity || 1)).toLocaleString() }}
                       </div>
                     </div>
                   </div>
@@ -155,6 +148,16 @@
             <div v-if="slotError" class="text-error text-caption mt-2">
               {{ slotError }}
             </div>
+
+            <v-alert
+              v-if="isScubaDiving"
+              type="info"
+              variant="tonal"
+              density="comfortable"
+              class="mb-3"
+            >
+              Your preferred time slot is subject to availability. If unavailable, we'll contact you with an available time slot.
+            </v-alert>
           </div>
 
           <!-- Price -->
@@ -182,6 +185,31 @@
             >
               View {{ dailyPricing.length }} more
             </div>
+          </div>
+
+          <div v-if="productHighlights.length" class="my-4">
+            <v-card
+              rounded="lg"
+              flat
+              class="border my-4"
+              v-for="(highlight, index) in productHighlights"
+              :key="index"
+            >
+              <v-container>
+                <div class="d-flex align-start mb-2 g2a-title-xs">
+                  <v-icon
+                    :icon="getIcon(highlight.title)"
+                    size="24"
+                    color="brandColor2"
+                    class="mt-1"
+                  />
+                  <div class="ml-2">
+                    <div class="g2a-title-lg">{{ highlight.title }}</div>
+                    <div class="mt-1">{{ highlight.content }}</div>
+                  </div>
+                </div>
+              </v-container>
+            </v-card>
           </div>
 
           <v-row class="my-4">
@@ -492,6 +520,25 @@ const productInclusions = computed(
 const productExclusions = computed(
   () => quotation.value.product.exclusions ?? {},
 );
+
+const productHighlights = computed(
+  () => quotation.value.product?.highlights ?? [],
+);
+
+const getIcon = (title) => {
+  if (title == "Security Deposits") {
+    return "mdi-shield-lock-outline";
+  } else if (title == "Damage Policy") {
+    return "mdi-information-outline";
+  } else if (title == "Information") {
+    return "mdi-information-outline";
+  } else if (title == "Timings") {
+    return "mdi-clock-outline";
+  } else if (title == "Duration") {
+    return "mdi-timer-outline";
+  }
+  return "mdi-crown-outline";
+};
 
 const pricing = computed(() => quotation.value.pricing ?? {});
 
