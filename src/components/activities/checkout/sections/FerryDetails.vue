@@ -51,7 +51,6 @@
             v-model="ferry.ferry_time"
             type="time"
             label="Ferry Time (optional)"
-            prepend-inner-icon="mdi-clock-outline"
             variant="outlined"
             density="compact"
             rounded="lg"
