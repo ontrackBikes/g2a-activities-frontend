@@ -48,9 +48,10 @@
 
         <v-col cols="12">
           <v-text-field
-            v-model="ferry.ferry_number"
-            label="Ferry Number (optional)"
-            placeholder="e.g. F-204"
+            v-model="ferry.ferry_time"
+            type="time"
+            label="Ferry Time (optional)"
+            prepend-inner-icon="mdi-clock-outline"
             variant="outlined"
             density="compact"
             rounded="lg"
@@ -193,7 +194,7 @@ const ferry = computed({
       booking.form.ferry_details = {
         operator: "",
         custom_operator: "",
-        ferry_number: "",
+        ferry_time: "",
       };
     }
 
