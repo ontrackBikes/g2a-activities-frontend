@@ -188,6 +188,12 @@ const getIcon = (title) => {
     return "mdi-shield-lock-outline";
   } else if (title == "Damage Policy") {
     return "mdi-information-outline";
+  } else if (title == "Information") {
+    return "mdi-information-outline";
+  } else if (title == "Timings") {
+    return "mdi-clock-outline";
+  } else if (title == "Duration") {
+    return "mdi-timer-outline";
   }
   return "mdi-crown-outline";
 };
