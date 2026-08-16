@@ -232,12 +232,13 @@ function bookNow() {
   width: 100%;
   padding: 14px;
   border: none;
-  border-radius: 10px;
+  border-radius: 20px;
   background: #ffc107;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
+  font-family: inherit;
 }
 
 .g2a-book-widget__button:hover:not(:disabled) {

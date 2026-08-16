@@ -203,9 +203,9 @@ function bookNow(product) {
 .g2a-book-widget__button {
   margin-top: 20px;
   width: 100%;
-  height: 48px;
+  height: 20px;
   border: none;
-  border-radius: 12px;
+  border-radius: 40px;
   background: #ffc107;
   color: #fff;
   font-size: 15px;
