@@ -4,6 +4,7 @@
     :locations="availableLocations"
     :loading="loadingLocations"
     :label="field.label || 'Drop Location'"
+    :location-slug="locationSlug"
     :rules="rules"
     @update:model-value="update"
   />

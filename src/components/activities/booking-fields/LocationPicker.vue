@@ -179,6 +179,11 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+
+  locationSlug: {
+    type: String,
+    default: "",
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -249,7 +254,7 @@ const runPlaceSearch = async (query) => {
 
   try {
     const { data } = await apiClient.get("/v1/places/search", {
-      params: { q: query },
+      params: { q: query, location_slug: props.locationSlug },
     });
 
     if (token !== searchToken) return;
