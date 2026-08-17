@@ -116,7 +116,9 @@
                   >
                     <v-col cols="3" class="text-capitalize">
                       {{
-                        item.booking_data.selected_slot.slot_type === 'TIME' ? "Time Slot" : item.booking_data.selected_slot.slot_type
+                        item.booking_data.selected_slot.slot_type === "TIME"
+                          ? "Time Slot"
+                          : item.booking_data.selected_slot.slot_type
                       }}
                     </v-col>
                     <v-col cols="9" class="g2a-title-md text-right">
@@ -142,7 +144,9 @@
                   <DetailRow
                     v-if="item.opt_for_pickup_and_drop != null"
                     label="Pickup & Drop"
-                    :value="item.opt_for_pickup_and_drop ? 'Opted' : 'Not opted'"
+                    :value="
+                      item.opt_for_pickup_and_drop ? 'Opted' : 'Not opted'
+                    "
                   />
                   <DetailRow
                     v-if="item.booking_data.pickup_date"
@@ -189,8 +193,9 @@
                     "
                     label="Airline"
                     :value="
-                      item.flight_details?.airline ||
-                      item.flight_details?.custom_airline
+                      item.flight_details?.airline === 'Others'
+                        ? item.flight_details?.custom_airline
+                        : item.flight_details?.airline
                     "
                   />
 
@@ -198,6 +203,37 @@
                     v-if="item.flight_details?.flight_number"
                     label="Flight Number"
                     :value="item.flight_details?.flight_number"
+                  />
+                </v-container>
+              </v-card>
+
+              <v-card
+                flat
+                class="border my-2"
+                rounded="lg"
+                v-if="item.ferry_details"
+              >
+                <v-container>
+                  <div class="g2a-title-lg">Ferry Info</div>
+                  <v-divider class="my-2" />
+
+                  <DetailRow
+                    v-if="
+                      item.ferry_details?.operator ||
+                      item.ferry_details?.custom_operator
+                    "
+                    label="Ferry Operator"
+                    :value="
+                      item.ferry_details?.operator === 'Others'
+                        ? item.ferry_details?.custom_operator
+                        : item.ferry_details?.operator
+                    "
+                  />
+
+                  <DetailRow
+                    v-if="item.ferry_details?.ferry_time"
+                    label="Ferry Time"
+                    :value="item.ferry_details?.ferry_time"
                   />
                 </v-container>
               </v-card>
@@ -253,7 +289,9 @@
                       >Drop Point ({{ item.rental_details?.drop_type }})</v-col
                     >
                     <v-col cols="9" class="text-right">
-                      <template v-if="item.rental_details.drop_type === 'hotel'">
+                      <template
+                        v-if="item.rental_details.drop_type === 'hotel'"
+                      >
                         <span class="g2a-title-lg">{{
                           item.rental_details?.drop_hotel_name
                         }}</span>
@@ -343,26 +381,23 @@
                 </v-container>
               </v-card>
 
-
-              <v-card
-                flat
-                class="border my-2"
-                rounded="lg"
-                
-              >
+              <v-card flat class="border my-2" rounded="lg">
                 <v-container>
                   <div class="g2a-title-lg">What happens after payment?</div>
                   <v-divider class="my-2" />
-                  
-                    <div>You'll receive a confirmation voucher shortly after your payment is processed. If additional information is required, our agents will contact you.</div>
-                    <!-- <ul>
+
+                  <div>
+                    You'll receive a confirmation voucher shortly after your
+                    payment is processed. If additional information is required,
+                    our agents will contact you.
+                  </div>
+                  <!-- <ul>
                     <li>If vendor confirmation is required, our operations team will contact you.</li>
                     <li>Your booking voucher will be emailed once confirmed.</li>
                     <li>Please carry a valid Government ID during your activity.</li>
                   </ul> -->
-                 
-                  </v-container>
-                  </v-card>
+                </v-container>
+              </v-card>
             </div>
           </div>
         </v-col>
