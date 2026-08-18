@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="lg" class="border" flat>
-    <v-container class="py-2"> 
+    <v-container class="py-2">
       <div class="g2a-title-xl">
         {{ config.title || "Rental Details" }}
       </div>
@@ -8,7 +8,7 @@
       <div v-if="config.description" class="mt-1">
         {{ config.description }}
       </div>
-    </v-container> 
+    </v-container>
 
     <v-divider />
 
@@ -45,8 +45,8 @@
             rounded="lg"
             class="g2a-title-sm mt-4"
           >
-            Free within city limits. Extra charges (~₹100) apply if outside.
-            Our agent will contact you for more details.
+            Free within city limits. Extra charges (~₹100) apply if outside. Our
+            agent will contact you for more details.
           </v-alert>
         </v-col>
       </v-row>
@@ -87,8 +87,8 @@
             rounded="lg"
             class="g2a-title-sm mt-4"
           >
-            Free within city limits. Extra charges (~₹100) apply if outside.
-            Our agent will contact you for more details.
+            Free within city limits. Extra charges (~₹100) apply if outside. Our
+            agent will contact you for more details.
           </v-alert>
         </v-col>
       </v-row>
@@ -267,23 +267,6 @@ const defaultRentalDetails = () => ({
   drop_hotel_name: "",
 });
 
-const loadRentalDetails = () => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-
-    const rental = raw
-      ? {
-          ...defaultRentalDetails(),
-          ...JSON.parse(raw),
-        }
-      : defaultRentalDetails();
-
-    return normalizeRentalDetails(rental);
-  } catch {
-    return defaultRentalDetails();
-  }
-};
-
 const saveRentalDetails = (value) => {
   try {
     localStorage.setItem(
@@ -350,7 +333,7 @@ const normalizeRentalDetails = (rental) => {
 const rental = computed({
   get() {
     if (!booking.form.rental_details) {
-      booking.form.rental_details = loadRentalDetails();
+      booking.form.rental_details = defaultRentalDetails();
     }
 
     return booking.form.rental_details;

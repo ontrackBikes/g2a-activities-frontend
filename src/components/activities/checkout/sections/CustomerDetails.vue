@@ -180,31 +180,6 @@ const defaultCustomer = () => ({
 |--------------------------------------------------------------------------
 */
 
-const loadCustomer = () => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-
-    if (!raw) {
-      return defaultCustomer();
-    }
-
-    const parsed = JSON.parse(raw);
-
-    // Guard against corrupt / partially-shaped data from an older schema version.
-    if (typeof parsed !== "object" || parsed === null) {
-      return defaultCustomer();
-    }
-
-    return {
-      ...defaultCustomer(),
-      ...parsed,
-    };
-  } catch (err) {
-    console.warn("Failed to parse saved customer details, resetting.", err);
-    return defaultCustomer();
-  }
-};
-
 let saveTimeout = null;
 
 const saveCustomer = (customer) => {
@@ -264,7 +239,7 @@ onMounted(() => {
 const customer_details = computed({
   get() {
     if (!booking.form.customer_details) {
-      booking.form.customer_details = loadCustomer();
+      booking.form.customer_details = defaultCustomer();
     }
 
     return booking.form.customer_details;

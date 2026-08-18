@@ -86,7 +86,10 @@
             </v-row>
           </div>
         </v-container>
-        <v-divider v-if="index + 1 < participants.length" class="mt-2"></v-divider>
+        <v-divider
+          v-if="index + 1 < participants.length"
+          class="mt-2"
+        ></v-divider>
       </div>
     </div>
   </v-card>
@@ -121,20 +124,6 @@ const nationalities = ["Indian", "Foreigner"];
 |--------------------------------------------------------------------------
 */
 
-const loadParticipants = () => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-
-    if (!raw) {
-      return [];
-    }
-
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-};
-
 const saveParticipants = (participants) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(participants));
@@ -146,7 +135,7 @@ const saveParticipants = (participants) => {
 const participants = computed({
   get() {
     if (!Array.isArray(booking.form.participants)) {
-      booking.form.participants = loadParticipants();
+      booking.form.participants = [];
     }
 
     return booking.form.participants;
