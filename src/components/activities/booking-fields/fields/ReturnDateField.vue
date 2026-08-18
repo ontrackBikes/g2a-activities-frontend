@@ -8,6 +8,8 @@
     density="compact"
     hide-details="auto"
     :rules="rules"
+    :hint="field.description || undefined"
+    :persistent-hint="!!field.description"
   />
 </template>
 

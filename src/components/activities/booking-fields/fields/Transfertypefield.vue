@@ -1,8 +1,15 @@
 <template>
   <v-card class="border" flat rounded="lg">
     <div class="pa-2 px-4">
-      <div class="g2a-title-md mb-3">
+      <div class="g2a-title-md" :class="field.description ? 'mb-1' : 'mb-3'">
         {{ field.label || "Transfer Details" }}
+      </div>
+
+      <div
+        v-if="field.description"
+        class="text-greyDark d-flex align-center mb-3"
+      >
+        <div>{{ field.description }}</div>
       </div>
 
       <!-- Transfer Direction -->

@@ -10,6 +10,7 @@ import PickupLocationField from "./fields/PickupLocationField.vue";
 import TransferTypeField from "./fields/Transfertypefield.vue";
 import PickupAndDropLocationField from "./fields/PickupAndDropLocationField.vue";
 import PickupTimeField from "./fields/Pickuptimefield.vue";
+import PreferredTimeField from "./fields/PreferredTimeField.vue";
 
 export default {
   date: DateField,
@@ -24,4 +25,5 @@ export default {
   transfer_type: TransferTypeField,
   pickup_and_drop_location: PickupAndDropLocationField,
   pickup_time: PickupTimeField,
+  preferred_time: PreferredTimeField,
 };

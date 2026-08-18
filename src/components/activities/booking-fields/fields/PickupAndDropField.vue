@@ -1,73 +1,80 @@
 <template>
   <v-card class="border" flat rounded="lg">
     <v-container>
+      <div
+        v-if="field.description"
+        class="text-greyDark d-flex align-center mb-3"
+      >
+        <div>{{ field.description }}</div>
+      </div>
+
       <v-row>
-      <v-col cols="12" md="6">
-        <v-text-field
-          v-model="pickupDate"
-          type="date"
-          label="Pickup Date"
-          :min="tomorrowString"
-          :error-messages="error ? [error] : []"
-          variant="outlined"
-          density="compact"
-          hide-details="auto"
-          rounded="lg"
-        />
-      </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="pickupDate"
+            type="date"
+            label="Pickup Date"
+            :min="tomorrowString"
+            :error-messages="error ? [error] : []"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+            rounded="lg"
+          />
+        </v-col>
 
-      <v-col cols="12" md="6">
-        <v-select
-          v-model="pickupTime"
-          :items="pickupTimeOptions"
-          item-title="title"
-          item-value="value"
-          label="Pickup Time"
-          variant="outlined"
-          density="compact"
-          hide-details="auto"
-          rounded="lg"
-        />
-      </v-col>
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="pickupTime"
+            :items="pickupTimeOptions"
+            item-title="title"
+            item-value="value"
+            label="Pickup Time"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+            rounded="lg"
+          />
+        </v-col>
 
-      <v-col cols="12" md="6">
-        <v-text-field
-          v-model="returnDate"
-          type="date"
-          label="Drop Date"
-          :min="minimumReturnDate"
-          :error-messages="error ? [error] : []"
-          variant="outlined"
-          density="compact"
-          hide-details="auto"
-          rounded="lg"
-        />
-      </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="returnDate"
+            type="date"
+            label="Drop Date"
+            :min="minimumReturnDate"
+            :error-messages="error ? [error] : []"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+            rounded="lg"
+          />
+        </v-col>
 
-      <v-col cols="12" md="6">
-        <v-select
-          v-model="pickupTime"
-          :items="pickupTimeOptions"
-          item-title="title"
-          item-value="value"
-          label="Drop Time"
-          variant="outlined"
-          density="compact"
-          hide-details="auto"
-          rounded="lg"
-          readonly
-          disabled
-        />
-      </v-col>
-    </v-row>
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="pickupTime"
+            :items="pickupTimeOptions"
+            item-title="title"
+            item-value="value"
+            label="Drop Time"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+            rounded="lg"
+            readonly
+            disabled
+          />
+        </v-col>
+      </v-row>
 
-    <v-card flat class="border mt-4" rounded="lg">
-      <v-container class="text-warning my-auto d-flex align-center">
-        <v-icon class="mr-2">mdi-information</v-icon> Drop time is
-        automatically set to 24 hours after pickup time. You can contact us
-        if you need a different drop time.
-      </v-container>
-    </v-card>
+      <v-card flat class="border mt-4" rounded="lg">
+        <v-container class="text-warning my-auto d-flex align-center">
+          <v-icon class="mr-2">mdi-information</v-icon> Drop time is
+          automatically set to 24 hours after pickup time. You can contact us if
+          you need a different drop time.
+        </v-container>
+      </v-card>
     </v-container>
   </v-card>
 </template>
@@ -79,6 +86,11 @@ const props = defineProps({
   form: {
     type: Object,
     required: true,
+  },
+
+  field: {
+    type: Object,
+    default: () => ({}),
   },
 
   error: {

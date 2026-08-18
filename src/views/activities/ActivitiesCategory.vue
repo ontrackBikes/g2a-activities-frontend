@@ -1,72 +1,100 @@
 <template>
   <div class="my-4">
-    <!-- Header -->
-    <CategoryHero :category="catetoryInfo" class="mb-10" />
+    <!-- Loading -->
+    <template v-if="loading">
+      <v-skeleton-loader type="image" height="280" class="rounded-lg mb-10" />
 
-    <!-- Product Types -->
-    <!-- Activity Types -->
-    <section v-if="productTypes.length" class="mb-14">
-      <div class="d-flex justify-space-between align-center mb-6">
-        <div>
-          <div class="g2a-title-2xl">Explore by Activity</div>
+      <section class="mb-14">
+        <v-skeleton-loader type="heading" width="240" class="mb-2" />
+        <v-skeleton-loader type="text" width="320" class="mb-6" />
 
-          <div class="">Browse experiences based on your interests.</div>
-        </div>
-      </div>
+        <v-row>
+          <v-col v-for="n in 6" :key="n" cols="6" sm="4" md="3" lg="2">
+            <v-skeleton-loader type="card" rounded="lg" height="96" />
+          </v-col>
+        </v-row>
+      </section>
 
-      <v-row>
-        <v-col
-          v-for="type in productTypes"
-          :key="type.id"
-          cols="6"
-          sm="4"
-          md="3"
-          lg="2"
-        >
-          <v-card
-            class="border "
-            rounded="lg"
-            flat
-            @click="goToProductType(type)"
-          >
-            <v-container class="text-center py-4">
-              <v-icon :icon="type.icon" size="34" color="brandColor2" />
+      <section class="mb-10">
+        <v-skeleton-loader type="heading" width="200" class="mb-2" />
+        <v-skeleton-loader type="text" width="360" class="mb-6" />
+        <v-row>
+          <v-col v-for="n in 4" :key="n" cols="12" sm="6" lg="3">
+            <v-skeleton-loader type="card" rounded="lg" />
+          </v-col>
+        </v-row>
+      </section>
+    </template>
 
-              <div class="g2a-title-md text-brandColor2 my-2">
-                {{ type.name }}
-              </div>
-            </v-container>
-          </v-card>
-        </v-col>
-      </v-row>
-    </section>
+    <template v-else>
+      <!-- Header -->
+      <CategoryHero :category="catetoryInfo" class="mb-10" />
 
-    <!-- Collections -->
+      <!-- Product Types -->
+      <!-- Activity Types -->
+      <section v-if="productTypes.length" class="mb-14">
+        <div class="d-flex justify-space-between align-center mb-6">
+          <div>
+            <div class="g2a-title-2xl">Explore by Activity</div>
 
-    <div v-for="collection in collections" :key="collection.id" class="mb-10">
-      <ProductCollectionSection :collection="collection" />
-    </div>
-
-    <!-- Products -->
-    <section class="mb-10">
-      <div class="d-flex justify-space-between align-center mb-4">
-        <div>
-          <div class="g2a-title-2xl">All {{ catetoryInfo.name }}</div>
-          <div class="">
-            Browse every experience available in this category.
+            <div class="">Browse experiences based on your interests.</div>
           </div>
         </div>
+
+        <v-row>
+          <v-col
+            v-for="type in productTypes"
+            :key="type.id"
+            cols="6"
+            sm="4"
+            md="3"
+            lg="2"
+          >
+            <v-card
+              class="border"
+              rounded="lg"
+              flat
+              @click="goToProductType(type)"
+            >
+              <v-container class="text-center py-4">
+                <v-icon :icon="type.icon" size="34" color="brandColor2" />
+
+                <div class="g2a-title-md text-brandColor2 my-2">
+                  {{ type.name }}
+                </div>
+              </v-container>
+            </v-card>
+          </v-col>
+        </v-row>
+      </section>
+
+      <!-- Collections -->
+
+      <div v-for="collection in collections" :key="collection.id" class="mb-10">
+        <ProductCollectionSection :collection="collection" />
       </div>
 
-      <!-- Filters later -->
+      <!-- Products -->
+      <section class="mb-10">
+        <div class="d-flex justify-space-between align-center mb-4">
+          <div>
+            <div class="g2a-title-2xl">All {{ catetoryInfo.name }}</div>
+            <div class="">
+              Browse every experience available in this category.
+            </div>
+          </div>
+        </div>
 
-      <!-- <ProductFilters
+        <!-- Filters later -->
+
+        <!-- <ProductFilters
         class="mb-6"
         @change="updateFilters"
   /> -->
 
-      <InfiniteProductList :category-slug="categorySlug" :filters="filters" />
-    </section>
+        <InfiniteProductList :category-slug="categorySlug" :filters="filters" />
+      </section>
+    </template>
   </div>
 </template>
 
@@ -89,6 +117,7 @@ const productTypes = ref([]);
 const collections = ref([]);
 const filters = ref({});
 const catetoryInfo = ref({});
+const loading = ref(true);
 
 /**
  * Route Params
@@ -136,7 +165,7 @@ const productTypeIcons = {
   Trek: "mdi-image-filter-hdr",
   Walks: "mdi-ski-cross-country",
   "Boat Trip": "mdi-sail-boat",
-  "Fishing": "mdi-fish",
+  Fishing: "mdi-fish",
 };
 
 /**
@@ -222,6 +251,8 @@ const updateFilters = (value) => {
  * Page Load
  */
 const loadPage = async () => {
+  loading.value = true;
+
   try {
     collections.value = [];
     productTypes.value = [];
@@ -233,6 +264,8 @@ const loadPage = async () => {
     ]);
   } catch (error) {
     console.error("[ActivitiesCategory] loadPage", error);
+  } finally {
+    loading.value = false;
   }
 };
 

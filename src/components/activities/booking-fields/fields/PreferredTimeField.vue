@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-text-field
-      :model-value="pickupTimeLabel"
-      :label="field.label || 'Pickup Time'"
-      placeholder="Select pickup time"
+      :model-value="preferredTimeLabel"
+      :label="field.label || 'Preferred Time'"
+      placeholder="Select preferred time"
       variant="outlined"
       density="compact"
       rounded="lg"
@@ -11,12 +11,15 @@
       :rules="rules"
       :error-messages="error ? [error] : []"
       hide-details="auto"
-      
       readonly
       @click="dialog = true"
     />
 
-    <div v-if="field.description" key="pickup-time-description" class="text-greyDark text-caption mt-1">
+    <div
+      v-if="field.description"
+      key="preferred-time-description"
+      class="text-greyDark text-caption mt-1"
+    >
       {{ field.description }}
     </div>
 
@@ -31,7 +34,7 @@
     >
       <v-card rounded="lg" flat>
         <v-toolbar density="comfortable" color="transparent">
-          <v-toolbar-title>Select Pickup Time</v-toolbar-title>
+          <v-toolbar-title>Select Preferred Time</v-toolbar-title>
 
           <v-spacer />
 
@@ -48,9 +51,9 @@
             overflowY: 'auto',
           }"
         >
-          <v-row v-if="pickupTimeOptions.length" dense>
+          <v-row v-if="preferredTimeOptions.length" dense>
             <v-col
-              v-for="option in pickupTimeOptions"
+              v-for="option in preferredTimeOptions"
               :key="option.value"
               md="3"
               sm="4"
@@ -70,7 +73,7 @@
           </v-row>
 
           <div v-else class="text-medium-emphasis text-body-2 pa-2">
-            No pickup slots are available for the selected service hours.
+            No preferred time or service hours for this activity.
           </div>
         </v-card-text>
       </v-card>
@@ -114,11 +117,11 @@ const dialog = ref(false);
 const rules = computed(() => {
   if (!props.field?.required) return [];
 
-  return [(v) => !!v || "Please select a pickup time"];
+  return [(v) => !!v || "Please select a preferred time"];
 });
 
 // ---------------------------------------------------------------------
-// Pickup time slot generation
+// Preferred time slot generation
 //
 // `serviceHours` is an array of `{ start_time, end_time }` windows (both
 // "HH:mm" or "HH:mm:ss" strings) - a product can have more than one
@@ -168,13 +171,15 @@ const formatMinutesToLabel = (totalMinutes) => {
 // Rounds each configured window's start up, and end down, to the nearest
 // slot boundary so every generated option is bookable and none of them
 // spill outside the service window. If a window's end <= start, it's
-// treated as spanning midnight (e.g. 22:00 -> 06:00). No windows at all
-// falls back to the full day, matching the old single-object default.
+// treated as spanning midnight (e.g. 22:00 -> 06:00). Unlike Pickuptimefield,
+// no windows at all means no slots - this field never falls back to a
+// full-day range, since an activity with no service hours configured has
+// no meaningful "preferred time" to offer.
 const serviceWindows = computed(() => {
   const windows = Array.isArray(props.serviceHours) ? props.serviceHours : [];
 
   if (!windows.length) {
-    return [{ start: 0, end: MINUTES_IN_DAY }];
+    return [];
   }
 
   return windows.map((window) => {
@@ -195,10 +200,10 @@ const serviceWindows = computed(() => {
 });
 
 // `value` stays in 24-hour HH:mm form - that's what the backend's
-// pickup_time validation expects. `title` is just the display label.
+// preferred_time validation expects. `title` is just the display label.
 // Generated fresh whenever serviceHours changes, one pass per window,
 // then deduped and sorted so overlapping windows don't produce repeats.
-const PICKUP_TIME_SLOTS = computed(() => {
+const PREFERRED_TIME_SLOTS = computed(() => {
   const seen = new Set();
   const slots = [];
 
@@ -229,7 +234,7 @@ const toMinutes = (hhmm) => {
   return hours * 60 + minutes;
 };
 
-// Pickup time only needs to be restricted when the selected date (from
+// Preferred time only needs to be restricted when the selected date (from
 // DateField, via the shared `form`) is today - any future date is
 // unrestricted.
 const minAllowedMinutes = computed(() => {
@@ -243,17 +248,17 @@ const minAllowedMinutes = computed(() => {
   return now.getHours() * 60 + now.getMinutes() + 720;
 });
 
-const pickupTimeOptions = computed(() => {
+const preferredTimeOptions = computed(() => {
   const minMinutes = minAllowedMinutes.value;
 
-  return PICKUP_TIME_SLOTS.value.map((slot) => ({
+  return PREFERRED_TIME_SLOTS.value.map((slot) => ({
     ...slot,
     disabled: minMinutes !== null && toMinutes(slot.value) < minMinutes,
   }));
 });
 
-const pickupTimeLabel = computed(() => {
-  const match = pickupTimeOptions.value.find(
+const preferredTimeLabel = computed(() => {
+  const match = preferredTimeOptions.value.find(
     (option) => option.value === props.modelValue,
   );
 
@@ -266,10 +271,10 @@ const select = (value) => {
   dialog.value = false;
 };
 
-// If the date changes (or time passes) and the currently selected pickup
-// time falls before the new cutoff, it's no longer a valid choice - drop
-// it instead of silently keeping a disabled option selected.
-watch(pickupTimeOptions, (options) => {
+// If the date changes (or time passes) and the currently selected
+// preferred time falls before the new cutoff, it's no longer a valid
+// choice - drop it instead of silently keeping a disabled option selected.
+watch(preferredTimeOptions, (options) => {
   if (!props.modelValue) return;
 
   const option = options.find((item) => item.value === props.modelValue);

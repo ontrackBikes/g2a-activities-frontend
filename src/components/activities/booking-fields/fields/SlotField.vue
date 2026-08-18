@@ -12,6 +12,8 @@
     :rules="rules"
     hide-details="auto"
     :required="field.required"
+    :hint="field.description || undefined"
+    :persistent-hint="!!field.description"
   />
 </template>
 

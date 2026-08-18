@@ -1,8 +1,15 @@
 <template>
   <v-card class="border" flat rounded="lg">
     <div class="pa-2 px-4">
-      <div class="g2a-title-md mb-4">
+      <div class="g2a-title-md" :class="field.description ? 'mb-1' : 'mb-4'">
         {{ field.label || "Pickup & Drop Details" }}
+      </div>
+
+      <div
+        v-if="field.description"
+        class="text-greyDark d-flex align-center mb-4"
+      >
+        <div>{{ field.description }}</div>
       </div>
 
       <!-- PICKUP / DROP — connector rail with swap, Ola/Uber style -->

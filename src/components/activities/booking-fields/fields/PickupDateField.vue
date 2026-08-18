@@ -8,6 +8,8 @@
     variant="outlined"
     density="compact"
     hide-details="auto"
+    :hint="field.description || undefined"
+    :persistent-hint="!!field.description"
   />
 </template>
 

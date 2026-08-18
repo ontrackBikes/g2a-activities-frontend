@@ -11,6 +11,8 @@
     readonly
     class="mb-4"
     hide-details="auto"
+    :hint="description || undefined"
+    :persistent-hint="!!description"
     @click="dialog = true"
   />
 
@@ -173,6 +175,11 @@ const props = defineProps({
   label: {
     type: String,
     default: "Select Location",
+  },
+
+  description: {
+    type: String,
+    default: "",
   },
 
   locations: {

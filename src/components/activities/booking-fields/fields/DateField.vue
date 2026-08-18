@@ -1,8 +1,14 @@
 <template>
   <div>
-    <div class="g2a-title-lg mb-3">
+    <div class="g2a-title-lg" :class="field.description ? 'mb-1' : 'mb-3'">
       {{ field.label || "Select Date" }}
-      
+    </div>
+
+    <div
+      v-if="field.description"
+      class="text-greyDark d-flex align-center mb-3"
+    >
+      <div>{{ field.description }}</div>
     </div>
 
     <div ref="stripRef" class="date-strip">
@@ -30,11 +36,11 @@
     </div>
 
     <div v-if="selectedDateLabel" class="text-body-2 mt-2">
-      Selected date: <strong>{{ selectedDateLabel }}</strong> <span v-if="nextAvailableDate">
-        , Next available date: {{ nextAvailableDate }}
+      Selected date: <strong>{{ selectedDateLabel }}</strong>
+      <span v-if="nextAvailableDateLabel">
+        , Next available date: {{ nextAvailableDateLabel }}
       </span>
     </div>
-    
 
     <div v-if="error" class="text-error text-caption mt-2">
       {{ error }}
@@ -135,6 +141,8 @@ const select = (value) => {
   emit("update:modelValue", value);
 };
 
+
+
 const selectedDateLabel = computed(() => {
   if (!props.modelValue) return "";
 
@@ -145,6 +153,20 @@ const selectedDateLabel = computed(() => {
     year: "numeric",
   });
 });
+
+
+
+const nextAvailableDateLabel = computed(() => {
+  if (!props.nextAvailableDate) return "";
+
+  return new Date(props.nextAvailableDate).toLocaleDateString("en-IN", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+});
+
 </script>
 
 <style scoped>

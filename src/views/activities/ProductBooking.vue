@@ -1,303 +1,354 @@
 <template>
-  <v-card
-    ref="topCard"
-    rounded="lg"
-    flat
-    :disabled="loading"
-    class="border mx-auto my-4"
-  >
-    <v-container>
-      <div class="d-flex align-center mb-4" v-if="product">
-        <v-avatar size="72" rounded="lg" class="mr-4">
-          <v-img :src="product.thumbnail_url" :alt="product.name" cover />
-        </v-avatar>
+  <!-- Initial load skeleton (only before the first check-available response) -->
+  <template v-if="!result">
+    <v-card rounded="lg" flat class="border mx-auto my-4">
+      <v-container>
+        <div class="d-flex align-center">
+          <v-skeleton-loader
+            type="image"
+            width="72"
+            height="72"
+            class="mr-4 flex-shrink-0"
+            style="border-radius: 12px"
+          />
 
-        <div>
-          <div class="g2a-title-lg">
-            {{ product.name }}
+          <div class="flex-grow-1">
+            <v-skeleton-loader type="text" width="45%" class="mb-2" />
+            <v-skeleton-loader type="text" width="30%" />
           </div>
-
-          <div class="text-grey">
-            {{ selectedLocation?.name }}
-          </div>
-          <!-- <div class="text-grey">
-            <span v-if="product?.next_available_date">
-              Next available date: {{ product.next_available_date }}
-            </span>
-          </div> -->
         </div>
+      </v-container>
+    </v-card>
+
+    <div class="my-4">
+      <v-skeleton-loader type="text" width="140" class="mb-3" />
+
+      <div class="d-flex ga-3" style="overflow: hidden">
+        <v-skeleton-loader
+          v-for="n in 8"
+          :key="n"
+          type="image"
+          width="54"
+          height="74"
+          class="flex-shrink-0"
+          style="border-radius: 18px"
+        />
       </div>
+    </div>
 
-      
-    </v-container>
-  </v-card>
-  <div v-if="loading && !result">Loading...</div>
-
-      <div v-else-if="result">
-        <!-- Dynamic booking fields -->
-        <v-form ref="bookingForm" @submit.prevent>
-          <div class="d-flex flex-column ga-4">
-            <BookingFieldRenderer
-              v-for="field in fields"
-              :key="field.field"
-              :model-value="fieldModel(field.field)"
-              @update:model-value="
-                (value) => handleFieldUpdate(field.field, value)
-              "
-              :field="field"
-              :slots="slots"
-              :form="form"
-              :maxQuantity="maxQuantity"
-              :serviceHours="serviceHours"
-              :productSlug="product?.slug"
-              :productTypeSlug="route.params.productType"
-              :locationSlug="selectedLocation?.slug"
-              :pricing="pricing"
-              :nextAvailableDate="product?.next_available_date"
-            />
+    <v-card rounded="lg" flat class="border my-4">
+      <v-container>
+        <div class="d-flex justify-space-between align-center">
+          <div style="width: 55%">
+            <v-skeleton-loader type="text" width="60%" class="mb-2" />
+            <v-skeleton-loader type="text" width="90%" />
           </div>
-        </v-form>
 
-        <template v-if="result.available">
-          <!-- <div class="my-4 text-success">
+          <v-skeleton-loader
+            type="image"
+            width="90"
+            height="32"
+            style="border-radius: 16px"
+          />
+        </div>
+      </v-container>
+    </v-card>
+
+    <v-skeleton-loader type="text" width="80%" class="my-4" />
+  </template>
+
+  <template v-else>
+    <v-card
+      ref="topCard"
+      rounded="lg"
+      flat
+      :disabled="loading"
+      class="border mx-auto my-4"
+    >
+      <v-container>
+        <div class="d-flex align-center mb-4" v-if="product">
+          <v-avatar size="72" rounded="lg" class="mr-4">
+            <v-img :src="product.thumbnail_url" :alt="product.name" cover />
+          </v-avatar>
+
+          <div>
+            <div class="g2a-title-lg">
+              {{ product.name }}
+            </div>
+
+            <div class="text-grey">
+              {{ selectedLocation?.name }}
+            </div>
+          </div>
+        </div>
+      </v-container>
+    </v-card>
+
+    <div>
+      <!-- Dynamic booking fields -->
+      <v-form ref="bookingForm" @submit.prevent>
+        <div class="d-flex flex-column ga-4">
+          <BookingFieldRenderer
+            v-for="field in fields"
+            :key="field.field"
+            :model-value="fieldModel(field.field)"
+            @update:model-value="
+              (value) => handleFieldUpdate(field.field, value)
+            "
+            :field="field"
+            :slots="slots"
+            :form="form"
+            :maxQuantity="maxQuantity"
+            :serviceHours="serviceHours"
+            :productSlug="product?.slug"
+            :productTypeSlug="route.params.productType"
+            :locationSlug="selectedLocation?.slug"
+            :pricing="pricing"
+            :nextAvailableDate="product?.next_available_date"
+          />
+        </div>
+      </v-form>
+
+      <template v-if="result.available">
+        <!-- <div class="my-4 text-success">
             This product is available for booking. Click "Continue Booking" to
             proceed.
           </div> -->
 
-          <!-- Slot Selection -->
-          <div v-if="isSlotPricing" class="mt-4">
-            <div class="g2a-title-lg mb-3">
-              {{ availability.slot_display_name || (availability.slot_display_type == "TIME"
+        <!-- Slot Selection -->
+        <div v-if="isSlotPricing" class="mt-4">
+          <div class="g2a-title-lg mb-3">
+            {{
+              availability.slot_display_name ||
+              (availability.slot_display_type == "TIME"
                 ? "Select Time Slot"
-                : `Select ${availability.slot_display_type}`) }}
-            </div>
-            
-            <v-text-field
-              v-if="slots.length > 4"
-              v-model="slotSearch"
-              prepend-inner-icon="mdi-magnify"
-              :placeholder="`Search ${availability.slot_display_type}...`"
-              density="compact"
-              variant="outlined"
-              clearable
-              rounded="lg"
-              hide-details
-              class="mb-4"
-            />
+                : `Select ${availability.slot_display_type}`)
+            }}
+          </div>
 
-            <v-alert
-              v-if="filteredSlots.length === 0"
-              type="info"
-              variant="tonal"
-              class="mb-3"
-            >
-              No matching slots found.
-            </v-alert>
+          <v-text-field
+            v-if="slots.length > 4"
+            v-model="slotSearch"
+            prepend-inner-icon="mdi-magnify"
+            :placeholder="`Search ${availability.slot_display_type}...`"
+            density="compact"
+            variant="outlined"
+            clearable
+            rounded="lg"
+            hide-details
+            class="mb-4"
+          />
 
+          <v-alert
+            v-if="filteredSlots.length === 0"
+            type="info"
+            variant="tonal"
+            class="mb-3"
+          >
+            No matching slots found.
+          </v-alert>
+
+          <div
+            v-else
+            style="max-height: 300px; overflow-y: auto; overflow-x: hidden"
+          >
             <div
-              v-else
-              style="max-height: 300px; overflow-y: auto; overflow-x: hidden"
+              cols="12"
+              v-for="slot in filteredSlots"
+              :key="slot.token"
+              class="my-2"
+              @click="form.selected_slot_token = slot.token"
             >
-              <div
-                cols="12"
-                v-for="slot in filteredSlots"
-                :key="slot.token"
-                class="my-2"
+              <v-card
+                class="slot-card"
+                :class="{ active: form.selected_slot_token === slot.token }"
+                variant="outlined"
                 @click="form.selected_slot_token = slot.token"
               >
-                <v-card
-                  class="slot-card"
-                  :class="{ active: form.selected_slot_token === slot.token }"
-                  variant="outlined"
-                  @click="form.selected_slot_token = slot.token"
-                >
-                  <div class="d-flex align-center">
-                    <!-- Left -->
-                    <div class="flex-grow-1">
-                      <div class="d-flex align-center">
-                        
-                        <div class="slot-name">
-                          {{ slot.name }}
-                        </div>
-
-                        <v-chip
-                          size="x-small"
-                          class="ml-2"
-                          color="warning"
-                          variant="tonal"
-                          v-if="slot.available < 5"
-                        >
-                          Few left
-                        </v-chip>
-
-                      
+                <div class="d-flex align-center">
+                  <!-- Left -->
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-center">
+                      <div class="slot-name">
+                        {{ slot.name }}
                       </div>
 
-                      <div
-                        class="slot-time mt-1"
-                        v-if="slot.slot_type == 'TIME'"
+                      <v-chip
+                        size="x-small"
+                        class="ml-2"
+                        color="warning"
+                        variant="tonal"
+                        v-if="slot.available < 5"
                       >
-                        <v-icon size="14">mdi-clock-outline</v-icon>
-                        <template v-if="slot.is_start_time_only">
-                          Starts {{ formatTime(slot.start_time) }}
-                        </template>
-                        <template v-else>
-                          {{ formatTime(slot.start_time) }} —
-                          {{ formatTime(slot.end_time) }}
-                        </template>  <span >
-                        {{slot.is_preferred ? "(Preferred only)" : ""}}
-                       </span>
-                      </div>
+                        Few left
+                      </v-chip>
                     </div>
 
-                    <!-- Right -->
-
-                    <div class="text-right ml-4">
-                      <div class="slot-price">
-                        ₹{{ (Number(slot.price) * (pricing.quantity || 1)).toLocaleString() }}
-                      </div>
+                    <div class="slot-time mt-1" v-if="slot.slot_type == 'TIME'">
+                      <v-icon size="14">mdi-clock-outline</v-icon>
+                      <template v-if="slot.is_start_time_only">
+                        Starts {{ formatTime(slot.start_time) }}
+                      </template>
+                      <template v-else>
+                        {{ formatTime(slot.start_time) }} —
+                        {{ formatTime(slot.end_time) }}
+                      </template>
+                      <span>
+                        {{ slot.is_preferred ? "(Preferred only)" : "" }}
+                      </span>
                     </div>
                   </div>
-                </v-card>
+
+                  <!-- Right -->
+
+                  <div class="text-right ml-4">
+                    <div class="slot-price">
+                      ₹{{
+                        (
+                          Number(slot.price) * (pricing.quantity || 1)
+                        ).toLocaleString()
+                      }}
+                    </div>
+                  </div>
+                </div>
+              </v-card>
+            </div>
+          </div>
+
+          <div v-if="slotError" class="text-error text-caption mt-2">
+            {{ slotError }}
+          </div>
+
+          <v-alert
+            v-if="selectedSlot?.is_preferred"
+            type="info"
+            variant="tonal"
+            density="comfortable"
+            class="mb-3"
+            rounded="lg"
+          >
+            Your preferred time slot is subject to availability. If unavailable,
+            we'll contact you with an available time slot.
+          </v-alert>
+        </div>
+
+        <!-- Price -->
+
+        <div v-if="dailyPricing.length > 2" class="my-4">
+          <div class="g2a-title-lg">Daily Pricing</div>
+
+          <div
+            v-for="day in previewDailyPricing"
+            :key="day.date"
+            class="d-flex justify-space-between my-2"
+          >
+            <span>{{ day.date }}</span>
+
+            <strong> ₹{{ day.unit_price * form.quantity }} </strong>
+          </div>
+
+          <div
+            class="g2a-link"
+            v-if="hasMorePricing"
+            variant="text"
+            size="large"
+            color="primary"
+            @click="pricingDialog = true"
+          >
+            View {{ dailyPricing.length }} more
+          </div>
+        </div>
+
+        <div v-if="productHighlights.length" class="my-4">
+          <v-card
+            rounded="lg"
+            flat
+            class="border my-4"
+            v-for="(highlight, index) in productHighlights"
+            :key="index"
+          >
+            <v-container>
+              <div class="d-flex align-start mb-2 g2a-title-xs">
+                <v-icon
+                  :icon="getIcon(highlight.title)"
+                  size="24"
+                  color="brandColor2"
+                  class="mt-1"
+                />
+                <div class="ml-2">
+                  <div class="g2a-title-lg">{{ highlight.title }}</div>
+                  <div class="mt-1">{{ highlight.content }}</div>
+                </div>
               </div>
-            </div>
+            </v-container>
+          </v-card>
+        </div>
 
-            <div v-if="slotError" class="text-error text-caption mt-2">
-              {{ slotError }}
-            </div>
-
-            <v-alert
-              v-if="selectedSlot?.is_preferred"
-              type="info"
-              variant="tonal"
-              density="comfortable"
-              class="mb-3"
-              rounded="lg"
-            >
-              Your preferred time slot is subject to availability. If unavailable, we'll contact you with an available time slot.
-            </v-alert>
-          </div>
-
-          <!-- Price -->
-
-          <div v-if="dailyPricing.length > 2" class="my-4">
-            <div class="g2a-title-lg">Daily Pricing</div>
-
-            <div
-              v-for="day in previewDailyPricing"
-              :key="day.date"
-              class="d-flex justify-space-between my-2"
-            >
-              <span>{{ day.date }}</span>
-
-              <strong> ₹{{ day.unit_price * form.quantity }} </strong>
-            </div>
-
-            <div
-              class="g2a-link"
-              v-if="hasMorePricing"
-              variant="text"
-              size="large"
-              color="primary"
-              @click="pricingDialog = true"
-            >
-              View {{ dailyPricing.length }} more
-            </div>
-          </div>
-
-          <div v-if="productHighlights.length" class="my-4">
-            <v-card
-              rounded="lg"
-              flat
-              class="border my-4"
-              v-for="(highlight, index) in productHighlights"
-              :key="index"
-            >
+        <v-row class="my-4">
+          <v-col v-if="productInclusions.length" cols="12" md="6">
+            <v-card rounded="lg" flat class="h-100 border">
+              <div class="pa-4" style="background-color: #f2f7f2">
+                <div class="g2a-title-lg text-success">What's Included?</div>
+              </div>
               <v-container>
-                <div class="d-flex align-start mb-2 g2a-title-xs">
+                <div
+                  v-for="(inc, index) in productInclusions"
+                  :key="index"
+                  class="d-flex align-start mb-2 g2a-title-xs"
+                >
                   <v-icon
-                    :icon="getIcon(highlight.title)"
-                    size="24"
-                    color="brandColor2"
-                    class="mt-1"
-                  />
-                  <div class="ml-2">
-                    <div class="g2a-title-lg">{{ highlight.title }}</div>
-                    <div class="mt-1">{{ highlight.content }}</div>
-                  </div>
+                    color="success"
+                    size="15"
+                    class="mr-2 mt-1 flex-shrink-0"
+                  >
+                    mdi-check-circle
+                  </v-icon>
+
+                  <div>{{ inc.content }}</div>
                 </div>
               </v-container>
             </v-card>
-          </div>
+          </v-col>
 
-          <v-row class="my-4">
-            <v-col v-if="productInclusions.length" cols="12" md="6">
-              <v-card rounded="lg" flat class="h-100 border">
-                <div class="pa-4" style="background-color: #f2f7f2">
-                  <div class="g2a-title-lg text-success">What's Included?</div>
-                </div>
-                <v-container>
-                  <div
-                    v-for="(inc, index) in productInclusions"
-                    :key="index"
-                    class="d-flex align-start mb-2 g2a-title-xs"
+          <v-col v-if="productExclusions.length" cols="12" md="6">
+            <v-card rounded="lg" flat class="h-100 border">
+              <div class="pa-4" style="background-color: #faf4f4">
+                <div class="g2a-title-lg text-error">What's not included?</div>
+              </div>
+              <v-container>
+                <div
+                  v-for="(inc, index) in productExclusions"
+                  :key="index"
+                  class="d-flex align-start mb-2 g2a-title-xs"
+                >
+                  <v-icon
+                    color="error"
+                    size="15"
+                    class="mr-2 mt-1 flex-shrink-0"
                   >
-                    <v-icon
-                      color="success"
-                      size="15"
-                      class="mr-2 mt-1 flex-shrink-0"
-                    >
-                      mdi-check-circle
-                    </v-icon>
+                    mdi-close-circle
+                  </v-icon>
 
-                    <div>{{ inc.content }}</div>
-                  </div>
-                </v-container>
-              </v-card>
-            </v-col>
-
-            <v-col v-if="productExclusions.length" cols="12" md="6">
-              <v-card rounded="lg" flat class="h-100 border">
-                <div class="pa-4" style="background-color: #FAF4F4">
-                  <div class="g2a-title-lg text-error">
-                    What's not included?
-                  </div>
+                  <div>{{ inc.content }}</div>
                 </div>
-                <v-container>
-                  <div
-                    v-for="(inc, index) in productExclusions"
-                    :key="index"
-                    class="d-flex align-start mb-2 g2a-title-xs"
-                  >
-                    <v-icon
-                      color="error"
-                      size="15"
-                      class="mr-2 mt-1 flex-shrink-0"
-                    >
-                      mdi-close-circle
-                    </v-icon>
+              </v-container>
+            </v-card>
+          </v-col>
+        </v-row>
+      </template>
 
-                    <div>{{ inc.content }}</div>
-                  </div>
-                </v-container>
-              </v-card>
-            </v-col>
-          </v-row>
-
-          
-        </template>
-
-        <v-alert
-          v-else
-          :type="unavailableAlertType"
-          variant="tonal"
-          rounded="lg"
-          density="comfortable"
-          class="mt-2"
-        >
-          {{ error || result.message }}
-        </v-alert>
-      </div>
+      <v-alert
+        v-else
+        :type="unavailableAlertType"
+        variant="tonal"
+        rounded="lg"
+        density="comfortable"
+        class="mt-2"
+      >
+        {{ error || result.message }}
+      </v-alert>
+    </div>
+  </template>
 
   <div v-if="result?.available" class="booking-footer">
     <v-card flat color="surface">
@@ -445,6 +496,8 @@ const form = reactive({
   drop_location: Number(route.query.drop_location) || null,
 
   pickup_time: route.query.pickup_time || "",
+
+  preferred_time: route.query.preferred_time || "",
 
   selected_slot_token: route.query.slot || null,
 
@@ -673,6 +726,39 @@ const handleFieldUpdate = (fieldKey, value) => {
   form[fieldKey] = value;
 };
 
+// Mirrors fieldModel/handleFieldUpdate's bundling: which form key(s) each
+// schema field actually owns. Used to build the check-available payload
+// from only the fields this product's schema declares - `form` always has
+// every possible key initialized (so every field component has somewhere
+// to bind), but a product that doesn't render e.g. `pickup_time` shouldn't
+// have it show up in the request either.
+const FIELD_FORM_KEYS = {
+  transfer_type: [
+    "transfer_type",
+    "pickup_location",
+    "drop_location",
+    "pickup_time",
+  ],
+  pickup_and_drop_location: ["pickup_location", "drop_location", "pickup_time"],
+  pickup_and_drop_date: ["pickup_date", "pickup_time", "return_date"],
+};
+
+const fieldsPayload = () => {
+  const payload = {};
+
+  for (const field of fields.value) {
+    const keys = FIELD_FORM_KEYS[field.field] || [field.field];
+
+    for (const key of keys) {
+      if (key in form) {
+        payload[key] = form[key];
+      }
+    }
+  }
+
+  return payload;
+};
+
 /**
  * API
  */
@@ -684,9 +770,7 @@ const checkAvailability = async () => {
   error.value = "";
 
   try {
-    const payload = {
-      ...form,
-    };
+    const payload = fieldsPayload();
 
     if (estimateId.value) {
       payload.estimate_id = estimateId.value;

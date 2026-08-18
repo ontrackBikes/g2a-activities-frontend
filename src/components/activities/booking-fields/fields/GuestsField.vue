@@ -2,9 +2,17 @@
   <v-card class="border" variant="outlined" rounded="lg">
     <div class="pa-2 px-4">
       <div class="d-flex align-center justify-space-between">
-        <span class="g2a-title-md">
-          {{ field.label || "Quantity" }}
-        </span>
+        <div>
+          <span class="g2a-title-md">
+            {{ field.label || "Quantity" }}
+          </span>
+          <div
+            v-if="field.description"
+            class="text-greyDark d-flex align-center"
+          >
+            <div>{{ field.description }}</div>
+          </div>
+        </div>
 
         <div class="d-flex align-center ga-2">
           <v-btn
