@@ -93,8 +93,8 @@ const props = defineProps({
     default: () => ({}),
   },
   serviceHours: {
-    type: Object,
-    default: () => ({}),
+    type: Array,
+    default: () => [],
   },
   error: {
     type: String,
@@ -115,11 +115,13 @@ const rules = computed(() => {
 // ---------------------------------------------------------------------
 // Pickup time slot generation
 //
-// Slots are derived from `serviceHours.start_time` / `end_time` (both
-// "HH:mm" or "HH:mm:ss" strings) rather than a hardcoded list, at a
-// fixed 30-minute cadence. This also supports overnight service windows
-// (e.g. start 22:00, end 06:00) and rounds ragged boundary times like
-// "22:29:00" down/up to the nearest valid slot.
+// `serviceHours` is an array of `{ start_time, end_time }` windows (both
+// "HH:mm" or "HH:mm:ss" strings) - a product can have more than one
+// service window per day (e.g. a morning and an evening shift). Slots are
+// generated per window at a fixed 30-minute cadence, merged, deduped and
+// sorted. This also supports overnight windows (e.g. start 22:00, end
+// 06:00) and rounds ragged boundary times like "22:29:00" down/up to the
+// nearest valid slot. With no windows configured, the whole day is used.
 // ---------------------------------------------------------------------
 
 const SLOT_INTERVAL_MINUTES = 30;
@@ -158,44 +160,62 @@ const formatMinutesToLabel = (totalMinutes) => {
   return `${String(hours12).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${period}`;
 };
 
-// Rounds the configured start up, and end down, to the nearest slot
-// boundary so every generated option is bookable and none of them spill
-// outside the service window. If end <= start, the window is treated as
-// spanning midnight (e.g. 22:00 -> 06:00).
-const serviceWindowMinutes = computed(() => {
-  const rawStart = parseTimeToMinutes(props.serviceHours?.start_time, 0);
-  const rawEnd = parseTimeToMinutes(
-    props.serviceHours?.end_time,
-    MINUTES_IN_DAY,
-  );
+// Rounds each configured window's start up, and end down, to the nearest
+// slot boundary so every generated option is bookable and none of them
+// spill outside the service window. If a window's end <= start, it's
+// treated as spanning midnight (e.g. 22:00 -> 06:00). No windows at all
+// falls back to the full day, matching the old single-object default.
+const serviceWindows = computed(() => {
+  const windows = Array.isArray(props.serviceHours) ? props.serviceHours : [];
 
-  const start =
-    Math.ceil(rawStart / SLOT_INTERVAL_MINUTES) * SLOT_INTERVAL_MINUTES;
-
-  let end = Math.ceil(rawEnd / SLOT_INTERVAL_MINUTES) * SLOT_INTERVAL_MINUTES;
-
-  if (end <= start) {
-    end += MINUTES_IN_DAY;
+  if (!windows.length) {
+    return [{ start: 0, end: MINUTES_IN_DAY }];
   }
 
-  return { start, end };
+  return windows.map((window) => {
+    const rawStart = parseTimeToMinutes(window?.start_time, 0);
+    const rawEnd = parseTimeToMinutes(window?.end_time, MINUTES_IN_DAY);
+
+    const start =
+      Math.ceil(rawStart / SLOT_INTERVAL_MINUTES) * SLOT_INTERVAL_MINUTES;
+
+    let end = Math.ceil(rawEnd / SLOT_INTERVAL_MINUTES) * SLOT_INTERVAL_MINUTES;
+
+    if (end <= start) {
+      end += MINUTES_IN_DAY;
+    }
+
+    return { start, end };
+  });
 });
 
 // `value` stays in 24-hour HH:mm form - that's what the backend's
 // pickup_time validation expects. `title` is just the display label.
-// Generated fresh whenever serviceHours changes.
+// Generated fresh whenever serviceHours changes, one pass per window,
+// then deduped and sorted so overlapping windows don't produce repeats.
 const PICKUP_TIME_SLOTS = computed(() => {
-  const { start, end } = serviceWindowMinutes.value;
+  const seen = new Set();
   const slots = [];
 
-  for (let minutes = start; minutes <= end; minutes += SLOT_INTERVAL_MINUTES) {
-    slots.push({
-      title: formatMinutesToLabel(minutes),
-      value: formatMinutesToHHmm(minutes),
-    });
+  for (const { start, end } of serviceWindows.value) {
+    for (
+      let minutes = start;
+      minutes <= end;
+      minutes += SLOT_INTERVAL_MINUTES
+    ) {
+      const value = formatMinutesToHHmm(minutes);
+
+      if (seen.has(value)) continue;
+      seen.add(value);
+
+      slots.push({
+        title: formatMinutesToLabel(minutes),
+        value,
+      });
+    }
   }
 
-  return slots;
+  return slots.sort((a, b) => a.value.localeCompare(b.value));
 });
 
 const toMinutes = (hhmm) => {
