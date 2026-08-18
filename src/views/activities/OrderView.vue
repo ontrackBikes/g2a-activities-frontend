@@ -292,35 +292,97 @@
           </v-container>
         </g2-a-expansion-panel>
 
-        <!-- ================= Participants ================= -->
+        <!-- ================= Participants (merged with KYC for display) ================= -->
         <g2-a-expansion-panel
-          v-if="item.participants?.length"
+          v-if="guestRowsFor(item).length"
           class="mb-4"
           title="Participants"
         >
-          <v-table density="compact" class="no-scrollbar">
-            <thead>
-              <tr>
-                <th class="g2a-title-md text-greyDark">Name</th>
-                <th class="g2a-title-md text-greyDark">Age</th>
-                <th class="g2a-title-md text-greyDark">Gender</th>
-                <th class="g2a-title-md text-greyDark">Nationality</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(p, pIndex) in item.participants"
-                :key="p.id ?? pIndex"
+          <v-container>
+            <div v-for="(guest, gIndex) in guestRowsFor(item)" :key="gIndex">
+              <div class="g2a-title-lg mt-2 mb-1">
+                Participant {{ gIndex + 1 }}
+                <span v-if="guest.first_name || guest.last_name">
+                  - {{ guest.first_name }} {{ guest.last_name }}
+                </span>
+              </div>
+
+              <div v-if="guest.age" class="d-flex justify-space-between py-2">
+                <span class="g2a-title-md text-greyDark">Age</span>
+                <div class="g2a-title-md">{{ guest.age }}</div>
+              </div>
+              <div
+                v-if="guest.gender"
+                class="d-flex justify-space-between py-2"
               >
-                <td class="g2a-title-md">
-                  {{ p.first_name }} {{ p.last_name }}
-                </td>
-                <td class="g2a-title-md">{{ p.age ?? "—" }}</td>
-                <td class="g2a-title-md">{{ p.gender || "—" }}</td>
-                <td class="g2a-title-md">{{ p.nationality || "—" }}</td>
-              </tr>
-            </tbody>
-          </v-table>
+                <span class="g2a-title-md text-greyDark">Gender</span>
+                <div class="g2a-title-md">{{ guest.gender }}</div>
+              </div>
+              <div
+                v-if="guest.nationality"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="g2a-title-md text-greyDark">Nationality</span>
+                <div class="g2a-title-md">{{ guest.nationality }}</div>
+              </div>
+
+              <template v-if="guest.kyc">
+                <div
+                  v-if="guest.kyc.nationality"
+                  class="d-flex justify-space-between py-2"
+                >
+                  <span class="g2a-title-md text-greyDark"
+                    >KYC Nationality</span
+                  >
+                  <div class="g2a-title-md">{{ guest.kyc.nationality }}</div>
+                </div>
+                <div
+                  v-if="guest.kyc.id_proof_type"
+                  class="d-flex justify-space-between py-2"
+                >
+                  <span class="g2a-title-md text-greyDark">ID Proof</span>
+                  <div class="g2a-title-md">
+                    {{ idProofLabel(guest.kyc.id_proof_type) }}
+                  </div>
+                </div>
+                <div
+                  v-if="guest.kyc.id_number"
+                  class="d-flex justify-space-between py-2"
+                >
+                  <span class="g2a-title-md text-greyDark">ID Number</span>
+                  <div class="g2a-title-md">{{ guest.kyc.id_number }}</div>
+                </div>
+                <div
+                  v-if="guest.kyc.id_expiry_date"
+                  class="d-flex justify-space-between py-2"
+                >
+                  <span class="g2a-title-md text-greyDark">Expiry Date</span>
+                  <div class="g2a-title-md">
+                    {{ formatDate(guest.kyc.id_expiry_date) }}
+                  </div>
+                </div>
+                <div
+                  v-if="guest.kyc.document?.document_url"
+                  class="d-flex justify-space-between py-2"
+                >
+                  <span class="g2a-title-md text-greyDark">Document</span>
+                  <a
+                    :href="resolveDocumentUrl(guest.kyc.document.document_url)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="g2a-link g2a-title-md"
+                  >
+                    {{ guest.kyc.document.file_name || "View" }}
+                  </a>
+                </div>
+              </template>
+
+              <v-divider
+                v-if="gIndex + 1 < guestRowsFor(item).length"
+                class="my-2"
+              />
+            </div>
+          </v-container>
         </g2-a-expansion-panel>
       </template>
 
@@ -465,6 +527,44 @@ const copied = ref(false);
 
 const items = computed(() => order.value?.items ?? []);
 const bookingOf = (item) => item.booking_data ?? {};
+
+// `participants` and `kyc_per_passanger` are separate arrays on each order
+// item - this merges them by index purely for display here, it is not a
+// payload shape.
+const guestRowsFor = (item) => {
+  const participants = item.participants || [];
+  const kyc = item.kyc_per_passanger || [];
+  const count = Math.max(participants.length, kyc.length);
+
+  return Array.from({ length: count }, (_, i) => ({
+    ...(participants[i] || {}),
+    kyc: kyc[i] || null,
+  }));
+};
+
+const ID_PROOF_LABELS = {
+  passport: "Passport",
+  aadhaar_card: "Aadhaar Card",
+  voter_id: "Voter Id",
+  driving_licence: "Driving Licence",
+  other: "Other Valid Govt Id Proof",
+};
+
+const idProofLabel = (type) => ID_PROOF_LABELS[type] || type;
+
+// Uploaded document URLs come back as paths relative to the API origin
+// (e.g. "/uploads/documents/..."), not under the "/api" base the axios
+// client uses, so resolve against the origin instead of apiClient's baseURL.
+const API_ORIGIN = (import.meta.env.VITE_API_BASE_URL || "").replace(
+  /\/api\/?$/,
+  "",
+);
+
+const resolveDocumentUrl = (url) => {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${API_ORIGIN}${url}`;
+};
 
 const customerDetails = computed(() => order.value?.customer_details ?? {});
 const hasCustomerDetails = computed(() =>

@@ -309,9 +309,9 @@
                 </v-container>
               </v-card>
 
-              <!-- Participants -->
+              <!-- Participants (merged, for display only, with their KYC) -->
               <v-card
-                v-if="item.participants.length > 0"
+                v-if="guestRows.length > 0"
                 class="border my-2"
                 rounded="lg"
                 flat
@@ -320,27 +320,75 @@
                   <div class="g2a-title-lg mb-1">Participants</div>
                   <v-divider class="my-2" />
 
-                  <v-table>
-                    <thead>
-                      <tr>
-                        <th class="data-label">Name</th>
-                        <th class="data-label">Age</th>
-                        <th class="data-label">Gender</th>
-                        <th class="data-label">Nationality</th>
-                      </tr>
-                    </thead>
+                  <div v-for="(guest, index) in guestRows" :key="index">
+                    <div class="g2a-title-md mt-3 mb-1">
+                      Participant {{ index + 1 }}
+                      <span v-if="guest.first_name || guest.last_name">
+                        - {{ guest.first_name }} {{ guest.last_name }}
+                      </span>
+                    </div>
 
-                    <tbody>
-                      <tr v-for="(p, index) in item.participants" :key="index">
-                        <td class="g2a-title-lg g2a-title-2xl-2">
-                          {{ p.first_name }} {{ p.last_name }}
-                        </td>
-                        <td class="g2a-title-2xl-2">{{ p.age }}</td>
-                        <td class="g2a-title-2xl-2">{{ p.gender }}</td>
-                        <td class="g2a-title-2xl-2">{{ p.nationality }}</td>
-                      </tr>
-                    </tbody>
-                  </v-table>
+                    <DetailRow
+                      v-if="guest.age"
+                      label="Age"
+                      :value="guest.age"
+                    />
+                    <DetailRow
+                      v-if="guest.gender"
+                      label="Gender"
+                      :value="guest.gender"
+                    />
+                    <DetailRow
+                      v-if="guest.nationality"
+                      label="Nationality"
+                      :value="guest.nationality"
+                    />
+
+                    <template v-if="guest.kyc">
+                      <DetailRow
+                        v-if="guest.kyc.nationality"
+                        label="KYC Nationality"
+                        :value="guest.kyc.nationality"
+                      />
+                      <DetailRow
+                        v-if="guest.kyc.id_proof_type"
+                        label="ID Proof"
+                        :value="idProofLabel(guest.kyc.id_proof_type)"
+                      />
+                      <DetailRow
+                        v-if="guest.kyc.id_number"
+                        label="ID Number"
+                        :value="guest.kyc.id_number"
+                      />
+                      <DetailRow
+                        v-if="guest.kyc.id_expiry_date"
+                        label="Expiry Date"
+                        :value="formatDate(guest.kyc.id_expiry_date)"
+                      />
+
+                      <div
+                        v-if="guest.kyc.document?.document_url"
+                        class="d-flex justify-space-between align-center py-2"
+                      >
+                        <span>Document</span>
+                        <a
+                          :href="
+                            resolveDocumentUrl(guest.kyc.document.document_url)
+                          "
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="g2a-link"
+                        >
+                          {{ guest.kyc.document.file_name || "View" }}
+                        </a>
+                      </div>
+                    </template>
+
+                    <v-divider
+                      v-if="index + 1 < guestRows.length"
+                      class="my-2"
+                    />
+                  </div>
                 </v-container>
               </v-card>
 
@@ -720,6 +768,44 @@ DetailRow.props = {
 };
 
 const item = computed(() => order.value?.items?.[0] || {});
+
+// `participants` and `kyc_per_passanger` are separate arrays in the order
+// payload (see KycDetails.vue) - this merges them by index purely for
+// display here, it is not a payload shape.
+const guestRows = computed(() => {
+  const participants = item.value.participants || [];
+  const kyc = item.value.kyc_per_passanger || [];
+  const count = Math.max(participants.length, kyc.length);
+
+  return Array.from({ length: count }, (_, i) => ({
+    ...(participants[i] || {}),
+    kyc: kyc[i] || null,
+  }));
+});
+
+const ID_PROOF_LABELS = {
+  passport: "Passport",
+  aadhaar_card: "Aadhaar Card",
+  voter_id: "Voter Id",
+  driving_licence: "Driving Licence",
+  other: "Other Valid Govt Id Proof",
+};
+
+const idProofLabel = (type) => ID_PROOF_LABELS[type] || type;
+
+// Uploaded document URLs come back as paths relative to the API origin
+// (e.g. "/uploads/documents/..."), not under the "/api" base the axios
+// client uses, so resolve against the origin instead of apiClient's baseURL.
+const API_ORIGIN = (import.meta.env.VITE_API_BASE_URL || "").replace(
+  /\/api\/?$/,
+  "",
+);
+
+const resolveDocumentUrl = (url) => {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${API_ORIGIN}${url}`;
+};
 
 const formatDate = (d) => new Date(d).toLocaleDateString("en-IN");
 
