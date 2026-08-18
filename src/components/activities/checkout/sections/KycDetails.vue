@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="lg" class="border" flat>
+  <v-card ref="rootEl" rounded="lg" class="border" flat>
     <v-container class="py-4">
       <div class="g2a-title-xl">
         {{ config.title || "KYC Details" }}
@@ -103,13 +103,35 @@
                 v-else
                 class="d-flex align-center justify-space-between border rounded-lg pa-3"
               >
-                <div class="d-flex align-center">
-                  <v-icon
-                    icon="mdi-check-circle"
-                    color="success"
-                    size="20"
-                    class="mr-2"
-                  />
+                <div class="d-flex align-center" style="min-width: 0">
+                  <a
+                    v-if="isImageDocument(kyc.document)"
+                    :href="resolveDocumentUrl(kyc.document.document_url)"
+                    :data-fancybox="`kyc-document-${index}`"
+                    :data-caption="kyc.document.file_name"
+                    class="mr-3 flex-shrink-0"
+                  >
+                    <v-img
+                      :src="resolveDocumentUrl(kyc.document.document_url)"
+                      width="48"
+                      height="48"
+                      cover
+                      rounded="lg"
+                      class="border"
+                    />
+                  </a>
+
+                  <a
+                    v-else
+                    :href="resolveDocumentUrl(kyc.document.document_url)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="d-flex align-center justify-center mr-3 border rounded-lg flex-shrink-0"
+                    style="width: 48px; height: 48px"
+                  >
+                    <v-icon icon="mdi-file-pdf-box" size="24" color="error" />
+                  </a>
+
                   <span class="text-truncate">
                     {{ kyc.document.file_name }}
                   </span>
@@ -120,6 +142,7 @@
                   size="small"
                   color="error"
                   icon="mdi-close"
+                  class="flex-shrink-0"
                   :loading="uploadState[index]?.uploading"
                   @click="removeDocument(kyc, index)"
                 />
@@ -144,8 +167,17 @@
 </template>
 
 <script setup>
-import { computed, reactive, watch } from "vue";
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from "vue";
 import { useRoute } from "vue-router";
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { bookingStore } from "@/store/booking";
 import apiClient from "@/services/api.js";
 
@@ -163,6 +195,41 @@ const props = defineProps({
 
 const booking = bookingStore;
 const route = useRoute();
+
+const rootEl = ref(null);
+
+// Uploaded document URLs come back as paths relative to the API origin
+// (e.g. "/uploads/documents/..."), not under the "/api" base the axios
+// client uses, so resolve against the origin instead of apiClient's baseURL.
+const API_ORIGIN = (import.meta.env.VITE_API_BASE_URL || "").replace(
+  /\/api\/?$/,
+  "",
+);
+
+const resolveDocumentUrl = (url) => {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${API_ORIGIN}${url}`;
+};
+
+const IMAGE_EXTENSIONS = /\.(jpe?g|png|gif|webp|bmp|heic|heif)$/i;
+
+const isImageDocument = (document) =>
+  IMAGE_EXTENSIONS.test(document?.file_name || document?.document_url || "");
+
+onMounted(() => {
+  Fancybox.bind(rootEl.value?.$el, '[data-fancybox^="kyc-document-"]', {
+    animated: true,
+    dragToClose: true,
+    Hash: false,
+    placeFocusBack: false,
+  });
+});
+
+onBeforeUnmount(() => {
+  Fancybox.unbind(rootEl.value?.$el);
+  Fancybox.close();
+});
 
 const nationalities = ["Indian", "Foreigner"];
 
