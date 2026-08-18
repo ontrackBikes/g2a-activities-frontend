@@ -100,6 +100,7 @@
             :form="form"
             :maxQuantity="maxQuantity"
             :serviceHours="serviceHours"
+            :minBookingLeadHours="minBookingLeadHours"
             :productSlug="product?.slug"
             :productTypeSlug="route.params.productType"
             :locationSlug="selectedLocation?.slug"
@@ -645,6 +646,10 @@ const fields = computed(
 const slots = computed(() => availability.value.slots ?? []);
 
 const serviceHours = computed(() => availability.value.service_hours ?? []);
+
+const minBookingLeadHours = computed(
+  () => availability.value.min_booking_lead_hours ?? 0,
+);
 
 const selectedSlot = computed(() => availability.value.selected_slot ?? null);
 

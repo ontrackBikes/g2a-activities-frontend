@@ -104,6 +104,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  minBookingLeadHours: {
+    type: Number,
+    default: 0,
+  },
   error: {
     type: String,
     default: "",
@@ -228,33 +232,40 @@ const PREFERRED_TIME_SLOTS = computed(() => {
   return slots.sort((a, b) => a.value.localeCompare(b.value));
 });
 
-const toMinutes = (hhmm) => {
-  const [hours, minutes] = hhmm.split(":").map(Number);
+// The preferred time must be at least `minBookingLeadHours` (from the
+// check-available API's `availability.min_booking_lead_hours`) ahead of
+// now. Compared as full date-times rather than a same-day-only check, so a
+// lead time that spans past midnight (e.g. 24h) still disables the
+// relevant early slots on the following day, not just "today".
+const cutoffDateTime = computed(() => {
+  const cutoff = new Date();
 
-  return hours * 60 + minutes;
-};
+  cutoff.setMinutes(cutoff.getMinutes() + (Number(props.minBookingLeadHours) || 0) * 60);
 
-// Preferred time only needs to be restricted when the selected date (from
-// DateField, via the shared `form`) is today - any future date is
-// unrestricted.
-const minAllowedMinutes = computed(() => {
-  const today = new Date().toISOString().split("T")[0];
-
-  if (props.form.date !== today) return null;
-
-  const now = new Date();
-
-  // 12 hours = 720 minutes
-  return now.getHours() * 60 + now.getMinutes() + 720;
+  return cutoff;
 });
 
-const preferredTimeOptions = computed(() => {
-  const minMinutes = minAllowedMinutes.value;
+const slotDateTime = (dateStr, hhmm) => {
+  if (!dateStr) return null;
 
-  return PREFERRED_TIME_SLOTS.value.map((slot) => ({
-    ...slot,
-    disabled: minMinutes !== null && toMinutes(slot.value) < minMinutes,
-  }));
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const [hours, minutes] = hhmm.split(":").map(Number);
+
+  return new Date(year, month - 1, day, hours, minutes, 0, 0);
+};
+
+const preferredTimeOptions = computed(() => {
+  const cutoff = cutoffDateTime.value;
+  const selectedDate = props.form.date;
+
+  return PREFERRED_TIME_SLOTS.value.map((slot) => {
+    const slotDate = slotDateTime(selectedDate, slot.value);
+
+    return {
+      ...slot,
+      disabled: !!slotDate && slotDate < cutoff,
+    };
+  });
 });
 
 const preferredTimeLabel = computed(() => {

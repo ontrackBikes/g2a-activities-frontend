@@ -7,6 +7,7 @@
     :slots="slots"
     :form="form"
     :serviceHours="serviceHours"
+    :minBookingLeadHours="minBookingLeadHours"
     :error="error"
     :maxQuantity="maxQuantity"
     :locationSlug="locationSlug"
