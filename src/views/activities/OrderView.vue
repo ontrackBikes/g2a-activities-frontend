@@ -1,5 +1,5 @@
 <template>
-  <v-container class="g2a-container-width py-8 mx-auto">
+  <v-container ref="pageRoot" class="g2a-container-width py-8 mx-auto">
     <div v-if="loading" class="text-center py-16">
       <v-progress-circular indeterminate color="brandColor" size="40" />
     </div>
@@ -366,20 +366,46 @@
                   class="d-flex justify-space-between py-2"
                 >
                   <span class="g2a-title-md text-greyDark">Document</span>
-                  <a
-                    :href="resolveDocumentUrl(guest.kyc.document.document_url)"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="g2a-link g2a-title-md"
-                  >
-                    {{ guest.kyc.document.file_name || "View" }}
-                  </a>
+                  <DocumentPreview
+                    :document="guest.kyc.document"
+                    fancybox-group="order-documents"
+                  />
                 </div>
               </template>
 
               <v-divider
                 v-if="gIndex + 1 < guestRowsFor(item).length"
                 class="my-2"
+              />
+            </div>
+          </v-container>
+        </g2-a-expansion-panel>
+
+        <!-- ================= Infant Documents ================= -->
+        <g2-a-expansion-panel
+          v-if="item.infant_documents?.has_infant"
+          class="mb-4"
+          title="Infant Documents"
+        >
+          <v-container>
+            <div
+              v-if="!item.infant_documents.documents?.length"
+              class="text-greyDark"
+            >
+              No documents uploaded.
+            </div>
+
+            <div
+              v-for="(doc, dIndex) in item.infant_documents.documents"
+              :key="dIndex"
+              class="d-flex justify-space-between align-center py-2"
+            >
+              <span class="g2a-title-md text-greyDark">
+                Document {{ dIndex + 1 }}
+              </span>
+              <DocumentPreview
+                :document="doc"
+                fancybox-group="order-documents"
               />
             </div>
           </v-container>
@@ -513,10 +539,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import apiClient from "@/services/api";
 import G2AExpansionPanel from "@/components/common/G2AExpansionPanel.vue";
+import DocumentPreview from "@/components/common/DocumentPreview.vue";
 
 const route = useRoute();
 
@@ -524,6 +553,22 @@ const loading = ref(true);
 const error = ref("");
 const order = ref(null);
 const copied = ref(false);
+
+const pageRoot = ref(null);
+
+onMounted(() => {
+  Fancybox.bind(pageRoot.value?.$el, '[data-fancybox="order-documents"]', {
+    animated: true,
+    dragToClose: true,
+    Hash: false,
+    placeFocusBack: false,
+  });
+});
+
+onBeforeUnmount(() => {
+  Fancybox.unbind(pageRoot.value?.$el);
+  Fancybox.close();
+});
 
 const items = computed(() => order.value?.items ?? []);
 const bookingOf = (item) => item.booking_data ?? {};
@@ -551,20 +596,6 @@ const ID_PROOF_LABELS = {
 };
 
 const idProofLabel = (type) => ID_PROOF_LABELS[type] || type;
-
-// Uploaded document URLs come back as paths relative to the API origin
-// (e.g. "/uploads/documents/..."), not under the "/api" base the axios
-// client uses, so resolve against the origin instead of apiClient's baseURL.
-const API_ORIGIN = (import.meta.env.VITE_API_BASE_URL || "").replace(
-  /\/api\/?$/,
-  "",
-);
-
-const resolveDocumentUrl = (url) => {
-  if (!url) return "";
-  if (/^https?:\/\//i.test(url)) return url;
-  return `${API_ORIGIN}${url}`;
-};
 
 const customerDetails = computed(() => order.value?.customer_details ?? {});
 const hasCustomerDetails = computed(() =>

@@ -1,6 +1,7 @@
 import CustomerDetails from "./sections/CustomerDetails.vue";
 import Participants from "./sections/Participants.vue";
 import KycDetails from "./sections/KycDetails.vue";
+import InfantDocuments from "./sections/InfantDocuments.vue";
 import MedicalDeclaration from "./sections/MedicalDeclaration.vue";
 import FerrySeatSelection from "./sections/FerrySeatSelection.vue";
 import RentalDetails from "./sections/RentalDetails.vue";
@@ -22,6 +23,11 @@ export default {
   kyc_per_passanger: {
     component: KycDetails,
     title: "KYC Details",
+  },
+
+  infant_documents: {
+    component: InfantDocuments,
+    title: "Infant Documents",
   },
 
   medical_declaration: {

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="g2a-container-width py-8 px-0 mx-auto">
+  <v-container ref="pageRoot" class="g2a-container-width py-8 px-0 mx-auto">
     <div v-if="loading" class="text-center py-10">
       <v-progress-circular indeterminate color="primary" />
     </div>
@@ -371,22 +371,48 @@
                         class="d-flex justify-space-between align-center py-2"
                       >
                         <span>Document</span>
-                        <a
-                          :href="
-                            resolveDocumentUrl(guest.kyc.document.document_url)
-                          "
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="g2a-link"
-                        >
-                          {{ guest.kyc.document.file_name || "View" }}
-                        </a>
+                        <DocumentPreview
+                          :document="guest.kyc.document"
+                          fancybox-group="order-documents"
+                        />
                       </div>
                     </template>
 
                     <v-divider
                       v-if="index + 1 < guestRows.length"
                       class="my-2"
+                    />
+                  </div>
+                </v-container>
+              </v-card>
+
+              <!-- Infant Documents -->
+              <v-card
+                v-if="item.infant_documents?.has_infant"
+                class="border my-2"
+                rounded="lg"
+                flat
+              >
+                <v-container>
+                  <div class="g2a-title-lg mb-1">Infant Documents</div>
+                  <v-divider class="my-2" />
+
+                  <div
+                    v-if="!item.infant_documents.documents?.length"
+                    class="text-greyDark"
+                  >
+                    No documents uploaded.
+                  </div>
+
+                  <div
+                    v-for="(doc, index) in item.infant_documents.documents"
+                    :key="index"
+                    class="d-flex justify-space-between align-center py-2"
+                  >
+                    <span>Document {{ index + 1 }}</span>
+                    <DocumentPreview
+                      :document="doc"
+                      fancybox-group="order-documents"
                     />
                   </div>
                 </v-container>
@@ -720,12 +746,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, h } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, h } from "vue";
 import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import apiClient from "@/services/api";
 import router from "@/router";
 import { VCol, VRow } from "vuetify/components";
+import DocumentPreview from "@/components/common/DocumentPreview.vue";
 
 const route = useRoute();
 const { mobile } = useDisplay();
@@ -736,6 +765,22 @@ const error = ref("");
 const detailsSheet = ref(false);
 
 const order = ref(null);
+
+const pageRoot = ref(null);
+
+onMounted(() => {
+  Fancybox.bind(pageRoot.value?.$el, '[data-fancybox="order-documents"]', {
+    animated: true,
+    dragToClose: true,
+    Hash: false,
+    placeFocusBack: false,
+  });
+});
+
+onBeforeUnmount(() => {
+  Fancybox.unbind(pageRoot.value?.$el);
+  Fancybox.close();
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -792,20 +837,6 @@ const ID_PROOF_LABELS = {
 };
 
 const idProofLabel = (type) => ID_PROOF_LABELS[type] || type;
-
-// Uploaded document URLs come back as paths relative to the API origin
-// (e.g. "/uploads/documents/..."), not under the "/api" base the axios
-// client uses, so resolve against the origin instead of apiClient's baseURL.
-const API_ORIGIN = (import.meta.env.VITE_API_BASE_URL || "").replace(
-  /\/api\/?$/,
-  "",
-);
-
-const resolveDocumentUrl = (url) => {
-  if (!url) return "";
-  if (/^https?:\/\//i.test(url)) return url;
-  return `${API_ORIGIN}${url}`;
-};
 
 const formatDate = (d) => new Date(d).toLocaleDateString("en-IN");
 
