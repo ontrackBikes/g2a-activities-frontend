@@ -166,6 +166,7 @@ const productTypeIcons = {
   Walks: "mdi-ski-cross-country",
   "Boat Trip": "mdi-sail-boat",
   Fishing: "mdi-fish",
+  "Cab Service": "mdi-taxi",
 };
 
 /**
