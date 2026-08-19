@@ -174,6 +174,8 @@
                         {{ slot.name }}
                       </div>
 
+                     
+
                       <v-chip
                         size="x-small"
                         class="ml-2"
@@ -183,6 +185,17 @@
                       >
                         Few left
                       </v-chip>
+
+                      <v-btn icon
+                        v-if="slot.is_for_non_indian"
+                        size="x-small"
+                        class="ml-2"
+                        color="info"
+                        variant="tonal"
+                        prepend-icon="mdi-airplane"
+                      >
+                      <v-icon>mdi-airplane</v-icon> 
+                      </v-btn>
                     </div>
 
                     <div class="slot-time mt-1" v-if="slot.slot_type == 'TIME'">
@@ -212,6 +225,9 @@
                     </div>
                   </div>
                 </div>
+                <div v-if="slot.description" class="mt-2 text-caption text-grey">
+                        {{ slot.description }}
+                      </div>
               </v-card>
             </div>
           </div>

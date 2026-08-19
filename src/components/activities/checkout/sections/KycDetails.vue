@@ -19,7 +19,6 @@
       <div v-for="(kyc, index) in kycEntries" :key="index">
         <v-container>
           <div class="my-2 g2a-title-md">Participant {{ index + 1 }}</div>
-
           <v-row>
             <!-- Nationality -->
             <v-col cols="12" md="6">
@@ -211,9 +210,24 @@ onBeforeUnmount(() => {
 |--------------------------------------------------------------------------
 | Nationality
 |--------------------------------------------------------------------------
+|
+| Some slots (e.g. a "For Foreigners" variant) are restricted to
+| non-Indian travellers only. When that's the case, "Indian" must not
+| be a selectable nationality.
+|
 */
 
-const nationalities = ["Indian", "Foreigner"];
+const isForNonIndian = computed(
+  () =>
+    !!(
+      props.quote?.availability?.selected_slot?.is_for_non_indian ??
+      props.quote?.availability?.is_for_non_indian
+    ),
+);
+
+const nationalities = computed(() =>
+  isForNonIndian.value ? ["Foreigner"] : ["Indian", "Foreigner"],
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -368,7 +382,7 @@ const createKycDocument = () => ({
 */
 
 const createKyc = () => ({
-  nationality: "Indian",
+  nationality: isForNonIndian.value ? "Foreigner" : "Indian",
   id_proof_type: "",
   id_number: "",
   id_expiry_date: null,
@@ -442,6 +456,38 @@ const kycEntries = computed({
 |--------------------------------------------------------------------------
 */
 
+const normalizeKycEntries = () => {
+  if (!Array.isArray(booking.form.kyc_per_passanger)) return;
+
+  booking.form.kyc_per_passanger.forEach((kyc) => {
+    if (!kyc.document) {
+      kyc.document = createKycDocument();
+    }
+
+    /*
+     * Safety rule:
+     * Slots restricted to non-Indian travellers must not allow
+     * an "Indian" nationality selection.
+     */
+    if (isForNonIndian.value && kyc.nationality !== "Foreigner") {
+      kyc.nationality = "Foreigner";
+      resetIdData(kyc);
+    }
+
+    /*
+     * Safety rule:
+     * Foreigner must always have Passport.
+     */
+    if (kyc.nationality === "Foreigner") {
+      if (kyc.id_proof_type !== "passport") {
+        kyc.id_proof_type = "passport";
+        resetIdData(kyc);
+        kyc.id_proof_type = "passport";
+      }
+    }
+  });
+};
+
 watch(
   () => props.quote?.booking?.guests,
   (guests) => {
@@ -467,28 +513,21 @@ watch(
      * Normalize existing data.
      * Important if old data is restored from localStorage/API.
      */
-    booking.form.kyc_per_passanger.forEach((kyc) => {
-      if (!kyc.document) {
-        kyc.document = createKycDocument();
-      }
-
-      /*
-       * Safety rule:
-       * Foreigner must always have Passport.
-       */
-      if (kyc.nationality === "Foreigner") {
-        if (kyc.id_proof_type !== "passport") {
-          kyc.id_proof_type = "passport";
-          resetIdData(kyc);
-          kyc.id_proof_type = "passport";
-        }
-      }
-    });
+    normalizeKycEntries();
   },
   {
     immediate: true,
   },
 );
+
+/*
+ * Re-normalize whenever the selected slot's nationality restriction
+ * changes (e.g. user switches between an "Indians only" and
+ * "Foreigners only" slot without changing guest count).
+ */
+watch(isForNonIndian, () => {
+  normalizeKycEntries();
+});
 
 /*
 |--------------------------------------------------------------------------
