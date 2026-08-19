@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
@@ -149,6 +149,16 @@ const infantDocuments = computed({
 const fileInputRef = ref(null);
 const uploading = ref(false);
 const uploadError = ref("");
+
+watch(
+  () => infantDocuments.value.has_infant,
+  (hasInfant) => {
+    if (!hasInfant) {
+      infantDocuments.value.documents = [];
+      uploadError.value = "";
+    }
+  },
+);
 
 const handleFileChange = async (event) => {
   const file = event.target.files?.[0];
