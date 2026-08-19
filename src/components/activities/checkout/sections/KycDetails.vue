@@ -61,11 +61,10 @@
                 variant="outlined"
                 rounded="lg"
                 hide-details="auto"
-                :disabled="!kyc.id_proof_type"
-                :rules="[
-                  (v) =>
-                    !!v || `${idNumberLabel(kyc.id_proof_type)} is required`,
-                ]"
+                :rules="idNumberRules(kyc)"
+                @update:model-value="
+                  (value) => (kyc.id_number = value.toUpperCase())
+                "
               />
             </v-col>
 
@@ -74,6 +73,7 @@
               <v-text-field
                 v-model="kyc.id_expiry_date"
                 type="date"
+                :min="today"
                 label="Passport Expiry Date"
                 density="compact"
                 variant="outlined"
@@ -181,11 +181,7 @@ const props = defineProps({
   },
 });
 
-/*
-|--------------------------------------------------------------------------
-| Setup
-|--------------------------------------------------------------------------
-*/
+const today = new Date().toISOString().split("T")[0];
 
 const booking = bookingStore;
 const route = useRoute();
@@ -292,6 +288,67 @@ const idNumberLabel = (type) => {
   }
 };
 
+const onIdProofTypeChange = (kyc) => {
+  kyc.id_number = "";
+  kyc.document = createKycDocument();
+
+  if (kyc.id_proof_type !== "passport") {
+    kyc.id_expiry_date = null;
+  }
+};
+
+const idNumberRules = (kyc) => [(v) => validateIdNumber(v, kyc.id_proof_type)];
+
+const validateIdNumber = (value, type) => {
+  if (!value) {
+    return `${idNumberLabel(type)} is required`;
+  }
+
+  const id = String(value).trim();
+
+  switch (type) {
+    case "passport":
+      // Indian passport format: 1 letter + 7 digits
+      if (!/^[A-Z][0-9]{7}$/i.test(id)) {
+        return "Enter a valid passport number (e.g. A1234567)";
+      }
+      break;
+
+    case "aadhaar_card":
+      // Exactly 12 digits
+      if (!/^\d{12}$/.test(id)) {
+        return "Aadhaar Number must be exactly 12 digits";
+      }
+      break;
+
+    case "voter_id":
+      // Common Indian Voter ID format: 3 letters + 7 digits
+      if (!/^[A-Z]{3}[0-9]{7}$/i.test(id)) {
+        return "Enter a valid Voter ID (e.g. ABC1234567)";
+      }
+      break;
+
+    case "driving_licence":
+      // State-dependent format, so keep it flexible
+      if (!/^[A-Z0-9-]{8,20}$/i.test(id)) {
+        return "Enter a valid Driving Licence Number";
+      }
+      break;
+
+    case "other":
+      // Generic government ID
+      if (id.length < 4 || id.length > 30) {
+        return "ID Number must be between 4 and 30 characters";
+      }
+      break;
+
+    default:
+      return "Please select an ID Proof";
+  }
+
+  return true;
+};
+
 /*
 |--------------------------------------------------------------------------
 | KYC Document
@@ -358,22 +415,6 @@ const onNationalityChange = (kyc) => {
 | ID Proof Type Change
 |--------------------------------------------------------------------------
 */
-
-const onIdProofTypeChange = (kyc) => {
-  /*
-   * Clear old ID data and uploaded document whenever
-   * the ID proof type changes.
-   */
-  kyc.id_number = "";
-  kyc.document = createKycDocument();
-
-  /*
-   * Expiry date is only applicable for Passport.
-   */
-  if (kyc.id_proof_type !== "passport") {
-    kyc.id_expiry_date = null;
-  }
-};
 
 /*
 |--------------------------------------------------------------------------

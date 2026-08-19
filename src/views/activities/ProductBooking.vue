@@ -66,7 +66,7 @@
       class="border mx-auto my-4"
     >
       <v-container>
-        <div class="d-flex align-center mb-4" v-if="product">
+        <div class="d-flex align-center" v-if="product">
           <v-avatar size="72" rounded="lg" class="mr-4">
             <v-img :src="product.thumbnail_url" :alt="product.name" cover />
           </v-avatar>
