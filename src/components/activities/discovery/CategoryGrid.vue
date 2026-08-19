@@ -62,6 +62,7 @@ const categoryIcons = {
   Stargazing: "mdi-telescope",
   "Scuba Diving": "mdi-diving-scuba-mask",
   Kayaking: "mdi-kayaking",
+  "Cab Service": "mdi-taxi",
 };
 
 const activityColors = {
@@ -74,6 +75,7 @@ const activityColors = {
   Stargazing: "cat-deep-purple",
   "Scuba Diving": "cat-cyan",
   Kayaking: "cat-teal",
+  "Cab Service": "cat-purple",
 };
 
 function getThemeColor(colorName) {
