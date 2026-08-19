@@ -21,6 +21,7 @@
           <div class="my-2 g2a-title-md">Participant {{ index + 1 }}</div>
 
           <v-row>
+            <!-- Nationality -->
             <v-col cols="12" md="6">
               <v-select
                 v-model="kyc.nationality"
@@ -31,23 +32,27 @@
                 rounded="lg"
                 hide-details="auto"
                 :rules="[(v) => !!v || 'Nationality is required']"
+                @update:model-value="onNationalityChange(kyc)"
               />
             </v-col>
 
+            <!-- ID Proof Type -->
             <v-col cols="12" md="6">
               <v-select
                 v-model="kyc.id_proof_type"
-                :items="idProofOptions"
+                :items="getIdProofOptions(kyc.nationality)"
                 label="Select ID Proof"
                 density="compact"
                 variant="outlined"
                 rounded="lg"
                 hide-details="auto"
+                :disabled="!kyc.nationality"
                 :rules="[(v) => !!v || 'ID Proof is required']"
-                @update:model-value="() => onIdProofTypeChange(kyc)"
+                @update:model-value="onIdProofTypeChange(kyc)"
               />
             </v-col>
 
+            <!-- ID Number -->
             <v-col cols="12" :md="kyc.id_proof_type === 'passport' ? 6 : 12">
               <v-text-field
                 v-model="kyc.id_number"
@@ -56,6 +61,7 @@
                 variant="outlined"
                 rounded="lg"
                 hide-details="auto"
+                :disabled="!kyc.id_proof_type"
                 :rules="[
                   (v) =>
                     !!v || `${idNumberLabel(kyc.id_proof_type)} is required`,
@@ -63,6 +69,7 @@
               />
             </v-col>
 
+            <!-- Passport Expiry Date -->
             <v-col v-if="kyc.id_proof_type === 'passport'" cols="12" md="6">
               <v-text-field
                 v-model="kyc.id_expiry_date"
@@ -72,10 +79,11 @@
                 variant="outlined"
                 rounded="lg"
                 hide-details="auto"
-                :rules="[(v) => !!v || 'Expiry Date is required']"
+                :rules="[(v) => !!v || 'Passport Expiry Date is required']"
               />
             </v-col>
 
+            <!-- Document Upload -->
             <v-col cols="12">
               <input
                 :ref="(el) => setFileInputRef(el, index)"
@@ -85,6 +93,7 @@
                 @change="(e) => handleFileChange(e, index)"
               />
 
+              <!-- Upload Button -->
               <v-btn
                 v-if="!kyc.document?.document_id"
                 variant="outlined"
@@ -96,9 +105,10 @@
                 prepend-icon="mdi-tray-arrow-up"
                 @click="fileInputRefs.get(index)?.click()"
               >
-                Upload Documents
+                Upload {{ idProofLabel(kyc.id_proof_type) }}
               </v-btn>
 
+              <!-- Uploaded Document -->
               <div
                 v-else
                 class="d-flex align-center justify-space-between border rounded-lg pa-3"
@@ -119,6 +129,7 @@
                 />
               </div>
 
+              <!-- Upload Error -->
               <div
                 v-if="uploadState[index]?.error"
                 class="text-error text-caption mt-1"
@@ -128,10 +139,8 @@
             </v-col>
           </v-row>
         </v-container>
-        <v-divider
-          v-if="index + 1 < kycEntries.length"
-          class="mt-2"
-        ></v-divider>
+
+        <v-divider v-if="index + 1 < kycEntries.length" class="mt-2" />
       </div>
     </div>
   </v-card>
@@ -149,9 +158,16 @@ import {
 import { useRoute } from "vue-router";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+
 import { bookingStore } from "@/store/booking";
 import apiClient from "@/services/api.js";
 import DocumentPreview from "@/components/common/DocumentPreview.vue";
+
+/*
+|--------------------------------------------------------------------------
+| Props
+|--------------------------------------------------------------------------
+*/
 
 const props = defineProps({
   config: {
@@ -165,10 +181,21 @@ const props = defineProps({
   },
 });
 
+/*
+|--------------------------------------------------------------------------
+| Setup
+|--------------------------------------------------------------------------
+*/
+
 const booking = bookingStore;
 const route = useRoute();
-
 const rootEl = ref(null);
+
+/*
+|--------------------------------------------------------------------------
+| Fancybox
+|--------------------------------------------------------------------------
+*/
 
 onMounted(() => {
   Fancybox.bind(rootEl.value?.$el, '[data-fancybox^="kyc-document-"]', {
@@ -184,44 +211,90 @@ onBeforeUnmount(() => {
   Fancybox.close();
 });
 
+/*
+|--------------------------------------------------------------------------
+| Nationality
+|--------------------------------------------------------------------------
+*/
+
 const nationalities = ["Indian", "Foreigner"];
 
-const idProofOptions = [
-  { title: "Passport", value: "passport" },
-  { title: "Aadhaar Card", value: "aadhaar_card" },
-  { title: "Voter Id", value: "voter_id" },
-  { title: "Driving Licence", value: "driving_licence" },
-  { title: "Other Valid Govt Id Proof", value: "other" },
+/*
+|--------------------------------------------------------------------------
+| ID Proof Options
+|--------------------------------------------------------------------------
+*/
+
+const passportOption = {
+  title: "Passport",
+  value: "passport",
+};
+
+const indianIdProofOptions = [
+  passportOption,
+  {
+    title: "Aadhaar Card",
+    value: "aadhaar_card",
+  },
+  {
+    title: "Voter ID",
+    value: "voter_id",
+  },
+  {
+    title: "Driving Licence",
+    value: "driving_licence",
+  },
+  {
+    title: "Other Valid Govt ID Proof",
+    value: "other",
+  },
 ];
 
-const idProofLabel = (type) =>
-  idProofOptions.find((option) => option.value === type)?.title || "ID Proof";
+const getIdProofOptions = (nationality) => {
+  if (nationality === "Foreigner") {
+    return [passportOption];
+  }
+
+  return indianIdProofOptions;
+};
+
+/*
+|--------------------------------------------------------------------------
+| Labels
+|--------------------------------------------------------------------------
+*/
+
+const idProofLabel = (type) => {
+  const options = [passportOption, ...indianIdProofOptions];
+
+  return options.find((option) => option.value === type)?.title || "ID Proof";
+};
 
 const idNumberLabel = (type) => {
   switch (type) {
     case "passport":
       return "Passport Number";
+
     case "aadhaar_card":
       return "Aadhaar Number";
+
     case "voter_id":
-      return "Voter Id Number";
+      return "Voter ID Number";
+
     case "driving_licence":
       return "Driving Licence Number";
+
+    case "other":
+      return "ID Number";
+
     default:
       return "ID Number";
   }
 };
 
-const onIdProofTypeChange = (kyc) => {
-  if (kyc.id_proof_type !== "passport") {
-    kyc.id_expiry_date = null;
-  }
-};
-
 /*
 |--------------------------------------------------------------------------
-| KYC entries (submitted as form.kyc_per_passanger, one per guest, kept
-| separate from form.participants)
+| KYC Document
 |--------------------------------------------------------------------------
 */
 
@@ -231,6 +304,12 @@ const createKycDocument = () => ({
   document_url: null,
 });
 
+/*
+|--------------------------------------------------------------------------
+| KYC Entry
+|--------------------------------------------------------------------------
+*/
+
 const createKyc = () => ({
   nationality: "Indian",
   id_proof_type: "",
@@ -238,6 +317,69 @@ const createKyc = () => ({
   id_expiry_date: null,
   document: createKycDocument(),
 });
+
+/*
+|--------------------------------------------------------------------------
+| Reset ID Data
+|--------------------------------------------------------------------------
+*/
+
+const resetIdData = (kyc) => {
+  kyc.id_number = "";
+  kyc.id_expiry_date = null;
+  kyc.document = createKycDocument();
+};
+
+/*
+|--------------------------------------------------------------------------
+| Nationality Change
+|--------------------------------------------------------------------------
+*/
+
+const onNationalityChange = (kyc) => {
+  resetIdData(kyc);
+
+  if (kyc.nationality === "Foreigner") {
+    /*
+     * Foreigner can only use Passport.
+     */
+    kyc.id_proof_type = "passport";
+    return;
+  }
+
+  /*
+   * For Indian users, let them select the ID proof again.
+   */
+  kyc.id_proof_type = "";
+};
+
+/*
+|--------------------------------------------------------------------------
+| ID Proof Type Change
+|--------------------------------------------------------------------------
+*/
+
+const onIdProofTypeChange = (kyc) => {
+  /*
+   * Clear old ID data and uploaded document whenever
+   * the ID proof type changes.
+   */
+  kyc.id_number = "";
+  kyc.document = createKycDocument();
+
+  /*
+   * Expiry date is only applicable for Passport.
+   */
+  if (kyc.id_proof_type !== "passport") {
+    kyc.id_expiry_date = null;
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| KYC Entries
+|--------------------------------------------------------------------------
+*/
 
 const kycEntries = computed({
   get() {
@@ -253,20 +395,54 @@ const kycEntries = computed({
   },
 });
 
+/*
+|--------------------------------------------------------------------------
+| Guest Count Sync
+|--------------------------------------------------------------------------
+*/
+
 watch(
   () => props.quote?.booking?.guests,
   (guests) => {
-    const count = Number(guests || 1);
+    const count = Math.max(1, Number(guests) || 1);
 
     if (!Array.isArray(booking.form.kyc_per_passanger)) {
       booking.form.kyc_per_passanger = [];
     }
 
+    /*
+     * Add missing participant KYC entries.
+     */
     while (booking.form.kyc_per_passanger.length < count) {
       booking.form.kyc_per_passanger.push(createKyc());
     }
 
+    /*
+     * Remove extra entries if guest count decreases.
+     */
     booking.form.kyc_per_passanger.splice(count);
+
+    /*
+     * Normalize existing data.
+     * Important if old data is restored from localStorage/API.
+     */
+    booking.form.kyc_per_passanger.forEach((kyc) => {
+      if (!kyc.document) {
+        kyc.document = createKycDocument();
+      }
+
+      /*
+       * Safety rule:
+       * Foreigner must always have Passport.
+       */
+      if (kyc.nationality === "Foreigner") {
+        if (kyc.id_proof_type !== "passport") {
+          kyc.id_proof_type = "passport";
+          resetIdData(kyc);
+          kyc.id_proof_type = "passport";
+        }
+      }
+    });
   },
   {
     immediate: true,
@@ -275,7 +451,7 @@ watch(
 
 /*
 |--------------------------------------------------------------------------
-| Document upload
+| File Input References
 |--------------------------------------------------------------------------
 */
 
@@ -289,23 +465,58 @@ const setFileInputRef = (el, index) => {
   }
 };
 
-// Local-only upload progress/error state, kept out of booking.form so it
-// never gets submitted as part of the order payload.
+/*
+|--------------------------------------------------------------------------
+| Upload State
+|--------------------------------------------------------------------------
+|
+| Kept outside booking.form so upload/loading/error
+| information never gets submitted with the booking.
+|
+*/
+
 const uploadState = reactive({});
+
+/*
+|--------------------------------------------------------------------------
+| File Upload
+|--------------------------------------------------------------------------
+*/
 
 const handleFileChange = async (event, index) => {
   const file = event.target.files?.[0];
+
+  /*
+   * Reset input so the same file can be selected again.
+   */
   event.target.value = "";
 
   if (!file) return;
 
   const kyc = kycEntries.value[index];
+
   if (!kyc) return;
 
-  uploadState[index] = { uploading: true, error: "" };
+  /*
+   * Basic safety check.
+   */
+  if (!kyc.id_proof_type) {
+    uploadState[index] = {
+      uploading: false,
+      error: "Please select an ID proof type first.",
+    };
+
+    return;
+  }
+
+  uploadState[index] = {
+    uploading: true,
+    error: "",
+  };
 
   try {
     const formData = new FormData();
+
     formData.append("file", file);
     formData.append("name", idProofLabel(kyc.id_proof_type));
 
@@ -313,7 +524,9 @@ const handleFileChange = async (event, index) => {
       `/v1/booking-estimates/${route.params.estimate_id}/upload-kyc`,
       formData,
       {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       },
     );
 
@@ -325,7 +538,10 @@ const handleFileChange = async (event, index) => {
       document_url: doc.url ?? doc.file_url ?? doc.document_url ?? null,
     };
 
-    uploadState[index] = { uploading: false, error: "" };
+    uploadState[index] = {
+      uploading: false,
+      error: "",
+    };
   } catch (err) {
     uploadState[index] = {
       uploading: false,
@@ -337,8 +553,18 @@ const handleFileChange = async (event, index) => {
   }
 };
 
+/*
+|--------------------------------------------------------------------------
+| Remove Document
+|--------------------------------------------------------------------------
+*/
+
 const removeDocument = (kyc, index) => {
   kyc.document = createKycDocument();
-  uploadState[index] = { uploading: false, error: "" };
+
+  uploadState[index] = {
+    uploading: false,
+    error: "",
+  };
 };
 </script>

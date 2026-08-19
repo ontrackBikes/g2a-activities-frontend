@@ -749,6 +749,21 @@ const FIELD_FORM_KEYS = {
 };
 
 const fieldsPayload = () => {
+  // The schema itself comes from the check-available response we're about
+  // to request, so on the very first call after a fresh page load/refresh
+  // `fields.value` is still empty (result.value hasn't arrived yet). If we
+  // filtered to the schema in that case we'd send an empty payload and
+  // silently drop things like date/guests. Fall back to sending everything
+  // currently set on the form (minus blanks) so that first request still
+  // reflects what the user/URL actually specified; once the real response
+  // comes back, fields.value is populated and subsequent calls go back to
+  // the precise, schema-filtered payload.
+  if (!fields.value.length) {
+    return Object.fromEntries(
+      Object.entries(form).filter(([, value]) => value !== "" && value != null),
+    );
+  }
+
   const payload = {};
 
   for (const field of fields.value) {
