@@ -1,6 +1,5 @@
 <template>
   <div ref="galleryRoot" v-if="galleryImages.length">
-
     <v-row no-gutters>
       <v-col
         v-for="(image, index) in previewImages"
@@ -14,20 +13,13 @@
           :data-caption="image.alt || ''"
           class="gallery-item"
         >
-          <v-img
-            :src="image.image_url"
-            height="195"
-            cover
-            rounded="lg"
-          />
+          <v-img :src="image.image_url" height="205" cover rounded="lg" />
 
           <div
             v-if="index === 1 && remainingImages > 0"
             class="gallery-overlay"
           >
-            <span class="text-h5  text-white">
-              +{{ remainingImages }}
-            </span>
+            <span class="text-h5 text-white"> +{{ remainingImages }} </span>
           </div>
         </a>
       </v-col>
@@ -64,7 +56,7 @@ const previewImages = computed(() => galleryImages.value.slice(0, 2));
 const hiddenImages = computed(() => galleryImages.value.slice(2));
 
 const remainingImages = computed(() =>
-  Math.max(galleryImages.value.length - 2, 0)
+  Math.max(galleryImages.value.length - 2, 0),
 );
 
 const galleryRoot = ref(null);
@@ -73,8 +65,8 @@ onMounted(() => {
   Fancybox.bind(galleryRoot.value, '[data-fancybox="product-gallery"]', {
     animated: true,
     dragToClose: true,
-    Hash: false,          // important
-    placeFocusBack: false // optional
+    Hash: false, // important
+    placeFocusBack: false, // optional
   });
 });
 
