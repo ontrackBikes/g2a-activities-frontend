@@ -11,16 +11,18 @@
       <div class="g2a-title-lg text-error">Out of Stock</div>
     </v-card>
     <v-card flat rounded="lg" class="pa-4 border" v-else>
-     
-
       <!-- Price & CTA -->
       <div class="d-flex align-center justify-space-between">
         <div>
           <div class="g2a-title-2xl-2-light text-greyDark text-uppercase">
-            {{ priceType === "SLOT" ? "Starts from" : "Flat price" }}
+            {{
+              ["SLOT", "KM_BASED"].includes(priceType)
+                ? "Starts from"
+                : "Flat price"
+            }}
           </div>
 
-          <div class=" mt-1">
+          <div class="mt-1">
             <span class="g2a-title-xl">₹{{ price }}</span>
             <span class="g2a-title-2xl-2-light text-greyDark">
               /
@@ -48,12 +50,14 @@
         </v-btn>
       </div>
       <div class="mt-4 text-success">
-        {{ nextAvailableDate ? `Next available date: ${nextAvailableDate}` : "" }}
+        {{
+          nextAvailableDate ? `Next available date: ${nextAvailableDate}` : ""
+        }}
       </div>
     </v-card>
     <v-card
       class="my-4 border"
-      flat 
+      flat
       rounded="lg"
       :disabled="props.locations.length < 2"
       :class="{ 'cursor-pointer': props.locations.length > 1 }"
@@ -66,7 +70,7 @@
           </v-avatar>
 
           <div class="flex-grow-1" style="min-width: 0">
-            <div class="g2a-title-lg  text-truncate">
+            <div class="g2a-title-lg text-truncate">
               {{ locationSelected || "Select Location" }}
             </div>
 

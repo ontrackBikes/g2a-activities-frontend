@@ -44,7 +44,16 @@
         <div class="g2a-book-widget__amount">
           ₹{{ formatPrice(product.starting_price) }}
 
-          <span>/ {{product.slug == "bike-rentals" ? 'bike' : product.slug == "airport-transfers" ? 'vehicle' : product.pricing_mode }}</span>
+          <span
+            >/
+            {{
+              product.slug == "bike-rentals"
+                ? "bike"
+                : product.slug == "airport-transfers"
+                  ? "vehicle"
+                  : product.pricing_mode
+            }}</span
+          >
         </div>
       </div>
 
@@ -54,7 +63,14 @@
 
       <div v-if="settings.showMeta" class="g2a-book-widget__meta">
         <div v-if="settings.showGuests && product.max_bookable_per_booking">
-          👥 Max {{ product.max_bookable_per_booking }} / {{product.slug == "bike-rentals" ? 'bike' : product.slug == "airport-transfers" ? 'vehicle' : product.pricing_mode }}
+          👥 Max {{ product.max_bookable_per_booking }} /
+          {{
+            product.slug == "bike-rentals"
+              ? "bike"
+              : product.slug == "airport-transfers"
+                ? "vehicle"
+                : product.pricing_mode
+          }}
         </div>
 
         <div v-if="settings.showLocations && product.locations?.length">
@@ -133,7 +149,9 @@ const shortDescription = computed(() => {
 });
 
 const priceLabel = computed(() => {
-  return props.product.price_type === "SLOT" ? "Starting from" : "Flat Price";
+  return ["SLOT", "KM_BASED"].includes(props.product.price_type)
+    ? "Starting from"
+    : "Flat Price";
 });
 
 function formatPrice(price) {
