@@ -106,6 +106,7 @@
             :locationSlug="selectedLocation?.slug"
             :pricing="pricing"
             :nextAvailableDate="product?.next_available_date"
+            :available="result?.available ?? true"
           />
         </div>
       </v-form>
@@ -174,8 +175,6 @@
                         {{ slot.name }}
                       </div>
 
-                     
-
                       <v-chip
                         size="x-small"
                         class="ml-2"
@@ -186,7 +185,8 @@
                         Few left
                       </v-chip>
 
-                      <v-btn icon
+                      <v-btn
+                        icon
                         v-if="slot.is_for_non_indian"
                         size="x-small"
                         class="ml-2"
@@ -194,7 +194,7 @@
                         variant="tonal"
                         prepend-icon="mdi-airplane"
                       >
-                      <v-icon>mdi-airplane</v-icon> 
+                        <v-icon>mdi-airplane</v-icon>
                       </v-btn>
                     </div>
 
@@ -225,9 +225,12 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="slot.description" class="mt-2 text-caption text-grey">
-                        {{ slot.description }}
-                      </div>
+                <div
+                  v-if="slot.description"
+                  class="mt-2 text-caption text-grey"
+                >
+                  {{ slot.description }}
+                </div>
               </v-card>
             </div>
           </div>

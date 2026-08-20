@@ -37,7 +37,7 @@
 
     <div v-if="selectedDateLabel" class="text-body-2 mt-2">
       Selected date: <strong>{{ selectedDateLabel }}</strong>
-      <span v-if="nextAvailableDateLabel">
+      <span v-if="!available && nextAvailableDateLabel">
         , Next available date: {{ nextAvailableDateLabel }}
       </span>
     </div>
@@ -67,6 +67,10 @@ const props = defineProps({
   nextAvailableDate: {
     type: String,
     default: "",
+  },
+  available: {
+    type: Boolean,
+    default: true,
   },
 });
 const emit = defineEmits(["update:modelValue"]);
@@ -141,8 +145,6 @@ const select = (value) => {
   emit("update:modelValue", value);
 };
 
-
-
 const selectedDateLabel = computed(() => {
   if (!props.modelValue) return "";
 
@@ -154,8 +156,6 @@ const selectedDateLabel = computed(() => {
   });
 });
 
-
-
 const nextAvailableDateLabel = computed(() => {
   if (!props.nextAvailableDate) return "";
 
@@ -166,7 +166,6 @@ const nextAvailableDateLabel = computed(() => {
     year: "numeric",
   });
 });
-
 </script>
 
 <style scoped>

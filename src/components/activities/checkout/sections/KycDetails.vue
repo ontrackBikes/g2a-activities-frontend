@@ -226,7 +226,7 @@ const isForNonIndian = computed(
 );
 
 const nationalities = computed(() =>
-  isForNonIndian.value ? ["Foreigner"] : ["Indian", "Foreigner"],
+  isForNonIndian.value ? ["Foreigner"] : ["Indian"],
 );
 
 /*

@@ -15,6 +15,7 @@
     :productTypeSlug="productTypeSlug"
     :pricing="pricing"
     :nextAvailableDate="nextAvailableDate"
+    :available="available"
     @update:modelValue="updateValue"
   />
 
@@ -86,6 +87,10 @@ const props = defineProps({
   nextAvailableDate: {
     type: String,
     default: "",
+  },
+  available: {
+    type: Boolean,
+    default: true,
   },
 });
 
