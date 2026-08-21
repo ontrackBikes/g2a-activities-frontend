@@ -159,7 +159,7 @@ const props = defineProps({
 const emit = defineEmits(["product-click"]);
 
 // ─── Constants ───────────────────────────────────────────────────
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 50;
 const FILTER_DEBOUNCE_MS = 350;
 
 const DEFAULT_FILTERS = {
