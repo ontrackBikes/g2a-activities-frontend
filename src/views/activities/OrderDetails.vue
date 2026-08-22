@@ -66,9 +66,9 @@
                     :value="item.booking_data.quantity"
                   />
                   <DetailRow
-                    v-if="item.booking_data.travel_date"
-                    label="Travel Date"
-                    :value="formatDate(item.booking_data.travel_date)"
+                    v-if="item.booking_data.date"
+                    label="Date"
+                    :value="formatDate(item.booking_data.date)"
                   />
                   <DetailRow
                     v-if="item.booking_data.transfer_type"
