@@ -187,7 +187,7 @@
 
                       <v-btn
                         icon
-                        v-if="slot.is_for_non_indian"
+                        v-if="slot.nationality_restriction === 'NON_INDIAN_ONLY'"
                         size="x-small"
                         class="ml-2"
                         color="info"

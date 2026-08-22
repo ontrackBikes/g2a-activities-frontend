@@ -211,18 +211,22 @@ onBeforeUnmount(() => {
 | Nationality
 |--------------------------------------------------------------------------
 |
-| Some slots (e.g. a "For Foreigners" variant) are restricted to
-| non-Indian travellers only. When that's the case, "Indian" must not
-| be a selectable nationality.
+| Some slots (e.g. a "For Foreigners" variant) are restricted to a
+| single nationality. `nationality_restriction` is one of
+| 'ALL' | 'INDIAN_ONLY' | 'NON_INDIAN_ONLY' and, when restricted,
+| the excluded nationality must not be selectable.
 |
 */
 
-const isForNonIndian = computed(
+const nationalityRestriction = computed(
   () =>
-    !!(
-      props.quote?.availability?.selected_slot?.is_for_non_indian ??
-      props.quote?.availability?.is_for_non_indian
-    ),
+    props.quote?.availability?.selected_slot?.nationality_restriction ??
+    props.quote?.availability?.nationality_restriction ??
+    "ALL",
+);
+
+const isForNonIndian = computed(
+  () => nationalityRestriction.value === "NON_INDIAN_ONLY",
 );
 
 const nationalities = computed(() =>
@@ -466,11 +470,15 @@ const normalizeKycEntries = () => {
 
     /*
      * Safety rule:
-     * Slots restricted to non-Indian travellers must not allow
-     * an "Indian" nationality selection.
+     * Nationality must match what's actually selectable for this
+     * slot — "Foreigner" only when restricted to non-Indians,
+     * "Indian" otherwise.
      */
     if (isForNonIndian.value && kyc.nationality !== "Foreigner") {
       kyc.nationality = "Foreigner";
+      resetIdData(kyc);
+    } else if (!isForNonIndian.value && kyc.nationality !== "Indian") {
+      kyc.nationality = "Indian";
       resetIdData(kyc);
     }
 
@@ -525,7 +533,7 @@ watch(
  * changes (e.g. user switches between an "Indians only" and
  * "Foreigners only" slot without changing guest count).
  */
-watch(isForNonIndian, () => {
+watch(nationalityRestriction, () => {
   normalizeKycEntries();
 });
 
