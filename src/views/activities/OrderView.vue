@@ -226,11 +226,11 @@
             </template>
 
             <!-- Activity Booking -->
-            <template v-else-if="bookingOf(item).travel_date">
+            <template v-else-if="bookingOf(item).date">
               <div class="d-flex justify-space-between py-2">
-                <span class="g2a-title-md text-greyDark">Travel Date</span>
+                <span class="g2a-title-md text-greyDark">Date</span>
                 <div class="g2a-title-md">
-                  {{ formatDate(bookingOf(item).travel_date) }}
+                  {{ formatDate(bookingOf(item).date) }}
                 </div>
               </div>
             </template>
