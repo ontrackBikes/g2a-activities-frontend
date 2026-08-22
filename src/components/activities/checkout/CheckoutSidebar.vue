@@ -805,7 +805,11 @@ const bookingRows = computed(() =>
     })
     .map(([key, value]) => {
       const label =
-        fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
+        key === "travel_date"
+          ? booking.value.pickup_location && booking.value.drop_location
+            ? "Travel Date"
+            : "Activity Date"
+          : fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
       const isTimeLabel = label === "Pickup Time" || label === "Return Time";
       return {
         label,
