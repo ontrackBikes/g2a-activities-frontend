@@ -229,9 +229,16 @@ const isForNonIndian = computed(
   () => nationalityRestriction.value === "NON_INDIAN_ONLY",
 );
 
-const nationalities = computed(() =>
-  isForNonIndian.value ? ["Foreigner"] : ["Indian"],
+const isForIndianOnly = computed(
+  () => nationalityRestriction.value === "INDIAN_ONLY",
 );
+
+const nationalities = computed(() => {
+  if (isForNonIndian.value) return ["Foreigner"];
+  if (isForIndianOnly.value) return ["Indian"];
+
+  return ["Indian", "Foreigner"];
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -472,12 +479,13 @@ const normalizeKycEntries = () => {
      * Safety rule:
      * Nationality must match what's actually selectable for this
      * slot — "Foreigner" only when restricted to non-Indians,
-     * "Indian" otherwise.
+     * "Indian" only when restricted to Indians. Either is fine
+     * when unrestricted ("ALL").
      */
     if (isForNonIndian.value && kyc.nationality !== "Foreigner") {
       kyc.nationality = "Foreigner";
       resetIdData(kyc);
-    } else if (!isForNonIndian.value && kyc.nationality !== "Indian") {
+    } else if (isForIndianOnly.value && kyc.nationality !== "Indian") {
       kyc.nationality = "Indian";
       resetIdData(kyc);
     }
