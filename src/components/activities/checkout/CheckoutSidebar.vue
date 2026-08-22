@@ -710,7 +710,7 @@ const canProceed = computed(
 // specific (guests, quantity, custom attributes) must be declared in that
 // product's schema to show up — see SYSTEM_FIELD_KEYS below.
 const ROW_LABELS = {
-  travel_date: "Travel Date",
+  date: "Date",
   pickup_date: "Pickup Date",
   pickup_time: "Pickup Time",
   return_date: "Return Date",
@@ -782,7 +782,6 @@ const resolveOptionLabel = (key, value) => {
 };
 
 // Row order follows the schema's field order first, then any system/legacy
-// keys (travel_date, etc.) that aren't part of the schema at all.
 const fieldOrder = computed(() => {
   const schemaOrder = schemaFields.value.map((field) => field.field);
   const extras = ROW_ORDER.filter((key) => !schemaOrder.includes(key));
@@ -804,8 +803,7 @@ const bookingRows = computed(() =>
       return indexA - indexB;
     })
     .map(([key, value]) => {
-      const label =
-        fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
+      const label = fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
       const isTimeLabel = label === "Pickup Time" || label === "Return Time";
       return {
         label,

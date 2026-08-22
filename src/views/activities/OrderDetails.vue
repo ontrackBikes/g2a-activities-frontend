@@ -173,6 +173,15 @@
                     label="Rental Days"
                     :value="item.booking_data.rental_days"
                   />
+
+                  <!-- Any product-specific booking_data field not covered
+                       above still shows up, with a prettified label -->
+                  <DetailRow
+                    v-for="row in extraBookingRows(item)"
+                    :key="row.label"
+                    :label="row.label"
+                    :value="row.value"
+                  />
                 </v-container>
               </v-card>
 
@@ -837,6 +846,57 @@ const ID_PROOF_LABELS = {
 };
 
 const idProofLabel = (type) => ID_PROOF_LABELS[type] || type;
+
+// Keys already rendered explicitly above - anything else in `booking_data`
+// (e.g. a product-specific field with no hardcoded row) falls through to
+// prettyLabel() below instead of being silently dropped.
+const KNOWN_BOOKING_DATA_KEYS = new Set([
+  "guests",
+  "quantity",
+  "date",
+  "transfer_type",
+  "pickup_location",
+  "drop_location",
+  "selected_slot",
+  "pickup_date",
+  "pickup_time",
+  "drop_time",
+  "return_date",
+  "rental_days",
+]);
+
+const formatExtraValue = (value) => {
+  if (value == null) return "";
+
+  if (Array.isArray(value)) {
+    return value.map(formatExtraValue).join(", ");
+  }
+
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+
+  if (typeof value === "object") {
+    if (value.name) return value.name;
+    if (value.label) return value.label;
+    if (value.title) return value.title;
+    return Object.values(value).map(formatExtraValue).join(", ");
+  }
+
+  return String(value);
+};
+
+const extraBookingRows = (orderItem) =>
+  Object.entries(orderItem?.booking_data || {})
+    .filter(
+      ([key, value]) =>
+        !KNOWN_BOOKING_DATA_KEYS.has(key) &&
+        value !== null &&
+        value !== undefined &&
+        value !== "",
+    )
+    .map(([key, value]) => ({
+      label: pretty(key),
+      value: formatExtraValue(value),
+    }));
 
 const formatDate = (d) => new Date(d).toLocaleDateString("en-IN");
 

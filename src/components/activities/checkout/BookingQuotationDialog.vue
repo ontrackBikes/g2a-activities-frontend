@@ -325,7 +325,6 @@ const finalPricing = computed(() => {
 
 const bookingRows = computed(() => {
   const labels = {
-    travel_date: "Travel Date",
 
     pickup_date: "Pickup Date",
 
@@ -336,6 +335,8 @@ const bookingRows = computed(() => {
     guests: "Guests",
 
     quantity: "Quantity",
+
+    date: "Date",
   };
 
   return Object.entries(booking.value)
