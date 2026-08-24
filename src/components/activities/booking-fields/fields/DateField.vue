@@ -1,7 +1,36 @@
 <template>
   <div>
-    <div class="g2a-title-lg" :class="field.description ? 'mb-1' : 'mb-3'">
-      {{ field.label || "Select Date" }}
+    <div
+      class="d-flex align-center justify-space-between"
+      :class="field.description ? 'mb-1' : 'mb-3'"
+    >
+      <div class="g2a-title-lg">
+        {{ field.label || "Select Date" }}
+      </div>
+
+      <div class="mode-toggle">
+        <v-btn
+          icon
+          variant="text"
+          size="36"
+          class="mode-toggle-btn"
+          :class="{ active: mode === 'strip' }"
+          @click="mode = 'strip'"
+        >
+          <v-icon size="20">mdi-view-list</v-icon>
+        </v-btn>
+
+        <v-btn
+          icon
+          variant="text"
+          size="36"
+          class="mode-toggle-btn"
+          :class="{ active: mode === 'calendar' }"
+          @click="mode = 'calendar'"
+        >
+          <v-icon size="20">mdi-calendar-blank-outline</v-icon>
+        </v-btn>
+      </div>
     </div>
 
     <div
@@ -11,28 +40,64 @@
       <div>{{ field.description }}</div>
     </div>
 
-    <div ref="stripRef" class="date-strip">
-      <template v-for="date in dates" :key="date.value">
-        <div v-if="date.showMonth" class="month-card py-2">
-          <span>{{ date.month }}</span>
-        </div>
+    <div v-if="mode === 'strip'" class="date-strip-wrapper">
+      <v-btn
+        v-if="!mobile"
+        icon
+        variant="elevated"
+        size="36"
+        class="scroll-arrow scroll-arrow-left"
+        @click="scrollByPage(-1)"
+      >
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
 
-        <v-card
-          :ref="(el) => setCardRef(el, date.value)"
-          class="date-card py-4"
-          :class="{ active: modelValue === date.value }"
-          elevation="0"
-          @click="select(date.value)"
-        >
-          <div class="date-number">
-            {{ String(date.date).padStart(2, "0") }}
+      <div ref="stripRef" class="date-strip">
+        <template v-for="date in dates" :key="date.value">
+          <div v-if="date.showMonth" class="month-card py-2">
+            <span>{{ date.month }}</span>
           </div>
 
-          <div class="date-day">
-            {{ date.day }}
-          </div>
-        </v-card>
-      </template>
+          <v-card
+            :ref="(el) => setCardRef(el, date.value)"
+            class="date-card py-4"
+            :class="{ active: modelValue === date.value }"
+            elevation="0"
+            @click="select(date.value)"
+          >
+            <div class="date-number">
+              {{ String(date.date).padStart(2, "0") }}
+            </div>
+
+            <div class="date-day">
+              {{ date.day }}
+            </div>
+          </v-card>
+        </template>
+      </div>
+
+      <v-btn
+        v-if="!mobile"
+        icon
+        variant="elevated"
+        size="36"
+        class="scroll-arrow scroll-arrow-right"
+        @click="scrollByPage(1)"
+      >
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+    </div>
+
+    <div v-else class="calendar-wrapper">
+      <v-date-picker
+        v-model="calendarDate"
+        :min="today"
+        hide-header
+        show-adjacent-months
+        width="100%"
+        elevation="0"
+        border
+      />
     </div>
 
     <div v-if="selectedDateLabel" class="text-body-2 mt-2">
@@ -50,6 +115,9 @@
 
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { useDisplay } from "vuetify";
+
+const { mobile } = useDisplay();
 
 const props = defineProps({
   modelValue: String,
@@ -77,8 +145,33 @@ const emit = defineEmits(["update:modelValue"]);
 
 const today = new Date().toISOString().split("T")[0];
 
+const mode = ref("strip");
+
 const stripRef = ref(null);
 const cardRefs = new Map();
+
+const scrollByPage = (direction) => {
+  const strip = stripRef.value;
+  if (!strip) return;
+
+  strip.scrollBy({
+    left: direction * strip.offsetWidth * 0.8,
+    behavior: "smooth",
+  });
+};
+
+const calendarDate = computed({
+  get: () =>
+    props.modelValue ? new Date(`${props.modelValue}T00:00:00`) : null,
+  set: (val) => {
+    if (!val) return;
+
+    const d = new Date(val);
+    const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+    emit("update:modelValue", iso);
+  },
+});
 
 const setCardRef = (el, value) => {
   if (el) {
@@ -169,6 +262,35 @@ const nextAvailableDateLabel = computed(() => {
 </script>
 
 <style scoped>
+/* Mode toggle */
+
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #f0f0f0;
+  border-radius: 999px;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.mode-toggle-btn {
+  border-radius: 10px !important;
+  color: #9ca3af;
+}
+
+.mode-toggle-btn.active {
+  background: white !important;
+  color: #0f1b3d;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* Strip + scroll arrows */
+
+.date-strip-wrapper {
+  position: relative;
+}
+
 .date-strip {
   display: flex;
   gap: 12px;
@@ -178,6 +300,33 @@ const nextAvailableDateLabel = computed(() => {
 }
 
 .date-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background: white !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.scroll-arrow-left {
+  left: -18px;
+}
+
+.scroll-arrow-right {
+  right: -18px;
+}
+
+/* Calendar */
+
+.calendar-wrapper :deep(.v-date-picker) {
+  border-radius: 18px;
+}
+
+.calendar-wrapper :deep(.v-picker-title) {
   display: none;
 }
 
