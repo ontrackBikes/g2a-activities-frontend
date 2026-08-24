@@ -9,6 +9,7 @@ import RentalDetails from "./sections/RentalDetails.vue";
 import FlightDetails from "./sections/FlightDetails.vue";
 import FerryDetails from "./sections/FerryDetails.vue";
 import OptForPickupAndDrop from "./sections/OptForPickupAndDrop.vue";
+import HasAgreedToPermitCharge from "./sections/HasAgreedToPermitCharge.vue";
 
 export default {
   customer_details: {
@@ -64,5 +65,10 @@ export default {
   opt_for_pickup_and_drop: {
     component: OptForPickupAndDrop,
     title: "Pickup & Drop",
+  },
+
+  has_agreed_to_permit_charge: {
+    component: HasAgreedToPermitCharge,
+    title: "Permit Charges",
   },
 };
