@@ -61,7 +61,10 @@
           <v-card
             :ref="(el) => setCardRef(el, date.value)"
             class="date-card py-4"
-            :class="{ active: modelValue === date.value }"
+            :class="[
+              `status-${dateStatus(date.value)}`,
+              { active: modelValue === date.value },
+            ]"
             elevation="0"
             @click="select(date.value)"
           >
@@ -72,6 +75,11 @@
             <div class="date-day">
               {{ date.day }}
             </div>
+
+            <span
+              v-if="dateStatus(date.value) !== 'unknown'"
+              class="date-dot"
+            />
           </v-card>
         </template>
       </div>
@@ -91,13 +99,34 @@
     <div v-else class="calendar-wrapper">
       <v-date-picker
         v-model="calendarDate"
+        v-model:month="calendarMonth"
+        v-model:year="calendarYear"
         :min="today"
         hide-header
         show-adjacent-months
         width="100%"
         elevation="0"
         border
-      />
+      >
+        <template #day="{ props: dayProps, item }">
+          <v-btn
+            v-bind="dayProps"
+            :disabled="dayProps.disabled || isDateUnavailable(item.isoDate)"
+            :class="`status-${dateStatus(item.isoDate)}`"
+          >
+            {{ item.localized }}
+          </v-btn>
+        </template>
+      </v-date-picker>
+
+      <div class="calendar-legend">
+        <span class="legend-item">
+          <span class="legend-dot status-available" /> Available
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot status-unavailable" /> Unavailable
+        </span>
+      </div>
     </div>
 
     <div v-if="selectedDateLabel" class="text-body-2 mt-2">
@@ -114,8 +143,9 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { useDisplay } from "vuetify";
+import apiClient from "@/services/api";
 
 const { mobile } = useDisplay();
 
@@ -139,6 +169,19 @@ const props = defineProps({
   available: {
     type: Boolean,
     default: true,
+  },
+
+  form: {
+    type: Object,
+    default: () => ({}),
+  },
+  productSlug: {
+    type: String,
+    default: "",
+  },
+  locationSlug: {
+    type: String,
+    default: "",
   },
 });
 const emit = defineEmits(["update:modelValue"]);
@@ -171,6 +214,85 @@ const calendarDate = computed({
 
     emit("update:modelValue", iso);
   },
+});
+
+const calendarMonth = ref(new Date().getMonth());
+const calendarYear = ref(new Date().getFullYear());
+
+// date (ISO string) -> true | false | "unknown", from the calendar API.
+// A date with no entry yet (not fetched, or still loading) renders the
+// same as "unknown" - neutral, not treated as unavailable.
+const calendarStatus = reactive(new Map());
+const loadedToDate = ref("");
+const loadedPage = ref(0);
+
+const calendarSlug = computed(() => {
+  if (!props.productSlug || !props.locationSlug) return "";
+  return `${props.productSlug}-in-${props.locationSlug}`;
+});
+
+const dateStatus = (value) => {
+  if (!calendarStatus.has(value)) return "unknown";
+
+  const status = calendarStatus.get(value);
+  if (status === true) return "available";
+  if (status === false) return "unavailable";
+  return "unknown";
+};
+
+const isDateUnavailable = (value) => calendarStatus.get(value) === false;
+
+const fetchCalendarPage = async (page) => {
+  if (!calendarSlug.value || page <= loadedPage.value) return;
+
+  try {
+    const { data } = await apiClient.get(
+      `/v1/products/app/${calendarSlug.value}/calendar`,
+      {
+        params: {
+          page,
+          guests: props.form?.guests || undefined,
+          quantity: props.form?.quantity || undefined,
+        },
+      },
+    );
+
+    for (const d of data.dates || []) {
+      calendarStatus.set(d.date, d.available);
+    }
+
+    loadedToDate.value = data.to_date || loadedToDate.value;
+    loadedPage.value = Math.max(loadedPage.value, data.page || page);
+  } catch (err) {
+    console.error("Failed to load product calendar", err);
+  }
+};
+
+const resetCalendar = () => {
+  calendarStatus.clear();
+  loadedToDate.value = "";
+  loadedPage.value = 0;
+
+  if (calendarSlug.value) fetchCalendarPage(1);
+};
+
+watch(calendarSlug, () => resetCalendar(), { immediate: true });
+
+watch(
+  () => [props.form?.guests, props.form?.quantity],
+  () => resetCalendar(),
+);
+
+// Fetch the next 3-month chunk once the user navigates the calendar past
+// the currently loaded window (max page 8, per the API's ~2yr cap).
+watch([calendarMonth, calendarYear], () => {
+  if (!loadedToDate.value || loadedPage.value >= 8) return;
+
+  const displayed = new Date(calendarYear.value, calendarMonth.value, 1);
+
+  if (displayed > new Date(`${loadedToDate.value}T00:00:00`)) {
+    fetchCalendarPage(loadedPage.value + 1);
+  }
 });
 
 const setCardRef = (el, value) => {
@@ -235,6 +357,8 @@ const dates = computed(() => {
 });
 
 const select = (value) => {
+  if (isDateUnavailable(value)) return;
+
   emit("update:modelValue", value);
 };
 
@@ -330,6 +454,44 @@ const nextAvailableDateLabel = computed(() => {
   display: none;
 }
 
+.calendar-wrapper .v-btn.status-available:not(.v-btn--disabled) {
+  color: #16a34a;
+}
+
+.calendar-wrapper .v-btn.status-unavailable {
+  color: #b0b0b0 !important;
+  text-decoration: line-through;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  padding: 0 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legend-dot.status-available {
+  background: #22c55e;
+}
+
+.legend-dot.status-unavailable {
+  background: #b0b0b0;
+}
+
 /* Month */
 
 .month-card {
@@ -395,5 +557,36 @@ const nextAvailableDateLabel = computed(() => {
 .date-card.active .date-number,
 .date-card.active .date-day {
   color: white;
+}
+
+/* Availability status */
+
+.date-card.status-unavailable {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.date-card.status-unavailable:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.date-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-top: 4px;
+}
+
+.date-card.status-available .date-dot {
+  background: #22c55e;
+}
+
+.date-card.status-unavailable .date-dot {
+  background: #b0b0b0;
+}
+
+.date-card.active .date-dot {
+  background: white;
 }
 </style>
