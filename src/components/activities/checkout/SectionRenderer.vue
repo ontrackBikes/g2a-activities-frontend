@@ -3,6 +3,7 @@
     <component
     :is="component"
     :config="section.config"
+    :required="section.required"
     :quote="quote"
   />
   </div>

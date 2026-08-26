@@ -149,6 +149,12 @@
                     "
                   />
                   <DetailRow
+                    v-for="row in agreeToRows(item)"
+                    :key="row.label"
+                    :label="row.label"
+                    :value="row.value"
+                  />
+                  <DetailRow
                     v-if="item.booking_data.pickup_date"
                     label="Pickup Date"
                     :value="formatDate(item.booking_data.pickup_date)"
@@ -897,6 +903,15 @@ const extraBookingRows = (orderItem) =>
       label: pretty(key),
       value: formatExtraValue(value),
     }));
+
+// item.agree_to is only present when the product's template actually had
+// agree_to sections enabled - keys are admin-defined per product, so this
+// can't be a fixed list (mirrors extraBookingRows()'s "unknown key" handling).
+const agreeToRows = (orderItem) =>
+  Object.entries(orderItem?.agree_to || {}).map(([key, value]) => ({
+    label: pretty(key),
+    value: value ? "Agreed" : "Not agreed",
+  }));
 
 const formatDate = (d) => new Date(d).toLocaleDateString("en-IN");
 

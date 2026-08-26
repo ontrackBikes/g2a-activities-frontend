@@ -10,6 +10,7 @@ import FlightDetails from "./sections/FlightDetails.vue";
 import FerryDetails from "./sections/FerryDetails.vue";
 import OptForPickupAndDrop from "./sections/OptForPickupAndDrop.vue";
 import HasAgreedToPermitCharge from "./sections/HasAgreedToPermitCharge.vue";
+import AgreeTo from "./sections/AgreeTo.vue";
 
 export default {
   customer_details: {
@@ -70,5 +71,10 @@ export default {
   has_agreed_to_permit_charge: {
     component: HasAgreedToPermitCharge,
     title: "Permit Charges",
+  },
+
+  agree_to: {
+    component: AgreeTo,
+    title: "Agreement",
   },
 };

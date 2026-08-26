@@ -1,8 +1,8 @@
 <template>
   <div>
     <SectionRenderer
-      v-for="section in sections"
-      :key="section.section"
+      v-for="(section, index) in sections"
+      :key="`${section.section}-${section.config?.key ?? index}`"
       :section="section"
       :quote="quote"
       class="my-4"
