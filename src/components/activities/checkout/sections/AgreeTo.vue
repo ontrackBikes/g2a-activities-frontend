@@ -2,18 +2,22 @@
   <v-card rounded="lg" flat class="border">
     <v-container>
       <div class="agree-to-description" v-html="config.description" />
-
+    </v-container>
+    <v-divider />
+    <v-container>
       <v-checkbox
         v-model="agreed"
         color="primary"
         hide-details="auto"
         density="compact"
-        class="mt-2"
-        :rules='
+        :rules="
           required
-            ? [(v) => !!v || `You must agree to "${config.agree_text}".`]
+            ? [
+                (v) =>
+                  !!v || `You must agree to &quot;${config.agree_text}&quot;.`,
+              ]
             : []
-        '
+        "
       >
         <template #label>
           {{ config.agree_text }}
