@@ -1,19 +1,22 @@
 <template>
   <v-card rounded="lg" flat class="border">
     <v-container>
+      <div class="agree-to-description" v-html="config.description" />
+
       <v-checkbox
         v-model="agreed"
         color="primary"
         hide-details="auto"
         density="compact"
+        class="mt-2"
         :rules='
           required
-            ? [(v) => !!v || `You must agree to "${config.description}".`]
+            ? [(v) => !!v || `You must agree to "${config.agree_text}".`]
             : []
         '
       >
         <template #label>
-          {{ config.description }}
+          {{ config.agree_text }}
         </template>
       </v-checkbox>
     </v-container>
@@ -60,3 +63,19 @@ const agreed = computed({
   },
 });
 </script>
+
+<style scoped>
+.agree-to-description :deep(p) {
+  margin-bottom: 0.75rem;
+}
+
+.agree-to-description :deep(ul),
+.agree-to-description :deep(ol) {
+  margin-bottom: 0.75rem;
+  padding-inline-start: 1.5rem;
+}
+
+.agree-to-description :deep(*:last-child) {
+  margin-bottom: 0;
+}
+</style>
