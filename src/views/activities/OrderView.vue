@@ -81,7 +81,7 @@
         </v-container>
       </v-card>
 
-      <template v-for="(item, index) in items" :key="index">
+      <template v-for="(item, index) in items" :key="item.id ?? index">
         <!-- ================= Product ================= -->
         <v-card rounded="lg" flat class="border mb-4">
           <v-row no-gutters>
@@ -258,7 +258,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="g2a-title-md text-greyDark">Pickup Location</span>
-                <div class="g2a-title-md">
+                <div class="g2a-title-md text-right">
                   {{ bookingOf(item).pickup_location.name }} -
                   {{ bookingOf(item).pickup_location.address }}
                 </div>
@@ -269,7 +269,7 @@
                 class="d-flex justify-space-between py-2"
               >
                 <span class="g2a-title-md text-greyDark">Drop Location</span>
-                <div class="g2a-title-md">
+                <div class="g2a-title-md text-right">
                   {{ bookingOf(item).drop_location.name }} -
                   {{ bookingOf(item).drop_location.address }}
                 </div>
@@ -286,6 +286,62 @@
                 <span class="g2a-title-md text-greyDark">Pickup Time</span>
                 <div class="g2a-title-md">
                   {{ formatTime(bookingOf(item).pickup_time) }}
+                </div>
+              </div>
+            </template>
+
+            <!-- Flight Details -->
+            <template v-if="hasFlightDetails(item.flight_details)">
+              <v-divider class="my-2" />
+              <div
+                class="g2a-title-lg text-greyDark mt-2 mb-1 d-flex align-center"
+              >
+                Flight Details
+              </div>
+              <div
+                v-if="flightAirline(item.flight_details)"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="g2a-title-md text-greyDark">Airline</span>
+                <div class="g2a-title-md">
+                  {{ flightAirline(item.flight_details) }}
+                </div>
+              </div>
+              <div
+                v-if="item.flight_details.flight_number"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="g2a-title-md text-greyDark">Flight Number</span>
+                <div class="g2a-title-md">
+                  {{ item.flight_details.flight_number }}
+                </div>
+              </div>
+            </template>
+
+            <!-- Ferry Details -->
+            <template v-if="hasFerryDetails(item.ferry_details)">
+              <v-divider class="my-2" />
+              <div
+                class="g2a-title-lg text-greyDark mt-2 mb-1 d-flex align-center"
+              >
+                Ferry Details
+              </div>
+              <div
+                v-if="ferryOperator(item.ferry_details)"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="g2a-title-md text-greyDark">Operator</span>
+                <div class="g2a-title-md">
+                  {{ ferryOperator(item.ferry_details) }}
+                </div>
+              </div>
+              <div
+                v-if="item.ferry_details.ferry_time"
+                class="d-flex justify-space-between py-2"
+              >
+                <span class="g2a-title-md text-greyDark">Ferry Time</span>
+                <div class="g2a-title-md">
+                  {{ formatTime(item.ferry_details.ferry_time) }}
                 </div>
               </div>
             </template>
@@ -455,14 +511,20 @@
             <div class="g2a-title-md">{{ currency(order.subtotal) }}</div>
           </div>
 
-          <div v-if="order.discount" class="d-flex justify-space-between py-2">
+          <div
+            v-if="Number(order.discount) > 0"
+            class="d-flex justify-space-between py-2"
+          >
             <span class="g2a-title-md text-greyDark">Discount</span>
             <div class="g2a-title-md text-success">
               -{{ currency(order.discount) }}
             </div>
           </div>
 
-          <div v-if="order.tax" class="d-flex justify-space-between py-2">
+          <div
+            v-if="Number(order.tax) > 0"
+            class="d-flex justify-space-between py-2"
+          >
             <span class="g2a-title-md text-greyDark">Tax</span>
             <div class="g2a-title-md">{{ currency(order.tax) }}</div>
           </div>
@@ -486,7 +548,7 @@
             <div class="g2a-title-lg text-greyDark my-4">Payment history</div>
 
             <v-card
-              v-for="p in order.payments"
+              v-for="p in sortedPayments"
               :key="p.payment_id"
               flat
               variant="tonal"
@@ -512,7 +574,12 @@
               </div>
               <div class="d-flex justify-space-between py-1">
                 <span class="g2a-title-md text-greyDark">Payment ID</span>
-                <div class="g2a-title-md">{{ p.payment_id }}</div>
+                <div
+                  class="g2a-title-md text-truncate"
+                  style="max-width: 220px"
+                >
+                  {{ p.payment_id }}
+                </div>
               </div>
             </v-card>
           </template>
@@ -587,6 +654,18 @@ const guestRowsFor = (item) => {
   }));
 };
 
+// flight_details / ferry_details are always present as objects on an item,
+// but their fields can be empty strings (e.g. custom_airline: ""), so check
+// for actual content rather than relying on object truthiness.
+const hasFlightDetails = (f) =>
+  !!(f && (f.airline || f.custom_airline || f.flight_number));
+
+const hasFerryDetails = (f) =>
+  !!(f && (f.operator || f.custom_operator || f.ferry_time));
+
+const flightAirline = (f) => f?.airline || f?.custom_airline || "";
+const ferryOperator = (f) => f?.operator || f?.custom_operator || "";
+
 const ID_PROOF_LABELS = {
   passport: "Passport",
   aadhaar_card: "Aadhaar Card",
@@ -601,6 +680,14 @@ const customerDetails = computed(() => order.value?.customer_details ?? {});
 const hasCustomerDetails = computed(() =>
   Object.values(customerDetails.value).some(Boolean),
 );
+
+// Payments sorted newest first so the most recent attempt shows on top.
+const sortedPayments = computed(() => {
+  if (!order.value?.payments?.length) return [];
+  return [...order.value.payments].sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at),
+  );
+});
 
 const statusAlert = computed(() => {
   const status = order.value?.order_status;
@@ -658,6 +745,7 @@ const loadOrder = async () => {
     loading.value = false;
   }
 };
+
 const prettyTransferType = (type) => {
   switch (type) {
     case "airport_to_location":
@@ -705,11 +793,13 @@ const formatDateTime = (date) => {
   });
 };
 
+// Accepts "HH:MM" or "HH:MM:SS" style plain time strings.
 const formatTime = (time) => {
   if (!time || typeof time !== "string" || !time.includes(":")) return "-";
   const [hour, minute] = time.split(":");
   const date = new Date();
-  date.setHours(Number(hour), Number(minute));
+  date.setHours(Number(hour), Number(minute), 0, 0);
+  if (Number.isNaN(date.getTime())) return time;
   return date.toLocaleTimeString("en-IN", {
     hour: "numeric",
     minute: "2-digit",
