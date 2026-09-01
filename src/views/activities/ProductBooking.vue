@@ -734,6 +734,12 @@ const fieldModel = (fieldKey) => {
     };
   }
 
+  // derive_quantity is sugar for editing form.guests directly - form.quantity
+  // is kept in sync by the deriveQuantityField watcher below.
+  if (fieldKey === "derive_quantity") {
+    return form.guests;
+  }
+
   return form[fieldKey];
 };
 
@@ -747,8 +753,35 @@ const handleFieldUpdate = (fieldKey, value) => {
     return;
   }
 
+  if (fieldKey === "derive_quantity") {
+    form.guests = value;
+    return;
+  }
+
   form[fieldKey] = value;
 };
+
+// A product using derive_quantity declares a single "derive_quantity" schema
+// field (guests only - no separate quantity field) with
+// config.per_qty_guests. Whenever guests changes, recompute quantity
+// locally so the price preview shown before submit matches what the
+// backend will independently recompute (it always overrides quantity from
+// guests using the same formula, so this only needs to match for display).
+const deriveQuantityField = computed(() =>
+  fields.value.find((field) => field.field === "derive_quantity"),
+);
+
+watch(
+  [() => form.guests, deriveQuantityField],
+  ([guests, field]) => {
+    if (!field) return;
+
+    const perQtyGuests = field.config?.per_qty_guests || 1;
+
+    form.quantity = Math.ceil((guests || 1) / perQtyGuests);
+  },
+  { immediate: true },
+);
 
 // Mirrors fieldModel/handleFieldUpdate's bundling: which form key(s) each
 // schema field actually owns. Used to build the check-available payload
@@ -765,6 +798,7 @@ const FIELD_FORM_KEYS = {
   ],
   pickup_and_drop_location: ["pickup_location", "drop_location", "pickup_time"],
   pickup_and_drop_date: ["pickup_date", "pickup_time", "return_date"],
+  derive_quantity: ["guests", "quantity"],
 };
 
 const fieldsPayload = () => {

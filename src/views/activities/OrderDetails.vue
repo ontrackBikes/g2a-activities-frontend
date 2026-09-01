@@ -71,6 +71,14 @@
                     :value="formatDate(item.booking_data.date)"
                   />
                   <DetailRow
+                    v-if="
+                      item.booking_data.pickup_time &&
+                      !item.booking_data.pickup_date
+                    "
+                    label="Pickup Time"
+                    :value="formatTime(item.booking_data.pickup_time)"
+                  />
+                  <DetailRow
                     v-if="item.booking_data.transfer_type"
                     label="Transfer Type"
                     :value="prettyTransferType(item.booking_data.transfer_type)"
@@ -95,6 +103,7 @@
                     label="Drop Address"
                     :value="item.booking_data.drop_location.address"
                   />
+                  <!-- Distance and Fare hidden for now
                   <DetailRow
                     v-if="
                       isKmBasedItem(item) && item.pricing?.distance_km != null
@@ -106,9 +115,15 @@
                     v-if="
                       isKmBasedItem(item) && item.pricing?.unit_price != null
                     "
-                    label="Fare"
+                    :label="
+                      `Fare` +
+                      (item.booking_data.quantity > 1
+                        ? ` (x${item.booking_data.quantity})`
+                        : '')
+                    "
                     :value="`₹${currency(item.pricing.unit_price)}`"
                   />
+                  -->
                   <v-row
                     v-if="item.booking_data.selected_slot"
                     no-gutters
@@ -160,7 +175,10 @@
                     :value="formatDate(item.booking_data.pickup_date)"
                   />
                   <DetailRow
-                    v-if="item.booking_data.pickup_time"
+                    v-if="
+                      item.booking_data.pickup_time &&
+                      item.booking_data.pickup_date
+                    "
                     label="Pickup Time"
                     :value="formatTime(item.booking_data.pickup_time)"
                   />
@@ -913,7 +931,15 @@ const agreeToRows = (orderItem) =>
     value: value ? "Agreed" : "Not agreed",
   }));
 
-const formatDate = (d) => new Date(d).toLocaleDateString("en-IN");
+const formatDate = (d) => {
+  const parsed = new Date(d);
+  if (Number.isNaN(parsed.getTime())) return d;
+  return parsed.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};
 
 const formatTime = (t) => {
   if (!t) return t;
