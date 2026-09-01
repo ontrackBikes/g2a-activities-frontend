@@ -99,6 +99,7 @@
             :slots="slots"
             :form="form"
             :maxQuantity="maxQuantity"
+            :minQuantity="minQuantity"
             :serviceHours="serviceHours"
             :minBookingLeadHours="minBookingLeadHours"
             :productSlug="product?.slug"
@@ -646,6 +647,8 @@ const maxQuantity = computed(
   () => pricing.value.max_bookable_per_booking ?? 10,
 );
 
+const minQuantity = computed(() => pricing.value.min_bookable_per_booking ?? 1);
+
 const availability = computed(() => quotation.value.availability ?? {});
 
 const dailyPricing = computed(() => availability.value.daily_pricing ?? []);
@@ -781,6 +784,36 @@ watch(
     form.quantity = Math.ceil((guests || 1) / perQtyGuests);
   },
   { immediate: true },
+);
+
+// On the first check-available response, default the guests/quantity
+// stepper(s) to the backend-suggested pricing.quantity instead of the
+// hardcoded "1" - unless the URL already pinned an explicit value. Then,
+// regardless of where the value came from (query, localStorage-persisted
+// booking form, or the seed above), bump it up to min_bookable_per_booking
+// if it's still below that. Runs once, on load.
+const guestsPinnedByQuery = Number(route.query.guests) > 0;
+const quantityPinnedByQuery = Number(route.query.quantity) > 0;
+let quantityInitializedFromPricing = false;
+
+watch(
+  () => pricing.value.quantity,
+  (qty) => {
+    if (quantityInitializedFromPricing || qty == null) return;
+
+    quantityInitializedFromPricing = true;
+
+    const hasGuestsField = fields.value.some((f) => f.field === "guests");
+    const hasQuantityField = fields.value.some((f) => f.field === "quantity");
+
+    if (hasGuestsField && !guestsPinnedByQuery) form.guests = qty;
+    if (hasQuantityField && !quantityPinnedByQuery) form.quantity = qty;
+
+    const min = minQuantity.value;
+
+    if (hasGuestsField && form.guests < min) form.guests = min;
+    if (hasQuantityField && form.quantity < min) form.quantity = min;
+  },
 );
 
 // Mirrors fieldModel/handleFieldUpdate's bundling: which form key(s) each

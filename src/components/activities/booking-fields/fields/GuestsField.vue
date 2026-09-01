@@ -19,7 +19,7 @@
             icon
             size="x-small"
             flat
-            :disabled="guestCount <= 1"
+            :disabled="guestCount <= minAllowed"
             @click="decrease"
           >
             <v-icon>mdi-minus</v-icon>
@@ -60,11 +60,16 @@ const props = defineProps({
     type: Number,
     default: 10,
   },
+  minQuantity: {
+    type: Number,
+    default: 1,
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
 
-const guestCount = computed(() => props.modelValue || 1);
+const minAllowed = computed(() => props.minQuantity || 1);
+const guestCount = computed(() => props.modelValue || minAllowed.value);
 const maxAllowed = computed(() => props.maxQuantity || 10);
 
 const increase = () => {
@@ -74,7 +79,7 @@ const increase = () => {
 };
 
 const decrease = () => {
-  if (guestCount.value <= 1) return;
+  if (guestCount.value <= minAllowed.value) return;
 
   emit("update:modelValue", guestCount.value - 1);
 };

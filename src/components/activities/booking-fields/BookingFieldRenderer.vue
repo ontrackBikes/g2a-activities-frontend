@@ -10,6 +10,7 @@
     :minBookingLeadHours="minBookingLeadHours"
     :error="error"
     :maxQuantity="maxQuantity"
+    :minQuantity="minQuantity"
     :locationSlug="locationSlug"
     :productSlug="productSlug"
     :productTypeSlug="productTypeSlug"
@@ -62,6 +63,11 @@ const props = defineProps({
   maxQuantity: {
     type: Number,
     default: 10,
+  },
+
+  minQuantity: {
+    type: Number,
+    default: 1,
   },
 
   locationSlug: {
