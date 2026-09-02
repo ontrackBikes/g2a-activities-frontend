@@ -35,8 +35,11 @@ jobs:
           VITE_RAZORPAY_KEY_ID=${{ secrets.PROD_VITE_RAZORPAY_KEY_ID }}
           EOF
 
-      - name: Build (main app + bike-rentals widget)
-        run: npm run build:all:production
+      - name: Build main app
+        run: npm run build:production
+
+      - name: Build widgets
+        run: npm run build:widgets
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
