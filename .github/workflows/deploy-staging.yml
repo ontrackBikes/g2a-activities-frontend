@@ -12,7 +12,7 @@ jobs:
     env:
       DEPLOY_HOST: 168.144.16.172
       DEPLOY_USER: shrenik
-      DEPLOY_PATH: /var/www/staging/g2a-activities-frontend
+      DEPLOY_PATH: /var/www/staging/g2a-activities-frontend/dist
 
     steps:
       - name: Checkout
