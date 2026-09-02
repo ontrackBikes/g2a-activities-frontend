@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Staging Deploy — g2a-activities-frontend</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #5b6270;
+    --border: #e2e4e8;
+    --code-bg: #f4f5f7;
+    --accent: #0969da;
+    --warn-bg: #fff8e6;
+    --warn-border: #e8c766;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --fg: #e6edf3;
+      --muted: #9198a1;
+      --border: #30363d;
+      --code-bg: #161b22;
+      --accent: #58a6ff;
+      --warn-bg: #2b2410;
+      --warn-border: #8a6d1f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    color: var(--muted);
+    margin-top: 0;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-size: 1.15rem;
+    margin-top: 40px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  p { color: var(--fg); }
+  code {
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+  }
+  pre code { background: none; padding: 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+  td, th {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 0.95em;
+  }
+  th { color: var(--muted); font-weight: 600; }
+  ol, ul { padding-left: 1.3em; }
+  li { margin-bottom: 6px; }
+  .callout {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .callout strong { display: block; margin-bottom: 4px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Staging Deploy</h1>
+  <p class="subtitle">How pushing to the <code>staging</code> branch gets the app onto the staging server.</p>
+
+  <h2>Trigger</h2>
+  <p>Any push to the <code>staging</code> branch runs <code>.github/workflows/deploy-staging.yml</code>. There is no manual step — merge or push to <code>staging</code> and it deploys.</p>
+  <pre><code>git checkout staging
+git merge main   # or push commits directly
+git push origin staging</code></pre>
+
+  <h2>What the workflow does</h2>
+  <ol>
+    <li>Checks out the repo, installs dependencies (<code>npm ci</code>).</li>
+    <li>Writes <code>.env.production</code> from the GitHub <strong>staging</strong> Environment's secrets.</li>
+    <li>Builds the main app: <code>npm run build:production</code>.</li>
+    <li>Builds the generic widgets (booking-price, product-list): <code>npm run build:widgets</code>.</li>
+    <li>SSHes into the staging server and <code>rsync --delete</code>s the local <code>dist/</code> folder to the server's <code>dist/</code> folder.</li>
+  </ol>
+  <p>The build always runs in <strong>production mode</strong> (<code>build:production</code>), even though it's deploying to staging — the staging vs. production distinction comes entirely from which secrets get written into <code>.env.production</code>, not from a different Vite mode.</p>
+
+  <h2>Server details</h2>
+  <table>
+    <tr><th>Host</th><td><code>168.144.16.172</code></td></tr>
+    <tr><th>SSH user</th><td><code>shrenik</code></td></tr>
+    <tr><th>Deploy path</th><td><code>/var/www/staging/g2a-activities-frontend/dist</code></td></tr>
+    <tr><th>Site</th><td><a href="https://activities-test.go2andaman.com">activities-test.go2andaman.com</a></td></tr>
+  </table>
+
+  <div class="callout">
+    <strong>The <code>/dist</code> suffix on the deploy path is required.</strong>
+    Nginx's <code>root</code> for <code>activities-test.go2andaman.com</code> points at <code>.../g2a-activities-frontend/dist</code>, not at <code>.../g2a-activities-frontend</code> itself. Rsyncing to the wrong (parent) path with <code>--delete</code> will wipe the live document root and take the site down with a 500 error until corrected — this happened once during setup.
+  </div>
+
+  <p>If the deploy path ever needs to change, check the server's nginx config first:</p>
+  <pre><code>ssh -i ~/.ssh/id_rsa shrenik@168.144.16.172 \
+  "cat /etc/nginx/sites-available/activities-test.go2andaman.com"</code></pre>
+
+  <h2>Required GitHub configuration</h2>
+  <p><strong>Environment secrets</strong> — under Settings → Environments → <code>staging</code> (repo: <code>ontrackBikes/g2a-activities-frontend</code>), as <strong>Environment secrets</strong>, not Environment variables:</p>
+  <ul>
+    <li><code>VITE_API_BASE_URL</code> — <code>https://activities-test.go2andaman.com/api</code> (no <code>/v1</code> — the app appends that itself on every call)</li>
+    <li><code>VITE_BASE_URL</code> — <code>https://activities-test.go2andaman.com</code></li>
+    <li><code>VITE_RAZORPAY_KEY_ID</code> — the test Razorpay key</li>
+  </ul>
+  <p><strong>Repository secret</strong> (shared with the production workflow, not environment-scoped):</p>
+  <ul>
+    <li><code>DEPLOY_SSH_KEY</code> — private key that can SSH as <code>shrenik</code> into <code>168.144.16.172</code> (and, separately, into the production host)</li>
+  </ul>
+  <div class="callout">
+    <strong>Silent failure mode</strong>
+    If any of the three <code>VITE_*</code> secrets are missing or added to the wrong place (e.g. as a repo-level secret instead of an environment secret, or under "Environment variables" instead of "Environment secrets"), the build silently succeeds but ships with an empty value — e.g. API calls end up hitting <code>https://activities-test.go2andaman.com/v1/...</code> instead of <code>.../api/v1/...</code>, because <code>baseURL</code> resolved to <code>""</code>.
+  </div>
+
+  <h2>Verifying a deploy</h2>
+  <pre><code># Site is up
+curl -s -o /dev/null -w "%{http_code}\n" https://activities-test.go2andaman.com
+
+# Correct API base URL made it into the build
+ssh -i ~/.ssh/id_rsa shrenik@168.144.16.172 \
+  "grep -o 'https://activities-test.go2andaman.com/api' /var/www/staging/g2a-activities-frontend/dist/assets/index-*.js"
+
+# Deployed files look right
+ssh -i ~/.ssh/id_rsa shrenik@168.144.16.172 \
+  "ls /var/www/staging/g2a-activities-frontend/dist"</code></pre>
+
+  <h2>Re-running a deploy without new code changes</h2>
+  <p>Push an empty commit to <code>staging</code>:</p>
+  <pre><code>git checkout staging
+git commit --allow-empty -m "Trigger staging deploy"
+git push origin staging</code></pre>
+  <p>Or re-run the failed/previous workflow from the <strong>Actions</strong> tab on GitHub.</p>
+</main>
+</body>
+</html>
