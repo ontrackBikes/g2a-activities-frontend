@@ -46,8 +46,8 @@
         <template v-else>
           {{ derivedQuantity }}
           {{ derivedQuantity === 1 ? unitLabel : unitLabelPlural }} will be
-          allocated for {{ guestCount }}
-          {{ guestCount === 1 ? "guest" : "guests" }}, you will get a
+          allocated for up to {{ capacity }}
+          {{ capacity === 1 ? "guest" : "guests" }}. You will receive a
           confirmation call.
         </template>
       </div>
@@ -86,6 +86,7 @@ const maxGuests = computed(() => (props.maxQuantity || 10) * perQtyGuests.value)
 const derivedQuantity = computed(() =>
   Math.ceil(guestCount.value / perQtyGuests.value),
 );
+const capacity = computed(() => derivedQuantity.value * perQtyGuests.value);
 
 const increase = () => {
   if (guestCount.value >= maxGuests.value) return;
