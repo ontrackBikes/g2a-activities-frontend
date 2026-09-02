@@ -99,6 +99,7 @@
             :slots="slots"
             :form="form"
             :maxQuantity="maxQuantity"
+            :minQuantity="minQuantity"
             :serviceHours="serviceHours"
             :minBookingLeadHours="minBookingLeadHours"
             :productSlug="product?.slug"
@@ -645,6 +646,9 @@ const pricing = computed(() => quotation.value.pricing ?? {});
 const maxQuantity = computed(
   () => pricing.value.max_bookable_per_booking ?? 10,
 );
+const minQuantity = computed(
+  () => pricing.value.min_bookable_per_booking ?? 1,
+);
 
 const availability = computed(() => quotation.value.availability ?? {});
 
@@ -825,6 +829,20 @@ const checkAvailability = async () => {
     );
 
     result.value = data;
+
+    const minimum = Number(
+      data.data?.pricing?.min_bookable_per_booking,
+    ) || 1;
+    const pricingField =
+      data.data?.product?.pricing_mode === "quantity"
+        ? "quantity"
+        : "guests";
+
+    if (form[pricingField] < minimum) {
+      form[pricingField] = minimum;
+      return;
+    }
+
     estimateId.value = data.data?.estimate_id || data.estimate_id || null;
 
     /**

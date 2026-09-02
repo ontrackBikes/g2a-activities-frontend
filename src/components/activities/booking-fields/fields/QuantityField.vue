@@ -79,6 +79,10 @@ const props = defineProps({
     type: Number,
     default: 10,
   },
+  minQuantity: {
+    type: Number,
+    default: 1,
+  },
   productTypeSlug: {
     type: String,
     default: "",
@@ -87,7 +91,9 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const minAllowed = computed(() => props.field?.min ?? 1);
+const minAllowed = computed(() =>
+  Math.max(Number(props.field?.min) || 1, props.minQuantity || 1),
+);
 const quantityCount = computed(() => props.modelValue || minAllowed.value);
 const maxAllowed = computed(() => props.maxQuantity || 10);
 const isBikeRentals = computed(() => props.productTypeSlug === "bike-rentals");
