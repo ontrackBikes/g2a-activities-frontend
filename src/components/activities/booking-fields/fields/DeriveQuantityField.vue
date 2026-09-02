@@ -42,10 +42,14 @@
       </div>
 
       <div v-if="perQtyGuests > 1" class="text-greyDark text-caption mt-1">
-        {{ derivedQuantity }} {{ derivedQuantity === 1 ? "unit" : "units" }} will
-        be allocated for {{ guestCount }}
-        {{ guestCount === 1 ? "guest" : "guests" }}, you will get a
-        confirmation call.
+        <template v-if="perQtyDescription">{{ perQtyDescription }}</template>
+        <template v-else>
+          {{ derivedQuantity }}
+          {{ derivedQuantity === 1 ? unitLabel : unitLabelPlural }} will be
+          allocated for {{ guestCount }}
+          {{ guestCount === 1 ? "guest" : "guests" }}, you will get a
+          confirmation call.
+        </template>
       </div>
     </div>
   </v-card>
@@ -72,6 +76,11 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 const perQtyGuests = computed(() => props.field?.config?.per_qty_guests || 1);
+const unitLabel = computed(() => props.field?.config?.unit_label || "unit");
+const unitLabelPlural = computed(() => `${unitLabel.value}s`);
+const perQtyDescription = computed(
+  () => props.field?.config?.per_qty_description || null,
+);
 const guestCount = computed(() => props.modelValue || 1);
 const maxGuests = computed(() => (props.maxQuantity || 10) * perQtyGuests.value);
 const derivedQuantity = computed(() =>
