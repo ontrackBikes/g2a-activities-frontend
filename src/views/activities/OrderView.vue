@@ -235,6 +235,15 @@
               </div>
             </template>
 
+            <template v-if="bookingOf(item).preferred_time">
+              <div class="d-flex justify-space-between py-2">
+                <span class="g2a-title-md text-greyDark">Preferred Time</span>
+                <div class="g2a-title-md">
+                  {{ formatDate(bookingOf(item).preferred_time) }}
+                </div>
+              </div>
+            </template>
+
             <!-- Airport Transfer / Cab Pickup & Drop -->
             <template
               v-if="

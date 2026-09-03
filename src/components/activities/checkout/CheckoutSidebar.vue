@@ -85,7 +85,7 @@
             :value="row.value"
             bold
           />
-        
+
           <v-divider v-if="dailyPricing.length > 1" class="my-4" />
           <template v-if="dailyPricing.length > 1">
             <div class="g2a-title-2xl-2 mb-3">Daily pricing</div>
@@ -200,11 +200,13 @@
         </div>
 
         <v-divider class="my-2" />
-        <div class="d-flex align-center justify-center text-greyDark mt-2 text-caption text-center">
- 
-            Discover and book Andaman experiences with trusted local operators through Go2Andaman. Activities are operated by local providers in accordance with applicable regulatory requirements.
+        <div
+          class="d-flex align-center justify-center text-greyDark mt-2 text-caption text-center"
+        >
+          Discover and book Andaman experiences with trusted local operators
+          through Go2Andaman. Activities are operated by local providers in
+          accordance with applicable regulatory requirements.
         </div>
-      
       </v-card-text>
     </v-card>
 
@@ -368,7 +370,9 @@
                 v-for="day in previewDailyPricing"
                 :key="day.date"
                 :label="formatDate(day.date)"
-                :value="formatCurrency(day.unit_price * (pricing.quantity || 1))"
+                :value="
+                  formatCurrency(day.unit_price * (pricing.quantity || 1))
+                "
                 bold
               />
               <button
@@ -511,10 +515,13 @@
         No Hidden Charges
       </div>
       <v-divider class="my-2" />
-        <div class="d-flex align-center justify-center text-greyDark mt-2 text-caption text-center">
-            Discover and book Andaman experiences with trusted local operators through Go2Andaman. Activities are operated by local providers in accordance with applicable regulatory requirements.
-        </div>
-        
+      <div
+        class="d-flex align-center justify-center text-greyDark mt-2 text-caption text-center"
+      >
+        Discover and book Andaman experiences with trusted local operators
+        through Go2Andaman. Activities are operated by local providers in
+        accordance with applicable regulatory requirements.
+      </div>
     </v-container>
   </v-card>
   <!-- Reserves space so page content isn't hidden behind the fixed bar -->
@@ -678,7 +685,8 @@ const pickupAndDropSectionEnabled = computed(() =>
   (
     props.quote?.product?.bookingTemplate?.booking_page_schema?.sections || []
   ).some(
-    (section) => section.section === "opt_for_pickup_and_drop" && section.enabled,
+    (section) =>
+      section.section === "opt_for_pickup_and_drop" && section.enabled,
   ),
 );
 
@@ -733,6 +741,17 @@ const flattenSchemaFields = (fields = []) =>
     return acc;
   }, []);
 
+// Unlike pickup_and_drop_location (which nests pickup_location/drop_location/
+// pickup_time under config.fields), "derive_quantity" writes two separate
+// booking keys, "guests" and "quantity", directly onto the form -- see
+// ProductBooking.vue's FIELD_FORM_KEYS. Mirror that mapping here so those two
+// booking keys resolve back to the "derive_quantity" schema field for
+// visibility, instead of falling through as unrecognized product-specific
+// keys and getting hidden.
+const DERIVED_FIELD_KEYS = {
+  derive_quantity: ["guests", "quantity"],
+};
+
 const schemaFields = computed(() =>
   flattenSchemaFields(
     props.quote?.product?.bookingTemplate?.product_page_schema?.fields || [],
@@ -762,10 +781,21 @@ const fieldLabels = computed(() =>
 // happens to attach to the booking payload.
 const SYSTEM_FIELD_KEYS = new Set(ROW_ORDER);
 
+// Resolves a booking data key to the schema field that owns it -- either
+// directly (field.field === key) or, for keys like "guests"/"quantity" that
+// a single field writes without nesting, via DERIVED_FIELD_KEYS.
+const schemaFieldForBookingKey = (key) => {
+  if (schemaFieldByKey.value[key]) return schemaFieldByKey.value[key];
+  const ownerKey = Object.keys(DERIVED_FIELD_KEYS).find((field) =>
+    DERIVED_FIELD_KEYS[field].includes(key),
+  );
+  return ownerKey ? schemaFieldByKey.value[ownerKey] : undefined;
+};
+
 // No matching schema field -> only show if it's a structural system field.
 // Matching schema field -> only show if not explicitly hidden for this product.
 const isFieldHiddenInSummary = (key) => {
-  const field = schemaFieldByKey.value[key];
+  const field = schemaFieldForBookingKey(key);
   if (field) {
     return field.hidden === true || field.visible === false;
   }
@@ -782,8 +812,13 @@ const resolveOptionLabel = (key, value) => {
 };
 
 // Row order follows the schema's field order first, then any system/legacy
+// keys. Fields in DERIVED_FIELD_KEYS (e.g. derive_quantity) are expanded to
+// the booking keys they actually own, so "guests"/"quantity" sort at that
+// field's position instead of not matching anything.
 const fieldOrder = computed(() => {
-  const schemaOrder = schemaFields.value.map((field) => field.field);
+  const schemaOrder = schemaFields.value.flatMap(
+    (field) => DERIVED_FIELD_KEYS[field.field] || [field.field],
+  );
   const extras = ROW_ORDER.filter((key) => !schemaOrder.includes(key));
   return [...schemaOrder, ...extras];
 });
@@ -803,7 +838,8 @@ const bookingRows = computed(() =>
       return indexA - indexB;
     })
     .map(([key, value]) => {
-      const label = fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
+      const label =
+        fieldLabels.value[key] || ROW_LABELS[key] || prettyLabel(key);
       const isTimeLabel = label === "Pickup Time" || label === "Return Time";
       return {
         label,
@@ -820,9 +856,10 @@ const bookingRows = computed(() =>
 // the rest live under "More details".
 const previewRows = computed(() => {
   const rows = bookingRows.value.slice(0, 3);
-  const extraRows = [selectedSlotRow.value, optForPickupAndDropRow.value].filter(
-    Boolean,
-  );
+  const extraRows = [
+    selectedSlotRow.value,
+    optForPickupAndDropRow.value,
+  ].filter(Boolean);
   return [...rows, ...extraRows];
 });
 const remainingRows = computed(() => bookingRows.value.slice(3));
