@@ -904,6 +904,16 @@ const checkAvailability = async () => {
   } catch (e) {
     error.value =
       e.response?.data?.message || e.message || "Unable to check availability.";
+
+    // Don't leave the previous successful response's availability/price/
+    // Continue button on screen once a request fails - a stale
+    // `result.value.available === true` would keep the footer and slot
+    // selection rendered against data that's no longer confirmed valid.
+    result.value = {
+      ...(result.value ?? {}),
+      available: false,
+      message: error.value,
+    };
   } finally {
     loading.value = false;
   }
