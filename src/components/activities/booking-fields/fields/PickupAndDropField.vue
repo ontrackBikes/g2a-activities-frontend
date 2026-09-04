@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 const props = defineProps({
   form: {
@@ -97,6 +97,13 @@ const props = defineProps({
     type: String,
     default: "",
   },
+
+  // From the check-available API's `availability.min_booking_lead_hours` -
+  // the pickup time must be at least this many hours ahead of now.
+  minBookingLeadHours: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const todayDate = new Date();
@@ -111,7 +118,7 @@ dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
 
 const dayAfterTomorrowString = dayAfterTomorrow.toISOString().split("T")[0];
 
-const pickupTimeOptions = [
+const PICKUP_TIME_SLOTS = [
   { title: "10:00 AM", value: "10:00" },
   { title: "10:30 AM", value: "10:30" },
   { title: "11:00 AM", value: "11:00" },
@@ -131,11 +138,119 @@ const pickupTimeOptions = [
   { title: "6:00 PM", value: "18:00" },
 ];
 
+// The pickup time must be at least `minBookingLeadHours` (from the
+// check-available API's `availability.min_booking_lead_hours`) ahead of
+// now - compared as full date-times (not a same-day-only check) so a lead
+// time spanning past midnight still disables the relevant slots on the
+// following day too, same as Pickuptimefield.vue.
+const cutoffDateTime = computed(() => {
+  const cutoff = new Date();
+
+  cutoff.setMinutes(
+    cutoff.getMinutes() + (Number(props.minBookingLeadHours) || 0) * 60,
+  );
+
+  return cutoff;
+});
+
+const slotDateTime = (dateStr, hhmm) => {
+  if (!dateStr) return null;
+
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const [hours, minutes] = hhmm.split(":").map(Number);
+
+  return new Date(year, month - 1, day, hours, minutes, 0, 0);
+};
+
+const formatDateToYMD = (date) => date.toISOString().split("T")[0];
+
+const MAX_LOOKAHEAD_DAYS = 90;
+
+// Finds the earliest pickup date/time - starting from tomorrow, since bike
+// rentals can't be booked same-day (matches the server-side rule in
+// dateRange.service.js) - whose date-time clears `now + minLeadHours`.
+// Walks the fixed daily slot schedule day by day so a lead time that spans
+// more than one day (e.g. 60h) correctly lands on a later date rather than
+// just the first disabled day.
+const computeNextAvailableSlot = (minLeadHours) => {
+  const cutoff = new Date();
+
+  cutoff.setMinutes(
+    cutoff.getMinutes() + (Number(minLeadHours) || 0) * 60,
+  );
+
+  for (
+    let dayOffset = 1;
+    dayOffset <= MAX_LOOKAHEAD_DAYS;
+    dayOffset += 1
+  ) {
+    const candidate = new Date(todayDate);
+    candidate.setDate(candidate.getDate() + dayOffset);
+
+    const dateStr = formatDateToYMD(candidate);
+
+    const firstSlot = PICKUP_TIME_SLOTS.find(
+      (slot) => slotDateTime(dateStr, slot.value) >= cutoff,
+    );
+
+    if (firstSlot) {
+      return { date: dateStr, time: firstSlot.value };
+    }
+  }
+
+  // Shouldn't happen with any realistic lead time - avoid leaving the
+  // form without a value if it does.
+  return { date: tomorrowString, time: PICKUP_TIME_SLOTS[0].value };
+};
+
+// VSelect's item-level overrides (disabled included) only take effect when
+// nested under `props` on each raw item - see VSelect's `select()`, which
+// checks `item.props.disabled`, and the `useItems` composable, which
+// spreads a raw item's `props` key onto the internal item. A flat
+// `disabled` key (or an `item-disabled` binding, which isn't a real prop
+// on this VSelect) is silently ignored.
+const pickupTimeOptions = computed(() => {
+  const cutoff = cutoffDateTime.value;
+
+  return PICKUP_TIME_SLOTS.map((slot) => {
+    const slotDate = slotDateTime(pickupDate.value, slot.value);
+    const disabled = !!slotDate && slotDate < cutoff;
+
+    return {
+      ...slot,
+      disabled,
+      props: { disabled },
+    };
+  });
+});
+
+// Tracks whether the pickup date/time reflects a deliberate choice - either
+// a booking resumed with values already in `form`, or the customer editing
+// the fields themselves - as opposed to still holding our own best-guess
+// auto-selection. Only auto-selection keeps recomputing as the real lead
+// hours arrive from the check-available API; once this flips true it stops
+// touching these fields.
+//
+// Keyed off `pickup_time` rather than `pickup_date`: ProductBooking.vue
+// always pre-fills `form.pickup_date` with its own "tomorrow" placeholder
+// (and keeps it synced to the URL) before this component even mounts, so
+// checking that would treat every fresh page load as already decided.
+// `pickup_time` has no such placeholder - it's only ever non-empty for a
+// genuinely restored/shared booking - so it's the reliable "already
+// decided" signal.
+const hasUserSetPickup = ref(!!props.form.pickup_time);
+
+// Set around our own programmatic writes to pickupDate/pickupTime so their
+// setters below don't mistake an auto-selection for user input.
+let isAutoSetting = false;
+
 const pickupDate = computed({
   get() {
     return props.form.pickup_date || tomorrowString;
   },
   set(value) {
+    if (!isAutoSetting) hasUserSetPickup.value = true;
+
     props.form.pickup_date = value;
   },
 });
@@ -145,6 +260,8 @@ const pickupTime = computed({
     return props.form.pickup_time || "10:00";
   },
   set(value) {
+    if (!isAutoSetting) hasUserSetPickup.value = true;
+
     props.form.pickup_time = value;
   },
 });
@@ -181,14 +298,6 @@ watch(
 watch(
   () => props.form,
   () => {
-    if (!props.form.pickup_date) {
-      props.form.pickup_date = tomorrowString;
-    }
-
-    if (!props.form.pickup_time) {
-      props.form.pickup_time = "10:00";
-    }
-
     if (!props.form.return_date) {
       props.form.return_date = dayAfterTomorrowString;
     }
@@ -198,6 +307,46 @@ watch(
     deep: true,
   },
 );
+
+// Auto-select the next available pickup date/time once real lead-hours
+// data is known, instead of always guessing "tomorrow at 10am". Runs
+// immediately at mount with whatever `minBookingLeadHours` starts as
+// (usually 0, before the first check-available response lands), then
+// re-runs and corrects the selection when the real value arrives -
+// `hasUserSetPickup` is what stops it from then fighting a restored
+// booking or the customer's own edit.
+watch(
+  () => props.minBookingLeadHours,
+  () => {
+    if (hasUserSetPickup.value) return;
+
+    const { date, time } = computeNextAvailableSlot(
+      props.minBookingLeadHours,
+    );
+
+    isAutoSetting = true;
+    pickupDate.value = date;
+    pickupTime.value = time;
+    isAutoSetting = false;
+  },
+  { immediate: true },
+);
+
+// If the pickup date changes (or time passes) and the currently selected
+// pickup time falls before the new lead-hours cutoff, it's no longer a
+// valid choice - drop it instead of silently keeping a disabled option
+// selected, same as Pickuptimefield.vue.
+watch(pickupTimeOptions, (options) => {
+  const current = props.form.pickup_time;
+
+  if (!current) return;
+
+  const option = options.find((item) => item.value === current);
+
+  if (option?.disabled) {
+    props.form.pickup_time = "";
+  }
+});
 </script>
 
 <style scoped>
